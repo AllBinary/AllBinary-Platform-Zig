@@ -1,0 +1,192 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+  <modelVersion>4.0.0</modelVersion>
+  <groupId>org.allbinary</groupId>
+  <artifactId>GameJ2MELibraryPOMZig</artifactId>
+  <packaging>pom</packaging>
+  <!-- AllBinary Platform Version Start -->
+  <version>1.0.0-SNAPSHOT</version>
+  <!-- AllBinary Platform Version End -->
+
+  <name>GameJ2MELibraryPOMZig</name>
+  <url>http://www.allbinary.com/</url>
+    <distributionManagement>
+        <snapshotRepository>
+            <id>nexus-snapshots</id>
+            <name>AllBinary Snapshots Nexus</name>
+            <url>https://nexus-allbinary.rhcloud.com/nexus/content/repositories/snapshots/</url>
+        </snapshotRepository>
+        <repository>
+            <id>nexus-releases</id>
+            <name>AllBinary Releases Nexus</name>
+            <url>https://nexus-allbinary.rhcloud.com/nexus/content/repositories/releases/</url>
+        </repository>
+    </distributionManagement>
+
+
+
+    <modules>
+
+        <!--
+        NoGyroSensorLibrary
+
+        -->
+        <module>../../android/AndroidUtilJavaLibraryZigM</module>
+
+        <module>../../../allbinary_src/security/SimpleCryptLibraryZigM</module>
+        <!--
+        <module>../../../../working_thirdparty/security/BouncyCastleDESJavaLibraryZigM</module>
+        <module>../../../../working_thirdparty/communication/XmlRpc/XmlRpcJavaLibraryZigM</module>
+        -->
+        <module>../../../allbinary_src/TokenizerJavaLibraryZigM</module>
+        <module>../../../allbinary_src/security/BasicSecurityJavaLibraryZigM</module>
+        <module>../../../replace_these_stub_projects/security/YourCryptFileJavaLibraryZigM</module>
+        <module>../../../replace_these_stub_projects/security/YourSecurityJavaLibraryZigM</module>
+        <module>../../../replace_these_stub_projects/communication/YourXmlRpcJavaLibraryZigM</module>
+        <module>../../../replace_these_stub_projects/allbinary_src/J2MEOnlyJavaLibraryZigM</module>
+        <module>../../../replace_these_stub_projects/allbinary_src/J2MECompatibilityJavaLibraryZigM</module>
+        <module>../../../replace_these_stub_projects/allbinary_src/J2MEJsInteropCompatibilityJavaLibraryZigM</module>
+
+        <module>../../DebugJavaLibraryZigM</module>             
+        <module>../../ResourceLibraryZigM</module>
+        <module>../../ResourceJ2MEJavaLibraryZigM</module>
+        <module>../../AndroidResourceLibraryZigM</module>
+        <module>../../../allbinary_src/hardware/AndroidSystemJavaLibraryZigM</module>
+
+        <module>../../../game/behavior/ArtificialIntelligenceLibraryZigM</module>
+
+        <module>../../media/graphics/PlatformNullImageJavaLibraryZigM</module>
+        <module>../../media/graphics/ImageCacheBaseJ2MEJavaLibraryZigM</module>
+        <module>../../media/graphics/ImageCacheJ2MEJavaLibraryZigM</module>
+        <module>../../../graphics/opengl/OpenGLJ2MENoneJavaLibraryZigM</module>
+        <module>../../../graphics/opengl/OpenGLNoneJavaLibraryZigM</module>
+        <module>../../../graphics/opengl/OpenGLNoneOtherJavaLibraryZigM</module>
+        <module>../../../graphics/opengl/OpenGLNoneOther2JavaLibraryZigM</module>
+        <module>../../../graphics/opengl/OpenGLESBaseJ2MEJavaLibraryZigM</module>
+
+        <module>../../media/graphics/animation/AnimationLibraryZigM</module>
+        <module>../../media/graphics/animation/RotationAnimationJavaLibraryZigM</module>
+
+        <module>../../games/GameInputLibraryZigM</module>
+
+        <module>../../games/GameScoresBaseJavaLibraryZigM</module>
+        <module>../../games/GameScoresBaseJ2MELibraryZigM</module>
+
+        <module>../../statistics/ApplicationStatisticsHTMLLibraryZigM</module>
+        <!--
+        <module>../../games/GameConfigurationHTMLJavaLibraryZigM</module>
+        -->
+        <module>../../games/GameConfigurationJ2MEJavaLibraryZigM</module>   
+        <module>../../games/GameConfigurationJavaLibraryZigM</module>
+
+        <module>../../games/GameIntermissionLibraryZigM</module>
+
+        <module>../../GroupLibraryZigM</module>
+
+        <module>../../input/NoSensorJavaLibraryZigM</module>
+
+        <module>../../input/AllBinarySensorJavaLibraryZigM</module>
+
+        <module>../../input/platform/me/GameInputMEJavaLibraryZigM</module>
+        <module>../../input/platform/me/GameInputMEKeyOnlyJavaLibraryZigM</module>
+        <module>../../input/platform/me/GameInputMEMotionJavaLibraryZigM</module>
+        <module>../../input/platform/pc/GameInputPCBaseJavaLibraryZigM</module>
+        <module>../../input/platform/pc/GameInputPCJavaLibraryZigM</module>
+        <module>../../input/platform/pc/GameInputPCKeyOnlyJavaLibraryZigM</module>
+        <module>../../input/platform/pc/GameInputPCMotionJavaLibraryZigM</module>
+        <module>../../input/platform/pc/GameInputSwtJavaLibraryZigM</module>
+
+        <module>../../input/AllBinaryGyroSensorJavaLibraryZigM</module>
+        <module>../../input/MotionGestureJavaLibraryZigM</module>
+        
+        <module>../../input/MotionGestureBaseJavaLibraryZigM</module>
+
+        <module>../../games/GameInputPersistanceLibraryZigM</module>
+        <module>../../games/GameInputNoPersistanceLibraryZigM</module>
+        
+        <module>../../lib/VectorThreeDimensionalLibraryZigM</module>
+        <module>../../input/AllBinaryAccelerometerSensorJavaLibraryZigM</module>
+        <module>../../input/NoGyroSensorJavaLibraryZigM</module>
+        <module>../../input/JSEGyroSensorJavaLibraryZigM</module>
+        <!--
+        <module>../../input/android/</module>
+        <module>../../input/platform/android/GameInputAndroidBaseJavaLibraryZigM</module>
+        -->
+
+        <module>../../media/sound/BasicPlayerJavaLibraryZigM</module>
+        <module>../../media/sound/BasicPlayerMIDP2JavaLibraryZigM</module>
+        <module>../../media/sound/NoPlayerJavaLibraryZigM</module>
+        <module>../../media/sound/SoundJ2MELibraryZigM</module>
+
+        <module>../../media/motion/AllBinaryVibrationJavaLibraryZigM</module>
+        <module>../../media/motion/NoVibrateJavaLibraryZigM</module>
+        <module>../../media/motion/VibrateAndroidJavaLibraryZigM</module>
+
+        <module>../../media/graphics/NullCustomUIJavaLibraryZigM</module>
+        <module>../../media/graphics/NullCustomUIBaseJavaLibraryZigM</module>
+
+        <module>../../media/graphics/FormValidationJavaLibraryZigM</module>
+        
+        <module>../../media/graphics/FormJavaLibraryZigM</module>
+        <module>../../media/graphics/FormBaseJavaLibraryZigM</module>
+        <!--
+        <module>../../media/graphics/FormJMEJavaLibraryZigM</module>
+        -->
+        <module>../../../j2me/media/graphics/FormJMEJavaLibraryZigM</module>
+
+        <module>../../media/graphics/animation/AnimationResourceJavaLibraryZigM</module>
+        <module>../../media/graphics/animation/TransitionAnimationJavaLibraryZigM</module>
+        <module>../../media/graphics/animation/NoTransitionAnimationJavaLibraryZigM</module>
+        <!--
+        AndroidTransitionAnimationJavaLibraryM
+        -->
+        <module>../../media/graphics/animation/GameAnimationJavaLibraryZigM</module>
+        <module>../../games/GameResourceJavaLibraryZigM</module>
+        <module>../../games/GameSoundsJavaLibraryZigM</module>
+
+        <module>../../input/TouchInputLibraryP</module>
+
+        <module>../../media/MediaDataZigM</module>
+        <module>../../media/sound/NotDeviceSpecificNoMediaMIDP1LibraryZigM</module>
+
+        <module>../../../allbinary_src/content/ContentNoneJavaLibraryZigM</module>
+        <module>../../../allbinary_src/content/ContentAndroidJavaLibraryZigM</module>
+
+        <module>../../games/GameConfigurationFormJavaLibraryZigM</module>
+
+        <module>../../FullScreenNoneJavaLibraryZigM</module>
+        <!--
+        <module>../../FullScreenJavaLibraryZigM</module>
+        -->
+
+        <module>../../../physics/VelocityLibraryZigM</module>
+
+        <module>../../games/weapon/SoundsBasicWeaponsJavaLibraryZigM</module>
+
+        <module>../../lib/TrigJ2MELibraryZigM</module>
+
+        <module>../../media/graphics/geography/map/LayerPlacementLibraryZigM</module>
+        <module>../../media/graphics/layer/AllBinaryLayerJavaLibraryZigM</module>
+
+        <module>../../ScreenCaptureNoneJavaLibraryZigM</module>
+        
+        <module>../licensing/GameLicensingNullJavaLibraryZigM</module>
+        
+        <module>../../business/advertisement/AllBinaryAdvertisementClientJavaLibraryZigM</module>
+        <module>../../business/advertisement/AdvertisementClientNoneJavaLibraryZigM</module>
+
+        <module>../GameNotificationJavaLibraryZigM</module>
+
+        <module>../../../graphics/opengl/NoSWTJavaLibraryZigM</module>
+        <module>../../../graphics/opengl/SWTWithoutJOGLJavaLibraryZigM</module>
+        <module>../SWTJavaLibraryZigM</module>
+        <module>../GameJ2MELibraryZigM</module>
+        
+        <!--
+        <module>../GameJ2MEOptionalLibraryPOZigM</module>
+        -->
+    
+    </modules>
+
+</project>
+

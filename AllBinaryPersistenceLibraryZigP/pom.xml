@@ -1,0 +1,59 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+    <groupId>org.allbinary</groupId>
+    <artifactId>AllBinaryPersistenceLibraryPZig</artifactId>
+    <packaging>pom</packaging>
+    <!-- AllBinary Platform Version Start -->
+    <version>1.0.0-SNAPSHOT</version>
+    <!-- AllBinary Platform Version End -->
+
+    <name>AllBinaryPersistenceLibraryPZig</name>
+    <url>http://www.allbinary.com/</url>
+    <distributionManagement>
+        <snapshotRepository>
+            <id>nexus-snapshots</id>
+            <name>AllBinary Snapshots Nexus</name>
+            <url>https://nexus-allbinary.rhcloud.com/nexus/content/repositories/snapshots/</url>
+        </snapshotRepository>
+        <repository>
+            <id>nexus-releases</id>
+            <name>AllBinary Releases Nexus</name>
+            <url>https://nexus-allbinary.rhcloud.com/nexus/content/repositories/releases/</url>
+        </repository>
+    </distributionManagement>
+    
+    <properties>
+        <buildLabel>${project.version}</buildLabel>
+        <assemblyPluginVersion>2.2-beta-1</assemblyPluginVersion>
+    </properties>
+
+    <modules>
+        
+        <!--
+        -->
+        <module>../allbinary_src/cache/AllBinaryCacheLibraryZigM</module>
+        <module>../allbinary_src/PermutationsJavaLibraryZigM</module>
+        <module>../allbinary_src/logic/BasePreloaderFileJavaLibraryZigM</module>
+        <module>../allbinary_src/logic/data/file/FileJavaLibraryZigM</module>
+        <module>../allbinary_src/logic/data/file/FileJ2SEJavaLibraryZigM</module>
+        <module>../allbinary_src/data/DataJavaLibraryZigM</module>
+        <module>../allbinary_src/logic/data/file/FileUnamedJavaLibraryZigM</module>
+        <module>../allbinary_src/logic/data/file/FileAdvancedJavaLibraryZigM</module>
+        <module>../allbinary_src/PreLoaderJavaLibraryZigM</module>
+        <module>../allbinary_src/FileInitInfoJavaLibraryZigM</module>
+        <module>../allbinary_src/PreLoaderFileJavaLibraryZigM</module>
+        <module>../allbinary_src/PreLoaderLicenseJavaLibraryZigM</module>
+        <module>../j2me/PCResourceLibraryZigM</module>
+        <module>../j2me/ProgressJ2MEJavaLibraryZigM</module>
+        <module>../allbinary_src/licensing/ClientInfoBaseJavaLibraryZigM</module>
+        <module>../allbinary_src/licensing/RemoteXmlRpcJavaLibraryZigM</module>
+        <module>../allbinary_src/licensing/LicenseClientJavaLibraryZigM</module>
+
+        <!--
+        <module>../allbinary_src/PreLoaderLicenseJavaLibraryZigM</module>
+        -->
+    </modules>
+
+</project>
+

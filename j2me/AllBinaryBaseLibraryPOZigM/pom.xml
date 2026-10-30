@@ -1,0 +1,88 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+    <groupId>org.allbinary</groupId>
+    <artifactId>AllBinaryBaseLibraryPOMZig</artifactId>
+    <packaging>pom</packaging>
+    <!-- AllBinary Platform Version Start -->
+    <version>1.0.0-SNAPSHOT</version>
+    <!-- AllBinary Platform Version End -->
+
+    <name>AllBinaryBaseLibraryPOMZig</name>
+    <url>http://www.allbinary.com/</url>
+    <distributionManagement>
+        <snapshotRepository>
+            <id>nexus-snapshots</id>
+            <name>AllBinary Snapshots Nexus</name>
+            <url>https://nexus-allbinary.rhcloud.com/nexus/content/repositories/snapshots/</url>
+        </snapshotRepository>
+        <repository>
+            <id>nexus-releases</id>
+            <name>AllBinary Releases Nexus</name>
+            <url>https://nexus-allbinary.rhcloud.com/nexus/content/repositories/releases/</url>
+        </repository>
+    </distributionManagement>
+    
+    <properties>
+        <buildLabel>${project.version}</buildLabel>
+        <assemblyPluginVersion>2.2-beta-1</assemblyPluginVersion>
+    </properties>
+
+    <modules>
+        <module>../CommonJavaLibraryZigM</module>
+        <module>../TempBaseJavaLibraryZigM</module>
+        
+        <module>../../allbinary_src/LogZigM</module>
+        <module>../../allbinary_src/allbinary_src_designpatterns_srcZigM</module>
+        <module>../../allbinary_src/data/BaseDataJavaLibraryZigM</module>
+        <module>../../allbinary_src/cache/BaseCacheJavaLibraryZigM</module>
+        <module>../../allbinary_src/logic/BasePreloaderJavaLibraryZigM</module>
+        <module>../../allbinary_src/logic/BasePreloaderJ2MEJavaLibraryZigM</module>
+
+        <module>../ExceptionHTMLJavaLibraryZigM</module>
+        <module>../J2MEExceptionLibraryZigM</module>
+        <module>../../allbinary_src/J2SEExceptionLibraryZigM</module>
+        <module>../J2MEUtilJavaLibraryZigM</module>
+        <module>../J2MEColorJavaLibraryZigM</module>
+        <module>../EventJ2MELibraryZigM</module>
+
+        <module>../../allbinary_src/LogNoPlatformJavaLibraryZigM</module>
+        <module>../../allbinary_src/LogJ2MEJavaLibraryZigM</module>
+        <module>../../allbinary_src/LogJ2SEJavaLibraryZigM</module>
+<!--        <module>../../allbinary_src/LogAndroidJavaLibraryZigM</module>-->
+        <module>../logging/LoggingNoneZigM</module>
+        <module>../logging/LoggingJ2MEAllZigM</module>
+        <module>../logging/LoggingJ2MEExceptionZigM</module>
+<!--        <module>../logging/LoggingAndroidAllZigM</module>-->
+        <!--
+        //While it is a possible dependency option it really does not fit here
+        //as such it is actually build in the final POM builds instead
+        <module>../logging/LoggingRemoteExceptionZigM</module>  
+        -->
+        
+        <module>../J2MEWindowingJavaLibraryZigM</module>
+        
+        <module>../lib/BaseMathLibraryZigM</module>
+        <module>../lib/BasicMathLibraryZigM</module>
+        
+        <module>../../allbinary_src/ThreadLibraryZigM</module>
+        <module>../../allbinary_src/ThreadHTMLLibraryZigM</module>
+        <module>../../replace_these_stub_projects/allbinary_src/NoneOnlyJavaLibraryZigM</module>
+        <module>../../allbinary_src/ThreadJ2MELibraryZigM</module>
+        <module>../time/TimeJavaLibraryZigM</module>
+
+        <module>../statistics/ApplicationStatisticsJ2SELibraryZigM</module>
+        <module>../statistics/ApplicationStatisticsJ2MELibraryZigM</module>
+        <module>../statistics/ApplicationStatisticsJavaLibraryZigM</module>
+
+        <module>../../allbinary_src/logging/BasicLogConfigTypeJavaLibraryZigM</module>
+        <module>../../allbinary_src/logging/LogConfigTypeGameClientJavaLibraryZigM</module>
+
+        <module>../../allbinary_src/hardware/HardwareLibraryPOZigM</module>
+
+        <module>../lib/TrigBaseLibraryZigM</module>
+
+    </modules>
+
+</project>
+

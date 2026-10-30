@@ -1,0 +1,97 @@
+//
+// AllBinary Open License Version 1
+// Copyright (c) 2011 AllBinary
+// 
+// By agreeing to this license you and any business entity you represent are
+// legally bound to the AllBinary Open License Version 1 legal agreement.
+// 
+// You may obtain the AllBinary Open License Version 1 legal agreement from
+// AllBinary or the root directory of AllBinary's AllBinary Platform repository.
+// 
+// Created By: Travis Berthelot
+//  
+// Generated Code Do Not Modify
+// package views.admin.storefront.statistics
+
+const std = @import("std");
+const allocator = std.heap.page_allocator;
+const String = @import("java/lang/String.zig").String;
+const Object = @import("java/lang/Object.zig").Object;
+const Inheritance = @import("zig/Inheritance.zig");
+const StoreFrontInterface = @import("org/allbinary/business/context/modules/storefront/StoreFrontInterface.zig").StoreFrontInterface;
+const LogUtil = @import("org/allbinary/logic/communication/log/LogUtil.zig").LogUtil;
+const ValidationComponentInterface = @import("org/allbinary/logic/control/validate/ValidationComponentInterface.zig").ValidationComponentInterface;
+const StringMaker = @import("org/allbinary/logic/string/StringMaker.zig").StringMaker;
+const TransformInfoInterface = @import("org/allbinary/logic/visual/transform/info/TransformInfoInterface.zig").TransformInfoInterface;
+const Document = @import("org/w3c/dom/Document.zig").Document;
+const Node = @import("org/w3c/dom/Node.zig").Node;
+const StoreFrontStatisticsComponent = @import("views/admin/storefront/statistics/StoreFrontStatisticsComponent.zig").StoreFrontStatisticsComponent;
+const Boolean = @import("java/lang/Boolean.zig").Boolean;
+
+//extends StoreFrontComponent
+pub const ValidationStoreFrontStatisticsView = struct {
+    const Self = @This();
+    pub const java_name = "views.admin.storefront.statistics.ValidationStoreFrontStatisticsView";
+    base: StoreFrontStatisticsComponent = undefined,
+    logUtil: ?*LogUtil = null,
+    newStoreFrontInterface: ?*StoreFrontInterface = null,
+    // Implements ValidationComponentInterface
+
+    fn initFields(this: *Self) void {
+        this.logUtil = Inheritance.upcast(?*LogUtil, LogUtil.getInstance());
+        this.newStoreFrontInterface = null;
+    }
+    
+
+    pub fn create1(transformInfoInterface: ?*TransformInfoInterface) *Self {
+        const this = allocator.create(Self) catch unreachable;
+        this.* = .{};
+        this.base = Inheritance.callStatic(StoreFrontStatisticsComponent, "create1", .{ transformInfoInterface }).*;
+        this.initFields();
+        Inheritance.bindOverrides(this);
+        return this;
+    }
+    
+
+    pub fn isValid(self: *Self) ?*Boolean {
+        _ = self;
+        { // try
+            const valid: ?*Boolean = Inheritance.upcast(?*Boolean, Boolean.TRUE);
+            return valid;
+        }
+        // catch (Exception e):
+//             if (Inheritance.call(org.allbinary.?.logic.?.communication.?.log.?.config.?.@"type".?.LogConfigTypes.?.LOGGING.?, "contains", .{ Inheritance.receiverOf(org.allbinary.?.logic.?.communication.?.log.?.config.?.@"type".?.LogConfigTypeFactory.?, "getInstance").getInstance().?.VIEWERROR })) {
+//                 _ = Inheritance.call(self.logUtil.?, "put", .{ String.literal("Failed to validate form"), self, Inheritance.fieldPointer(self, "commonStrings").*.?.IS_VALID, e });
+//             }
+//             return Inheritance.upcast(?*Boolean, Boolean.FALSE);
+    }
+    
+
+    pub fn validationInfo(self: *Self) ?*String {
+        _ = self;
+        { // try
+            const stringBuffer: ?*StringMaker = StringMaker.create();
+            _ = Inheritance.call(stringBuffer.?, "append", .{ String.literal("Never") });
+            return Inheritance.upcast(?*String, Object.toString(Object.of(stringBuffer)));
+        }
+        // catch (Exception e):
+//             if (Inheritance.call(org.allbinary.?.logic.?.communication.?.log.?.config.?.@"type".?.LogConfigTypes.?.LOGGING.?, "contains", .{ Inheritance.receiverOf(org.allbinary.?.logic.?.communication.?.log.?.config.?.@"type".?.LogConfigTypeFactory.?, "getInstance").getInstance().?.VIEWERROR })) {
+//                 _ = Inheritance.call(self.logUtil.?, "put", .{ String.literal("Failed to generate validation error info"), self, String.literal("validationInfo()"), e });
+//             }
+//             return String.literal("Error Validating Form");
+    }
+    
+
+    pub fn toValidationInfoDoc(self: *Self) ?*Document {
+        _ = self;
+        return null;
+    }
+    
+
+    pub fn toValidationInfoNode(self: *Self, document: ?*Document) ?*Node {
+        _ = document;
+        _ = self;
+        return null;
+    }
+};
+

@@ -1,0 +1,43 @@
+//
+// AllBinary Open License Version 1
+// Copyright (c) 2011 AllBinary
+// 
+// By agreeing to this license you and any business entity you represent are
+// legally bound to the AllBinary Open License Version 1 legal agreement.
+// 
+// You may obtain the AllBinary Open License Version 1 legal agreement from
+// AllBinary or the root directory of AllBinary's AllBinary Platform repository.
+// 
+// Created By: Travis Berthelot
+//  
+// Generated Code Do Not Modify
+// package org.allbinary.logic.visual.transform
+
+const std = @import("std");
+const allocator = std.heap.page_allocator;
+const String = @import("java/lang/String.zig").String;
+const Object = @import("java/lang/Object.zig").Object;
+const Inheritance = @import("zig/Inheritance.zig");
+// const URIResolver = @import("javax/xml/transform/URIResolver.zig").URIResolver;
+const BasicUriResolver = @import("org/allbinary/data/tree/dom/BasicUriResolver.zig").BasicUriResolver;
+const StoreUriResolver = @import("org/allbinary/data/tree/dom/StoreUriResolver.zig").StoreUriResolver;
+const AbeClientInformationInterface = @import("org/allbinary/logic/system/security/licensing/AbeClientInformationInterface.zig").AbeClientInformationInterface;
+const TransformInfoInterface = @import("org/allbinary/logic/visual/transform/info/TransformInfoInterface.zig").TransformInfoInterface;
+const BasicTransformer = @import("org/allbinary/logic/visual/transform/BasicTransformer.zig").BasicTransformer;
+
+pub const StoreTransformer = struct {
+    const Self = @This();
+    pub const java_name = "org.allbinary.logic.visual.transform.StoreTransformer";
+    base: BasicTransformer = undefined,
+    
+
+    pub fn create2(abeClientInformation: ?*AbeClientInformationInterface, transformInfoInterface: ?*TransformInfoInterface) *Self {
+        const this = allocator.create(Self) catch unreachable;
+        this.* = .{};
+        this.base = Inheritance.callStatic(BasicTransformer, "create2", .{ abeClientInformation, transformInfoInterface }).*;
+        _ = Inheritance.call(this, "setURIResolver", .{ Inheritance.cast(?*URIResolver, Inheritance.callStatic(StoreUriResolver, "create2", .{ Inheritance.receiver(this, "getTransformInfoInterface").getTransformInfoInterface(), Inheritance.cast(?*BasicUriResolver, Inheritance.receiver(this, "getURIResolver").getURIResolver()) })) });
+        Inheritance.bindOverrides(this);
+        return this;
+    }
+};
+

@@ -1,0 +1,66 @@
+//
+// AllBinary Open License Version 1
+// Copyright (c) 2011 AllBinary
+// 
+// By agreeing to this license you and any business entity you represent are
+// legally bound to the AllBinary Open License Version 1 legal agreement.
+// 
+// You may obtain the AllBinary Open License Version 1 legal agreement from
+// AllBinary or the root directory of AllBinary's AllBinary Platform repository.
+// 
+// Created By: Travis Berthelot
+//  
+// Generated Code Do Not Modify
+// package org.allbinary.logic.io
+
+const std = @import("std");
+const allocator = std.heap.page_allocator;
+const String = @import("java/lang/String.zig").String;
+const Object = @import("java/lang/Object.zig").Object;
+const Inheritance = @import("zig/Inheritance.zig");
+const AbFile = @import("org/allbinary/logic/io/file/AbFile.zig").AbFile;
+const AbDataOutputStream = @import("org/allbinary/logic/io/AbDataOutputStream.zig").AbDataOutputStream;
+const AbFileOutputStream = @import("org/allbinary/logic/io/AbFileOutputStream.zig").AbFileOutputStream;
+const FileStreamFactory = @import("org/allbinary/logic/io/FileStreamFactory.zig").FileStreamFactory;
+
+pub const DataOutputStreamFactory = struct {
+    const Self = @This();
+    pub const java_name = "org.allbinary.logic.io.DataOutputStreamFactory";
+    var instance: ?*DataOutputStreamFactory = undefined;
+
+    // Static fields with runtime initializers: call staticInit once at startup
+    pub fn staticInit() void {
+        instance = DataOutputStreamFactory.create();
+    }
+
+    pub fn create() *Self {
+        const this = allocator.create(Self) catch unreachable;
+        this.* = .{};
+        return this;
+    }
+    
+
+    pub fn getInstance() ?*DataOutputStreamFactory {
+        return Inheritance.upcast(?*DataOutputStreamFactory, DataOutputStreamFactory.instance);
+    }
+    
+
+    // throws Exception
+    pub fn getInstanceForAbFile(self: *Self, file: ?*AbFile) ?*AbDataOutputStream {
+        _ = self;
+        const idFileOutputStream: ?*AbFileOutputStream = Inheritance.upcast(?*AbFileOutputStream, Inheritance.callStatic(AbFileOutputStream, "createFromAbFile", .{ file }));
+        const idOutData: ?*AbDataOutputStream = Inheritance.callStatic(AbDataOutputStream, "create1", .{ idFileOutputStream });
+        return idOutData;
+    }
+    
+
+    // throws Exception
+    pub fn getInstance2(self: *Self, filePath: ?*String, fileName: ?*String) ?*AbDataOutputStream {
+        _ = self;
+        const fileStreamFactory: ?*FileStreamFactory = Inheritance.upcast(?*FileStreamFactory, FileStreamFactory.getInstance());
+        const fileOutputStream: ?*AbFileOutputStream = Inheritance.upcast(?*AbFileOutputStream, Inheritance.call(fileStreamFactory.?, "getFileOutputStreamInstance", .{ filePath, fileName }));
+        const idOutData: ?*AbDataOutputStream = Inheritance.callStatic(AbDataOutputStream, "create1", .{ fileOutputStream });
+        return idOutData;
+    }
+};
+

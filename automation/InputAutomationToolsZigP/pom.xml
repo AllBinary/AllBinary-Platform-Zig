@@ -1,0 +1,61 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+    <groupId>org.allbinary</groupId>
+    <artifactId>InputAutomationToolsZig</artifactId>
+    <packaging>pom</packaging>
+    <!-- AllBinary Platform Version Start -->
+    <version>1.0.0-SNAPSHOT</version>
+    <!-- AllBinary Platform Version End -->
+
+    <name>InputAutomationToolsZig</name>
+    <url>http://www.allbinary.com/</url>
+    <distributionManagement>
+        <snapshotRepository>
+            <id>nexus-snapshots</id>
+            <name>AllBinary Snapshots Nexus</name>
+            <url>https://nexus-allbinary.rhcloud.com/nexus/content/repositories/snapshots/</url>
+        </snapshotRepository>
+        <repository>
+            <id>nexus-releases</id>
+            <name>AllBinary Releases Nexus</name>
+            <url>https://nexus-allbinary.rhcloud.com/nexus/content/repositories/releases/</url>
+        </repository>
+    </distributionManagement>
+    
+    <properties>
+        <buildLabel>${project.version}</buildLabel>
+        <assemblyPluginVersion>2.2-beta-1</assemblyPluginVersion>
+    </properties>
+
+    <modules>
+        <!--
+        <module>../AllBinaryCoreJavaLibraryZigM</module>        
+        -->
+
+        <module>../../replace_these_stub_projects/osgi/YourOSGIComponentLibraryZigM</module>
+        <module>../../allbinary_src/AllBinaryOSGIJavaLibraryZigM</module>
+
+        <module>../../graphics/ColorJavaLibraryZigM</module>
+        <module>../../graphics/ImageJavaLibraryZigM</module>
+        <module>../../graphics/ImageComparisonJavaLibraryZigM</module>
+        <module>../../graphics/AdvancedImageJ2SEJavaLibraryZigM</module>
+        
+        <module>../InputAutomationModuleJavaLibraryZigM</module>
+        
+        <module>../InputAutomationActionScriptJavaLibraryZigM</module>
+        <module>../InputAutomationGenericModuleJavaLibraryZigM</module>
+        <module>../InputAutomationGeneric2ModuleJavaLibraryZigM</module>
+
+        <module>../../allbinary_src/HelpJavaLibraryZigM</module>
+        <module>../InputAutomationJavaLibraryZigM</module>
+
+        <module>../InputAutomationJavaApplicationZigM</module>
+        
+        <module>../../game/InputAutomationGameModulesJavaLibraryZigM</module>
+        
+        <module>../AllBinaryCoreJavaLibraryZigM</module>
+    </modules>
+
+</project>
+

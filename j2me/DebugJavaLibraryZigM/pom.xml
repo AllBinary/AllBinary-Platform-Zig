@@ -1,0 +1,140 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+    <groupId>org.allbinary</groupId>
+    <artifactId>DebugJavaLibraryZig</artifactId>
+    <packaging>jar</packaging>
+    <!-- AllBinary Platform Version Start -->
+            <version>1.0.0-SNAPSHOT</version>
+            <!-- AllBinary Platform Version End -->
+
+    <name>DebugJavaLibraryZig</name>
+    <url>http://www.allbinary.com/</url>
+    <distributionManagement>
+        <snapshotRepository>
+            <id>nexus-snapshots</id>
+            <name>AllBinary Snapshots Nexus</name>
+            <url>https://nexus-allbinary.rhcloud.com/nexus/content/repositories/snapshots/</url>
+        </snapshotRepository>
+        <repository>
+            <id>nexus-releases</id>
+            <name>AllBinary Releases Nexus</name>
+            <url>https://nexus-allbinary.rhcloud.com/nexus/content/repositories/releases/</url>
+        </repository>
+    </distributionManagement>
+    <properties>
+        <!-- zig executable. build.zig uses the std.Build API of Zig 0.17 and later. -->
+        <zig.executable>zig</zig.executable>
+        <!-- Hand written runtime sources that the generated code imports with paths from the source root -->
+        <zig.runtime.source.path>G:/mnt/bc/mydev/workzig/j2me/J2SEForZigLibraryZigM/src/main/java</zig.runtime.source.path>
+        <!-- Set to false to continue the Maven build when the generated Zig does not compile -->
+        <zig.fail.on.error>true</zig.fail.on.error>
+    </properties>
+
+    <dependencies>
+        <dependency>
+            <groupId>junit</groupId>
+            <artifactId>junit</artifactId>
+            <version>3.8.1</version>
+            <scope>test</scope>
+        </dependency>
+
+        <dependency>
+            <groupId>org.allbinary</groupId>
+            <artifactId>LoggingJ2MEAllZig</artifactId>
+            <!-- AllBinary Platform Version Start -->
+            <version>1.0.0-SNAPSHOT</version>
+            <!-- AllBinary Platform Version End -->
+
+            <optional>true</optional>
+        </dependency>
+
+    </dependencies>
+
+    <profiles>
+        <profile>
+            <id>zig-ignore-errors</id>
+            <activation>
+                <property>
+                    <name>zig.fail.on.error</name>
+                    <value>false</value>
+                </property>
+            </activation>
+            <build>
+                <plugins>
+                    <plugin>
+                        <groupId>org.codehaus.mojo</groupId>
+                        <artifactId>exec-maven-plugin</artifactId>
+                        <executions>
+                            <execution>
+                                <id>compile-zig-sources</id>
+                                <configuration>
+                                    <successCodes>
+                                        <successCode>0</successCode>
+                                        <successCode>1</successCode>
+                                    </successCodes>
+                                </configuration>
+                            </execution>
+                        </executions>
+                    </plugin>
+                </plugins>
+            </build>
+        </profile>
+    </profiles>
+
+    <build>
+        <plugins>
+            <plugin>
+                <groupId>org.codehaus.mojo</groupId>
+                <artifactId>exec-maven-plugin</artifactId>
+                <version>3.5.0</version>
+                <executions>
+                    <execution>
+                        <id>compile-zig-sources</id>
+                        <phase>compile</phase>
+                        <goals>
+                            <goal>exec</goal>
+                        </goals>
+                        <configuration>
+                            <executable>${zig.executable}</executable>
+                            <workingDirectory>${project.basedir}</workingDirectory>
+                            <arguments>
+                                <argument>build</argument>
+                                <argument>check</argument>
+                                <argument>--cache-dir</argument>
+                                <argument>${project.build.directory}/zig-cache</argument>
+                                <!-- Sources of the dependency closure since Zig compiles sources and not libraries. Written by ZigPomUpdater. -->
+                                <argument>-Ddependency-source-paths=G:/mnt/bc/mydev/workingzig/j2me/logging/LoggingJ2MEAllZigM/src/main/java;G:/mnt/bc/mydev/workingzig/j2me/TempBaseJavaLibraryZigM/src/main/java;G:/mnt/bc/mydev/workingzig/allbinary_src/LogJ2MEJavaLibraryZigM/src/main/java;G:/mnt/bc/mydev/workingzig/allbinary_src/LogZigM/src/main/java;G:/mnt/bc/mydev/workingzig/j2me/CommonJavaLibraryZigM/src/main/java;G:/mnt/bc/mydev/workingzig/j2me/J2MEExceptionLibraryZigM/src/main/java;G:/mnt/bc/mydev/workingzig/replace_these_stub_projects/allbinary_src/J2MEJsInteropCompatibilityJavaLibraryZigM/src/main/java;${zig.runtime.source.path}</argument>
+                            </arguments>
+                        </configuration>
+                    </execution>
+                </executions>
+            </plugin>
+            
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-source-plugin</artifactId>
+                <version>3.3.1</version>
+                <executions>
+                    <execution>
+                        <id>attach-sources</id>
+                        <goals>
+                            <goal>jar</goal>
+                        </goals>
+                    </execution>
+                </executions>
+            </plugin>
+        </plugins>
+
+    </build>
+
+</project>
+
+
+
+
+
+
+
+
+

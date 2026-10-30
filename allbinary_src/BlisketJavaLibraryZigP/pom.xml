@@ -1,0 +1,147 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+    <groupId>org.allbinary.business</groupId>
+    <artifactId>BlisketJavaLibraryPZig</artifactId>
+    <packaging>pom</packaging>
+    <!-- AllBinary Platform Version Start -->
+    <version>1.0.0-SNAPSHOT</version>
+    <!-- AllBinary Platform Version End -->
+
+    <name>BlisketJavaLibraryPZig</name>
+    <url>http://www.allbinary.com/</url>
+    <distributionManagement>
+        <snapshotRepository>
+            <id>nexus-snapshots</id>
+            <name>AllBinary Snapshots Nexus</name>
+            <url>https://nexus-allbinary.rhcloud.com/nexus/content/repositories/snapshots/</url>
+        </snapshotRepository>
+        <repository>
+            <id>nexus-releases</id>
+            <name>AllBinary Releases Nexus</name>
+            <url>https://nexus-allbinary.rhcloud.com/nexus/content/repositories/releases/</url>
+        </repository>
+    </distributionManagement>
+    
+    <dependencies>
+        <dependency>
+            <groupId>junit</groupId>
+            <artifactId>junit</artifactId>
+            <version>3.8.1</version>
+            <scope>test</scope>
+        </dependency>
+    </dependencies>
+    
+    <modules>
+
+        <!--
+        <module>../../j2me/AllBinaryJ2MELibraryP</module>
+        -->
+        <!--
+        <module>../data/DataJavaLibraryZigM</module>
+        -->
+
+        <module>../licensing/TestServiceClientInfoJavaLibraryZigM</module>        
+
+        <module>../data/DataTableInterfacesZigM</module>
+        
+        <module>../QueueJavaLibraryZigM</module>
+        
+        <!--
+        <module>../TokenizerJavaLibraryZigM</module>
+        -->
+
+        <module>../logging/LogConfigTypeFreeblisketJavaLibraryZigM</module>
+
+        <module>../JavaUtilLibraryZigM</module>
+        <module>../NullInitInfoJavaLibraryZigM</module>        
+        <module>../InitInfoJavaLibraryZigM</module>
+        <module>../PreLoaderHttpJavaLibraryZigM</module>
+        
+        <module>../TagsBaseJavaLibraryZigM</module>
+        <module>../CustomLoaderJavaLibraryZigM</module>
+        
+        <!--
+        <module>../logic/data/file/FileJ2SEJavaLibraryZigM</module>
+        <module>../logic/data/file/FileJavaLibraryZigM</module>
+        -->
+
+        <module>../data/SQLAllBinaryJavaLibraryZigM</module>
+
+        <!--
+        <module>../licensing/FileLicenseInitInfoJavaLibraryZigM</module>
+        -->
+
+        <module>../DocumentObjectModelJavaLibraryZigM</module>
+
+        <module>../VisualStyleJavaLibraryZigM</module>
+
+        <module>../ConfigurationJavaLibraryZigM</module>
+
+        <module>../VisualTransformBaseJavaLibraryZigM</module>
+
+        <module>../CategoryBaseJavaLibraryZigM</module>
+        <module>../CategoryJavaLibraryZigM</module>
+
+        <module>../UserJavaLibraryZigM</module>
+
+        <module>../PaymentGatewayBaseJavaLibraryZigM</module>
+
+        <module>../data/vo/EntitiesBlisketVOJavaLibraryZigM</module>
+        <module>../PaymentGatewayJavaLibraryZigM</module>
+        <module>../data/vo/EntitiesOrderHistoryVOJavaLibraryZigM</module>
+        <module>../data/vo/EntityPaymentGatewayVOJavaLibraryZigM</module>
+        <module>../data/vo/EntityStoreFrontVOJavaLibraryZigM</module>
+
+        <module>../data/EntitiesBlisketBaseInterfacesJavaLibraryZigM</module>
+        <module>../data/EntitiesBlisketBaseJavaLibraryZigM</module>
+        
+        <module>../data/EntitiesAdvertisementBaseJavaLibraryZigM</module>
+        <module>../data/EntityOrderHistoryJavaLibraryZigM</module>
+        <module>../data/EntityPaymentGatewayJavaLibraryZigM</module>
+        <module>../data/EntityVisualTransformJavaLibraryZigM</module>
+        <module>../data/EntityUserJavaLibraryZigM</module>
+        <module>../data/EntityWorkflowJavaLibraryZigM</module>
+
+        <module>../SMTPConfigurationJavaLibraryZigM</module>
+        <module>../SMTPBaseJavaLibraryZigM</module>
+
+        <module>../VisualTransformJavaLibraryZigM</module>
+
+        <module>../../replace_these_stub_projects/allbinary_src/YourRuntimeEnvironmentJavaLibraryZigM</module>
+        <module>../GatewayJavaLibraryZigM</module>
+        
+        <module>../WorkflowBaseJavaLibraryZigM</module>
+        <module>../WorkflowJavaLibraryZigM</module>
+
+        <module>../IdGeneratorUsingFilesJavaLibraryZigM</module>
+        <module>../BlisketPreVOJavaLibraryZigM</module>
+
+        <!-- 
+        EntitiesOrderHistoryVOJavaLibrary
+        UserJavaLibrary
+        -->
+        
+        <module>../BlisketVOJavaLibraryZigM</module>
+
+        <module>../UserCommerceJavaLibraryZigM</module>
+
+        <module>../CustomizerValidatorsJavaLibraryZigM</module>
+
+        <!-- 
+        AllBinaryCacheForShiftOneJavaLibrary
+        AllBinaryJSECacheJavaLibrary
+        ColorJavaLibrary
+        ImageJavaLibrary
+        -->
+        
+        <module>../logic/data/file/FileMediaJ2SEJavaLibraryZigM</module>
+        <module>../BlisketBaseJavaLibraryZigM</module>
+
+        <module>../logging/LoggingGAEAllZigM</module>
+        <module>../BlisketJavaLibraryZigM</module>
+        
+    </modules>
+
+</project>
+

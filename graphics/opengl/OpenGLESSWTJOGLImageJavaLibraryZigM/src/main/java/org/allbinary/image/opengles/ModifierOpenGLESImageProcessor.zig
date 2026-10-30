@@ -1,0 +1,54 @@
+// 
+// AllBinary Open License Version 1 
+// Copyright (c) 2022 AllBinary 
+//  
+// By agreeing to this license you and any business entity you represent are 
+// legally bound to the AllBinary Open License Version 1 legal agreement. 
+//  
+// You may obtain the AllBinary Open License Version 1 legal agreement from 
+// AllBinary or the root directory of AllBinary's AllBinary Platform repository. 
+//  
+// Created By: Travis Berthelot 
+//   
+// Generated Code Do Not Modify
+// package org.allbinary.image.opengles
+
+const std = @import("std");
+const allocator = std.heap.page_allocator;
+const String = @import("java/lang/String.zig").String;
+const Object = @import("java/lang/Object.zig").Object;
+const Inheritance = @import("zig/Inheritance.zig");
+// const GL10 = @import("javax/microedition/khronos/opengles/GL10.zig").GL10;
+const OpenGLESImageProcessor = @import("org/allbinary/image/opengles/OpenGLESImageProcessor.zig").OpenGLESImageProcessor;
+
+pub const ModifierOpenGLESImageProcessor = struct {
+    const Self = @This();
+    pub const java_name = "org.allbinary.image.opengles.ModifierOpenGLESImageProcessor";
+    base: OpenGLESImageProcessor = undefined,
+    var instanceC: ?*ModifierOpenGLESImageProcessor = undefined;
+
+    // Static fields with runtime initializers: call staticInit once at startup
+    pub fn staticInit() void {
+        instanceC = ModifierOpenGLESImageProcessor.create();
+    }
+
+    pub fn create() *Self {
+        const this = allocator.create(Self) catch unreachable;
+        this.* = .{};
+        this.base = OpenGLESImageProcessor.create().*;
+        Inheritance.bindOverrides(this);
+        return this;
+    }
+    
+
+    pub fn getInstance() ?*ModifierOpenGLESImageProcessor {
+        return Inheritance.upcast(?*ModifierOpenGLESImageProcessor, ModifierOpenGLESImageProcessor.instanceC);
+    }
+    
+
+    pub fn colorMask(self: *Self, gl: ?*GL10, red: f32, green: f32, blue: f32, alpha: f32) void {
+        _ = self;
+        _ = Inheritance.call(gl.?, "glColor4f", .{ red, green, blue, alpha });
+    }
+};
+

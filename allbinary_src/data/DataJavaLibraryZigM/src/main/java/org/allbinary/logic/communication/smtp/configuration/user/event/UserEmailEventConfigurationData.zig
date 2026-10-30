@@ -1,0 +1,35 @@
+//
+// AllBinary Open License Version 1
+// Copyright (c) 2011 AllBinary
+// 
+// By agreeing to this license you and any business entity you represent are
+// legally bound to the AllBinary Open License Version 1 legal agreement.
+// 
+// You may obtain the AllBinary Open License Version 1 legal agreement from
+// AllBinary or the root directory of AllBinary's AllBinary Platform repository.
+// 
+// Created By: Travis Berthelot
+//  
+// Generated Code Do Not Modify
+// package org.allbinary.logic.communication.smtp.configuration.user.event
+
+const std = @import("std");
+const allocator = std.heap.page_allocator;
+const String = @import("java/lang/String.zig").String;
+const Object = @import("java/lang/Object.zig").Object;
+const Inheritance = @import("zig/Inheritance.zig");
+
+pub const UserEmailEventConfigurationData = struct {
+    const Self = @This();
+    pub const java_name = "org.allbinary.logic.communication.smtp.configuration.user.event.UserEmailEventConfigurationData";
+    pub const NAME: ?*String = String.literal("EMAIL_EVENT_CONFIGURATION_NAME");
+    pub const LISTENER_CLASSPATH: ?*String = String.literal("EMAIL_EVENT_CONFIGURATION_LISTENER_CLASSPATH");
+    
+
+    pub fn create() *Self {
+        const this = allocator.create(Self) catch unreachable;
+        this.* = .{};
+        return this;
+    }
+};
+

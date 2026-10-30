@@ -1,0 +1,142 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+  <modelVersion>4.0.0</modelVersion>
+  <groupId>org.allbinary</groupId>
+  <artifactId>CombatGameJavaLibraryPOMZig</artifactId>
+  <packaging>pom</packaging>
+  <!-- AllBinary Platform Version Start -->
+  <version>1.0.0-SNAPSHOT</version>
+  <!-- AllBinary Platform Version End -->
+
+  <name>CombatGameJavaLibraryPOMZig</name>
+  <url>http://www.allbinary.com/</url>
+    <distributionManagement>
+        <snapshotRepository>
+            <id>nexus-snapshots</id>
+            <name>AllBinary Snapshots Nexus</name>
+            <url>https://nexus-allbinary.rhcloud.com/nexus/content/repositories/snapshots/</url>
+        </snapshotRepository>
+        <repository>
+            <id>nexus-releases</id>
+            <name>AllBinary Releases Nexus</name>
+            <url>https://nexus-allbinary.rhcloud.com/nexus/content/repositories/releases/</url>
+        </repository>
+    </distributionManagement>
+
+    <properties>
+        <buildLabel>${project.version}</buildLabel>
+        <assemblyPluginVersion>2.2-beta-1</assemblyPluginVersion>
+    </properties>
+
+    <modules>
+
+        <!--
+
+        -->
+
+        <module>../../games/TickableJavaLibraryZigM</module>
+
+        <module>../../games/CommonHeadsUpDisplayLibraryZigM</module>
+
+        <module>../../../physics/MovementJavaLibraryZigM</module>
+        <!--        -->
+        <module>../../games/PartsJavaLibraryZigM</module>
+        <module>../../games/PickupGameJavaLibraryZigM</module>
+
+        <module>../../../allbinary_src/licensing/HardCodedLicenseInitInfoJavaLibraryZigM</module>
+        <module>../../../allbinary_src/licensing/FileLicenseInitInfoJavaLibraryZigM</module>
+        <module>../../../allbinary_src/licensing/ClientInfoLicensingJavaLibraryZigM</module>
+
+        <module>../../games/licensing/PartnerJ2MEJavaLibraryZigM</module>
+        <module>../../games/licensing/PartnerHTMLJavaLibraryZigM</module>
+        <module>../../games/licensing/PartnerAndroidJavaLibraryZigM</module>
+        <module>../../games/licensing/NoGameLicensingJavaLibraryZigM</module>
+        <module>../../games/licensing/GameLicensingOnlyDemoJavaLibraryZigM</module>
+        <module>../../games/licensing/GameLicensingOnlyNormalJavaLibraryZigM</module>
+        <module>../../games/licensing/GameLicensingBaseJavaLibraryZigM</module>
+
+        <!--
+        <module>../../games/GameScoresBaseLibraryZigM</module>
+        <module>../../games/GameScoresBaseHTMLLibraryZigM</module>
+        <module>../../games/GameScoresBaseJ2MELibraryZigM</module>
+        -->
+        <module>../../games/GameScoresLocalJavaLibraryZigM</module>
+        <module>../../games/GameScoresRemoteAndLocalJavaLibraryZigM</module>
+
+        <module>../../../store/ThirdPartyStoreJavaLibraryZigM</module>
+        <module>../../../store/NoThirdPartyStoreJavaLibraryZigM</module>
+
+        <module>../../media/graphics/layer/CollisionLayerJavaLibraryZigM</module>
+        <module>../../games/CollisionLibraryZigM</module>
+
+        <module>../../games/multiplayer/AllBinaryGameClientBaseNullJavaLibraryZigM</module>
+
+        <module>../../games/PickupLayerJavaLibraryZigM</module>
+
+        <module>../../games/DamageGameJavaLibraryZigM</module>
+        <module>../../games/DropJavaLibraryZigM</module>
+        <module>../../games/WeaponLayerJavaLibraryZigM</module>
+
+        <module>../../games/CombatGameJavaLibraryZigM</module>
+        <module>../../games/LifeJavaLibraryZigM</module>
+
+        <module>../../games/CommonHeadsUpDisplayCombatGameLibraryZigM</module>
+        <module>../../games/LifeOrDeathDataJavaLibraryZigM</module>
+
+        <module>../../games/BasicWeaponPartsJavaLibraryZigM</module>
+        <module>../../games/weapon/WeaponPropertiesJavaLibraryZigM</module>
+
+        <module>../../games/weapon/WeaponMineJavaLibraryZigM</module>
+
+        <!--
+        <module>../../media/graphics/effects/fireworks/FireworksJavaLibraryZigM</module>
+        -->
+
+        <module>../../media/graphics/geography/map/TerrainEventJavaLibraryZigM</module>
+
+<!--
+        <module>../../media/graphics/geography/map/BasicPlatformGeographicMapJavaLibraryZigM</module>
+        -->
+
+        <!--
+        <module>../../media/graphics/geography/map/RaceTrackP</module>
+        -->
+
+        <!--
+        XmlRpcJavaLibrary
+        RemoteXmlRpcJavaLibrary
+
+        Since POMs are built before the other libs is it best to handle this differently
+        ../../
+        <module>../../../../work/j2me/games/strategy/rts/RTSGameJavaLibraryP</module>
+        -->
+
+        <module>../../media/graphics/OtherGraphicsMediaLibraryP</module>
+
+        <module>../../input/NoTouchButtonResourceAnimationJavaLibraryZigM</module>
+        <module>../../input/TouchButtonResourceAnimationJavaLibraryZigM</module>
+        <module>../../input/TouchButtonResourceOpenGLESAnimationJavaLibraryZigM</module>
+
+        <module>../../input/TrackingEventJavaLibraryZigM</module>
+        <module>../../../game/behavior/BehaviorLibraryP</module>
+
+        <module>../../media/sound/OtherSoundMediaLibraryP</module>
+
+        <module>../../../allbinary_src/licensing/ApplicationConfigurationJavaLibraryZigM</module>
+        <module>../../../allbinary_src/licensing/ApplicationConfigurationNoFSJavaLibraryZigM</module>
+        <module>../../input/AllBinaryMagneticFieldSensorJavaLibraryZigM</module>
+        <module>../../android/VirtualKeyboardJavaLibraryZigM</module>
+
+    </modules>
+
+    <dependencies>
+        <dependency>
+            <groupId>junit</groupId>
+            <artifactId>junit</artifactId>
+            <version>3.8.1</version>
+            <scope>test</scope>
+        </dependency>
+    </dependencies>
+
+</project>
+

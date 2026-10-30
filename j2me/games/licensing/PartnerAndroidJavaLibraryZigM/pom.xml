@@ -1,0 +1,247 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+  <modelVersion>4.0.0</modelVersion>
+  <groupId>org.allbinary</groupId>
+  <artifactId>PartnerAndroidJavaLibraryZig</artifactId>
+  <packaging>jar</packaging>
+  <!-- AllBinary Platform Version Start -->
+            <version>1.0.0-SNAPSHOT</version>
+            <!-- AllBinary Platform Version End -->
+
+  <name>PartnerAndroidJavaLibraryZig</name>
+  <url>http://www.allbinary.com/</url>
+    <distributionManagement>
+        <snapshotRepository>
+            <id>nexus-snapshots</id>
+            <name>AllBinary Snapshots Nexus</name>
+            <url>https://nexus-allbinary.rhcloud.com/nexus/content/repositories/snapshots/</url>
+        </snapshotRepository>
+        <repository>
+            <id>nexus-releases</id>
+            <name>AllBinary Releases Nexus</name>
+            <url>https://nexus-allbinary.rhcloud.com/nexus/content/repositories/releases/</url>
+        </repository>
+    </distributionManagement>
+
+
+
+    <properties>
+        <!-- zig executable. build.zig uses the std.Build API of Zig 0.17 and later. -->
+        <zig.executable>zig</zig.executable>
+        <!-- Hand written runtime sources that the generated code imports with paths from the source root -->
+        <zig.runtime.source.path>G:/mnt/bc/mydev/workzig/j2me/J2SEForZigLibraryZigM/src/main/java</zig.runtime.source.path>
+        <!-- Set to false to continue the Maven build when the generated Zig does not compile -->
+        <zig.fail.on.error>true</zig.fail.on.error>
+    </properties>
+
+    <dependencies>
+        <dependency>
+            <groupId>junit</groupId>
+            <artifactId>junit</artifactId>
+            <version>3.8.1</version>
+            <scope>test</scope>
+        </dependency>
+
+        <dependency>
+            <groupId>org.allbinary</groupId>
+            <artifactId>LoggingJ2MEAllZig</artifactId>
+            <!-- AllBinary Platform Version Start -->
+            <version>1.0.0-SNAPSHOT</version>
+            <!-- AllBinary Platform Version End -->
+
+            <optional>true</optional>
+        </dependency>
+
+        <dependency>
+            <groupId>org.allbinary</groupId>
+            <artifactId>AndroidResourceLibraryZig</artifactId>
+<!--
+            <artifactId>ResourceJ2MEJavaLibraryZig</artifactId>
+            <artifactId>PCResourceLibraryZig</artifactId>
+            <artifactId>AndroidResourceLibraryZig</artifactId>
+            <artifactId>ResourceLibraryZig</artifactId>
+            for HTML it is in ABDKPlaynJavaLibrary
+-->
+            <!-- AllBinary Platform Version Start -->
+            <version>1.0.0-SNAPSHOT</version>
+            <!-- AllBinary Platform Version End -->
+
+            <optional>true</optional>
+        </dependency>
+
+        <dependency>
+            <groupId>org.allbinary</groupId>
+            <artifactId>J2MEForJ2MEJavaLibraryZig</artifactId>
+            <!-- AllBinary Platform Version Start -->
+            <version>1.0.0-SNAPSHOT</version>
+            <!-- AllBinary Platform Version End -->
+
+            <optional>true</optional>
+        </dependency>
+
+        <dependency>
+            <groupId>org.allbinary</groupId>
+            <artifactId>PartnerJ2MEJavaLibraryZig</artifactId>
+            <!-- AllBinary Platform Version Start -->
+            <version>1.0.0-SNAPSHOT</version>
+            <!-- AllBinary Platform Version End -->
+
+            <optional>true</optional>
+        </dependency>
+
+        <dependency>
+            <groupId>org.allbinary</groupId>
+            <artifactId>ClientInfoLicensingJavaLibraryZig</artifactId>
+            <!-- AllBinary Platform Version Start -->
+            <version>1.0.0-SNAPSHOT</version>
+            <!-- AllBinary Platform Version End -->
+
+        </dependency>
+    
+        <dependency>
+            <groupId>org.allbinary</groupId>
+            <artifactId>GameJ2MELibraryZig</artifactId>
+            <!-- AllBinary Platform Version Start -->
+            <version>1.0.0-SNAPSHOT</version>
+            <!-- AllBinary Platform Version End -->
+
+        </dependency>
+    
+        <dependency>
+            <groupId>org.allbinary</groupId>
+            <artifactId>FileLicenseInitInfoJavaLibraryZig</artifactId>
+            <!-- AllBinary Platform Version Start -->
+            <version>1.0.0-SNAPSHOT</version>
+            <!-- AllBinary Platform Version End -->
+
+            <optional>true</optional>
+        </dependency>
+
+        <dependency>
+            <groupId>org.allbinary</groupId>
+            <artifactId>GameInputPCMotionJavaLibraryZig</artifactId>
+            <!-- AllBinary Platform Version Start -->
+            <version>1.0.0-SNAPSHOT</version>
+            <!-- AllBinary Platform Version End -->
+
+            <optional>true</optional>
+        </dependency>
+
+        <dependency>
+            <groupId>org.allbinary</groupId>
+            <artifactId>BasePreloaderJavaLibraryZig</artifactId>
+            <!-- AllBinary Platform Version Start -->
+            <version>1.0.0-SNAPSHOT</version>
+            <!-- AllBinary Platform Version End -->
+
+            <optional>true</optional>
+        </dependency>
+
+        <dependency>
+            <groupId>org.microemu</groupId>
+            <artifactId>microemu-midpZig</artifactId>
+            <version>2.0.4</version>
+            <optional>true</optional>
+        </dependency>
+        <!--
+        Public microemu
+        <dependency>
+            <groupId>org.microemu</groupId>
+            <artifactId>microemu-midpZig</artifactId>
+            <version>2.0.4</version>
+            <optional>true</optional>
+        </dependency>
+        Custom microemu
+        <dependency>
+            <groupId>org.microemu</groupId>
+            <artifactId>microemu-midpZig</artifactId>
+            <version>3.0.0-SNAPSHOT</version>
+            <optional>true</optional>
+        </dependency>
+        -->
+
+    </dependencies>
+
+    <profiles>
+        <profile>
+            <id>zig-ignore-errors</id>
+            <activation>
+                <property>
+                    <name>zig.fail.on.error</name>
+                    <value>false</value>
+                </property>
+            </activation>
+            <build>
+                <plugins>
+                    <plugin>
+                        <groupId>org.codehaus.mojo</groupId>
+                        <artifactId>exec-maven-plugin</artifactId>
+                        <executions>
+                            <execution>
+                                <id>compile-zig-sources</id>
+                                <configuration>
+                                    <successCodes>
+                                        <successCode>0</successCode>
+                                        <successCode>1</successCode>
+                                    </successCodes>
+                                </configuration>
+                            </execution>
+                        </executions>
+                    </plugin>
+                </plugins>
+            </build>
+        </profile>
+    </profiles>
+
+    <build>
+        
+        <plugins>
+            <plugin>
+                <groupId>org.codehaus.mojo</groupId>
+                <artifactId>exec-maven-plugin</artifactId>
+                <version>3.5.0</version>
+                <executions>
+                    <execution>
+                        <id>compile-zig-sources</id>
+                        <phase>compile</phase>
+                        <goals>
+                            <goal>exec</goal>
+                        </goals>
+                        <configuration>
+                            <executable>${zig.executable}</executable>
+                            <workingDirectory>${project.basedir}</workingDirectory>
+                            <arguments>
+                                <argument>build</argument>
+                                <argument>check</argument>
+                                <argument>--cache-dir</argument>
+                                <argument>${project.build.directory}/zig-cache</argument>
+                                <!-- Sources of the dependency closure since Zig compiles sources and not libraries. Written by ZigPomUpdater. -->
+                                <argument>-Ddependency-source-paths=G:/mnt/bc/mydev/workingzig/j2me/logging/LoggingJ2MEAllZigM/src/main/java;G:/mnt/bc/mydev/workingzig/j2me/AndroidResourceLibraryZigM/src/main/java;G:/mnt/bc/mydev/workingzig/j2me/J2MEForJ2MEJavaLibraryZigM/src/main/java;G:/mnt/bc/mydev/workingzig/j2me/games/licensing/PartnerJ2MEJavaLibraryZigM/src/main/java;G:/mnt/bc/mydev/workingzig/allbinary_src/licensing/ClientInfoLicensingJavaLibraryZigM/src/main/java;G:/mnt/bc/mydev/workingzig/j2me/games/GameJ2MELibraryZigM/src/main/java;G:/mnt/bc/mydev/workingzig/allbinary_src/licensing/FileLicenseInitInfoJavaLibraryZigM/src/main/java;G:/mnt/bc/mydev/workingzig/allbinary_src/logic/BasePreloaderJavaLibraryZigM/src/main/java;G:/mnt/bc/mydev/workingzig/j2me/TempBaseJavaLibraryZigM/src/main/java;G:/mnt/bc/mydev/workingzig/allbinary_src/LogJ2MEJavaLibraryZigM/src/main/java;G:/mnt/bc/mydev/workingzig/allbinary_src/LogZigM/src/main/java;G:/mnt/bc/mydev/workingzig/j2me/J2MEUtilJavaLibraryZigM/src/main/java;G:/mnt/bc/mydev/workingzig/j2me/DebugJavaLibraryZigM/src/main/java;G:/mnt/bc/mydev/workingzig/j2me/TempJavaLibraryZigM/src/main/java;G:/mnt/bc/mydev/workingzig/allbinary_src/ThreadJ2MELibraryZigM/src/main/java;G:/mnt/bc/mydev/workingzig/allbinary_src/ThreadLibraryZigM/src/main/java;G:/mnt/bc/mydev/workingzig/j2me/statistics/ApplicationStatisticsJ2MELibraryZigM/src/main/java;G:/mnt/bc/mydev/workingzig/j2me/AllBinaryJ2MELibraryZigM/src/main/java;G:/mnt/bc/mydev/workingzig/j2me/PCResourceLibraryZigM/src/main/java;G:/mnt/bc/mydev/workingzig/allbinary_src/licensing/HardCodedLicenseInitInfoJavaLibraryZigM/src/main/java;G:/mnt/bc/mydev/workingzig/allbinary_src/licensing/ClientInfoBaseJavaLibraryZigM/src/main/java;G:/mnt/bc/mydev/workingzig/allbinary_src/hardware/BaseOperatingSystemJavaLibraryZigM/src/main/java;G:/mnt/bc/mydev/workingzig/allbinary_src/hardware/NoSystemJavaLibraryZigM/src/main/java;G:/mnt/bc/mydev/workingzig/j2me/J2MEWindowingJavaLibraryZigM/src/main/java;G:/mnt/bc/mydev/workingzig/j2me/games/licensing/GameLicensingNullJavaLibraryZigM/src/main/java;G:/mnt/bc/mydev/workingzig/graphics/opengl/OpenGLNoneJavaLibraryZigM/src/main/java;G:/mnt/bc/mydev/workingzig/graphics/opengl/OpenGLNoneOtherJavaLibraryZigM/src/main/java;G:/mnt/bc/mydev/workingzig/j2me/media/graphics/FormJMEJavaLibraryZigM/src/main/java;G:/mnt/bc/mydev/workingzig/j2me/business/advertisement/AdvertisementClientNoneJavaLibraryZigM/src/main/java;G:/mnt/bc/mydev/workingzig/j2me/ScreenCaptureNoneJavaLibraryZigM/src/main/java;G:/mnt/bc/mydev/workingzig/j2me/ProgressJ2MEJavaLibraryZigM/src/main/java;G:/mnt/bc/mydev/workingzig/j2me/media/graphics/NullCustomUIJavaLibraryZigM/src/main/java;G:/mnt/bc/mydev/workingzig/j2me/media/graphics/ImageCacheJ2MEJavaLibraryZigM/src/main/java;G:/mnt/bc/mydev/workingzig/j2me/games/GameScoresBaseJ2MELibraryZigM/src/main/java;G:/mnt/bc/mydev/workingzig/j2me/games/GameConfigurationJ2MEJavaLibraryZigM/src/main/java;G:/mnt/bc/mydev/workingzig/j2me/games/GameNotificationJavaLibraryZigM/src/main/java;G:/mnt/bc/mydev/workingzig/j2me/games/licensing/GameLicensingOnlyDemoJavaLibraryZigM/src/main/java;G:/mnt/bc/mydev/workingzig/j2me/input/NoSensorJavaLibraryZigM/src/main/java;G:/mnt/bc/mydev/workingzig/j2me/FullScreenNoneJavaLibraryZigM/src/main/java;G:/mnt/bc/mydev/workingzig/j2me/input/TouchButtonBaseJavaLibraryZigM/src/main/java;G:/mnt/bc/mydev/workingzig/j2me/input/NoTouchButtonJavaLibraryZigM/src/main/java;G:/mnt/bc/mydev/workingzig/j2me/media/sound/NotDeviceSpecificNoMediaMIDP1LibraryZigM/src/main/java;G:/mnt/bc/mydev/workingzig/j2me/J2SEForJ2MEJavaLibraryZigM/src/main/java;G:/mnt/bc/mydev/workingzig/graphics/opengl/OpenGLESBaseJavaLibraryZigM/src/main/java;G:/mnt/bc/mydev/workingzig/j2me/games/GameInputPersistanceLibraryZigM/src/main/java;G:/mnt/bc/mydev/workingzig/j2me/input/AllBinaryGyroSensorJavaLibraryZigM/src/main/java;G:/mnt/bc/mydev/workingzig/graphics/opengl/NoSWTJavaLibraryZigM/src/main/java;G:/mnt/bc/mydev/workingzig/j2me/games/GameScoresBaseJavaLibraryZigM/src/main/java;G:/mnt/bc/mydev/workingzig/j2me/lib/BasicMathLibraryZigM/src/main/java;G:/mnt/bc/mydev/workingzig/j2me/EventJ2MELibraryZigM/src/main/java;G:/mnt/bc/mydev/workingzig/j2me/lib/TrigJ2MELibraryZigM/src/main/java;G:/mnt/bc/mydev/workingzig/j2me/media/graphics/layer/AllBinaryLayerJavaLibraryZigM/src/main/java;G:/mnt/bc/mydev/workingzig/game/behavior/ArtificialIntelligenceLibraryZigM/src/main/java;G:/mnt/bc/mydev/workingzig/j2me/media/graphics/animation/AnimationLibraryZigM/src/main/java;G:/mnt/bc/mydev/workingzig/j2me/games/GameInputLibraryZigM/src/main/java;G:/mnt/bc/mydev/workingzig/j2me/games/PreGameJ2MEJavaLibraryZigM/src/main/java;G:/mnt/bc/mydev/workingzig/j2me/games/GameConfigurationJavaLibraryZigM/src/main/java;G:/mnt/bc/mydev/workingzig/j2me/games/GameIntermissionLibraryZigM/src/main/java;G:/mnt/bc/mydev/workingzig/j2me/GroupLibraryZigM/src/main/java;G:/mnt/bc/mydev/workingzig/j2me/input/AllBinarySensorJavaLibraryZigM/src/main/java;G:/mnt/bc/mydev/workingzig/j2me/time/TimeJavaLibraryZigM/src/main/java;G:/mnt/bc/mydev/workingzig/j2me/games/GameConfigurationFormJavaLibraryZigM/src/main/java;G:/mnt/bc/mydev/workingzig/j2me/statistics/ApplicationStatisticsJavaLibraryZigM/src/main/java;G:/mnt/bc/mydev/workingzig/j2me/games/GameSoundsJavaLibraryZigM/src/main/java;G:/mnt/bc/mydev/workingzig/j2me/media/graphics/animation/AnimationResourceJavaLibraryZigM/src/main/java;G:/mnt/bc/mydev/workingzig/j2me/games/GameResourceJavaLibraryZigM/src/main/java;G:/mnt/bc/mydev/workingzig/j2me/media/graphics/animation/GameAnimationJavaLibraryZigM/src/main/java;G:/mnt/bc/mydev/workingzig/j2me/media/MediaDataZigM/src/main/java;G:/mnt/bc/mydev/workingzig/replace_these_stub_projects/allbinary_src/J2MEOnlyJavaLibraryZigM/src/main/java;G:/mnt/bc/mydev/workingzig/allbinary_src/logic/data/file/FileJavaLibraryZigM/src/main/java;G:/mnt/bc/mydev/workingzig/allbinary_src/logic/data/file/FileJ2SEJavaLibraryZigM/src/main/java;G:/mnt/bc/mydev/workingzig/allbinary_src/logic/BasePreloaderFileJavaLibraryZigM/src/main/java;G:/mnt/bc/mydev/workingzig/allbinary_src/data/BaseDataJavaLibraryZigM/src/main/java;G:/mnt/bc/mydev/workingzig/allbinary_src/security/BasicSecurityJavaLibraryZigM/src/main/java;G:/mnt/bc/mydev/workingzig/allbinary_src/allbinary_src_designpatterns_srcZigM/src/main/java;G:/mnt/bc/mydev/workingzig/allbinary_src/logic/BasePreloaderJ2MEJavaLibraryZigM/src/main/java;G:/mnt/bc/mydev/workingzig/graphics/opengl/OpenGLESJavaLibraryZigM/src/main/java;G:/mnt/bc/mydev/workzig/j2me/android/AndroidToNullLibraryZigM/src/main/java;G:/mnt/bc/mydev/workingzig/j2me/CommonJavaLibraryZigM/src/main/java;G:/mnt/bc/mydev/workingzig/j2me/J2MEExceptionLibraryZigM/src/main/java;G:/mnt/bc/mydev/workingzig/replace_these_stub_projects/allbinary_src/J2MEJsInteropCompatibilityJavaLibraryZigM/src/main/java;G:/mnt/bc/mydev/workingzig/allbinary_src/LogNoPlatformJavaLibraryZigM/src/main/java;G:/mnt/bc/mydev/workingzig/j2me/lib/BaseMathLibraryZigM/src/main/java;G:/mnt/bc/mydev/workingzig/replace_these_stub_projects/allbinary_src/NoneOnlyJavaLibraryZigM/src/main/java;G:/mnt/bc/mydev/workingzig/j2me/NullJ2MELibraryZigM/src/main/java;G:/mnt/bc/mydev/workingzig/j2me/media/sound/SoundJ2MELibraryZigM/src/main/java;G:/mnt/bc/mydev/workingzig/j2me/lib/TrigBaseLibraryZigM/src/main/java;G:/mnt/bc/mydev/workingzig/j2me/J2MEColorJavaLibraryZigM/src/main/java;G:/mnt/bc/mydev/workingzig/j2me/media/graphics/geography/map/GraphBaseJavaLibraryZigM/src/main/java;G:/mnt/bc/mydev/workingzig/allbinary_src/hardware/BaseHardwareJavaLibraryZigM/src/main/java;G:/mnt/bc/mydev/workingzig/allbinary_src/hardware/BaseSystemJavaLibraryZigM/src/main/java;G:/mnt/bc/mydev/workingzig/allbinary_src/hardware/NoHardwareJavaLibraryZigM/src/main/java;G:/mnt/bc/mydev/workingzig/j2me/media/graphics/FormBaseJavaLibraryZigM/src/main/java;G:/mnt/bc/mydev/workingzig/j2me/business/advertisement/AllBinaryAdvertisementClientJavaLibraryZigM/src/main/java;G:/mnt/bc/mydev/workingzig/j2me/games/ScreenCaptureJavaLibraryZigM/src/main/java;G:/mnt/bc/mydev/workingzig/j2me/media/graphics/NullCustomUIPreJavaLibraryZigM/src/main/java;G:/mnt/bc/mydev/workingzig/j2me/media/graphics/GameResourceNoneJavaLibraryZigM/src/main/java;G:/mnt/bc/mydev/workingzig/j2me/media/graphics/ImageCacheBaseJ2MEJavaLibraryZigM/src/main/java;G:/mnt/bc/mydev/workingzig/replace_these_stub_projects/security/YourSecurityJavaLibraryZigM/src/main/java;G:/mnt/bc/mydev/workingzig/store/NoThirdPartyStoreJavaLibraryZigM/src/main/java;G:/mnt/bc/mydev/workingzig/j2me/input/NoGyroSensorJavaLibraryZigM/src/main/java;G:/mnt/bc/mydev/workingzig/graphics/opengl/SWTWithoutJOGLJavaLibraryZigM/src/main/java;G:/mnt/bc/mydev/workingzig/j2me/media/sound/BasicPlayerJavaLibraryZigM/src/main/java;G:/mnt/bc/mydev/workingzig/j2me/media/sound/NoPlayerJavaLibraryZigM/src/main/java;G:/mnt/bc/mydev/workingzig/allbinary_src/LogJ2SEJavaLibraryZigM/src/main/java;G:/mnt/bc/mydev/workingzig/j2me/lib/VectorThreeDimensionalLibraryZigM/src/main/java;G:/mnt/bc/mydev/workingzig/j2me/logging/LoggingJ2MEExceptionZigM/src/main/java;G:/mnt/bc/mydev/workingzig/allbinary_src/cache/BaseCacheJavaLibraryZigM/src/main/java;G:/mnt/bc/mydev/workingzig/j2me/media/graphics/geography/map/LayerPlacementLibraryZigM/src/main/java;G:/mnt/bc/mydev/workingzig/j2me/media/graphics/animation/RotationAnimationJavaLibraryZigM/src/main/java;G:/mnt/bc/mydev/workingzig/allbinary_src/TokenizerJavaLibraryZigM/src/main/java;G:/mnt/bc/mydev/workingzig/allbinary_src/security/SimpleCryptLibraryZigM/src/main/java;G:/mnt/bc/mydev/workingzig/replace_these_stub_projects/communication/YourXmlRpcJavaLibraryZigM/src/main/java;G:/mnt/bc/mydev/workingzig/j2me/media/graphics/ImageCacheOpenGLESJavaLibraryZigM/src/main/java;G:/mnt/bc/mydev/workingzig/graphics/opengl/OpenGLESNullImageJavaLibraryZigM/src/main/java;G:/mnt/bc/mydev/workingzig/graphics/opengl/Min3dForNullJavaLibraryZigM/src/main/java;G:/mnt/bc/mydev/workingzig/graphics/opengl/OpenGLESFileConfigurationJavaLibraryZigM/src/main/java;G:/mnt/bc/mydev/AllBinary-Platform-Integrationzig/embedded/j2me/microemulator/custom/MicroEmulatorCustomJavaLibraryZigM/src/main/java;G:/mnt/bc/mydev/workingzig/j2me/android/VirtualKeyboardJavaLibraryZigM/src/main/java;G:/mnt/bc/mydev/workingzig/allbinary_src/hardware/AndroidSystemJavaLibraryZigM/src/main/java;G:/mnt/bc/mydev/workingzig/j2me/media/graphics/FormValidationJavaLibraryZigM/src/main/java;G:/mnt/bc/mydev/workingzig/j2me/media/graphics/FormJavaLibraryZigM/src/main/java;G:/mnt/bc/mydev/workingzig/store/ThirdPartyStoreJavaLibraryZigM/src/main/java;G:/mnt/bc/mydev/workingzig/allbinary_src/J2SEExceptionLibraryZigM/src/main/java;G:/mnt/bc/mydev/workingzig/graphics/opengl/OpenGLJ2MENoneJavaLibraryZigM/src/main/java;G:/mnt/bc/mydev/workingzig/j2me/media/graphics/animation/image/ImageJ2MEJavaLibraryZigM/src/main/java;G:/mnt/bc/mydev/AllBinary-Platform-Integrationzig/graphics/opengl/min3d/Min3dBaseJavaLibraryZigM/src/main/java;${zig.runtime.source.path}</argument>
+                            </arguments>
+                        </configuration>
+                    </execution>
+                </executions>
+            </plugin>
+
+
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-source-plugin</artifactId>
+                <version>3.3.1</version>
+                <executions>
+                    <execution>
+                        <id>attach-sources</id>
+                        <goals>
+                            <goal>jar</goal>
+                        </goals>
+                    </execution>
+                </executions>
+            </plugin>
+
+
+        </plugins>
+
+    </build>
+
+</project>
+
