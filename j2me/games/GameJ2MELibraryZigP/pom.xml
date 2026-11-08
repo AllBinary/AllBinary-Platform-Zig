@@ -31,7 +31,7 @@
         NoGyroSensorLibrary
 
         -->
-        <module>../../android/AndroidUtilJavaLibraryZigM</module>
+        <!--<module>../../android/AndroidUtilJavaLibraryZigM</module>-->
 
         <module>../../../allbinary_src/security/SimpleCryptLibraryZigM</module>
         <!--
@@ -40,7 +40,7 @@
         -->
         <module>../../../allbinary_src/TokenizerJavaLibraryZigM</module>
         <module>../../../allbinary_src/security/BasicSecurityJavaLibraryZigM</module>
-        <module>../../../replace_these_stub_projects/security/YourCryptFileJavaLibraryZigM</module>
+        <!--<module>../../../replace_these_stub_projects/security/YourCryptFileJavaLibraryZigM</module>-->
         <module>../../../replace_these_stub_projects/security/YourSecurityJavaLibraryZigM</module>
         <module>../../../replace_these_stub_projects/communication/YourXmlRpcJavaLibraryZigM</module>
         <module>../../../replace_these_stub_projects/allbinary_src/J2MEOnlyJavaLibraryZigM</module>
@@ -50,8 +50,8 @@
         <module>../../DebugJavaLibraryZigM</module>             
         <module>../../ResourceLibraryZigM</module>
         <module>../../ResourceJ2MEJavaLibraryZigM</module>
-        <module>../../AndroidResourceLibraryZigM</module>
-        <module>../../../allbinary_src/hardware/AndroidSystemJavaLibraryZigM</module>
+        <!--<module>../../AndroidResourceLibraryZigM</module>-->
+        <!--<module>../../../allbinary_src/hardware/AndroidSystemJavaLibraryZigM</module>-->
 
         <module>../../../game/behavior/ArtificialIntelligenceLibraryZigM</module>
 

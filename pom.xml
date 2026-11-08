@@ -32,6 +32,10 @@
 
         <!--
         -->
+        <module>../working_thirdpartyzig/embedded/j2me/microemulator/2_0_4/microemu-cldcZig</module>
+        <module>../working_thirdpartyzig/embedded/j2me/microemulator/2_0_4/microemu-midpZig</module>
+        <module>../working_thirdpartyzig/embedded/j2me/microemulator/2_0_4/microemu-extensions/microemu-jsr-135Zig</module>
+        
         <module>./j2me/AllBinaryBaseLibraryPOZigM</module>
         <module>./j2me/AllBinaryJ2MELibraryP</module>
         <module>./AllBinaryPersistenceLibraryP</module>
@@ -45,9 +49,9 @@
         <module>./j2me/media/graphics/animation/image/AllBinaryHTMLImageAnimationRotationJavaLibraryZigM</module>
         <module>./j2me/media/graphics/animation/image/AllBinaryHTML2ImageAnimationRotationJavaLibraryZigM</module>
         -->
-        <module>./j2me/media/graphics/animation/image/AllBinaryJ2SEImageAnimationRotationJavaLibraryZigM</module>
-        <module>./j2me/games/Resources/sounds/release/GameSoundsJ2SEOggResourcesJavaLibraryZigM</module>
-        <module>./graphics/opengl/AllBinaryJOGLResourcesJavaLibraryZigM</module>
+        <!--<module>./j2me/media/graphics/animation/image/AllBinaryJ2SEImageAnimationRotationJavaLibraryZigM</module>-->
+        <!--<module>./j2me/games/Resources/sounds/release/GameSoundsJ2SEOggResourcesJavaLibraryZigM</module>-->
+        <!--<module>./graphics/opengl/AllBinaryJOGLResourcesJavaLibraryZigM</module>-->
 
     </modules>
 

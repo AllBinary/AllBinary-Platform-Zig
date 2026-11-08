@@ -37,18 +37,18 @@
         <module>../allbinary_src/logic/BasePreloaderFileJavaLibraryZigM</module>
         <module>../allbinary_src/logic/data/file/FileJavaLibraryZigM</module>
         <module>../allbinary_src/logic/data/file/FileJ2SEJavaLibraryZigM</module>
-        <module>../allbinary_src/data/DataJavaLibraryZigM</module>
-        <module>../allbinary_src/logic/data/file/FileUnamedJavaLibraryZigM</module>
-        <module>../allbinary_src/logic/data/file/FileAdvancedJavaLibraryZigM</module>
-        <module>../allbinary_src/PreLoaderJavaLibraryZigM</module>
-        <module>../allbinary_src/FileInitInfoJavaLibraryZigM</module>
-        <module>../allbinary_src/PreLoaderFileJavaLibraryZigM</module>
-        <module>../allbinary_src/PreLoaderLicenseJavaLibraryZigM</module>
+        <!--<module>../allbinary_src/data/DataJavaLibraryZigM</module>-->
+        <!--<module>../allbinary_src/logic/data/file/FileUnamedJavaLibraryZigM</module>-->
+        <!--<module>../allbinary_src/logic/data/file/FileAdvancedJavaLibraryZigM</module>-->
+        <!--<module>../allbinary_src/PreLoaderJavaLibraryZigM</module>-->
+        <!--<module>../allbinary_src/FileInitInfoJavaLibraryZigM</module>-->
+        <!--<module>../allbinary_src/PreLoaderFileJavaLibraryZigM</module>-->
+        <!--<module>../allbinary_src/PreLoaderLicenseJavaLibraryZigM</module>-->
         <module>../j2me/PCResourceLibraryZigM</module>
         <module>../j2me/ProgressJ2MEJavaLibraryZigM</module>
         <module>../allbinary_src/licensing/ClientInfoBaseJavaLibraryZigM</module>
-        <module>../allbinary_src/licensing/RemoteXmlRpcJavaLibraryZigM</module>
-        <module>../allbinary_src/licensing/LicenseClientJavaLibraryZigM</module>
+        <!--<module>../allbinary_src/licensing/RemoteXmlRpcJavaLibraryZigM</module>-->
+        <!--<module>../allbinary_src/licensing/LicenseClientJavaLibraryZigM</module>-->
 
         <!--
         <module>../allbinary_src/PreLoaderLicenseJavaLibraryZigM</module>

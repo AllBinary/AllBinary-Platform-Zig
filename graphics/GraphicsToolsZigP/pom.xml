@@ -33,14 +33,14 @@
         -->
         
         
-        <module>../AllBinaryGraphicsUserInterfaceJavaLibraryZigM</module>
+        <!--<module>../AllBinaryGraphicsUserInterfaceJavaLibraryZigM</module>-->
         
         <module>../../allbinary_src/logging/LogConfigTypeThickClientJavaLibraryZigM</module>
-        <module>../../allbinary_src/logging/GUILoggingZigM</module>
+        <!--<module>../../allbinary_src/logging/GUILoggingZigM</module>-->
                 
-        <module>../AllBinaryGraphicsJavaApplicationZigM</module>
+        <!--<module>../AllBinaryGraphicsJavaApplicationZigM</module>-->
         
-        <module>../ImageToolJavaApplicationZigM</module>
+        <!--<module>../ImageToolJavaApplicationZigM</module>-->
     </modules>
 
 </project>

@@ -61,7 +61,7 @@
         <!--
         <module>../../graphics/animation/image/ImageHTMLJavaLibraryZigM</module>
         -->
-        <module>../../graphics/animation/image/ImageJ2SEJavaLibraryZigM</module>
+        <!--<module>../../graphics/animation/image/ImageJ2SEJavaLibraryZigM</module>-->
         <!--
         <module>../../graphics/animation/image/ImageAndroidJavaLibraryZigM</module>
         -->

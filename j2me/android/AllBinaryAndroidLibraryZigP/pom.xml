@@ -42,18 +42,18 @@
         
         <!-- Several Move to PostPlatforms -->
         
-        <module>../../media/sound/MusicJ2MEJavaLibraryZigM</module>
-        <module>../../media/sound/NullMusicAndroidJavaLibraryZigM</module>
-        <module>../../media/sound/MusicAndroidJavaLibraryZigM</module>
+        <!--<module>../../media/sound/MusicJ2MEJavaLibraryZigM</module>-->
+        <!--<module>../../media/sound/NullMusicAndroidJavaLibraryZigM</module>-->
+        <!--<module>../../media/sound/MusicAndroidJavaLibraryZigM</module>-->
 
         <!--
         <module>../../media/graphics/ImageCacheAndroidJavaLibraryZigM</module>
         -->
                 
         <!-- ../../../../working/allbinary_src/logic/data/file/FileAndroidJavaLibraryM -->
-        <module>../../../allbinary_src/logic/data/file/FileAndroidJavaLibraryZigM</module>
+        <!--<module>../../../allbinary_src/logic/data/file/FileAndroidJavaLibraryZigM</module>-->
         
-        <module>../../input/platform/android/MotionInputAndroidResourcesJavaLibraryZigM</module>
+        <!--<module>../../input/platform/android/MotionInputAndroidResourcesJavaLibraryZigM</module>-->
                 
     </modules>
 
