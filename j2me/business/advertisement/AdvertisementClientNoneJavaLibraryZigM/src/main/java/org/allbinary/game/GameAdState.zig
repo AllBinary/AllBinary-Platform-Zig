@@ -23,6 +23,8 @@ const AdConfiguration = @import("org/allbinary/business/advertisement/AdConfigur
 const VirtualKeyboardEvent = @import("org/allbinary/input/event/VirtualKeyboardEvent.zig").VirtualKeyboardEvent;
 const VirtualKeyboardEventHandler = @import("org/allbinary/input/event/VirtualKeyboardEventHandler.zig").VirtualKeyboardEventHandler;
 const VirtualKeyboardEventListenerInterface = @import("org/allbinary/input/event/VirtualKeyboardEventListenerInterface.zig").VirtualKeyboardEventListenerInterface;
+const AllBinaryEventObject = @import("org/allbinary/logic/util/event/AllBinaryEventObject.zig").AllBinaryEventObject;
+const Exception = @import("java/lang/Exception.zig").Exception;
 
 pub const GameAdState = struct {
     const Self = @This();
@@ -45,6 +47,11 @@ pub const GameAdState = struct {
     pub fn onVirtualKeyboardEvent(self: *Self, virtualKeyboardEvent: ?*VirtualKeyboardEvent) void {
         _ = virtualKeyboardEvent;
         _ = self;
+    }
+    
+
+    pub fn onEvent(self: *Self, eventObject: ?*AllBinaryEventObject) void {
+        _ = Inheritance.call(&self.base, "onEvent", .{ eventObject });
     }
 };
 

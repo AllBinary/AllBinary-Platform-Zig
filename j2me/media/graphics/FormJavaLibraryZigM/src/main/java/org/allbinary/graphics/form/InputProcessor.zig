@@ -20,6 +20,7 @@ const Object = @import("java/lang/Object.zig").Object;
 const Inheritance = @import("zig/Inheritance.zig");
 const Processor = @import("org/allbinary/canvas/Processor.zig").Processor;
 const PlayerGameInputCompositeInterface = @import("org/allbinary/game/input/PlayerGameInputCompositeInterface.zig").PlayerGameInputCompositeInterface;
+const Exception = @import("java/lang/Exception.zig").Exception;
 
 pub const InputProcessor = struct {
     const Self = @This();

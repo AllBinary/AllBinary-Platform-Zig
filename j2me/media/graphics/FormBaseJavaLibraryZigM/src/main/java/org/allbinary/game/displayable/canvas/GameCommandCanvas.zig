@@ -18,10 +18,10 @@ const allocator = std.heap.page_allocator;
 const String = @import("java/lang/String.zig").String;
 const Object = @import("java/lang/Object.zig").Object;
 const Inheritance = @import("zig/Inheritance.zig");
-// const CommandListener = @import("javax/microedition/lcdui/CommandListener.zig").CommandListener;
-// const Font = @import("javax/microedition/lcdui/Font.zig").Font;
-// const Graphics = @import("javax/microedition/lcdui/Graphics.zig").Graphics;
-// const NullCommandListener = @import("javax/microedition/lcdui/NullCommandListener.zig").NullCommandListener;
+const CommandListener = @import("javax/microedition/lcdui/CommandListener.zig").CommandListener;
+const Font = @import("javax/microedition/lcdui/Font.zig").Font;
+const Graphics = @import("javax/microedition/lcdui/Graphics.zig").Graphics;
+const NullCommandListener = @import("javax/microedition/lcdui/NullCommandListener.zig").NullCommandListener;
 const Processor = @import("org/allbinary/canvas/Processor.zig").Processor;
 const GameCommandsFactory = @import("org/allbinary/game/commands/GameCommandsFactory.zig").GameCommandsFactory;
 const Features = @import("org/allbinary/game/configuration/feature/Features.zig").Features;
@@ -73,6 +73,8 @@ const BasicMenuInputProcessor = @import("org/allbinary/game/displayable/canvas/B
 const ImmediateCommandFormInputProcessor = @import("org/allbinary/game/displayable/canvas/ImmediateCommandFormInputProcessor.zig").ImmediateCommandFormInputProcessor;
 const MenuListener = @import("org/allbinary/game/displayable/canvas/MenuListener.zig").MenuListener;
 const NoMenuInputProcessor = @import("org/allbinary/game/displayable/canvas/NoMenuInputProcessor.zig").NoMenuInputProcessor;
+const Exception = @import("java/lang/Exception.zig").Exception;
+const RuntimeException = @import("java/lang/RuntimeException.zig").RuntimeException;
 
 pub const GameCommandCanvas = struct {
     const Self = @This();
@@ -104,7 +106,7 @@ pub const GameCommandCanvas = struct {
     const id: i32 = 0;
 
     fn initFields(this: *Self) void {
-        this.repaintProcessor = Inheritance.upcast(?*Processor, Inheritance.call(ScreenRepaintProcessorFactory.getInstance().?, "create", .{ this }));
+        this.repaintProcessor = Inheritance.upcast(?*Processor, Inheritance.call(ScreenRepaintProcessorFactory.getInstance().?, "create_Method", .{ this }));
         this.gameInputStrings = Inheritance.upcast(?*GameInputStrings, GameInputStrings.getInstance());
         
         
@@ -121,7 +123,7 @@ pub const GameCommandCanvas = struct {
         this.menuInputProcessor = Inheritance.upcast(?*BasicMenuInputProcessor, NoMenuInputProcessor.getInstance());
         this.menuPaintable = Inheritance.upcast(?*Paintable, NullPaintable.getInstance());
         this.menuForm = Inheritance.upcast(?*PaintableForm, PaintableForm.getNullPaintableForm());
-        this.isSingleKeyRepeatableProcessing = Inheritance.call(Features.getInstance().?, "isFeature", .{ InputFeatureFactory.getInstance().?.SINGLE_KEY_REPEAT_PRESS });
+        this.isSingleKeyRepeatableProcessing = Inheritance.call(Features.getInstance().?, "isFeature", .{ Inheritance.fieldPointer(InputFeatureFactory.getInstance().?, "SINGLE_KEY_REPEAT_PRESS").* });
         this.fontHeight = 0;
     }
     
@@ -129,7 +131,7 @@ pub const GameCommandCanvas = struct {
     pub fn create4(cmdListener: ?*CommandListener, name: ?*String, backgroundBasicColor: ?*BasicColor, foregroundBasicColor: ?*BasicColor) *Self {
         const this = allocator.create(Self) catch unreachable;
         this.* = .{};
-        this.base = Inheritance.callStatic(MyCanvas, "create2", .{ name, CanvasStrings.getInstance().?.EMPTY_CHILD_NAME_LIST }).*;
+        this.base = Inheritance.callStatic(MyCanvas, "create2", .{ name, Inheritance.fieldPointer(CanvasStrings.getInstance().?, "EMPTY_CHILD_NAME_LIST").* }).*;
         this.initFields();
         this.repaintBehavior = Inheritance.upcast(@TypeOf(this.repaintBehavior), RepaintBehavior.getInstance());
         this.foregroundBasicColor = foregroundBasicColor;
@@ -153,34 +155,34 @@ pub const GameCommandCanvas = struct {
     pub fn updateMeasurement(self: *Self, graphics: ?*Graphics) void {
         { // try
             const font: ?*Font = Inheritance.upcast(?*Font, graphics.?.getFont());
-            _ = Inheritance.call(Inheritance.fieldPointer(self, "logUtil").*.?, "putF", .{ Object.toString(Object.of(Inheritance.call(Inheritance.call(Inheritance.call(Inheritance.call(Inheritance.call(StringMaker.create(), "append", .{ Inheritance.fieldPointer(self, "commonStrings").*.?.START }).?, "append", .{ Inheritance.fieldPointer(self, "canvasStrings").*.?.FD_WIDTH }).?, "appendint", .{ @as(i32, @intCast(Inheritance.callStatic(MyFontProcessor, "defaultCharWidth", .{ font }))) }).?, "append", .{ Inheritance.fieldPointer(self, "canvasStrings").*.?.FD_HEIGHT }).?, "appendint", .{ @as(i32, @intCast(font.?.getHeight())) }))), self, Inheritance.fieldPointer(self, "canvasStrings").*.?.UPDATE_MEASUREMENT });
+            _ = Inheritance.call(Inheritance.fieldPointer(self, "logUtil").*.?, "putF", .{ Object.toString(Object.of(Inheritance.call(Inheritance.call(Inheritance.call(Inheritance.call(Inheritance.call(StringMaker.create(), "append", .{ Inheritance.fieldPointer(Inheritance.fieldPointer(self, "commonStrings").*.?, "START").* }).?, "append", .{ Inheritance.fieldPointer(Inheritance.fieldPointer(self, "canvasStrings").*.?, "FD_WIDTH").* }).?, "appendint", .{ Inheritance.number(i32, Inheritance.callStatic(MyFontProcessor, "defaultCharWidth", .{ font })) }).?, "append", .{ Inheritance.fieldPointer(Inheritance.fieldPointer(self, "canvasStrings").*.?, "FD_HEIGHT").* }).?, "appendint", .{ Inheritance.number(i32, font.?.getHeight()) }))), self, Inheritance.fieldPointer(Inheritance.fieldPointer(self, "canvasStrings").*.?, "UPDATE_MEASUREMENT").* });
             self.fontHeight = font.?.getHeight();
             const rectangle: ?*Rectangle = Inheritance.upcast(?*Rectangle, Inheritance.call(self, "createRectangle", .{ Inheritance.receiver(self.menuForm.?, "size").size() }));
-            _ = Inheritance.call(self.menuForm.?, "init", .{ rectangle, FormTypeFactory.getInstance().?.VERTICAL_CENTER_FORM });
+            _ = Inheritance.call(self.menuForm.?, "init", .{ rectangle, Inheritance.fieldPointer(FormTypeFactory.getInstance().?, "VERTICAL_CENTER_FORM").* });
             _ = self.update();
         }
         // catch (Exception e):
-//             _ = Inheritance.call(Inheritance.fieldPointer(self, "logUtil").*.?, "put", .{ Inheritance.fieldPointer(self, "commonStrings").*.?.EXCEPTION, self, Inheritance.fieldPointer(self, "canvasStrings").*.?.ON_DISPLAY_CHANGE_EVENT, e });
+//             _ = Inheritance.call(Inheritance.fieldPointer(self, "logUtil").*.?, "put", .{ Inheritance.fieldPointer(Inheritance.fieldPointer(self, "commonStrings").*.?, "EXCEPTION").*, self, Inheritance.fieldPointer(Inheritance.fieldPointer(self, "canvasStrings").*.?, "ON_DISPLAY_CHANGE_EVENT").*, e });
         self.myFontProcessor = Inheritance.upcast(@TypeOf(self.myFontProcessor), MyFontProcessor.getInstance());
     }
     
 
     pub fn onEvent(self: *Self, eventObject: ?*AllBinaryEventObject) void {
         _ = eventObject;
-        _ = Inheritance.callStatic(ForcedLogUtil, "log", .{ EventStrings.getInstance().?.PERFORMANCE_MESSAGE, self });
+        _ = Inheritance.callStatic(ForcedLogUtil, "log", .{ Inheritance.fieldPointer(EventStrings.getInstance().?, "PERFORMANCE_MESSAGE").*, self });
     }
     
 
     pub fn onDisplayChangeEvent(self: *Self, displayChangeEvent: ?*DisplayChangeEvent) void {
         _ = displayChangeEvent;
-        _ = Inheritance.call(Inheritance.fieldPointer(self, "logUtil").*.?, "putF", .{ Object.toString(Object.of(Inheritance.call(Inheritance.call(StringMaker.create(), "append", .{ Inheritance.fieldPointer(self, "commonStrings").*.?.START }).?, "append", .{ Object.toString(Object.of(DisplayInfoSingleton.getInstance())) }))), self, Inheritance.fieldPointer(self, "canvasStrings").*.?.ON_DISPLAY_CHANGE_EVENT });
+        _ = Inheritance.call(Inheritance.fieldPointer(self, "logUtil").*.?, "putF", .{ Object.toString(Object.of(Inheritance.call(Inheritance.call(StringMaker.create(), "append", .{ Inheritance.fieldPointer(Inheritance.fieldPointer(self, "commonStrings").*.?, "START").* }).?, "append", .{ Object.toString(Object.of(DisplayInfoSingleton.getInstance())) }))), self, Inheritance.fieldPointer(Inheritance.fieldPointer(self, "canvasStrings").*.?, "ON_DISPLAY_CHANGE_EVENT").* });
         self.myFontProcessor = self.updateMyFontProcessor;
     }
     
 
     pub fn initCommands(self: *Self, cmdListener: ?*CommandListener) void {
         _ = Inheritance.receiver(self, "removeAllCommands").removeAllCommands();
-        _ = Inheritance.call(self, "addCommand", .{ GameCommandsFactory.getInstance().?.CLOSE_AND_SHOW_GAME_CANVAS });
+        _ = Inheritance.call(self, "addCommand", .{ Inheritance.fieldPointer(GameCommandsFactory.getInstance().?, "CLOSE_AND_SHOW_GAME_CANVAS").* });
         _ = Inheritance.call(self, "setCommandListener", .{ cmdListener });
     }
     
@@ -201,21 +203,21 @@ pub const GameCommandCanvas = struct {
     pub fn createForm(self: *Self) ?*ScrollSelectionForm {
         const items: []?*ABCustomItem = Inheritance.call(Inheritance.callStatic(CommandTextItemArrayFactory, "create1", .{ AllCommandsVisitor.create() }), "getInstance", .{ Inheritance.receiver(self, "getCommandStack").getCommandStack(), self.backgroundBasicColor, self.foregroundBasicColor });
         const rectangle: ?*Rectangle = Inheritance.upcast(?*Rectangle, Inheritance.call(self, "createRectangle", .{ @as(i32, @intCast(items.len)) }));
-        return Inheritance.upcast(?*ScrollSelectionForm, Inheritance.callStatic(CommandCurrentSelectionFormFactory, "getInstance", .{ StringUtil.getInstance().?.EMPTY_STRING, items, rectangle, FormTypeFactory.getInstance().?.VERTICAL_CENTER_FORM, 15, false, self.backgroundBasicColor, self.foregroundBasicColor }));
+        return Inheritance.upcast(?*ScrollSelectionForm, Inheritance.callStatic(CommandCurrentSelectionFormFactory, "getInstance", .{ Inheritance.fieldPointer(StringUtil.getInstance().?, "EMPTY_STRING").*, items, rectangle, Inheritance.fieldPointer(FormTypeFactory.getInstance().?, "VERTICAL_CENTER_FORM").*, 15, false, self.backgroundBasicColor, self.foregroundBasicColor }));
     }
     
 
     pub fn createRectangle(self: *Self, size: i32) ?*Rectangle {
         const height: i32 = size * self.fontHeight;
-        const startY: i32 = ((divide_N70488: { const left_N70488 = Inheritance.receiverOf(Inheritance.fieldPointer(self, "displayInfo").*.?, "getLastHeight").getLastHeight() * 2; const right_N70488 = 3; break :divide_N70488 if (comptime @typeInfo(@TypeOf(left_N70488)) == .int or @TypeOf(left_N70488) == comptime_int) @divTrunc(left_N70488, right_N70488) else left_N70488 / right_N70488; })) - height;
+        const startY: i32 = Inheritance.arithmetic(.subtract, ((divide_N70488: { const left_N70488 = Inheritance.arithmetic(.multiply, Inheritance.receiverOf(Inheritance.fieldPointer(self, "displayInfo").*.?, "getLastHeight").getLastHeight(), 2); const right_N70488 = 3; break :divide_N70488 if (comptime @typeInfo(@TypeOf(left_N70488)) == .int or @TypeOf(left_N70488) == comptime_int) @divTrunc(left_N70488, right_N70488) else left_N70488 / right_N70488; })), height);
         const pointFactory: ?*PointFactory = Inheritance.upcast(?*PointFactory, PointFactory.getInstance());
-        const rectangle: ?*Rectangle = Inheritance.callStatic(Rectangle, "create3", .{ Inheritance.call(pointFactory.?, "createXY", .{ 30, startY }), Inheritance.receiverOf(Inheritance.fieldPointer(self, "displayInfo").*.?, "getLastWidth").getLastWidth() - 30, startY });
+        const rectangle: ?*Rectangle = Inheritance.callStatic(Rectangle, "create3", .{ Inheritance.call(pointFactory.?, "createXY", .{ 30, startY }), Inheritance.arithmetic(.subtract, Inheritance.receiverOf(Inheritance.fieldPointer(self, "displayInfo").*.?, "getLastWidth").getLastWidth(), 30), startY });
         return rectangle;
     }
     
 
     pub fn open(self: *Self) void {
-        _ = Inheritance.call(Inheritance.fieldPointer(self, "logUtil").*.?, "putF", .{ Inheritance.fieldPointer(self, "commonStrings").*.?.START, self, String.literal("open") });
+        _ = Inheritance.call(Inheritance.fieldPointer(self, "logUtil").*.?, "putF", .{ Inheritance.fieldPointer(Inheritance.fieldPointer(self, "commonStrings").*.?, "START").*, self, String.literal("open") });
         _ = Inheritance.call(BasicMotionGesturesHandler.getInstance().?, "addListenerInterface", .{ self.getMenuInputProcessor() });
         _ = Inheritance.call(GameKeyEventHandler.getInstance().?, "addListener", .{ self.getMenuInputProcessor() });
         _ = Inheritance.call(DisplayChangeEventHandler.getInstance().?, "addListenerInterface", .{ self });
@@ -224,7 +226,7 @@ pub const GameCommandCanvas = struct {
 
     // throws Exception
     pub fn close(self: *Self) void {
-        _ = Inheritance.call(Inheritance.fieldPointer(self, "logUtil").*.?, "putF", .{ Inheritance.fieldPointer(self, "commonStrings").*.?.START, self, Inheritance.fieldPointer(self, "commonStrings").*.?.CLOSE });
+        _ = Inheritance.call(Inheritance.fieldPointer(self, "logUtil").*.?, "putF", .{ Inheritance.fieldPointer(Inheritance.fieldPointer(self, "commonStrings").*.?, "START").*, self, Inheritance.fieldPointer(Inheritance.fieldPointer(self, "commonStrings").*.?, "CLOSE").* });
         _ = Inheritance.call(BasicMotionGesturesHandler.getInstance().?, "removeListener", .{ self.getMenuInputProcessor() });
         _ = Inheritance.call(GameKeyEventHandler.getInstance().?, "removeListener", .{ self.getMenuInputProcessor() });
         _ = Inheritance.call(DisplayChangeEventHandler.getInstance().?, "removeListener", .{ self });
@@ -260,7 +262,7 @@ pub const GameCommandCanvas = struct {
 
     pub fn keyPressedByDevice(self: *Self, keyCode: i32, deviceId: i32) void {
         _ = deviceId;
-        _ = Inheritance.call(Inheritance.fieldPointer(self, "logUtil").*.?, "putF", .{ Object.toString(Object.of(Inheritance.call(Inheritance.call(StringMaker.create(), "append", .{ CommonSeps.getInstance().?.SPACE }).?, "appendint", .{ keyCode }))), self, self.gameInputStrings.?.KEY_PRESSED });
+        _ = Inheritance.call(Inheritance.fieldPointer(self, "logUtil").*.?, "putF", .{ Object.toString(Object.of(Inheritance.call(Inheritance.call(StringMaker.create(), "append", .{ Inheritance.fieldPointer(CommonSeps.getInstance().?, "SPACE").* }).?, "appendint", .{ keyCode }))), self, Inheritance.fieldPointer(self.gameInputStrings.?, "KEY_PRESSED").* });
         _ = Inheritance.call(self, "addGameKeyEvent", .{ keyCode, 0, false });
     }
     
@@ -281,16 +283,16 @@ pub const GameCommandCanvas = struct {
         _ = repeated;
         { // try
             const gameKey: ?*GameKey = Inheritance.upcast(?*GameKey, Inheritance.call(self.inputToGameKeyMapping.?, "getInstanceForCanvas", .{ self, keyCode }));
-            if (!Object.same(gameKey, self.gameKeyFactory.?.NONE)) {
+            if (!Object.same(gameKey, Inheritance.fieldPointer(self.gameKeyFactory.?, "NONE").*)) {
                 const gameKeyEvent: ?*GameKeyEvent = Inheritance.upcast(?*GameKeyEvent, Inheritance.call(self.gameKeyEventFactory.?, "getInstanceForInput", .{ self, gameKey }));
                 _ = Inheritance.call(self.downGameKeyEventHandler.?, "fireEvent", .{ gameKeyEvent });
                 _ = Inheritance.call(Inheritance.call(self.downGameKeyEventHandler.?, "getInstanceForDevice", .{ deviceId }).?, "fireEvent", .{ gameKeyEvent });
             } else {
-                _ = Inheritance.call(Inheritance.fieldPointer(self, "logUtil").*.?, "putF", .{ Object.toString(Object.of(Inheritance.call(Inheritance.call(StringMaker.create(), "append", .{ self.gameInputStrings.?.NO_KEY }).?, "appendint", .{ keyCode }))), self, self.gameInputStrings.?.ADD_KEY_EVENT });
+                _ = Inheritance.call(Inheritance.fieldPointer(self, "logUtil").*.?, "putF", .{ Object.toString(Object.of(Inheritance.call(Inheritance.call(StringMaker.create(), "append", .{ Inheritance.fieldPointer(self.gameInputStrings.?, "NO_KEY").* }).?, "appendint", .{ keyCode }))), self, Inheritance.fieldPointer(self.gameInputStrings.?, "ADD_KEY_EVENT").* });
             }
         }
         // catch (Exception e):
-//             _ = Inheritance.call(Inheritance.fieldPointer(self, "logUtil").*.?, "put", .{ String.literal("Key Event Error"), self, self.gameInputStrings.?.ADD_KEY_EVENT, e });
+//             _ = Inheritance.call(Inheritance.fieldPointer(self, "logUtil").*.?, "put", .{ String.literal("Key Event Error"), self, Inheritance.fieldPointer(self.gameInputStrings.?, "ADD_KEY_EVENT").*, e });
     }
     
 
@@ -298,16 +300,16 @@ pub const GameCommandCanvas = struct {
         _ = repeated;
         { // try
             const gameKey: ?*GameKey = Inheritance.upcast(?*GameKey, Inheritance.call(self.inputToGameKeyMapping.?, "getInstanceForCanvas", .{ self, keyCode }));
-            if (!Object.same(gameKey, self.gameKeyFactory.?.NONE)) {
+            if (!Object.same(gameKey, Inheritance.fieldPointer(self.gameKeyFactory.?, "NONE").*)) {
                 const gameKeyEvent: ?*GameKeyEvent = Inheritance.upcast(?*GameKeyEvent, Inheritance.call(self.gameKeyEventFactory.?, "getInstanceForInput", .{ self, gameKey }));
                 _ = Inheritance.call(self.upGameKeyEventHandler.?, "fireEvent", .{ gameKeyEvent });
                 _ = Inheritance.call(Inheritance.call(self.upGameKeyEventHandler.?, "getInstanceForDevice", .{ deviceId }).?, "fireEvent", .{ gameKeyEvent });
             } else {
-                _ = Inheritance.call(Inheritance.fieldPointer(self, "logUtil").*.?, "putF", .{ Object.toString(Object.of(Inheritance.call(Inheritance.call(StringMaker.create(), "append", .{ self.gameInputStrings.?.NO_KEY }).?, "appendint", .{ keyCode }))), self, self.gameInputStrings.?.REMOVE_KEY_EVENT });
+                _ = Inheritance.call(Inheritance.fieldPointer(self, "logUtil").*.?, "putF", .{ Object.toString(Object.of(Inheritance.call(Inheritance.call(StringMaker.create(), "append", .{ Inheritance.fieldPointer(self.gameInputStrings.?, "NO_KEY").* }).?, "appendint", .{ keyCode }))), self, Inheritance.fieldPointer(self.gameInputStrings.?, "REMOVE_KEY_EVENT").* });
             }
         }
         // catch (Exception e):
-//             _ = Inheritance.call(Inheritance.fieldPointer(self, "logUtil").*.?, "put", .{ String.literal("Key Event Error"), self, self.gameInputStrings.?.REMOVE_KEY_EVENT, e });
+//             _ = Inheritance.call(Inheritance.fieldPointer(self, "logUtil").*.?, "put", .{ String.literal("Key Event Error"), self, Inheritance.fieldPointer(self.gameInputStrings.?, "REMOVE_KEY_EVENT").*, e });
     }
     
 

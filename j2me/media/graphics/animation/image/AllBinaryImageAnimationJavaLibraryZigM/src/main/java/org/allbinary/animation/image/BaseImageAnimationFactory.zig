@@ -18,7 +18,7 @@ const allocator = std.heap.page_allocator;
 const String = @import("java/lang/String.zig").String;
 const Object = @import("java/lang/Object.zig").Object;
 const Inheritance = @import("zig/Inheritance.zig");
-// const Image = @import("javax/microedition/lcdui/Image.zig").Image;
+const Image = @import("javax/microedition/lcdui/Image.zig").Image;
 const Animation = @import("org/allbinary/animation/Animation.zig").Animation;
 const AnimationBehaviorFactory = @import("org/allbinary/animation/AnimationBehaviorFactory.zig").AnimationBehaviorFactory;
 const AnimationInterfaceFactoryInterface = @import("org/allbinary/animation/AnimationInterfaceFactoryInterface.zig").AnimationInterfaceFactoryInterface;
@@ -30,6 +30,7 @@ const ScaleProperties = @import("org/allbinary/media/ScaleProperties.zig").Scale
 const CommonLabels = @import("org/allbinary/string/CommonLabels.zig").CommonLabels;
 const CommonSeps = @import("org/allbinary/string/CommonSeps.zig").CommonSeps;
 const AnimationFactoryInitializationVisitor = @import("org/allbinary/animation/image/AnimationFactoryInitializationVisitor.zig").AnimationFactoryInitializationVisitor;
+const Exception = @import("java/lang/Exception.zig").Exception;
 
 pub const BaseImageAnimationFactory = struct {
     const Self = @This();
@@ -64,12 +65,12 @@ pub const BaseImageAnimationFactory = struct {
         this.initFields();
         this.animationFactoryInitializationVisitor = AnimationFactoryInitializationVisitor.create();
         this.image = image;
-        this.animationFactoryInitializationVisitor.?.width = Inheritance.upcast(@TypeOf(this.animationFactoryInitializationVisitor.?.width), width);
-        this.animationFactoryInitializationVisitor.?.height = Inheritance.upcast(@TypeOf(this.animationFactoryInitializationVisitor.?.height), height);
+        Inheritance.fieldPointer(this.animationFactoryInitializationVisitor.?, "width").* = Inheritance.upcast(@TypeOf(Inheritance.fieldPointer(this.animationFactoryInitializationVisitor.?, "width").*), width);
+        Inheritance.fieldPointer(this.animationFactoryInitializationVisitor.?, "height").* = Inheritance.upcast(@TypeOf(Inheritance.fieldPointer(this.animationFactoryInitializationVisitor.?, "height").*), height);
         this.animationBehaviorFactory = animationBehaviorFactory;
         this.sequenceArray = sequenceArray;
-        this.animationFactoryInitializationVisitor.?.dx = Inheritance.upcast(@TypeOf(this.animationFactoryInitializationVisitor.?.dx), dx);
-        this.animationFactoryInitializationVisitor.?.dy = Inheritance.upcast(@TypeOf(this.animationFactoryInitializationVisitor.?.dy), dy);
+        Inheritance.fieldPointer(this.animationFactoryInitializationVisitor.?, "dx").* = Inheritance.upcast(@TypeOf(Inheritance.fieldPointer(this.animationFactoryInitializationVisitor.?, "dx").*), dx);
+        Inheritance.fieldPointer(this.animationFactoryInitializationVisitor.?, "dy").* = Inheritance.upcast(@TypeOf(Inheritance.fieldPointer(this.animationFactoryInitializationVisitor.?, "dy").*), dy);
         return this;
     }
     
@@ -93,9 +94,9 @@ pub const BaseImageAnimationFactory = struct {
 
     pub fn setInitialScale(self: *Self, scaleProperties: ?*ScaleProperties) void {
         self.scaleProperties = scaleProperties;
-        if (self.scaleProperties.?.shouldScale) {
-            self.scaleProperties.?.scaleWidth = @as(i32, @intCast((self.animationFactoryInitializationVisitor.?.width * self.scaleProperties.?.scaleX)));
-            self.scaleProperties.?.scaleHeight = @as(i32, @intCast((self.animationFactoryInitializationVisitor.?.height * self.scaleProperties.?.scaleY)));
+        if (Inheritance.fieldPointer(self.scaleProperties.?, "shouldScale").*) {
+            Inheritance.fieldPointer(self.scaleProperties.?, "scaleWidth").* = Inheritance.number(i32, (Inheritance.arithmetic(.multiply, Inheritance.fieldPointer(self.animationFactoryInitializationVisitor.?, "width").*, Inheritance.fieldPointer(self.scaleProperties.?, "scaleX").*)));
+            Inheritance.fieldPointer(self.scaleProperties.?, "scaleHeight").* = Inheritance.number(i32, (Inheritance.arithmetic(.multiply, Inheritance.fieldPointer(self.animationFactoryInitializationVisitor.?, "height").*, Inheritance.fieldPointer(self.scaleProperties.?, "scaleY").*)));
         } else {
         }
     }
@@ -115,10 +116,10 @@ pub const BaseImageAnimationFactory = struct {
         const commonSeps: ?*CommonSeps = Inheritance.upcast(?*CommonSeps, CommonSeps.getInstance());
         const commonLabels: ?*CommonLabels = Inheritance.upcast(?*CommonLabels, CommonLabels.getInstance());
         const stringBuffer: ?*StringMaker = StringMaker.create();
-        _ = Inheritance.call(stringBuffer.?, "append", .{ self.base.toString() });
-        _ = Inheritance.call(stringBuffer.?, "append", .{ commonLabels.?.HEIGHT_LABEL });
-        _ = Inheritance.call(stringBuffer.?, "appendint", .{ @as(i32, @intCast(self.image.?.getHeight())) });
-        _ = Inheritance.call(stringBuffer.?, "append", .{ commonSeps.?.SPACE });
+        _ = Inheritance.call(stringBuffer.?, "append", .{ Object.identityToString(self) });
+        _ = Inheritance.call(stringBuffer.?, "append", .{ Inheritance.fieldPointer(commonLabels.?, "HEIGHT_LABEL").* });
+        _ = Inheritance.call(stringBuffer.?, "appendint", .{ Inheritance.number(i32, self.image.?.getHeight()) });
+        _ = Inheritance.call(stringBuffer.?, "append", .{ Inheritance.fieldPointer(commonSeps.?, "SPACE").* });
         _ = Inheritance.call(stringBuffer.?, "append", .{ Object.toString(Object.of(self.animationFactoryInitializationVisitor)) });
         return Inheritance.upcast(?*String, Object.toString(Object.of(stringBuffer)));
     }

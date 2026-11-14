@@ -31,12 +31,12 @@ pub const UpTouchInputToGameKeyEventAction = struct {
 
     // Static fields with runtime initializers: call staticInit once at startup
     pub fn staticInit() void {
-        instance = Inheritance.upcast(?Object, NullUtil.getInstance().?.NULL_OBJECT);
+        instance = Inheritance.upcast(?Object, Inheritance.fieldPointer(NullUtil.getInstance().?, "NULL_OBJECT").*);
     }
     
 
     pub fn getInstance() ?*GameKeyCompleteMotionGestureInputEvent {
-        if (Object.same(UpTouchInputToGameKeyEventAction.instance, NullUtil.getInstance().?.NULL_OBJECT)) {
+        if (Object.same(UpTouchInputToGameKeyEventAction.instance, Inheritance.fieldPointer(NullUtil.getInstance().?, "NULL_OBJECT").*)) {
             UpTouchInputToGameKeyEventAction.instance = Inheritance.upcast(@TypeOf(UpTouchInputToGameKeyEventAction.instance), UpTouchInputToGameKeyEventAction.create());
         }
         return Inheritance.cast(?*GameKeyCompleteMotionGestureInputEvent, UpTouchInputToGameKeyEventAction.instance);
@@ -46,7 +46,7 @@ pub const UpTouchInputToGameKeyEventAction = struct {
     pub fn create() *Self {
         const this = allocator.create(Self) catch unreachable;
         this.* = .{};
-        this.base = Inheritance.callStatic(GameKeyCompleteMotionGestureInputEvent, "create3", .{ String.literal("Up Action"), TouchMotionGestureFactory.getInstance().?.UP, Inheritance.receiverOf(Inheritance.receiverOf(PlatformInputMappingFactory.getInstance().?, "getPersistentInputMappingInstance").getPersistentInputMappingInstance().?, "getInputMapping").getInputMapping() }).*;
+        this.base = Inheritance.callStatic(GameKeyCompleteMotionGestureInputEvent, "create3", .{ String.literal("Up Action"), Inheritance.fieldPointer(TouchMotionGestureFactory.getInstance().?, "UP").*, Inheritance.receiverOf(Inheritance.receiverOf(PlatformInputMappingFactory.getInstance().?, "getPersistentInputMappingInstance").getPersistentInputMappingInstance().?, "getInputMapping").getInputMapping() }).*;
         Inheritance.bindOverrides(this);
         return this;
     }

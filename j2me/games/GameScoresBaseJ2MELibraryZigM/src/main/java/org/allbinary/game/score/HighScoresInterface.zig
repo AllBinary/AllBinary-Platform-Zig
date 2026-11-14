@@ -20,6 +20,7 @@ const Object = @import("java/lang/Object.zig").Object;
 const Inheritance = @import("zig/Inheritance.zig");
 const BasicArrayList = @import("org/allbinary/util/BasicArrayList.zig").BasicArrayList;
 const HighScore = @import("org/allbinary/game/score/HighScore.zig").HighScore;
+const Exception = @import("java/lang/Exception.zig").Exception;
 
 // Java interface: an implementation is a pointer and a table of functions
 pub const HighScoresInterface = struct {
@@ -28,10 +29,10 @@ pub const HighScoresInterface = struct {
     pointer: *anyopaque,
     object: Object,
     toStringFn: *const fn (pointer: *anyopaque) ?*String,
-    getListFn: *const fn (pointer: *anyopaque) ?*BasicArrayList,
-    addHighScoreFn: *const fn (pointer: *anyopaque, newHighScore: ?*HighScore) void,
-    getTotalFn: *const fn (pointer: *anyopaque) i32,
-    isBestScoreFn: *const fn (pointer: *anyopaque, newHighScore: ?*HighScore) bool,
+    getListFn: *const fn (interface_pointer: *anyopaque) ?*BasicArrayList,
+    addHighScoreFn: *const fn (interface_pointer: *anyopaque, newHighScore: ?*HighScore) void,
+    getTotalFn: *const fn (interface_pointer: *anyopaque) i32,
+    isBestScoreFn: *const fn (interface_pointer: *anyopaque, newHighScore: ?*HighScore) bool,
 
     pub fn getList(self: *Self) ?*BasicArrayList {
         return self.getListFn(self.pointer);
@@ -55,27 +56,27 @@ pub const HighScoresInterface = struct {
 
     // The interface value of an object with the methods. Like a Java class a method can be declared by the object or a superclass.
     pub fn of(object: anytype) ?*Self {
-        const Implementation = @TypeOf(object);
+        const ImplementationType = @TypeOf(object);
         const Methods = struct {
             fn toString(pointer: *anyopaque) ?*String {
-                const implementation: Implementation = @ptrCast(@alignCast(pointer));
+                const implementation: ImplementationType = @ptrCast(@alignCast(pointer));
                 return String.valueOf(implementation);
             }
-            fn getList(pointer: *anyopaque) ?*BasicArrayList {
-                const implementation: Implementation = @ptrCast(@alignCast(pointer));
+            fn getList(interface_pointer: *anyopaque) ?*BasicArrayList {
+                const implementation: ImplementationType = @ptrCast(@alignCast(interface_pointer));
                 return Inheritance.upcast(?*BasicArrayList, Inheritance.receiver(implementation, "getList").getList());
             }
-            fn addHighScore(pointer: *anyopaque, newHighScore: ?*HighScore) void {
-                const implementation: Implementation = @ptrCast(@alignCast(pointer));
-                return Inheritance.receiver(implementation, "addHighScore").addHighScore(newHighScore);
+            fn addHighScore(interface_pointer: *anyopaque, newHighScore: ?*HighScore) void {
+                const implementation: ImplementationType = @ptrCast(@alignCast(interface_pointer));
+                return Inheritance.call(implementation, "addHighScore", .{ newHighScore });
             }
-            fn getTotal(pointer: *anyopaque) i32 {
-                const implementation: Implementation = @ptrCast(@alignCast(pointer));
+            fn getTotal(interface_pointer: *anyopaque) i32 {
+                const implementation: ImplementationType = @ptrCast(@alignCast(interface_pointer));
                 return Inheritance.receiver(implementation, "getTotal").getTotal();
             }
-            fn isBestScore(pointer: *anyopaque, newHighScore: ?*HighScore) bool {
-                const implementation: Implementation = @ptrCast(@alignCast(pointer));
-                return Inheritance.receiver(implementation, "isBestScore").isBestScore(newHighScore);
+            fn isBestScore(interface_pointer: *anyopaque, newHighScore: ?*HighScore) bool {
+                const implementation: ImplementationType = @ptrCast(@alignCast(interface_pointer));
+                return Inheritance.call(implementation, "isBestScore", .{ newHighScore });
             }
         };
         const this = allocator.create(Self) catch unreachable;

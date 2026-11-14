@@ -25,6 +25,7 @@ const LogUtil = @import("org/allbinary/logic/communication/log/LogUtil.zig").Log
 const CommonStrings = @import("org/allbinary/string/CommonStrings.zig").CommonStrings;
 const BasicArrayList = @import("org/allbinary/util/BasicArrayList.zig").BasicArrayList;
 const BasicArrayListD = @import("org/allbinary/util/BasicArrayListD.zig").BasicArrayListD;
+const Exception = @import("java/lang/Exception.zig").Exception;
 
 pub const AllBinarySensorManager = struct {
     const Self = @This();
@@ -38,7 +39,7 @@ pub const AllBinarySensorManager = struct {
 
     // Static fields with runtime initializers: call staticInit once at startup
     pub fn staticInit() void {
-        instance = Inheritance.upcast(?Object, NullUtil.getInstance().?.NULL_OBJECT);
+        instance = Inheritance.upcast(?Object, Inheritance.fieldPointer(NullUtil.getInstance().?, "NULL_OBJECT").*);
     }
 
     fn initFields(this: *Self) void {
@@ -51,7 +52,7 @@ pub const AllBinarySensorManager = struct {
     
 
     pub fn getInstance() ?*AllBinarySensorManager {
-        if (Object.same(AllBinarySensorManager.instance, NullUtil.getInstance().?.NULL_OBJECT)) {
+        if (Object.same(AllBinarySensorManager.instance, Inheritance.fieldPointer(NullUtil.getInstance().?, "NULL_OBJECT").*)) {
             AllBinarySensorManager.instance = Inheritance.upcast(@TypeOf(AllBinarySensorManager.instance), AllBinarySensorManager.create());
         }
         return Inheritance.cast(?*AllBinarySensorManager, AllBinarySensorManager.instance);
@@ -67,7 +68,7 @@ pub const AllBinarySensorManager = struct {
             _ = AccelerometerSensorFactory.init();
         }
         // catch (Exception e):
-//             _ = Inheritance.call(this.logUtil.?, "put", .{ this.commonStrings.?.EXCEPTION, this, this.commonStrings.?.CONSTRUCTOR, e });
+//             _ = Inheritance.call(this.logUtil.?, "put", .{ Inheritance.fieldPointer(this.commonStrings.?, "EXCEPTION").*, this, Inheritance.fieldPointer(this.commonStrings.?, "CONSTRUCTOR").*, e });
         return this;
     }
     

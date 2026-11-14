@@ -127,14 +127,14 @@ pub const VelocityProperties = struct {
     
 
     pub fn limitMaxPositiveYVelocity(self: *Self, maxVelocity: i32) void {
-        if (Inheritance.receiverOf(Inheritance.fieldPointer(self, "velocityYBasicDecimal").*.?, "getUnscaled").getUnscaled() > maxVelocity) {
+        if (Inheritance.arithmetic(.greater, Inheritance.receiverOf(Inheritance.fieldPointer(self, "velocityYBasicDecimal").*.?, "getUnscaled").getUnscaled(), maxVelocity)) {
             _ = Inheritance.call(Inheritance.fieldPointer(self, "velocityYBasicDecimal").*.?, "setint", .{ maxVelocity });
         }
     }
     
 
     pub fn limitMaxNegativeYVelocity(self: *Self, maxVelocity: i32) void {
-        if (Inheritance.receiverOf(Inheritance.fieldPointer(self, "velocityYBasicDecimal").*.?, "getUnscaled").getUnscaled() < -maxVelocity) {
+        if (Inheritance.arithmetic(.less, Inheritance.receiverOf(Inheritance.fieldPointer(self, "velocityYBasicDecimal").*.?, "getUnscaled").getUnscaled(), -maxVelocity)) {
             _ = Inheritance.call(Inheritance.fieldPointer(self, "velocityYBasicDecimal").*.?, "setint", .{ -maxVelocity });
         }
     }
@@ -147,26 +147,26 @@ pub const VelocityProperties = struct {
     
 
     pub fn limitMaxXVelocity(self: *Self, maxVelocity: i32) void {
-        if (Inheritance.receiverOf(Inheritance.fieldPointer(self, "velocityXBasicDecimal").*.?, "getUnscaled").getUnscaled() > maxVelocity) {
+        if (Inheritance.arithmetic(.greater, Inheritance.receiverOf(Inheritance.fieldPointer(self, "velocityXBasicDecimal").*.?, "getUnscaled").getUnscaled(), maxVelocity)) {
             _ = Inheritance.call(Inheritance.fieldPointer(self, "velocityXBasicDecimal").*.?, "setint", .{ maxVelocity });
         }
-        if (Inheritance.receiverOf(Inheritance.fieldPointer(self, "velocityXBasicDecimal").*.?, "getUnscaled").getUnscaled() < -maxVelocity) {
+        if (Inheritance.arithmetic(.less, Inheritance.receiverOf(Inheritance.fieldPointer(self, "velocityXBasicDecimal").*.?, "getUnscaled").getUnscaled(), -maxVelocity)) {
             _ = Inheritance.call(Inheritance.fieldPointer(self, "velocityXBasicDecimal").*.?, "setint", .{ -maxVelocity });
         }
     }
     
 
     pub fn isOverXYMaxVelocity(self: *Self, maxVelocity: i32) bool {
-        if (Inheritance.receiverOf(Inheritance.fieldPointer(self, "velocityXBasicDecimal").*.?, "getUnscaled").getUnscaled() > maxVelocity) {
+        if (Inheritance.arithmetic(.greater, Inheritance.receiverOf(Inheritance.fieldPointer(self, "velocityXBasicDecimal").*.?, "getUnscaled").getUnscaled(), maxVelocity)) {
             return true;
         }
-        if (Inheritance.receiverOf(Inheritance.fieldPointer(self, "velocityXBasicDecimal").*.?, "getUnscaled").getUnscaled() < -maxVelocity) {
+        if (Inheritance.arithmetic(.less, Inheritance.receiverOf(Inheritance.fieldPointer(self, "velocityXBasicDecimal").*.?, "getUnscaled").getUnscaled(), -maxVelocity)) {
             return true;
         }
-        if (Inheritance.receiverOf(Inheritance.fieldPointer(self, "velocityYBasicDecimal").*.?, "getUnscaled").getUnscaled() > maxVelocity) {
+        if (Inheritance.arithmetic(.greater, Inheritance.receiverOf(Inheritance.fieldPointer(self, "velocityYBasicDecimal").*.?, "getUnscaled").getUnscaled(), maxVelocity)) {
             return true;
         }
-        if (Inheritance.receiverOf(Inheritance.fieldPointer(self, "velocityYBasicDecimal").*.?, "getUnscaled").getUnscaled() < -maxVelocity) {
+        if (Inheritance.arithmetic(.less, Inheritance.receiverOf(Inheritance.fieldPointer(self, "velocityYBasicDecimal").*.?, "getUnscaled").getUnscaled(), -maxVelocity)) {
             return true;
         }
         return false;

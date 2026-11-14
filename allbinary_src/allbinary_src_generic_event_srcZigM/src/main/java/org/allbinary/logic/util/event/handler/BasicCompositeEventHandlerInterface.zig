@@ -27,8 +27,8 @@ pub const BasicCompositeEventHandlerInterface = struct {
     pointer: *anyopaque,
     object: Object,
     toStringFn: *const fn (pointer: *anyopaque) ?*String,
-    getEventHandlerFn: *const fn (pointer: *anyopaque) ?*BasicEventHandlerInterface,
-    setEventHandlerFn: *const fn (pointer: *anyopaque, basicEventHandlerInterface: ?*BasicEventHandlerInterface) void,
+    getEventHandlerFn: *const fn (interface_pointer: *anyopaque) ?*BasicEventHandlerInterface,
+    setEventHandlerFn: *const fn (interface_pointer: *anyopaque, basicEventHandlerInterface: ?*BasicEventHandlerInterface) void,
 
     pub fn getEventHandler(self: *Self) ?*BasicEventHandlerInterface {
         return self.getEventHandlerFn(self.pointer);
@@ -44,19 +44,19 @@ pub const BasicCompositeEventHandlerInterface = struct {
 
     // The interface value of an object with the methods. Like a Java class a method can be declared by the object or a superclass.
     pub fn of(object: anytype) ?*Self {
-        const Implementation = @TypeOf(object);
+        const ImplementationType = @TypeOf(object);
         const Methods = struct {
             fn toString(pointer: *anyopaque) ?*String {
-                const implementation: Implementation = @ptrCast(@alignCast(pointer));
+                const implementation: ImplementationType = @ptrCast(@alignCast(pointer));
                 return String.valueOf(implementation);
             }
-            fn getEventHandler(pointer: *anyopaque) ?*BasicEventHandlerInterface {
-                const implementation: Implementation = @ptrCast(@alignCast(pointer));
+            fn getEventHandler(interface_pointer: *anyopaque) ?*BasicEventHandlerInterface {
+                const implementation: ImplementationType = @ptrCast(@alignCast(interface_pointer));
                 return Inheritance.upcast(?*BasicEventHandlerInterface, Inheritance.receiver(implementation, "getEventHandler").getEventHandler());
             }
-            fn setEventHandler(pointer: *anyopaque, basicEventHandlerInterface: ?*BasicEventHandlerInterface) void {
-                const implementation: Implementation = @ptrCast(@alignCast(pointer));
-                return Inheritance.receiver(implementation, "setEventHandler").setEventHandler(basicEventHandlerInterface);
+            fn setEventHandler(interface_pointer: *anyopaque, basicEventHandlerInterface: ?*BasicEventHandlerInterface) void {
+                const implementation: ImplementationType = @ptrCast(@alignCast(interface_pointer));
+                return Inheritance.call(implementation, "setEventHandler", .{ basicEventHandlerInterface });
             }
         };
         const this = allocator.create(Self) catch unreachable;

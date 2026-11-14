@@ -21,6 +21,7 @@ const Inheritance = @import("zig/Inheritance.zig");
 const ScaleProperties = @import("org/allbinary/media/ScaleProperties.zig").ScaleProperties;
 const Animation = @import("org/allbinary/animation/Animation.zig").Animation;
 const BasicAnimationInterfaceFactoryInterface = @import("org/allbinary/animation/BasicAnimationInterfaceFactoryInterface.zig").BasicAnimationInterfaceFactoryInterface;
+const Exception = @import("java/lang/Exception.zig").Exception;
 
 // Java interface: an implementation is a pointer and a table of functions
 pub const AnimationInterfaceFactoryInterface = struct {
@@ -30,8 +31,8 @@ pub const AnimationInterfaceFactoryInterface = struct {
     object: Object,
     base: BasicAnimationInterfaceFactoryInterface,
     toStringFn: *const fn (pointer: *anyopaque) ?*String,
-    getInstanceFn: *const fn (pointer: *anyopaque, instanceId: i32) ?*Animation,
-    setInitialScaleFn: *const fn (pointer: *anyopaque, scaleProperties: ?*ScaleProperties) void,
+    getInstanceFn: *const fn (interface_pointer: *anyopaque, instanceId: i32) ?*Animation,
+    setInitialScaleFn: *const fn (interface_pointer: *anyopaque, scaleProperties: ?*ScaleProperties) void,
 
     pub fn getInstance(self: *Self, instanceId: i32) ?*Animation {
         return self.getInstanceFn(self.pointer, instanceId);
@@ -47,19 +48,19 @@ pub const AnimationInterfaceFactoryInterface = struct {
 
     // The interface value of an object with the methods. Like a Java class a method can be declared by the object or a superclass.
     pub fn of(object: anytype) ?*Self {
-        const Implementation = @TypeOf(object);
+        const ImplementationType = @TypeOf(object);
         const Methods = struct {
             fn toString(pointer: *anyopaque) ?*String {
-                const implementation: Implementation = @ptrCast(@alignCast(pointer));
+                const implementation: ImplementationType = @ptrCast(@alignCast(pointer));
                 return String.valueOf(implementation);
             }
-            fn getInstance(pointer: *anyopaque, instanceId: i32) ?*Animation {
-                const implementation: Implementation = @ptrCast(@alignCast(pointer));
-                return Inheritance.upcast(?*Animation, Inheritance.receiver(implementation, "getInstance").getInstance(instanceId));
+            fn getInstance(interface_pointer: *anyopaque, instanceId: i32) ?*Animation {
+                const implementation: ImplementationType = @ptrCast(@alignCast(interface_pointer));
+                return Inheritance.upcast(?*Animation, Inheritance.call(implementation, "getInstance", .{ instanceId }));
             }
-            fn setInitialScale(pointer: *anyopaque, scaleProperties: ?*ScaleProperties) void {
-                const implementation: Implementation = @ptrCast(@alignCast(pointer));
-                return Inheritance.receiver(implementation, "setInitialScale").setInitialScale(scaleProperties);
+            fn setInitialScale(interface_pointer: *anyopaque, scaleProperties: ?*ScaleProperties) void {
+                const implementation: ImplementationType = @ptrCast(@alignCast(interface_pointer));
+                return Inheritance.call(implementation, "setInitialScale", .{ scaleProperties });
             }
         };
         const this = allocator.create(Self) catch unreachable;

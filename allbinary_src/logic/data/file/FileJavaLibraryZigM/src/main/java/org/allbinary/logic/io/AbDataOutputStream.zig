@@ -18,8 +18,8 @@ const allocator = std.heap.page_allocator;
 const String = @import("java/lang/String.zig").String;
 const Object = @import("java/lang/Object.zig").Object;
 const Inheritance = @import("zig/Inheritance.zig");
-// const DataOutputStream = @import("java/io/DataOutputStream.zig").DataOutputStream;
-// const OutputStream = @import("java/io/OutputStream.zig").OutputStream;
+const DataOutputStream = @import("java/io/DataOutputStream.zig").DataOutputStream;
+const OutputStream = @import("java/io/OutputStream.zig").OutputStream;
 
 pub const AbDataOutputStream = struct {
     const Self = @This();

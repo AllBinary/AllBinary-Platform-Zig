@@ -18,8 +18,8 @@ const allocator = std.heap.page_allocator;
 const String = @import("java/lang/String.zig").String;
 const Object = @import("java/lang/Object.zig").Object;
 const Inheritance = @import("zig/Inheritance.zig");
-// const Font = @import("javax/microedition/lcdui/Font.zig").Font;
-// const Graphics = @import("javax/microedition/lcdui/Graphics.zig").Graphics;
+const Font = @import("javax/microedition/lcdui/Font.zig").Font;
+const Graphics = @import("javax/microedition/lcdui/Graphics.zig").Graphics;
 const Anchor = @import("org/allbinary/graphics/Anchor.zig").Anchor;
 const CanvasStrings = @import("org/allbinary/graphics/displayable/CanvasStrings.zig").CanvasStrings;
 const DisplayInfoSingleton = @import("org/allbinary/graphics/displayable/DisplayInfoSingleton.zig").DisplayInfoSingleton;
@@ -51,7 +51,7 @@ pub const AboutPaintable = struct {
         this.ABOUT = Inheritance.upcast(?*String, CanvasStrings.getInstance().?.ABOUT);
         
         
-        this.paintableArray = @constCast(&[_]?*Paintable{ this })[0..];
+        this.paintableArray = @constCast(&[_]?*Paintable{ Inheritance.upcast(?*Paintable, this) })[0..];
         this.myFontProcessor = Inheritance.upcast(?*MyFontProcessor, Inheritance.callStatic(UpdateMyFontProcessor, "create1", .{ this }));
         this.charHeight = 0;
         this.aboutBeginWidth = 0;

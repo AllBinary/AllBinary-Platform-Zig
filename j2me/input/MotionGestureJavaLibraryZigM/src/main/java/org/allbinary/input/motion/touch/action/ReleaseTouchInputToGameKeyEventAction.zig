@@ -26,6 +26,7 @@ const GameKeyCompleteMotionGestureInputEvent = @import("org/allbinary/game/input
 const TouchMotionGestureFactory = @import("org/allbinary/input/motion/gesture/TouchMotionGestureFactory.zig").TouchMotionGestureFactory;
 const NullUtil = @import("org/allbinary/logic/NullUtil.zig").NullUtil;
 const CommonStrings = @import("org/allbinary/string/CommonStrings.zig").CommonStrings;
+const Exception = @import("java/lang/Exception.zig").Exception;
 
 pub const ReleaseTouchInputToGameKeyEventAction = struct {
     const Self = @This();
@@ -36,7 +37,7 @@ pub const ReleaseTouchInputToGameKeyEventAction = struct {
 
     // Static fields with runtime initializers: call staticInit once at startup
     pub fn staticInit() void {
-        instance = Inheritance.upcast(?Object, NullUtil.getInstance().?.NULL_OBJECT);
+        instance = Inheritance.upcast(?Object, Inheritance.fieldPointer(NullUtil.getInstance().?, "NULL_OBJECT").*);
     }
 
     fn initFields(this: *Self) void {
@@ -45,7 +46,7 @@ pub const ReleaseTouchInputToGameKeyEventAction = struct {
     
 
     pub fn getInstance() ?*GameKeyCompleteMotionGestureInputEvent {
-        if (Object.same(ReleaseTouchInputToGameKeyEventAction.instance, NullUtil.getInstance().?.NULL_OBJECT)) {
+        if (Object.same(ReleaseTouchInputToGameKeyEventAction.instance, Inheritance.fieldPointer(NullUtil.getInstance().?, "NULL_OBJECT").*)) {
             ReleaseTouchInputToGameKeyEventAction.instance = Inheritance.upcast(@TypeOf(ReleaseTouchInputToGameKeyEventAction.instance), ReleaseTouchInputToGameKeyEventAction.create());
         }
         return Inheritance.cast(?*GameKeyCompleteMotionGestureInputEvent, ReleaseTouchInputToGameKeyEventAction.instance);
@@ -55,7 +56,7 @@ pub const ReleaseTouchInputToGameKeyEventAction = struct {
     pub fn create() *Self {
         const this = allocator.create(Self) catch unreachable;
         this.* = .{};
-        this.base = Inheritance.callStatic(GameKeyCompleteMotionGestureInputEvent, "create3", .{ String.literal("Release Action"), TouchMotionGestureFactory.getInstance().?.RELEASED, Inheritance.receiverOf(Inheritance.receiverOf(PlatformInputMappingFactory.getInstance().?, "getPersistentInputMappingInstance").getPersistentInputMappingInstance().?, "getInputMapping").getInputMapping() }).*;
+        this.base = Inheritance.callStatic(GameKeyCompleteMotionGestureInputEvent, "create3", .{ String.literal("Release Action"), Inheritance.fieldPointer(TouchMotionGestureFactory.getInstance().?, "RELEASED").*, Inheritance.receiverOf(Inheritance.receiverOf(PlatformInputMappingFactory.getInstance().?, "getPersistentInputMappingInstance").getPersistentInputMappingInstance().?, "getInputMapping").getInputMapping() }).*;
         this.initFields();
         { // try
             _ = Inheritance.call(this, "setGameKey", .{ this.NONE });
@@ -63,7 +64,7 @@ pub const ReleaseTouchInputToGameKeyEventAction = struct {
         }
         // catch (Exception e):
 //             const commonStrings: ?*CommonStrings = Inheritance.upcast(?*CommonStrings, CommonStrings.getInstance()); _ = commonStrings;
-//             _ = Inheritance.call(Inheritance.fieldPointer(this, "logUtil").*.?, "put", .{ commonStrings.?.EXCEPTION, this, commonStrings.?.CONSTRUCTOR, e });
+//             _ = Inheritance.call(Inheritance.fieldPointer(this, "logUtil").*.?, "put", .{ Inheritance.fieldPointer(commonStrings.?, "EXCEPTION").*, this, Inheritance.fieldPointer(commonStrings.?, "CONSTRUCTOR").*, e });
         Inheritance.bindOverrides(this);
         return this;
     }

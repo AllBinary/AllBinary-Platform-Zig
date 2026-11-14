@@ -21,6 +21,7 @@ const Inheritance = @import("zig/Inheritance.zig");
 const CollidableCompositeLayer = @import("org/allbinary/game/layer/CollidableCompositeLayer.zig").CollidableCompositeLayer;
 const CollidableBaseBehavior = @import("org/allbinary/game/collision/CollidableBaseBehavior.zig").CollidableBaseBehavior;
 const CollidableInterfaceCompositeInterface = @import("org/allbinary/game/collision/CollidableInterfaceCompositeInterface.zig").CollidableInterfaceCompositeInterface;
+const Exception = @import("java/lang/Exception.zig").Exception;
 
 pub const CollidableNeverCollideBehavior = struct {
     const Self = @This();

@@ -18,8 +18,8 @@ const allocator = std.heap.page_allocator;
 const String = @import("java/lang/String.zig").String;
 const Object = @import("java/lang/Object.zig").Object;
 const Inheritance = @import("zig/Inheritance.zig");
-// const Command = @import("javax/microedition/lcdui/Command.zig").Command;
-// const ImageItem = @import("javax/microedition/lcdui/ImageItem.zig").ImageItem;
+const Command = @import("javax/microedition/lcdui/Command.zig").Command;
+const ImageItem = @import("javax/microedition/lcdui/ImageItem.zig").ImageItem;
 const BasicColor = @import("org/allbinary/graphics/color/BasicColor.zig").BasicColor;
 const DisplayInfoSingleton = @import("org/allbinary/graphics/displayable/DisplayInfoSingleton.zig").DisplayInfoSingleton;
 const ScreenInfo = @import("org/allbinary/graphics/form/ScreenInfo.zig").ScreenInfo;
@@ -60,7 +60,7 @@ pub const CommandTextItemArrayFactory = struct {
         var textItem: ?*CommandTextItem = null;
         var priorityLimit: i32 = 7;
         const displayInfo: ?*DisplayInfoSingleton = Inheritance.upcast(?*DisplayInfoSingleton, DisplayInfoSingleton.getInstance());
-        const isLargeEnoughDisplayForBigMenu: bool = (displayInfo.?.isPortrait() and displayInfo.?.getLastHeight() >= ScreenInfo.getInstance().?.MEDIUM_WIDTH) or (!displayInfo.?.isPortrait() and displayInfo.?.getLastWidth() >= ScreenInfo.getInstance().?.MEDIUM_WIDTH);
+        const isLargeEnoughDisplayForBigMenu: bool = (displayInfo.?.isPortrait() and Inheritance.arithmetic(.greater_equal, displayInfo.?.getLastHeight(), Inheritance.fieldPointer(ScreenInfo.getInstance().?, "MEDIUM_WIDTH").*)) or (!displayInfo.?.isPortrait() and Inheritance.arithmetic(.greater_equal, displayInfo.?.getLastWidth(), Inheritance.fieldPointer(ScreenInfo.getInstance().?, "MEDIUM_WIDTH").*));
         if (!isLargeEnoughDisplayForBigMenu and size > 3) {
             priorityLimit = 3;
         }
@@ -69,10 +69,10 @@ pub const CommandTextItemArrayFactory = struct {
             var index: i32 = 0;
             while (index < size) : (index += 1) {
             command = Inheritance.cast(?*Command, Inheritance.call(vectorUtil.?, "elementAt", .{ vector, index }));
-            if (command.?.getPriority() < priorityLimit) {
+            if (Inheritance.arithmetic(.less, command.?.getPriority(), priorityLimit)) {
                 const aBoolean: ?*Boolean = Inheritance.cast(?*Boolean, Inheritance.call(self.visitorInterface.?, "visit", .{ command }));
                 if (aBoolean.?.booleanValue()) {
-                    textItem = Inheritance.callStatic(CommandTextItem, "create5", .{ command, ImageItem.LAYOUT_DEFAULT, StringUtil.getInstance().?.EMPTY_STRING, backgroundBasicColor, foregroundBasicColor });
+                    textItem = Inheritance.callStatic(CommandTextItem, "create5", .{ command, ImageItem.LAYOUT_DEFAULT, Inheritance.fieldPointer(StringUtil.getInstance().?, "EMPTY_STRING").*, backgroundBasicColor, foregroundBasicColor });
                     _ = Inheritance.call(self.list.?, "add", .{ textItem });
                 }
             }
@@ -83,7 +83,7 @@ pub const CommandTextItemArrayFactory = struct {
         {
             var index: i32 = 0;
             while (index < size2) : (index += 1) {
-            textItemArray[@intCast(index)] = Inheritance.cast(?*ABCustomItem, self.list.?.objectArray[@intCast(index)]);
+            textItemArray[@intCast(index)] = Inheritance.cast(?*ABCustomItem, Inheritance.fieldPointer(self.list.?, "objectArray").*[@intCast(index)]);
             }
         }
         return textItemArray;

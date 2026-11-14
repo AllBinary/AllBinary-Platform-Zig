@@ -53,7 +53,7 @@ pub const HighScoresHelper = struct {
     pub fn getNextHighScores(self: *Self) ?*HighScores {
         var highScores: ?*HighScores = Inheritance.upcast(?*HighScores, Inheritance.fieldPointer(self, "highScoresArrayP").*[@intCast(self.circularIndexUtil.?.getIndex())]);
         var index: i32 = 0;
-        while ((highScores.?.getTotal() < 1 or self.lastIndex == self.circularIndexUtil.?.getIndex()) and index < @as(i32, @intCast(Inheritance.fieldPointer(self, "highScoresArrayP").*.len))) {
+        while ((Inheritance.arithmetic(.less, highScores.?.getTotal(), 1) or self.lastIndex == self.circularIndexUtil.?.getIndex()) and index < @as(i32, @intCast(Inheritance.fieldPointer(self, "highScoresArrayP").*.len))) {
             _ = self.circularIndexUtil.?.next();
             highScores = Inheritance.upcast(@TypeOf(highScores), Inheritance.fieldPointer(self, "highScoresArrayP").*[@intCast(self.circularIndexUtil.?.getIndex())]);
             index += 1;
@@ -73,7 +73,7 @@ pub const HighScoresHelper = struct {
             var index: i32 = @as(i32, @intCast(Inheritance.fieldPointer(self, "highScoresArrayP").*.len)) - 1;
             while (index >= 0) : (index -= 1) {
             highScores = Inheritance.upcast(@TypeOf(highScores), Inheritance.fieldPointer(self, "highScoresArrayP").*[@intCast(index)]);
-            if (highScores.?.getTotal() > 0) {
+            if (Inheritance.arithmetic(.greater, highScores.?.getTotal(), 0)) {
                 anyScores = true;
             }
             }

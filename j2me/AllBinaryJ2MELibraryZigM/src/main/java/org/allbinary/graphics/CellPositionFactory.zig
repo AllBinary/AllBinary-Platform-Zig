@@ -22,6 +22,7 @@ const LogUtil = @import("org/allbinary/logic/communication/log/LogUtil.zig").Log
 const StringMaker = @import("org/allbinary/logic/string/StringMaker.zig").StringMaker;
 const CommonStrings = @import("org/allbinary/string/CommonStrings.zig").CommonStrings;
 const CellPosition = @import("org/allbinary/graphics/CellPosition.zig").CellPosition;
+const Exception = @import("java/lang/Exception.zig").Exception;
 
 pub const CellPositionFactory = struct {
     const Self = @This();
@@ -67,7 +68,7 @@ pub const CellPositionFactory = struct {
         _ = Inheritance.call(stringBuffer.?, "appendint", .{ columns });
         _ = Inheritance.call(stringBuffer.?, "append", .{ String.literal(" rows: ") });
         _ = Inheritance.call(stringBuffer.?, "appendint", .{ rows });
-        _ = Inheritance.call(self.logUtil.?, "putF", .{ Object.toString(Object.of(stringBuffer)), self, commonStrings.?.INIT });
+        _ = Inheritance.call(self.logUtil.?, "putF", .{ Object.toString(Object.of(stringBuffer)), self, Inheritance.fieldPointer(commonStrings.?, "INIT").* });
         self.cellPositionArray = Inheritance.upcast(@TypeOf(self.cellPositionArray), array_N66343: { const array_N66343_array = allocator.alloc([]?*CellPosition, @intCast(columns)) catch unreachable; for (array_N66343_array) |*array_N66343_row| { array_N66343_row.* = allocator.alloc(?*CellPosition, @intCast(rows)) catch unreachable; @memset(array_N66343_row.*, null); } break :array_N66343 array_N66343_array; });
         self.columns = columns;
         self.rows = rows;
@@ -91,14 +92,14 @@ pub const CellPositionFactory = struct {
         }
         // catch (Exception e):
 //             const commonStrings: ?*CommonStrings = Inheritance.upcast(?*CommonStrings, CommonStrings.getInstance()); _ = commonStrings;
-//             _ = Inheritance.call(self.logUtil.?, "put", .{ Object.toString(Object.of(Inheritance.call(Inheritance.call(Inheritance.call(Inheritance.call(Inheritance.call(Inheritance.call(Inheritance.call(Inheritance.call(StringMaker.create(), "append", .{ String.literal("columns: ") }).?, "appendint", .{ self.getColumns() }).?, "append", .{ String.literal(" rows: ") }).?, "appendint", .{ self.getRows() }).?, "append", .{ String.literal(" col: ") }).?, "appendint", .{ i_column }).?, "append", .{ String.literal(" row: ") }).?, "appendint", .{ i_row }))), self, commonStrings.?.GET_INSTANCE, e });
+//             _ = Inheritance.call(self.logUtil.?, "put", .{ Object.toString(Object.of(Inheritance.call(Inheritance.call(Inheritance.call(Inheritance.call(Inheritance.call(Inheritance.call(Inheritance.call(Inheritance.call(StringMaker.create(), "append", .{ String.literal("columns: ") }).?, "appendint", .{ self.getColumns() }).?, "append", .{ String.literal(" rows: ") }).?, "appendint", .{ self.getRows() }).?, "append", .{ String.literal(" col: ") }).?, "appendint", .{ i_column }).?, "append", .{ String.literal(" row: ") }).?, "appendint", .{ i_row }))), self, Inheritance.fieldPointer(commonStrings.?, "GET_INSTANCE").*, e });
 //             return self.NONE;
     }
     
 
     pub fn createInstance(self: *Self, i_column: i32, i_row: i32) ?*CellPosition {
         var cellPositionCanBeNull: ?*CellPosition = Inheritance.upcast(?*CellPosition, self.cellPositionArray[@intCast(i_column)][@intCast(i_row)]);
-        if (cellPositionCanBeNull == null) {
+        if (Object.isNull(cellPositionCanBeNull)) {
             cellPositionCanBeNull = Inheritance.callStatic(CellPosition, "create4", .{ i_column, i_row, self.columns, self.rows });
             self.cellPositionArray[@intCast(i_column)][@intCast(i_row)] = Inheritance.upcast(@TypeOf(self.cellPositionArray[@intCast(i_column)][@intCast(i_row)]), cellPositionCanBeNull);
         }

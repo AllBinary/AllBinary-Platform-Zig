@@ -38,7 +38,7 @@ pub const GameGlobalsFactory = struct {
     fn initFields(this: *Self) void {
         this.newCanvas = true;
         this.newDisplaybleTime = @as(i64, @intCast(@as(i32, std.math.minInt(i32))));
-        this.point = Inheritance.upcast(?*GPoint, PointFactory.getInstance().?.ZERO_ZERO);
+        this.point = Inheritance.upcast(?*GPoint, Inheritance.fieldPointer(PointFactory.getInstance().?, "ZERO_ZERO").*);
     }
 
     pub fn create() *Self {

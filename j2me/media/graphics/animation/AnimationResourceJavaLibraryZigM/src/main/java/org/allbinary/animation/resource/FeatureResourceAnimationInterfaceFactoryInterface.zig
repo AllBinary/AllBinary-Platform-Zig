@@ -30,8 +30,10 @@ pub const FeatureResourceAnimationInterfaceFactoryInterface = struct {
     pointer: *anyopaque,
     object: Object,
     base: ResourceAnimationInterfaceFactoryInterface,
+    base2: RectangleResourceFactoryInterface,
+    base3: GameFeatureControlledInterface,
     toStringFn: *const fn (pointer: *anyopaque) ?*String,
-    getHashtableFn: *const fn (pointer: *anyopaque) ?*ABHashtable,
+    getHashtableFn: *const fn (interface_pointer: *anyopaque) ?*ABHashtable,
 
     pub fn getHashtable(self: *Self) ?*ABHashtable {
         return self.getHashtableFn(self.pointer);
@@ -43,19 +45,19 @@ pub const FeatureResourceAnimationInterfaceFactoryInterface = struct {
 
     // The interface value of an object with the methods. Like a Java class a method can be declared by the object or a superclass.
     pub fn of(object: anytype) ?*Self {
-        const Implementation = @TypeOf(object);
+        const ImplementationType = @TypeOf(object);
         const Methods = struct {
             fn toString(pointer: *anyopaque) ?*String {
-                const implementation: Implementation = @ptrCast(@alignCast(pointer));
+                const implementation: ImplementationType = @ptrCast(@alignCast(pointer));
                 return String.valueOf(implementation);
             }
-            fn getHashtable(pointer: *anyopaque) ?*ABHashtable {
-                const implementation: Implementation = @ptrCast(@alignCast(pointer));
+            fn getHashtable(interface_pointer: *anyopaque) ?*ABHashtable {
+                const implementation: ImplementationType = @ptrCast(@alignCast(interface_pointer));
                 return Inheritance.upcast(?*ABHashtable, Inheritance.receiver(implementation, "getHashtable").getHashtable());
             }
         };
         const this = allocator.create(Self) catch unreachable;
-        this.* = .{ .pointer = object, .object = Object.of(object).?, .base = ResourceAnimationInterfaceFactoryInterface.of(object).?.*, .toStringFn = Methods.toString, .getHashtableFn = Methods.getHashtable };
+        this.* = .{ .pointer = object, .object = Object.of(object).?, .base = ResourceAnimationInterfaceFactoryInterface.of(object).?.*, .base2 = RectangleResourceFactoryInterface.of(object).?.*, .base3 = GameFeatureControlledInterface.of(object).?.*, .toStringFn = Methods.toString, .getHashtableFn = Methods.getHashtable };
         return this;
     }
 };

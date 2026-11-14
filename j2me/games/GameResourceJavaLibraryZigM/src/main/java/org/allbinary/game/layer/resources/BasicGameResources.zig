@@ -24,6 +24,7 @@ const StringMaker = @import("org/allbinary/logic/string/StringMaker.zig").String
 const StringUtil = @import("org/allbinary/logic/string/StringUtil.zig").StringUtil;
 const CommonStrings = @import("org/allbinary/string/CommonStrings.zig").CommonStrings;
 const GameGraphicsResourceUtil = @import("org/allbinary/game/layer/resources/GameGraphicsResourceUtil.zig").GameGraphicsResourceUtil;
+const Exception = @import("java/lang/Exception.zig").Exception;
 
 pub const BasicGameResources = struct {
     const Self = @This();
@@ -40,8 +41,8 @@ pub const BasicGameResources = struct {
 
     fn initFields(this: *Self) void {
         this.logUtil = Inheritance.upcast(?*LogUtil, LogUtil.getInstance());
-        this.RESOURCE = Inheritance.upcast(?*String, StringUtil.getInstance().?.EMPTY_STRING);
-        this.RESOURCE_DESTROY = Inheritance.upcast(?*String, StringUtil.getInstance().?.EMPTY_STRING);
+        this.RESOURCE = Inheritance.upcast(?*String, Inheritance.fieldPointer(StringUtil.getInstance().?, "EMPTY_STRING").*);
+        this.RESOURCE_DESTROY = Inheritance.upcast(?*String, Inheritance.fieldPointer(StringUtil.getInstance().?, "EMPTY_STRING").*);
     }
     
 
@@ -55,7 +56,7 @@ pub const BasicGameResources = struct {
 
     pub fn init(self: *Self, ROOT: ?*String, SIZE: []?*String) void {
         { // try
-            const scale: i32 = Inheritance.receiverOf(Inheritance.receiverOf(GameConfigurationCentral.getInstance().?.SCALE.?, "getValue").getValue().?, "intValue").intValue();
+            const scale: i32 = Inheritance.receiverOf(Inheritance.receiverOf(Inheritance.fieldPointer(GameConfigurationCentral.getInstance().?, "SCALE").*.?, "getValue").getValue().?, "intValue").intValue();
             if (scale > 1 and scale - 1 < @as(i32, @intCast(SIZE.len))) {
                 _ = Inheritance.call(self, "append", .{ ROOT, SIZE[@intCast(scale - 1)] });
             } else {
@@ -64,7 +65,7 @@ pub const BasicGameResources = struct {
         }
         // catch (Exception e):
 //             const commonStrings: ?*CommonStrings = Inheritance.upcast(?*CommonStrings, CommonStrings.getInstance()); _ = commonStrings;
-//             _ = Inheritance.call(self.logUtil.?, "put", .{ commonStrings.?.EXCEPTION, self, commonStrings.?.INIT, e });
+//             _ = Inheritance.call(self.logUtil.?, "put", .{ Inheritance.fieldPointer(commonStrings.?, "EXCEPTION").*, self, Inheritance.fieldPointer(commonStrings.?, "INIT").*, e });
     }
     
 

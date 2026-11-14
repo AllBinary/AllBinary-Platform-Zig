@@ -27,7 +27,7 @@ pub const GameNotificationHudCompositeInterface = struct {
     pointer: *anyopaque,
     object: Object,
     toStringFn: *const fn (pointer: *anyopaque) ?*String,
-    getGameNotificationHudFn: *const fn (pointer: *anyopaque) ?*GameNotificationHud,
+    getGameNotificationHudFn: *const fn (interface_pointer: *anyopaque) ?*GameNotificationHud,
 
     pub fn getGameNotificationHud(self: *Self) ?*GameNotificationHud {
         return self.getGameNotificationHudFn(self.pointer);
@@ -39,14 +39,14 @@ pub const GameNotificationHudCompositeInterface = struct {
 
     // The interface value of an object with the methods. Like a Java class a method can be declared by the object or a superclass.
     pub fn of(object: anytype) ?*Self {
-        const Implementation = @TypeOf(object);
+        const ImplementationType = @TypeOf(object);
         const Methods = struct {
             fn toString(pointer: *anyopaque) ?*String {
-                const implementation: Implementation = @ptrCast(@alignCast(pointer));
+                const implementation: ImplementationType = @ptrCast(@alignCast(pointer));
                 return String.valueOf(implementation);
             }
-            fn getGameNotificationHud(pointer: *anyopaque) ?*GameNotificationHud {
-                const implementation: Implementation = @ptrCast(@alignCast(pointer));
+            fn getGameNotificationHud(interface_pointer: *anyopaque) ?*GameNotificationHud {
+                const implementation: ImplementationType = @ptrCast(@alignCast(interface_pointer));
                 return Inheritance.upcast(?*GameNotificationHud, Inheritance.receiver(implementation, "getGameNotificationHud").getGameNotificationHud());
             }
         };

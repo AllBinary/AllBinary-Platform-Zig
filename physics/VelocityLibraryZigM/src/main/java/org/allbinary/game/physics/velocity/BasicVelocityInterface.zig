@@ -29,18 +29,18 @@ pub const BasicVelocityInterface = struct {
     pointer: *anyopaque,
     object: Object,
     toStringFn: *const fn (pointer: *anyopaque) ?*String,
-    getVelocityXBasicDecimalPFn: *const fn (pointer: *anyopaque) ?*BasicDecimal,
-    getVelocityYBasicDecimalPFn: *const fn (pointer: *anyopaque) ?*BasicDecimal,
-    zeroFn: *const fn (pointer: *anyopaque) void,
-    setVelocityWithBigDecimalAndDirectionFn: *const fn (pointer: *anyopaque, magnitudeBasicDecimal: ?*BasicDecimal, direction: ?*Direction, otherDirection: ?*Direction) void,
-    addVelocityWithBigDecimalAndDirectionFn: *const fn (pointer: *anyopaque, magnitudeBasicDecimal: ?*BasicDecimal, direction: ?*Direction, otherDirection: ?*Direction) void,
-    setVelocityWithDirectionFn: *const fn (pointer: *anyopaque, magnitude: i64, direction: ?*Direction, otherDirection: ?*Direction) void,
-    addVelocityWithDirectionFn: *const fn (pointer: *anyopaque, magnitude: i64, direction: ?*Direction, otherDirection: ?*Direction) void,
-    setVelocityWithBigDecimalFn: *const fn (pointer: *anyopaque, magnitudeBasicDecimal: ?*BasicDecimal, angle: ?*Angle, otherAngle: ?*Angle) void,
-    addVelocityWithBigDecimalFn: *const fn (pointer: *anyopaque, magnitudeBasicDecimal: ?*BasicDecimal, angle: ?*Angle, otherAngle: ?*Angle) void,
-    setVelocityFn: *const fn (pointer: *anyopaque, magnitude: i64, angle: ?*Angle, otherAngle: ?*Angle) void,
-    addVelocityFn: *const fn (pointer: *anyopaque, magnitude: i64, angle: ?*Angle, otherAngle: ?*Angle) void,
-    addVelocityiFn: *const fn (pointer: *anyopaque, magnitude: i64, angle: i32, otherAngle: i32) void,
+    getVelocityXBasicDecimalPFn: *const fn (interface_pointer: *anyopaque) ?*BasicDecimal,
+    getVelocityYBasicDecimalPFn: *const fn (interface_pointer: *anyopaque) ?*BasicDecimal,
+    zeroFn: *const fn (interface_pointer: *anyopaque) void,
+    setVelocityWithBigDecimalAndDirectionFn: *const fn (interface_pointer: *anyopaque, magnitudeBasicDecimal: ?*BasicDecimal, direction: ?*Direction, otherDirection: ?*Direction) void,
+    addVelocityWithBigDecimalAndDirectionFn: *const fn (interface_pointer: *anyopaque, magnitudeBasicDecimal: ?*BasicDecimal, direction: ?*Direction, otherDirection: ?*Direction) void,
+    setVelocityWithDirectionFn: *const fn (interface_pointer: *anyopaque, magnitude: i64, direction: ?*Direction, otherDirection: ?*Direction) void,
+    addVelocityWithDirectionFn: *const fn (interface_pointer: *anyopaque, magnitude: i64, direction: ?*Direction, otherDirection: ?*Direction) void,
+    setVelocityWithBigDecimalFn: *const fn (interface_pointer: *anyopaque, magnitudeBasicDecimal: ?*BasicDecimal, angle: ?*Angle, otherAngle: ?*Angle) void,
+    addVelocityWithBigDecimalFn: *const fn (interface_pointer: *anyopaque, magnitudeBasicDecimal: ?*BasicDecimal, angle: ?*Angle, otherAngle: ?*Angle) void,
+    setVelocityFn: *const fn (interface_pointer: *anyopaque, magnitude: i64, angle: ?*Angle, otherAngle: ?*Angle) void,
+    addVelocityFn: *const fn (interface_pointer: *anyopaque, magnitude: i64, angle: ?*Angle, otherAngle: ?*Angle) void,
+    addVelocityiFn: *const fn (interface_pointer: *anyopaque, magnitude: i64, angle: i32, otherAngle: i32) void,
 
     pub fn getVelocityXBasicDecimalP(self: *Self) ?*BasicDecimal {
         return self.getVelocityXBasicDecimalPFn(self.pointer);
@@ -96,59 +96,59 @@ pub const BasicVelocityInterface = struct {
 
     // The interface value of an object with the methods. Like a Java class a method can be declared by the object or a superclass.
     pub fn of(object: anytype) ?*Self {
-        const Implementation = @TypeOf(object);
+        const ImplementationType = @TypeOf(object);
         const Methods = struct {
             fn toString(pointer: *anyopaque) ?*String {
-                const implementation: Implementation = @ptrCast(@alignCast(pointer));
+                const implementation: ImplementationType = @ptrCast(@alignCast(pointer));
                 return String.valueOf(implementation);
             }
-            fn getVelocityXBasicDecimalP(pointer: *anyopaque) ?*BasicDecimal {
-                const implementation: Implementation = @ptrCast(@alignCast(pointer));
+            fn getVelocityXBasicDecimalP(interface_pointer: *anyopaque) ?*BasicDecimal {
+                const implementation: ImplementationType = @ptrCast(@alignCast(interface_pointer));
                 return Inheritance.upcast(?*BasicDecimal, Inheritance.receiver(implementation, "getVelocityXBasicDecimalP").getVelocityXBasicDecimalP());
             }
-            fn getVelocityYBasicDecimalP(pointer: *anyopaque) ?*BasicDecimal {
-                const implementation: Implementation = @ptrCast(@alignCast(pointer));
+            fn getVelocityYBasicDecimalP(interface_pointer: *anyopaque) ?*BasicDecimal {
+                const implementation: ImplementationType = @ptrCast(@alignCast(interface_pointer));
                 return Inheritance.upcast(?*BasicDecimal, Inheritance.receiver(implementation, "getVelocityYBasicDecimalP").getVelocityYBasicDecimalP());
             }
-            fn zero(pointer: *anyopaque) void {
-                const implementation: Implementation = @ptrCast(@alignCast(pointer));
+            fn zero(interface_pointer: *anyopaque) void {
+                const implementation: ImplementationType = @ptrCast(@alignCast(interface_pointer));
                 return Inheritance.receiver(implementation, "zero").zero();
             }
-            fn setVelocityWithBigDecimalAndDirection(pointer: *anyopaque, magnitudeBasicDecimal: ?*BasicDecimal, direction: ?*Direction, otherDirection: ?*Direction) void {
-                const implementation: Implementation = @ptrCast(@alignCast(pointer));
-                return Inheritance.receiver(implementation, "setVelocityWithBigDecimalAndDirection").setVelocityWithBigDecimalAndDirection(magnitudeBasicDecimal, direction, otherDirection);
+            fn setVelocityWithBigDecimalAndDirection(interface_pointer: *anyopaque, magnitudeBasicDecimal: ?*BasicDecimal, direction: ?*Direction, otherDirection: ?*Direction) void {
+                const implementation: ImplementationType = @ptrCast(@alignCast(interface_pointer));
+                return Inheritance.call(implementation, "setVelocityWithBigDecimalAndDirection", .{ magnitudeBasicDecimal, direction, otherDirection });
             }
-            fn addVelocityWithBigDecimalAndDirection(pointer: *anyopaque, magnitudeBasicDecimal: ?*BasicDecimal, direction: ?*Direction, otherDirection: ?*Direction) void {
-                const implementation: Implementation = @ptrCast(@alignCast(pointer));
-                return Inheritance.receiver(implementation, "addVelocityWithBigDecimalAndDirection").addVelocityWithBigDecimalAndDirection(magnitudeBasicDecimal, direction, otherDirection);
+            fn addVelocityWithBigDecimalAndDirection(interface_pointer: *anyopaque, magnitudeBasicDecimal: ?*BasicDecimal, direction: ?*Direction, otherDirection: ?*Direction) void {
+                const implementation: ImplementationType = @ptrCast(@alignCast(interface_pointer));
+                return Inheritance.call(implementation, "addVelocityWithBigDecimalAndDirection", .{ magnitudeBasicDecimal, direction, otherDirection });
             }
-            fn setVelocityWithDirection(pointer: *anyopaque, magnitude: i64, direction: ?*Direction, otherDirection: ?*Direction) void {
-                const implementation: Implementation = @ptrCast(@alignCast(pointer));
-                return Inheritance.receiver(implementation, "setVelocityWithDirection").setVelocityWithDirection(magnitude, direction, otherDirection);
+            fn setVelocityWithDirection(interface_pointer: *anyopaque, magnitude: i64, direction: ?*Direction, otherDirection: ?*Direction) void {
+                const implementation: ImplementationType = @ptrCast(@alignCast(interface_pointer));
+                return Inheritance.call(implementation, "setVelocityWithDirection", .{ magnitude, direction, otherDirection });
             }
-            fn addVelocityWithDirection(pointer: *anyopaque, magnitude: i64, direction: ?*Direction, otherDirection: ?*Direction) void {
-                const implementation: Implementation = @ptrCast(@alignCast(pointer));
-                return Inheritance.receiver(implementation, "addVelocityWithDirection").addVelocityWithDirection(magnitude, direction, otherDirection);
+            fn addVelocityWithDirection(interface_pointer: *anyopaque, magnitude: i64, direction: ?*Direction, otherDirection: ?*Direction) void {
+                const implementation: ImplementationType = @ptrCast(@alignCast(interface_pointer));
+                return Inheritance.call(implementation, "addVelocityWithDirection", .{ magnitude, direction, otherDirection });
             }
-            fn setVelocityWithBigDecimal(pointer: *anyopaque, magnitudeBasicDecimal: ?*BasicDecimal, angle: ?*Angle, otherAngle: ?*Angle) void {
-                const implementation: Implementation = @ptrCast(@alignCast(pointer));
-                return Inheritance.receiver(implementation, "setVelocityWithBigDecimal").setVelocityWithBigDecimal(magnitudeBasicDecimal, angle, otherAngle);
+            fn setVelocityWithBigDecimal(interface_pointer: *anyopaque, magnitudeBasicDecimal: ?*BasicDecimal, angle: ?*Angle, otherAngle: ?*Angle) void {
+                const implementation: ImplementationType = @ptrCast(@alignCast(interface_pointer));
+                return Inheritance.call(implementation, "setVelocityWithBigDecimal", .{ magnitudeBasicDecimal, angle, otherAngle });
             }
-            fn addVelocityWithBigDecimal(pointer: *anyopaque, magnitudeBasicDecimal: ?*BasicDecimal, angle: ?*Angle, otherAngle: ?*Angle) void {
-                const implementation: Implementation = @ptrCast(@alignCast(pointer));
-                return Inheritance.receiver(implementation, "addVelocityWithBigDecimal").addVelocityWithBigDecimal(magnitudeBasicDecimal, angle, otherAngle);
+            fn addVelocityWithBigDecimal(interface_pointer: *anyopaque, magnitudeBasicDecimal: ?*BasicDecimal, angle: ?*Angle, otherAngle: ?*Angle) void {
+                const implementation: ImplementationType = @ptrCast(@alignCast(interface_pointer));
+                return Inheritance.call(implementation, "addVelocityWithBigDecimal", .{ magnitudeBasicDecimal, angle, otherAngle });
             }
-            fn setVelocity(pointer: *anyopaque, magnitude: i64, angle: ?*Angle, otherAngle: ?*Angle) void {
-                const implementation: Implementation = @ptrCast(@alignCast(pointer));
-                return Inheritance.receiver(implementation, "setVelocity").setVelocity(magnitude, angle, otherAngle);
+            fn setVelocity(interface_pointer: *anyopaque, magnitude: i64, angle: ?*Angle, otherAngle: ?*Angle) void {
+                const implementation: ImplementationType = @ptrCast(@alignCast(interface_pointer));
+                return Inheritance.call(implementation, "setVelocity", .{ magnitude, angle, otherAngle });
             }
-            fn addVelocity(pointer: *anyopaque, magnitude: i64, angle: ?*Angle, otherAngle: ?*Angle) void {
-                const implementation: Implementation = @ptrCast(@alignCast(pointer));
-                return Inheritance.receiver(implementation, "addVelocity").addVelocity(magnitude, angle, otherAngle);
+            fn addVelocity(interface_pointer: *anyopaque, magnitude: i64, angle: ?*Angle, otherAngle: ?*Angle) void {
+                const implementation: ImplementationType = @ptrCast(@alignCast(interface_pointer));
+                return Inheritance.call(implementation, "addVelocity", .{ magnitude, angle, otherAngle });
             }
-            fn addVelocityi(pointer: *anyopaque, magnitude: i64, angle: i32, otherAngle: i32) void {
-                const implementation: Implementation = @ptrCast(@alignCast(pointer));
-                return Inheritance.receiver(implementation, "addVelocityi").addVelocityi(magnitude, angle, otherAngle);
+            fn addVelocityi(interface_pointer: *anyopaque, magnitude: i64, angle: i32, otherAngle: i32) void {
+                const implementation: ImplementationType = @ptrCast(@alignCast(interface_pointer));
+                return Inheritance.call(implementation, "addVelocityi", .{ magnitude, angle, otherAngle });
             }
         };
         const this = allocator.create(Self) catch unreachable;

@@ -24,6 +24,7 @@ const GameInput = @import("org/allbinary/game/input/GameInput.zig").GameInput;
 const AllBinaryLayer = @import("org/allbinary/layer/AllBinaryLayer.zig").AllBinaryLayer;
 const ABHashtable = @import("org/allbinary/util/ABHashtable.zig").ABHashtable;
 const HorizontalScreenPatrolAI = @import("org/allbinary/game/ag/ai/scroller/HorizontalScreenPatrolAI.zig").HorizontalScreenPatrolAI;
+const Exception = @import("java/lang/Exception.zig").Exception;
 
 pub const HorizontalScreenPatrolFiringAIFactory = struct {
     const Self = @This();

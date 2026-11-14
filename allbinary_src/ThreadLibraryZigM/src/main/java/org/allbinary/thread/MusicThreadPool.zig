@@ -52,18 +52,18 @@ pub const MusicThreadPool = struct {
     
 
     pub fn runTask(self: *Self, task: ?*Runnable) void {
-        _ = Inheritance.call(Inheritance.fieldPointer(self, "logUtil").*.?, "putF", .{ Object.toString(Object.of(Inheritance.call(Inheritance.call(StringMaker.create(), "append", .{ Inheritance.call(StringUtil.getInstance().?, "toString", .{ task }) }).?, "appendlong", .{ @as(i64, @intCast(std.Io.Timestamp.now(std.Io.Threaded.global_single_threaded.io(), .real).toMilliseconds())) }))), self, Inheritance.fieldPointer(self, "threadPoolStrings").*.?.ADD_TASK });
+        _ = Inheritance.call(Inheritance.fieldPointer(self, "logUtil").*.?, "putF", .{ Object.toString(Object.of(Inheritance.call(Inheritance.call(StringMaker.create(), "append", .{ Inheritance.call(StringUtil.getInstance().?, "toString", .{ task }) }).?, "appendlong", .{ Inheritance.number(i64, std.Io.Timestamp.now(std.Io.Threaded.global_single_threaded.io(), .real).toMilliseconds()) }))), self, Inheritance.fieldPointer(Inheritance.fieldPointer(self, "threadPoolStrings").*.?, "ADD_TASK").* });
         _ = Inheritance.call(&self.base, "runTask", .{ task });
     }
     
 
     pub fn startTask(self: *Self, task: ?*Runnable) void {
-        _ = Inheritance.call(Inheritance.fieldPointer(self, "logUtil").*.?, "putF", .{ Object.toString(Object.of(Inheritance.call(Inheritance.call(Inheritance.call(StringMaker.create(), "append", .{ Inheritance.fieldPointer(self, "threadPoolStrings").*.?.START_TASK }).?, "append", .{ Inheritance.call(StringUtil.getInstance().?, "toString", .{ task }) }).?, "appendlong", .{ @as(i64, @intCast(std.Io.Timestamp.now(std.Io.Threaded.global_single_threaded.io(), .real).toMilliseconds())) }))), self, Inheritance.fieldPointer(self, "commonStrings").*.?.RUN });
+        _ = Inheritance.call(Inheritance.fieldPointer(self, "logUtil").*.?, "putF", .{ Object.toString(Object.of(Inheritance.call(Inheritance.call(Inheritance.call(StringMaker.create(), "append", .{ Inheritance.fieldPointer(Inheritance.fieldPointer(self, "threadPoolStrings").*.?, "START_TASK").* }).?, "append", .{ Inheritance.call(StringUtil.getInstance().?, "toString", .{ task }) }).?, "appendlong", .{ Inheritance.number(i64, std.Io.Timestamp.now(std.Io.Threaded.global_single_threaded.io(), .real).toMilliseconds()) }))), self, Inheritance.fieldPointer(Inheritance.fieldPointer(self, "commonStrings").*.?, "RUN").* });
     }
     
 
     pub fn completedTask(self: *Self, task: ?*Runnable) void {
-        _ = Inheritance.call(Inheritance.fieldPointer(self, "logUtil").*.?, "putF", .{ Object.toString(Object.of(Inheritance.call(Inheritance.call(Inheritance.call(StringMaker.create(), "append", .{ Inheritance.fieldPointer(self, "threadPoolStrings").*.?.COMPLETE_TASK }).?, "append", .{ Inheritance.call(StringUtil.getInstance().?, "toString", .{ task }) }).?, "appendlong", .{ @as(i64, @intCast(std.Io.Timestamp.now(std.Io.Threaded.global_single_threaded.io(), .real).toMilliseconds())) }))), self, Inheritance.fieldPointer(self, "commonStrings").*.?.RUN });
+        _ = Inheritance.call(Inheritance.fieldPointer(self, "logUtil").*.?, "putF", .{ Object.toString(Object.of(Inheritance.call(Inheritance.call(Inheritance.call(StringMaker.create(), "append", .{ Inheritance.fieldPointer(Inheritance.fieldPointer(self, "threadPoolStrings").*.?, "COMPLETE_TASK").* }).?, "append", .{ Inheritance.call(StringUtil.getInstance().?, "toString", .{ task }) }).?, "appendlong", .{ Inheritance.number(i64, std.Io.Timestamp.now(std.Io.Threaded.global_single_threaded.io(), .real).toMilliseconds()) }))), self, Inheritance.fieldPointer(Inheritance.fieldPointer(self, "commonStrings").*.?, "RUN").* });
     }
 };
 

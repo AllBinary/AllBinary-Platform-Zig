@@ -18,8 +18,8 @@ const allocator = std.heap.page_allocator;
 const String = @import("java/lang/String.zig").String;
 const Object = @import("java/lang/Object.zig").Object;
 const Inheritance = @import("zig/Inheritance.zig");
-// const Font = @import("javax/microedition/lcdui/Font.zig").Font;
-// const Graphics = @import("javax/microedition/lcdui/Graphics.zig").Graphics;
+const Font = @import("javax/microedition/lcdui/Font.zig").Font;
+const Graphics = @import("javax/microedition/lcdui/Graphics.zig").Graphics;
 const GameAdStateFactory = @import("org/allbinary/business/advertisement/GameAdStateFactory.zig").GameAdStateFactory;
 const Processor = @import("org/allbinary/canvas/Processor.zig").Processor;
 const GameAdState = @import("org/allbinary/game/GameAdState.zig").GameAdState;
@@ -41,6 +41,7 @@ const TimeDelayHelper = @import("org/allbinary/time/TimeDelayHelper.zig").TimeDe
 const CircularIndexUtil = @import("org/allbinary/util/CircularIndexUtil.zig").CircularIndexUtil;
 const Integer = @import("java/lang/Integer.zig").Integer;
 const Boolean = @import("java/lang/Boolean.zig").Boolean;
+const Exception = @import("java/lang/Exception.zig").Exception;
 
 pub const PlayerGameNotificationHud = struct {
     const Self = @This();
@@ -107,7 +108,7 @@ pub const PlayerGameNotificationHud = struct {
         // catch (Exception e):
 //             const logUtil: ?*LogUtil = Inheritance.upcast(?*LogUtil, LogUtil.getInstance()); _ = logUtil;
 //             const commonStrings: ?*CommonStrings = Inheritance.upcast(?*CommonStrings, CommonStrings.getInstance()); _ = commonStrings;
-//             _ = Inheritance.call(logUtil.?, "put", .{ commonStrings.?.EXCEPTION, self, commonStrings.?.UPDATE, e });
+//             _ = Inheritance.call(logUtil.?, "put", .{ Inheritance.fieldPointer(commonStrings.?, "EXCEPTION").*, self, Inheritance.fieldPointer(commonStrings.?, "UPDATE").*, e });
     }
     
 
@@ -123,7 +124,7 @@ pub const PlayerGameNotificationHud = struct {
         if (permanent.?.booleanValue()) {
             if (!Object.same(self.lastString, string)) {
                 self.lastString = string;
-                _ = Inheritance.call(Inheritance.fieldPointer(self, "logUtil").*.?, "putF", .{ Object.toString(Object.of(Inheritance.call(Inheritance.call(StringMaker.create(), "append", .{ self.PERMANENT_GAME_NOTIFICATION }).?, "append", .{ string }))), self, Inheritance.fieldPointer(self, "commonStrings").*.?.ADD });
+                _ = Inheritance.call(Inheritance.fieldPointer(self, "logUtil").*.?, "putF", .{ Object.toString(Object.of(Inheritance.call(Inheritance.call(StringMaker.create(), "append", .{ self.PERMANENT_GAME_NOTIFICATION }).?, "append", .{ string }))), self, Inheritance.fieldPointer(Inheritance.fieldPointer(self, "commonStrings").*.?, "ADD").* });
             }
             _ = Inheritance.call(self.permanentGameNotification.?, "add", .{ string, seconds, basicColor });
             _ = Inheritance.call(self.circularIndexUtil.?, "setSize", .{ self.permanentGameNotification.?.getSize() });
@@ -135,16 +136,16 @@ pub const PlayerGameNotificationHud = struct {
 
     // throws Exception
     pub fn processTick(self: *Self) void {
-        if (Inheritance.call(self.timeDelayHelper.?, "isTime", .{ self.gameTickTimeDelayHelper.?.startTime })) {
+        if (Inheritance.call(self.timeDelayHelper.?, "isTime", .{ Inheritance.fieldPointer(self.gameTickTimeDelayHelper.?, "startTime").* })) {
             const gameAdState: ?*GameAdState = Inheritance.upcast(?*GameAdState, Inheritance.receiverOf(GameAdStateFactory.getInstance().?, "getCurrentInstance").getCurrentInstance());
             if (Inheritance.call(gameAdState.?, "isShowingAtLocation", .{ Inheritance.receiver(self, "getLocation").getLocation() })) {
                 Inheritance.fieldPointer(self, "offsetY").* = Inheritance.upcast(@TypeOf(Inheritance.fieldPointer(self, "offsetY").*), -54);
             } else {
                 Inheritance.fieldPointer(self, "offsetY").* = 0;
             }
-            if (self.gameNotification.?.getSize() > 0) {
+            if (Inheritance.arithmetic(.greater, self.gameNotification.?.getSize(), 0)) {
                 _ = self.setAndRemove();
-            } else if (self.permanentGameNotification.?.getSize() > 0) {
+            } else if (Inheritance.arithmetic(.greater, self.permanentGameNotification.?.getSize(), 0)) {
                 _ = self.setNextUnremoveable();
             } else {
                 self.string = self.EMPTY_STRING;
@@ -155,30 +156,30 @@ pub const PlayerGameNotificationHud = struct {
 
     // throws Exception
     pub fn setAndRemove(self: *Self) void {
-        self.string = Inheritance.cast(?*String, Inheritance.call(self.gameNotification.?.stringList.?, "removeAt", .{ 0 }));
+        self.string = Inheritance.cast(?*String, Inheritance.call(Inheritance.fieldPointer(self.gameNotification.?, "stringList").*.?, "removeAt", .{ 0 }));
         self.processor = self.setAndRemoveProcessor;
     }
     
 
     // throws Exception
     pub fn setAndRemoveProcess(self: *Self) void {
-        _ = Inheritance.call(self, "setX", .{ (self.displayInfo.?.getLastWidth() - self.width) >> @intCast(1) });
+        _ = Inheritance.call(self, "setX", .{ (Inheritance.arithmetic(.subtract, self.displayInfo.?.getLastWidth(), self.width)) >> @intCast(1) });
         _ = Inheritance.call(self.point.?, "setX", .{ Inheritance.receiver(self, "getX").getX() });
         _ = Inheritance.call(self.point.?, "setY", .{ Inheritance.receiver(self, "getY").getY() });
-        const time: ?*Integer = Inheritance.cast(?*Integer, Inheritance.call(self.gameNotification.?.timeList.?, "removeAt", .{ 0 }));
-        var iTime: i32 = time.?.intValue() * 1000;
+        const time: ?*Integer = Inheritance.cast(?*Integer, Inheritance.call(Inheritance.fieldPointer(self.gameNotification.?, "timeList").*.?, "removeAt", .{ 0 }));
+        var iTime: i32 = Inheritance.arithmetic(.multiply, time.?.intValue(), 1000);
         if (iTime == 0) {
             iTime = 500;
         }
-        self.timeDelayHelper.?.delay = Inheritance.upcast(@TypeOf(self.timeDelayHelper.?.delay), iTime);
-        _ = Inheritance.call(self, "setBasicColorP", .{ Inheritance.cast(?*BasicColor, Inheritance.call(self.gameNotification.?.colorList.?, "removeAt", .{ 0 })) });
+        Inheritance.fieldPointer(self.timeDelayHelper.?, "delay").* = Inheritance.upcast(@TypeOf(Inheritance.fieldPointer(self.timeDelayHelper.?, "delay").*), iTime);
+        _ = Inheritance.call(self, "setBasicColorP", .{ Inheritance.cast(?*BasicColor, Inheritance.call(Inheritance.fieldPointer(self.gameNotification.?, "colorList").*.?, "removeAt", .{ 0 })) });
     }
     
 
     // throws Exception
     pub fn setNextUnremoveable(self: *Self) void {
         const index: i32 = self.circularIndexUtil.?.getIndex();
-        self.string = Inheritance.cast(?*String, self.permanentGameNotification.?.stringList.?.objectArray[@intCast(index)]);
+        self.string = Inheritance.cast(?*String, Inheritance.fieldPointer(Inheritance.fieldPointer(self.permanentGameNotification.?, "stringList").*.?, "objectArray").*[@intCast(index)]);
         self.processor = self.nextUnremoveableProcessor;
     }
     
@@ -186,12 +187,12 @@ pub const PlayerGameNotificationHud = struct {
     // throws Exception
     pub fn setNextUnremoveableProcess(self: *Self) void {
         const index: i32 = self.circularIndexUtil.?.getIndex();
-        _ = Inheritance.call(self, "setX", .{ (self.displayInfo.?.getLastWidth() - self.width) >> @intCast(1) });
+        _ = Inheritance.call(self, "setX", .{ (Inheritance.arithmetic(.subtract, self.displayInfo.?.getLastWidth(), self.width)) >> @intCast(1) });
         _ = Inheritance.call(self.point.?, "setX", .{ Inheritance.receiver(self, "getX").getX() });
         _ = Inheritance.call(self.point.?, "setY", .{ Inheritance.receiver(self, "getY").getY() });
-        const time: ?*Integer = Inheritance.cast(?*Integer, self.permanentGameNotification.?.timeList.?.objectArray[@intCast(index)]);
-        self.timeDelayHelper.?.delay = Inheritance.upcast(@TypeOf(self.timeDelayHelper.?.delay), time.?.intValue() * 1000);
-        _ = Inheritance.call(self, "setBasicColorP", .{ Inheritance.cast(?*BasicColor, self.permanentGameNotification.?.colorList.?.objectArray[@intCast(index)]) });
+        const time: ?*Integer = Inheritance.cast(?*Integer, Inheritance.fieldPointer(Inheritance.fieldPointer(self.permanentGameNotification.?, "timeList").*.?, "objectArray").*[@intCast(index)]);
+        Inheritance.fieldPointer(self.timeDelayHelper.?, "delay").* = Inheritance.upcast(@TypeOf(Inheritance.fieldPointer(self.timeDelayHelper.?, "delay").*), Inheritance.arithmetic(.multiply, time.?.intValue(), 1000));
+        _ = Inheritance.call(self, "setBasicColorP", .{ Inheritance.cast(?*BasicColor, Inheritance.fieldPointer(Inheritance.fieldPointer(self.permanentGameNotification.?, "colorList").*.?, "objectArray").*[@intCast(index)]) });
         _ = self.circularIndexUtil.?.next();
     }
     
@@ -207,59 +208,59 @@ pub const PlayerGameNotificationHud = struct {
         _ = Inheritance.call(&self.base, "paintString", .{ graphics, self.string });
     }
     pub const SetAndRemoveProcessor = struct {
-        const Self = @This();
+        const Self1 = @This();
         pub const java_name = "org.allbinary.game.ag.layer.hud.basic.SetAndRemoveProcessor";
         base: Processor = undefined,
         updateMeasurementProcessor: ?*PlayerGameNotificationHud = null,
 
-    fn initFields(this: *Self) void {
+    fn initFields(this: *Self1) void {
         _ = this;
             
     }
         
 
-        pub fn create1(updateMeasurementProcessor: ?*PlayerGameNotificationHud) *Self {
-            const this = allocator.create(Self) catch unreachable;
+        pub fn create1(updateMeasurementProcessor: ?*PlayerGameNotificationHud) *Self1 {
+            const this = allocator.create(Self1) catch unreachable;
             this.* = .{};
         this.base = Processor.create().*;
             this.initFields();
-            Inheritance.fieldPointer(this, "updateMeasurementProcessor").* = updateMeasurementProcessor;
+            this.updateMeasurementProcessor = updateMeasurementProcessor;
             Inheritance.bindOverrides(this);
             return this;
         }
         
 
         // throws Exception
-        pub fn process(self: *Self) void {
-            _ = Inheritance.receiver(Inheritance.fieldPointer(self, "updateMeasurementProcessor").*.?, "setAndRemoveProcess").setAndRemoveProcess();
+        pub fn process(self: *Self1) void {
+            _ = Inheritance.receiver(self.updateMeasurementProcessor.?, "setAndRemoveProcess").setAndRemoveProcess();
         }
     };
     pub const NextUnremoveableProcessor = struct {
-        const Self = @This();
+        const Self1 = @This();
         pub const java_name = "org.allbinary.game.ag.layer.hud.basic.NextUnremoveableProcessor";
         base: Processor = undefined,
         updateMeasurementProcessor: ?*PlayerGameNotificationHud = null,
 
-    fn initFields(this: *Self) void {
+    fn initFields(this: *Self1) void {
         _ = this;
             
     }
         
 
-        pub fn create1(updateMeasurementProcessor: ?*PlayerGameNotificationHud) *Self {
-            const this = allocator.create(Self) catch unreachable;
+        pub fn create1(updateMeasurementProcessor: ?*PlayerGameNotificationHud) *Self1 {
+            const this = allocator.create(Self1) catch unreachable;
             this.* = .{};
         this.base = Processor.create().*;
             this.initFields();
-            Inheritance.fieldPointer(this, "updateMeasurementProcessor").* = updateMeasurementProcessor;
+            this.updateMeasurementProcessor = updateMeasurementProcessor;
             Inheritance.bindOverrides(this);
             return this;
         }
         
 
         // throws Exception
-        pub fn process(self: *Self) void {
-            _ = Inheritance.receiver(Inheritance.fieldPointer(self, "updateMeasurementProcessor").*.?, "setNextUnremoveableProcess").setNextUnremoveableProcess();
+        pub fn process(self: *Self1) void {
+            _ = Inheritance.receiver(self.updateMeasurementProcessor.?, "setNextUnremoveableProcess").setNextUnremoveableProcess();
         }
     };
 };

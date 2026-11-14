@@ -23,6 +23,7 @@ const OperatingSystems = @import("org/allbinary/logic/system/os/OperatingSystems
 const LinuxHardware = @import("org/allbinary/logic/system/hardware/linux/LinuxHardware.zig").LinuxHardware;
 const WindowsHardware = @import("org/allbinary/logic/system/hardware/windows/WindowsHardware.zig").WindowsHardware;
 const HardwareInterface = @import("org/allbinary/logic/system/hardware/HardwareInterface.zig").HardwareInterface;
+const Exception = @import("java/lang/Exception.zig").Exception;
 
 pub const HardwareFactory = struct {
     const Self = @This();
@@ -51,9 +52,9 @@ pub const HardwareFactory = struct {
     pub fn getInstance1(os: ?*GenericOperatingSystem) ?*HardwareInterface {
         { // try
             const operatingSystems: ?*OperatingSystems = Inheritance.upcast(?*OperatingSystems, OperatingSystems.getInstance());
-            if (Inheritance.call(os.?.getName().?, "compareTo", .{ operatingSystems.?.LINUX }) == 0) {
+            if (Inheritance.call(os.?.getName().?, "compareTo", .{ Inheritance.fieldPointer(operatingSystems.?, "LINUX").* }) == 0) {
                 return Inheritance.cast(?*HardwareInterface, LinuxHardware.create());
-            } else if (Inheritance.call(os.?.getName().?, "indexOf", .{ operatingSystems.?.WINDOWS }) >= 0) {
+            } else if (Inheritance.arithmetic(.greater_equal, Inheritance.call(os.?.getName().?, "indexOf", .{ Inheritance.fieldPointer(operatingSystems.?, "WINDOWS").* }), 0)) {
                 return Inheritance.cast(?*HardwareInterface, WindowsHardware.create());
             }
             std.debug.panic("{any}", .{exception: { _ = String.plus(String.literal("No Hardware Imp for: "), os.?.getName()); break :exception error.Exception; }});

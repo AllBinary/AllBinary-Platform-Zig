@@ -26,6 +26,7 @@ const SmallIntegerSingletonFactory = @import("org/allbinary/logic/math/SmallInte
 const ABHashtable = @import("org/allbinary/util/ABHashtable.zig").ABHashtable;
 const BasePatrolAI = @import("org/allbinary/game/ag/ai/scroller/BasePatrolAI.zig").BasePatrolAI;
 const TerrainPatrolAI = @import("org/allbinary/game/ag/ai/scroller/TerrainPatrolAI.zig").TerrainPatrolAI;
+const Exception = @import("java/lang/Exception.zig").Exception;
 
 pub const TerrainPatrolAIFactory = struct {
     const Self = @This();

@@ -18,8 +18,8 @@ const allocator = std.heap.page_allocator;
 const String = @import("java/lang/String.zig").String;
 const Object = @import("java/lang/Object.zig").Object;
 const Inheritance = @import("zig/Inheritance.zig");
-// const Closeable = @import("java/io/Closeable.zig").Closeable;
-// const IOException = @import("java/io/IOException.zig").IOException;
+const Closeable = @import("java/io/Closeable.zig").Closeable;
+const IOException = @import("java/io/IOException.zig").IOException;
 
 pub const NullCloseable = struct {
     const Self = @This();

@@ -27,6 +27,7 @@ const AllBinaryLayer = @import("org/allbinary/layer/AllBinaryLayer.zig").AllBina
 const AllBinaryLayerManager = @import("org/allbinary/layer/AllBinaryLayerManager.zig").AllBinaryLayerManager;
 const StringMaker = @import("org/allbinary/logic/string/StringMaker.zig").StringMaker;
 const StringUtil = @import("org/allbinary/logic/string/StringUtil.zig").StringUtil;
+const Exception = @import("java/lang/Exception.zig").Exception;
 
 pub const SequenceAI = struct {
     const Self = @This();
@@ -89,7 +90,7 @@ pub const SequenceAI = struct {
 
     pub fn toString(self: *Self) ?*String {
         const stringBuffer: ?*StringMaker = StringMaker.create();
-        _ = Inheritance.call(stringBuffer.?, "append", .{ self.base.toString() });
+        _ = Inheritance.call(stringBuffer.?, "append", .{ String.valueOf(&self.base) });
         _ = Inheritance.call(stringBuffer.?, "append", .{ String.literal(" Selected AI: ") });
         _ = Inheritance.call(stringBuffer.?, "append", .{ Inheritance.call(StringUtil.getInstance().?, "toString", .{ self.getSelectedArtificialIntelligenceInterface() }) });
         return Inheritance.upcast(?*String, Object.toString(Object.of(stringBuffer)));

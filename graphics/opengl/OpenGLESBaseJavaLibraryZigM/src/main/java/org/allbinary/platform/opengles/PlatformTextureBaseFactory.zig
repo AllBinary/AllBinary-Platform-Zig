@@ -18,8 +18,8 @@ const allocator = std.heap.page_allocator;
 const String = @import("java/lang/String.zig").String;
 const Object = @import("java/lang/Object.zig").Object;
 const Inheritance = @import("zig/Inheritance.zig");
-// const GL10 = @import("javax/microedition/khronos/opengles/GL10.zig").GL10;
-// const Image = @import("javax/microedition/lcdui/Image.zig").Image;
+const GL10 = @import("javax/microedition/khronos/opengles/GL10.zig").GL10;
+const Image = @import("javax/microedition/lcdui/Image.zig").Image;
 const CommonStrings = @import("org/allbinary/string/CommonStrings.zig").CommonStrings;
 
 pub const PlatformTextureBaseFactory = struct {

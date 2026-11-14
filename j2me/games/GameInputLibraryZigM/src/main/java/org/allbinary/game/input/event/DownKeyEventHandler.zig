@@ -33,7 +33,7 @@ pub const DownKeyEventHandler = struct {
     // Static fields with runtime initializers: call staticInit once at startup
     pub fn staticInit() void {
         instance = DownKeyEventHandler.create();
-        instanceArray = @constCast(&[_]?*DownKeyEventHandlerBase{ DownKeyEventHandlerBase.create(), DownKeyEventHandlerBase.create(), DownKeyEventHandlerBase.create(), DownKeyEventHandlerBase.create(), DownKeyEventHandlerBase.create(), DownKeyEventHandlerBase.create() })[0..];
+        instanceArray = @constCast(&[_]?*DownKeyEventHandlerBase{ Inheritance.upcast(?*DownKeyEventHandlerBase, DownKeyEventHandlerBase.create()), Inheritance.upcast(?*DownKeyEventHandlerBase, DownKeyEventHandlerBase.create()), Inheritance.upcast(?*DownKeyEventHandlerBase, DownKeyEventHandlerBase.create()), Inheritance.upcast(?*DownKeyEventHandlerBase, DownKeyEventHandlerBase.create()), Inheritance.upcast(?*DownKeyEventHandlerBase, DownKeyEventHandlerBase.create()), Inheritance.upcast(?*DownKeyEventHandlerBase, DownKeyEventHandlerBase.create()) })[0..];
     }
 
     fn initFields(this: *Self) void {
@@ -69,7 +69,7 @@ pub const DownKeyEventHandler = struct {
     
 
     pub fn removeAllListeners(self: *Self) void {
-        _ = self.base.removeAllListeners();
+        _ = Inheritance.receiver(&self.base, "removeAllListeners").removeAllListeners();
         {
             var index: i32 = @as(i32, @intCast(DownKeyEventHandler.instanceArray.len)) - 1;
             while (index >= 0) : (index -= 1) {

@@ -18,8 +18,8 @@ const allocator = std.heap.page_allocator;
 const String = @import("java/lang/String.zig").String;
 const Object = @import("java/lang/Object.zig").Object;
 const Inheritance = @import("zig/Inheritance.zig");
-// const RecordEnumeration = @import("javax/microedition/rms/RecordEnumeration.zig").RecordEnumeration;
-// const RecordStore = @import("javax/microedition/rms/RecordStore.zig").RecordStore;
+const RecordEnumeration = @import("javax/microedition/rms/RecordEnumeration.zig").RecordEnumeration;
+const RecordStore = @import("javax/microedition/rms/RecordStore.zig").RecordStore;
 const BasicPersitance = @import("org/allbinary/game/configuration/persistance/BasicPersitance.zig").BasicPersitance;
 const NullRecordComparator = @import("org/allbinary/game/configuration/persistance/NullRecordComparator.zig").NullRecordComparator;
 const NullRecordFilter = @import("org/allbinary/game/configuration/persistance/NullRecordFilter.zig").NullRecordFilter;
@@ -33,6 +33,7 @@ const HashtableUtil = @import("org/allbinary/util/HashtableUtil.zig").HashtableU
 const StdUtil = @import("org/allbinary/logic/StdUtil.zig").StdUtil;
 const ABHashtable = @import("org/allbinary/util/ABHashtable.zig").ABHashtable;
 const Input = @import("org/allbinary/game/input/Input.zig").Input;
+const Exception = @import("java/lang/Exception.zig").Exception;
 
 //GameInputNoPersistanceLibrary
 pub const InputPersistance = struct {
@@ -67,7 +68,7 @@ pub const InputPersistance = struct {
         while (recordEnum.?.hasNextElement()) {
             id = recordEnum.?.nextRecordId();
             _ = Inheritance.call(stringBuffer.?, "delete", .{ 0, stringBuffer.?.length() });
-            _ = Inheritance.call(Inheritance.fieldPointer(self, "logUtil").*.?, "putF", .{ Object.toString(Object.of(Inheritance.call(Inheritance.call(stringBuffer.?, "append", .{ Inheritance.fieldPointer(self, "persistanceStrings").*.?.LOADING_ID }).?, "appendint", .{ id }))), self, Inheritance.fieldPointer(self, "persistanceStrings").*.?.LOAD_ALL });
+            _ = Inheritance.call(Inheritance.fieldPointer(self, "logUtil").*.?, "putF", .{ Object.toString(Object.of(Inheritance.call(Inheritance.call(stringBuffer.?, "append", .{ Inheritance.fieldPointer(Inheritance.fieldPointer(self, "persistanceStrings").*.?, "LOADING_ID").* }).?, "appendint", .{ id }))), self, Inheritance.fieldPointer(Inheritance.fieldPointer(self, "persistanceStrings").*.?, "LOAD_ALL").* });
             hashtable = Inheritance.upcast(@TypeOf(hashtable), Inheritance.receiverOf(StdUtil.getInstance().?, "createHashtable").createHashtable());
             _ = Inheritance.call(Inheritance.fieldPointer(self, "valueList").*.?, "add", .{ hashtable });
             _ = Inheritance.call(Inheritance.fieldPointer(self, "idList").*.?, "add", .{ Inheritance.call(smallIntegerSingletonFactory.?, "getAt", .{ id }) });
@@ -78,7 +79,7 @@ pub const InputPersistance = struct {
 
     // throws Exception
     pub fn save(self: *Self, abeClientInformation: ?*AbeClientInformationInterface, hashtable: ?*ABHashtable) void {
-        _ = Inheritance.callStatic(PreLogUtil, "put", .{ Object.toString(Object.of(Inheritance.call(Inheritance.call(StringMaker.create(), "append", .{ Inheritance.fieldPointer(self, "persistanceStrings").*.?.NOT_SAVING }).?, "append", .{ Inheritance.call(StringUtil.getInstance().?, "toString", .{ hashtable }) }))), self, Inheritance.fieldPointer(self, "commonStrings").*.?.SAVE });
+        _ = Inheritance.callStatic(PreLogUtil, "put", .{ Object.toString(Object.of(Inheritance.call(Inheritance.call(StringMaker.create(), "append", .{ Inheritance.fieldPointer(Inheritance.fieldPointer(self, "persistanceStrings").*.?, "NOT_SAVING").* }).?, "append", .{ Inheritance.call(StringUtil.getInstance().?, "toString", .{ hashtable }) }))), self, Inheritance.fieldPointer(Inheritance.fieldPointer(self, "commonStrings").*.?, "SAVE").* });
         const recordStore: ?*RecordStore = Inheritance.upcast(?*RecordStore, Inheritance.callStatic(RecordStore, "openRecordStore", .{ Inheritance.call(self, "getRecordId", .{ abeClientInformation }), true }));
         var gameActionInput: ?*Input = null;
         var list: ?*BasicArrayList = null;

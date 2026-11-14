@@ -31,7 +31,7 @@ pub const NoThirdPartyStore = struct {
     pub fn create() *Self {
         const this = allocator.create(Self) catch unreachable;
         this.* = .{};
-        this.base = Inheritance.callStatic(ThirdPartyStore, "create1", .{ StringUtil.getInstance().?.EMPTY_STRING }).*;
+        this.base = Inheritance.callStatic(ThirdPartyStore, "create1", .{ Inheritance.fieldPointer(StringUtil.getInstance().?, "EMPTY_STRING").* }).*;
         Inheritance.bindOverrides(this);
         return this;
     }

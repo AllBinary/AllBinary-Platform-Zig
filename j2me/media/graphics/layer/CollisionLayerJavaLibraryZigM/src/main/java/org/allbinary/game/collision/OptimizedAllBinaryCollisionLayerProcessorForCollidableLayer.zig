@@ -25,6 +25,7 @@ const LayerManager = @import("org/allbinary/layer/LayerManager.zig").LayerManage
 const LayerProcessor = @import("org/allbinary/layer/LayerProcessor.zig").LayerProcessor;
 const CollidableBaseBehavior = @import("org/allbinary/game/collision/CollidableBaseBehavior.zig").CollidableBaseBehavior;
 const OptimizedAllBinaryCollisionLayerManager = @import("org/allbinary/game/collision/OptimizedAllBinaryCollisionLayerManager.zig").OptimizedAllBinaryCollisionLayerManager;
+const Exception = @import("java/lang/Exception.zig").Exception;
 
 pub const OptimizedAllBinaryCollisionLayerProcessorForCollidableLayer = struct {
     const Self = @This();

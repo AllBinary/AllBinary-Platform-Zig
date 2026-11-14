@@ -21,6 +21,7 @@ const Inheritance = @import("zig/Inheritance.zig");
 const CollidableDestroyableDamageableLayer = @import("org/allbinary/game/layer/special/CollidableDestroyableDamageableLayer.zig").CollidableDestroyableDamageableLayer;
 const TimeDelayHelper = @import("org/allbinary/time/TimeDelayHelper.zig").TimeDelayHelper;
 const AnalogControllerConfigurationFactory = @import("org/allbinary/android/input/motion/AnalogControllerConfigurationFactory.zig").AnalogControllerConfigurationFactory;
+const Exception = @import("java/lang/Exception.zig").Exception;
 
 pub const AnalogControllerHelper = struct {
     const Self = @This();
@@ -53,7 +54,7 @@ pub const AnalogControllerHelper = struct {
 
     // throws Exception
     pub fn right(self: *Self, collidableDestroyableDamageableLayer: ?*CollidableDestroyableDamageableLayer, xAnalogValue: i32) void {
-        self.rightTimeElapsedHelper.?.delay = Inheritance.upcast(@TypeOf(self.rightTimeElapsedHelper.?.delay), ((self.SCALE_VALUE - xAnalogValue) >> @intCast(self.reduceTimeFactor)));
+        Inheritance.fieldPointer(self.rightTimeElapsedHelper.?, "delay").* = Inheritance.upcast(@TypeOf(Inheritance.fieldPointer(self.rightTimeElapsedHelper.?, "delay").*), ((self.SCALE_VALUE - xAnalogValue) >> @intCast(self.reduceTimeFactor)));
         if (self.rightTimeElapsedHelper.?.isTimeTNT()) {
             _ = Inheritance.receiver(collidableDestroyableDamageableLayer.?, "right").right();
         }
@@ -62,7 +63,7 @@ pub const AnalogControllerHelper = struct {
 
     // throws Exception
     pub fn left(self: *Self, collidableDestroyableDamageableLayer: ?*CollidableDestroyableDamageableLayer, xAnalogValue: i32) void {
-        self.leftTimeElapsedHelper.?.delay = Inheritance.upcast(@TypeOf(self.leftTimeElapsedHelper.?.delay), ((self.SCALE_VALUE + xAnalogValue) >> @intCast(self.reduceTimeFactor)));
+        Inheritance.fieldPointer(self.leftTimeElapsedHelper.?, "delay").* = Inheritance.upcast(@TypeOf(Inheritance.fieldPointer(self.leftTimeElapsedHelper.?, "delay").*), ((self.SCALE_VALUE + xAnalogValue) >> @intCast(self.reduceTimeFactor)));
         if (self.leftTimeElapsedHelper.?.isTimeTNT()) {
             _ = Inheritance.receiver(collidableDestroyableDamageableLayer.?, "left").left();
         }
@@ -71,7 +72,7 @@ pub const AnalogControllerHelper = struct {
 
     // throws Exception
     pub fn up(self: *Self, collidableDestroyableDamageableLayer: ?*CollidableDestroyableDamageableLayer, xAnalogValue: i32) void {
-        self.upTimeElapsedHelper.?.delay = Inheritance.upcast(@TypeOf(self.upTimeElapsedHelper.?.delay), ((self.SCALE_VALUE - xAnalogValue) >> @intCast(self.reduceTimeFactor)));
+        Inheritance.fieldPointer(self.upTimeElapsedHelper.?, "delay").* = Inheritance.upcast(@TypeOf(Inheritance.fieldPointer(self.upTimeElapsedHelper.?, "delay").*), ((self.SCALE_VALUE - xAnalogValue) >> @intCast(self.reduceTimeFactor)));
         if (self.upTimeElapsedHelper.?.isTimeTNT()) {
             _ = Inheritance.receiver(collidableDestroyableDamageableLayer.?, "up").up();
         }
@@ -80,7 +81,7 @@ pub const AnalogControllerHelper = struct {
 
     // throws Exception
     pub fn down(self: *Self, collidableDestroyableDamageableLayer: ?*CollidableDestroyableDamageableLayer, xAnalogValue: i32) void {
-        self.downTimeElapsedHelper.?.delay = Inheritance.upcast(@TypeOf(self.downTimeElapsedHelper.?.delay), ((self.SCALE_VALUE + xAnalogValue) >> @intCast(self.reduceTimeFactor)));
+        Inheritance.fieldPointer(self.downTimeElapsedHelper.?, "delay").* = Inheritance.upcast(@TypeOf(Inheritance.fieldPointer(self.downTimeElapsedHelper.?, "delay").*), ((self.SCALE_VALUE + xAnalogValue) >> @intCast(self.reduceTimeFactor)));
         if (self.downTimeElapsedHelper.?.isTimeTNT()) {
             _ = Inheritance.receiver(collidableDestroyableDamageableLayer.?, "down").down();
         }

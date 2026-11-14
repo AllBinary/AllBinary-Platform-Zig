@@ -67,8 +67,8 @@ pub const CommonButtons = struct {
             commonButtonSize = commonButtonSize >> @intCast(1);
         }
         this.STANDARD_BUTTON_SIZE = commonButtonSize;
-        this.NORMAL_BUTTON = Inheritance.callStatic(Rectangle, "create3", .{ PointFactory.getInstance().?.ZERO_ZERO, this.STANDARD_BUTTON_SIZE, this.STANDARD_BUTTON_SIZE });
-        this.LARGE_BUTTON = Inheritance.callStatic(Rectangle, "create3", .{ PointFactory.getInstance().?.ZERO_ZERO, this.STANDARD_BUTTON_SIZE << @intCast(1), this.STANDARD_BUTTON_SIZE << @intCast(1) });
+        this.NORMAL_BUTTON = Inheritance.callStatic(Rectangle, "create3", .{ Inheritance.fieldPointer(PointFactory.getInstance().?, "ZERO_ZERO").*, this.STANDARD_BUTTON_SIZE, this.STANDARD_BUTTON_SIZE });
+        this.LARGE_BUTTON = Inheritance.callStatic(Rectangle, "create3", .{ Inheritance.fieldPointer(PointFactory.getInstance().?, "ZERO_ZERO").*, this.STANDARD_BUTTON_SIZE << @intCast(1), this.STANDARD_BUTTON_SIZE << @intCast(1) });
         return this;
     }
 };

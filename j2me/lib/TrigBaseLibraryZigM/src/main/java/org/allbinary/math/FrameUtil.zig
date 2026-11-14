@@ -62,15 +62,15 @@ pub const FrameUtil = struct {
         _ = self;
         const angleFactory: ?*AngleFactory = Inheritance.upcast(?*AngleFactory, AngleFactory.getInstance());
         if (currentAngle > 359) {
-            currentAngle = (currentAngle - angleFactory.?.TOTAL_ANGLE);
+            currentAngle = (Inheritance.arithmetic(.subtract, currentAngle, Inheritance.fieldPointer(angleFactory.?, "TOTAL_ANGLE").*));
             while (currentAngle > 359) {
-                currentAngle = (currentAngle - angleFactory.?.TOTAL_ANGLE);
+                currentAngle = (Inheritance.arithmetic(.subtract, currentAngle, Inheritance.fieldPointer(angleFactory.?, "TOTAL_ANGLE").*));
             }
         }
         if (currentAngle < 0) {
-            currentAngle = (currentAngle + angleFactory.?.TOTAL_ANGLE);
+            currentAngle = (currentAngle + Inheritance.fieldPointer(angleFactory.?, "TOTAL_ANGLE").*);
             while (currentAngle < 0) {
-                currentAngle = (currentAngle + angleFactory.?.TOTAL_ANGLE);
+                currentAngle = (currentAngle + Inheritance.fieldPointer(angleFactory.?, "TOTAL_ANGLE").*);
             }
         }
         return currentAngle;

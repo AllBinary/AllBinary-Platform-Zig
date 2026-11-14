@@ -18,8 +18,8 @@ const allocator = std.heap.page_allocator;
 const String = @import("java/lang/String.zig").String;
 const Object = @import("java/lang/Object.zig").Object;
 const Inheritance = @import("zig/Inheritance.zig");
-// const Displayable = @import("javax/microedition/lcdui/Displayable.zig").Displayable;
-// const MIDlet = @import("javax/microedition/midlet/MIDlet.zig").MIDlet;
+const Displayable = @import("javax/microedition/lcdui/Displayable.zig").Displayable;
+const MIDlet = @import("javax/microedition/midlet/MIDlet.zig").MIDlet;
 const AllBinaryMidlet = @import("org/allbinary/midlet/AllBinaryMidlet.zig").AllBinaryMidlet;
 
 // Java interface: an implementation is a pointer and a table of functions
@@ -29,9 +29,9 @@ pub const MidletCompositeInterface = struct {
     pointer: *anyopaque,
     object: Object,
     toStringFn: *const fn (pointer: *anyopaque) ?*String,
-    setMidletFn: *const fn (pointer: *anyopaque, midlet: ?*MIDlet) void,
-    getMidletFn: *const fn (pointer: *anyopaque) ?*AllBinaryMidlet,
-    getDisplayableFn: *const fn (pointer: *anyopaque) ?*Displayable,
+    setMidletFn: *const fn (interface_pointer: *anyopaque, midlet: ?*MIDlet) void,
+    getMidletFn: *const fn (interface_pointer: *anyopaque) ?*AllBinaryMidlet,
+    getDisplayableFn: *const fn (interface_pointer: *anyopaque) ?*Displayable,
 
     pub fn setMidlet(self: *Self, midlet: ?*MIDlet) void {
         return self.setMidletFn(self.pointer, midlet);
@@ -51,22 +51,22 @@ pub const MidletCompositeInterface = struct {
 
     // The interface value of an object with the methods. Like a Java class a method can be declared by the object or a superclass.
     pub fn of(object: anytype) ?*Self {
-        const Implementation = @TypeOf(object);
+        const ImplementationType = @TypeOf(object);
         const Methods = struct {
             fn toString(pointer: *anyopaque) ?*String {
-                const implementation: Implementation = @ptrCast(@alignCast(pointer));
+                const implementation: ImplementationType = @ptrCast(@alignCast(pointer));
                 return String.valueOf(implementation);
             }
-            fn setMidlet(pointer: *anyopaque, midlet: ?*MIDlet) void {
-                const implementation: Implementation = @ptrCast(@alignCast(pointer));
-                return Inheritance.receiver(implementation, "setMidlet").setMidlet(midlet);
+            fn setMidlet(interface_pointer: *anyopaque, midlet: ?*MIDlet) void {
+                const implementation: ImplementationType = @ptrCast(@alignCast(interface_pointer));
+                return Inheritance.call(implementation, "setMidlet", .{ midlet });
             }
-            fn getMidlet(pointer: *anyopaque) ?*AllBinaryMidlet {
-                const implementation: Implementation = @ptrCast(@alignCast(pointer));
+            fn getMidlet(interface_pointer: *anyopaque) ?*AllBinaryMidlet {
+                const implementation: ImplementationType = @ptrCast(@alignCast(interface_pointer));
                 return Inheritance.upcast(?*AllBinaryMidlet, Inheritance.receiver(implementation, "getMidlet").getMidlet());
             }
-            fn getDisplayable(pointer: *anyopaque) ?*Displayable {
-                const implementation: Implementation = @ptrCast(@alignCast(pointer));
+            fn getDisplayable(interface_pointer: *anyopaque) ?*Displayable {
+                const implementation: ImplementationType = @ptrCast(@alignCast(interface_pointer));
                 return Inheritance.upcast(?*Displayable, Inheritance.receiver(implementation, "getDisplayable").getDisplayable());
             }
         };

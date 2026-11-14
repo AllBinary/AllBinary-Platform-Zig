@@ -23,6 +23,7 @@ const LogUtil = @import("org/allbinary/logic/communication/log/LogUtil.zig").Log
 const CommonStrings = @import("org/allbinary/string/CommonStrings.zig").CommonStrings;
 const FeaturedResourceFactory = @import("org/allbinary/game/resource/FeaturedResourceFactory.zig").FeaturedResourceFactory;
 const FeaturedResourceRelativeRelationshipFactory = @import("org/allbinary/game/resource/FeaturedResourceRelativeRelationshipFactory.zig").FeaturedResourceRelativeRelationshipFactory;
+const Exception = @import("java/lang/Exception.zig").Exception;
 
 pub const FeatureResourceInitializationUtil = struct {
     const Self = @This();
@@ -55,7 +56,7 @@ pub const FeatureResourceInitializationUtil = struct {
     // throws Exception
     pub fn init(self: *Self, level: i32) void {
         const commonStrings: ?*CommonStrings = Inheritance.upcast(?*CommonStrings, CommonStrings.getInstance());
-        _ = Inheritance.call(self.logUtil.?, "putF", .{ commonStrings.?.START, self, commonStrings.?.INIT });
+        _ = Inheritance.call(self.logUtil.?, "putF", .{ Inheritance.fieldPointer(commonStrings.?, "START").*, self, Inheritance.fieldPointer(commonStrings.?, "INIT").* });
         const featuredResourceFactory: ?*FeaturedResourceFactory = Inheritance.upcast(?*FeaturedResourceFactory, FeaturedAnimationInterfaceFactoryInterfaceFactory.getInstance());
         _ = Inheritance.call(featuredResourceFactory.?, "init", .{ level });
         _ = Inheritance.call(FeaturedResourceRelativeRelationshipFactory.getInstance().?, "init", .{ level });

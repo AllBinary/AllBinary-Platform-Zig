@@ -31,12 +31,12 @@ pub const DiagonalDownLeftTouchInputToGameKeyEventAction = struct {
 
     // Static fields with runtime initializers: call staticInit once at startup
     pub fn staticInit() void {
-        instance = Inheritance.upcast(?Object, NullUtil.getInstance().?.NULL_OBJECT);
+        instance = Inheritance.upcast(?Object, Inheritance.fieldPointer(NullUtil.getInstance().?, "NULL_OBJECT").*);
     }
     
 
     pub fn getInstance() ?*GameKeyCompleteMotionGestureInputEvent {
-        if (Object.same(DiagonalDownLeftTouchInputToGameKeyEventAction.instance, NullUtil.getInstance().?.NULL_OBJECT)) {
+        if (Object.same(DiagonalDownLeftTouchInputToGameKeyEventAction.instance, Inheritance.fieldPointer(NullUtil.getInstance().?, "NULL_OBJECT").*)) {
             DiagonalDownLeftTouchInputToGameKeyEventAction.instance = Inheritance.upcast(@TypeOf(DiagonalDownLeftTouchInputToGameKeyEventAction.instance), DiagonalDownLeftTouchInputToGameKeyEventAction.create());
         }
         return Inheritance.cast(?*GameKeyCompleteMotionGestureInputEvent, DiagonalDownLeftTouchInputToGameKeyEventAction.instance);
@@ -46,7 +46,7 @@ pub const DiagonalDownLeftTouchInputToGameKeyEventAction = struct {
     pub fn create() *Self {
         const this = allocator.create(Self) catch unreachable;
         this.* = .{};
-        this.base = Inheritance.callStatic(GameKeyCompleteMotionGestureInputEvent, "create3", .{ String.literal("Diagonal Down Left Action"), TouchMotionGestureFactory.getInstance().?.DIAGONAL_DOWN_LEFT, Inheritance.receiverOf(Inheritance.receiverOf(PlatformInputMappingFactory.getInstance().?, "getPersistentInputMappingInstance").getPersistentInputMappingInstance().?, "getInputMapping").getInputMapping() }).*;
+        this.base = Inheritance.callStatic(GameKeyCompleteMotionGestureInputEvent, "create3", .{ String.literal("Diagonal Down Left Action"), Inheritance.fieldPointer(TouchMotionGestureFactory.getInstance().?, "DIAGONAL_DOWN_LEFT").*, Inheritance.receiverOf(Inheritance.receiverOf(PlatformInputMappingFactory.getInstance().?, "getPersistentInputMappingInstance").getPersistentInputMappingInstance().?, "getInputMapping").getInputMapping() }).*;
         Inheritance.bindOverrides(this);
         return this;
     }

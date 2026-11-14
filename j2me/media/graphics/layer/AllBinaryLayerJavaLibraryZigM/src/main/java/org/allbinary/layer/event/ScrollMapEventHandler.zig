@@ -23,6 +23,7 @@ const EventListenerInterface = @import("org/allbinary/logic/util/event/EventList
 const BasicEventHandler = @import("org/allbinary/logic/util/event/handler/BasicEventHandler.zig").BasicEventHandler;
 const ScrollMapEvent = @import("org/allbinary/layer/event/ScrollMapEvent.zig").ScrollMapEvent;
 const ScrollMapEventListenerInterface = @import("org/allbinary/layer/event/ScrollMapEventListenerInterface.zig").ScrollMapEventListenerInterface;
+const Exception = @import("java/lang/Exception.zig").Exception;
 
 pub const ScrollMapEventHandler = struct {
     const Self = @This();

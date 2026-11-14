@@ -20,6 +20,7 @@ const Object = @import("java/lang/Object.zig").Object;
 const Inheritance = @import("zig/Inheritance.zig");
 const GameKey = @import("org/allbinary/game/input/GameKey.zig").GameKey;
 const Input = @import("org/allbinary/game/input/Input.zig").Input;
+const Exception = @import("java/lang/Exception.zig").Exception;
 
 // Java interface: an implementation is a pointer and a table of functions
 pub const InputMappingInterface = struct {
@@ -28,7 +29,7 @@ pub const InputMappingInterface = struct {
     pointer: *anyopaque,
     object: Object,
     toStringFn: *const fn (pointer: *anyopaque) ?*String,
-    processInputMappingFn: *const fn (pointer: *anyopaque, gameKey: ?*GameKey, input: ?*Input) void,
+    processInputMappingFn: *const fn (interface_pointer: *anyopaque, gameKey: ?*GameKey, input: ?*Input) void,
 
     pub fn processInputMapping(self: *Self, gameKey: ?*GameKey, input: ?*Input) void {
         return self.processInputMappingFn(self.pointer, gameKey, input);
@@ -40,15 +41,15 @@ pub const InputMappingInterface = struct {
 
     // The interface value of an object with the methods. Like a Java class a method can be declared by the object or a superclass.
     pub fn of(object: anytype) ?*Self {
-        const Implementation = @TypeOf(object);
+        const ImplementationType = @TypeOf(object);
         const Methods = struct {
             fn toString(pointer: *anyopaque) ?*String {
-                const implementation: Implementation = @ptrCast(@alignCast(pointer));
+                const implementation: ImplementationType = @ptrCast(@alignCast(pointer));
                 return String.valueOf(implementation);
             }
-            fn processInputMapping(pointer: *anyopaque, gameKey: ?*GameKey, input: ?*Input) void {
-                const implementation: Implementation = @ptrCast(@alignCast(pointer));
-                return Inheritance.receiver(implementation, "processInputMapping").processInputMapping(gameKey, input);
+            fn processInputMapping(interface_pointer: *anyopaque, gameKey: ?*GameKey, input: ?*Input) void {
+                const implementation: ImplementationType = @ptrCast(@alignCast(interface_pointer));
+                return Inheritance.call(implementation, "processInputMapping", .{ gameKey, input });
             }
         };
         const this = allocator.create(Self) catch unreachable;

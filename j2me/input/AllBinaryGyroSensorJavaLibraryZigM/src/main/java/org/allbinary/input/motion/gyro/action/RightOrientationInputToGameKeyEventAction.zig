@@ -31,12 +31,12 @@ pub const RightOrientationInputToGameKeyEventAction = struct {
 
     // Static fields with runtime initializers: call staticInit once at startup
     pub fn staticInit() void {
-        instance = Inheritance.upcast(?Object, NullUtil.getInstance().?.NULL_OBJECT);
+        instance = Inheritance.upcast(?Object, Inheritance.fieldPointer(NullUtil.getInstance().?, "NULL_OBJECT").*);
     }
     
 
     pub fn getInstance() ?*GameKeyCompleteMotionGestureInputEvent {
-        if (Object.same(RightOrientationInputToGameKeyEventAction.instance, NullUtil.getInstance().?.NULL_OBJECT)) {
+        if (Object.same(RightOrientationInputToGameKeyEventAction.instance, Inheritance.fieldPointer(NullUtil.getInstance().?, "NULL_OBJECT").*)) {
             RightOrientationInputToGameKeyEventAction.instance = Inheritance.upcast(@TypeOf(RightOrientationInputToGameKeyEventAction.instance), RightOrientationInputToGameKeyEventAction.create());
         }
         return Inheritance.cast(?*GameKeyCompleteMotionGestureInputEvent, RightOrientationInputToGameKeyEventAction.instance);
@@ -46,7 +46,7 @@ pub const RightOrientationInputToGameKeyEventAction = struct {
     pub fn create() *Self {
         const this = allocator.create(Self) catch unreachable;
         this.* = .{};
-        this.base = Inheritance.callStatic(GameKeyCompleteMotionGestureInputEvent, "create3", .{ String.literal("Right Action"), OrientationMotionGestureFactory.getInstance().?.RIGHT, Inheritance.receiverOf(Inheritance.receiverOf(PlatformInputMappingFactory.getInstance().?, "getPersistentInputMappingInstance").getPersistentInputMappingInstance().?, "getInputMapping").getInputMapping() }).*;
+        this.base = Inheritance.callStatic(GameKeyCompleteMotionGestureInputEvent, "create3", .{ String.literal("Right Action"), Inheritance.fieldPointer(OrientationMotionGestureFactory.getInstance().?, "RIGHT").*, Inheritance.receiverOf(Inheritance.receiverOf(PlatformInputMappingFactory.getInstance().?, "getPersistentInputMappingInstance").getPersistentInputMappingInstance().?, "getInputMapping").getInputMapping() }).*;
         Inheritance.bindOverrides(this);
         return this;
     }

@@ -50,21 +50,21 @@ pub const ColorTemperatureUtil = struct {
     
 
     pub fn getBasicColor(self: *Self, thirdTemp: i32) ?*BasicColor {
-        var basicColor: ?*BasicColor = Inheritance.upcast(?*BasicColor, self.basicColorFactory.?.RED);
+        var basicColor: ?*BasicColor = Inheritance.upcast(?*BasicColor, Inheritance.fieldPointer(self.basicColorFactory.?, "RED").*);
         if (thirdTemp > 3700) {
-            basicColor = Inheritance.upcast(@TypeOf(basicColor), self.basicColorFactory.?.PURPLE);
+            basicColor = Inheritance.upcast(@TypeOf(basicColor), Inheritance.fieldPointer(self.basicColorFactory.?, "PURPLE").*);
         } else if (thirdTemp > 3200) {
-            basicColor = Inheritance.upcast(@TypeOf(basicColor), self.basicColorFactory.?.BLUE);
+            basicColor = Inheritance.upcast(@TypeOf(basicColor), Inheritance.fieldPointer(self.basicColorFactory.?, "BLUE").*);
         } else if (thirdTemp > 2700) {
-            basicColor = Inheritance.upcast(@TypeOf(basicColor), self.basicColorFactory.?.PUCE);
+            basicColor = Inheritance.upcast(@TypeOf(basicColor), Inheritance.fieldPointer(self.basicColorFactory.?, "PUCE").*);
         } else if (thirdTemp > 2200) {
-            basicColor = Inheritance.upcast(@TypeOf(basicColor), self.basicColorFactory.?.WHITE);
+            basicColor = Inheritance.upcast(@TypeOf(basicColor), Inheritance.fieldPointer(self.basicColorFactory.?, "WHITE").*);
         } else if (thirdTemp > 1700) {
-            basicColor = Inheritance.upcast(@TypeOf(basicColor), self.basicColorFactory.?.GREEN);
+            basicColor = Inheritance.upcast(@TypeOf(basicColor), Inheritance.fieldPointer(self.basicColorFactory.?, "GREEN").*);
         } else if (thirdTemp > 1200) {
-            basicColor = Inheritance.upcast(@TypeOf(basicColor), self.basicColorFactory.?.YELLOW);
+            basicColor = Inheritance.upcast(@TypeOf(basicColor), Inheritance.fieldPointer(self.basicColorFactory.?, "YELLOW").*);
         } else if (thirdTemp > 700) {
-            basicColor = Inheritance.upcast(@TypeOf(basicColor), self.basicColorFactory.?.ORANGE);
+            basicColor = Inheritance.upcast(@TypeOf(basicColor), Inheritance.fieldPointer(self.basicColorFactory.?, "ORANGE").*);
         }
         return basicColor;
     }

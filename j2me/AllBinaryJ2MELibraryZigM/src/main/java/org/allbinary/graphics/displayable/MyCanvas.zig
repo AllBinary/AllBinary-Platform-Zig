@@ -18,11 +18,11 @@ const allocator = std.heap.page_allocator;
 const String = @import("java/lang/String.zig").String;
 const Object = @import("java/lang/Object.zig").Object;
 const Inheritance = @import("zig/Inheritance.zig");
-// const Canvas = @import("javax/microedition/lcdui/Canvas.zig").Canvas;
-// const Command = @import("javax/microedition/lcdui/Command.zig").Command;
-// const CommandListener = @import("javax/microedition/lcdui/CommandListener.zig").CommandListener;
-// const Graphics = @import("javax/microedition/lcdui/Graphics.zig").Graphics;
-// const NullCommandListener = @import("javax/microedition/lcdui/NullCommandListener.zig").NullCommandListener;
+const Canvas = @import("javax/microedition/lcdui/Canvas.zig").Canvas;
+const Command = @import("javax/microedition/lcdui/Command.zig").Command;
+const CommandListener = @import("javax/microedition/lcdui/CommandListener.zig").CommandListener;
+const Graphics = @import("javax/microedition/lcdui/Graphics.zig").Graphics;
+const NullCommandListener = @import("javax/microedition/lcdui/NullCommandListener.zig").NullCommandListener;
 const MyCommandInterface = @import("org/allbinary/graphics/displayable/command/MyCommandInterface.zig").MyCommandInterface;
 const MyCommandsFactory = @import("org/allbinary/graphics/displayable/command/MyCommandsFactory.zig").MyCommandsFactory;
 const TouchJ2ME = @import("org/allbinary/input/TouchJ2ME.zig").TouchJ2ME;
@@ -36,6 +36,7 @@ const ABStack = @import("org/allbinary/util/ABStack.zig").ABStack;
 const CanvasStrings = @import("org/allbinary/graphics/displayable/CanvasStrings.zig").CanvasStrings;
 const DisplayInfoSingleton = @import("org/allbinary/graphics/displayable/DisplayInfoSingleton.zig").DisplayInfoSingleton;
 const DisplayableInterface = @import("org/allbinary/graphics/displayable/DisplayableInterface.zig").DisplayableInterface;
+const Exception = @import("java/lang/Exception.zig").Exception;
 
 pub const MyCanvas = struct {
     const Self = @This();
@@ -76,8 +77,8 @@ pub const MyCanvas = struct {
         this.* = .{};
         this.base = Canvas.create().*;
         this.initFields();
-        _ = Inheritance.call(this.logUtil.?, "putF", .{ this.commonStrings.?.CONSTRUCTOR, this, this.commonStrings.?.CONSTRUCTOR });
-        _ = Inheritance.call(this.displayInfo.?, "update", .{ this, this.canvasStrings.?.CONSTRUCTOR });
+        _ = Inheritance.call(this.logUtil.?, "putF", .{ Inheritance.fieldPointer(this.commonStrings.?, "CONSTRUCTOR").*, this, Inheritance.fieldPointer(this.commonStrings.?, "CONSTRUCTOR").* });
+        _ = Inheritance.call(this.displayInfo.?, "update", .{ this, Inheritance.fieldPointer(this.canvasStrings.?, "CONSTRUCTOR").* });
         this.name = name;
         this.childNameList = childNameList;
         this.commandStack = Inheritance.upcast(@TypeOf(this.commandStack), Inheritance.receiverOf(StdUtil.getInstance().?, "createStack").createStack());
@@ -86,16 +87,26 @@ pub const MyCanvas = struct {
     }
     
 
+    pub fn getWidth(self: *Self) i32 {
+        return Inheritance.receiver(&self.base, "getWidth").getWidth();
+    }
+    
+
+    pub fn getHeight(self: *Self) i32 {
+        return Inheritance.receiver(&self.base, "getHeight").getHeight();
+    }
+    
+
     pub fn setFullScreenMode(self: *Self, mode: bool) void {
         _ = Inheritance.call(&self.base, "setFullScreenMode", .{ mode });
-        _ = Inheritance.call(self.displayInfo.?, "update", .{ self, self.canvasStrings.?.SET_FULL_SCREEN_MODE });
+        _ = Inheritance.call(self.displayInfo.?, "update", .{ self, Inheritance.fieldPointer(self.canvasStrings.?, "SET_FULL_SCREEN_MODE").* });
     }
     
 
     pub fn sizeChanged(self: *Self, w: i32, h: i32) void {
         _ = w;
         _ = h;
-        _ = Inheritance.call(self.displayInfo.?, "update", .{ self, self.canvasStrings.?.SIZE_CHANGED });
+        _ = Inheritance.call(self.displayInfo.?, "update", .{ self, Inheritance.fieldPointer(self.canvasStrings.?, "SIZE_CHANGED").* });
     }
     
 
@@ -166,7 +177,7 @@ pub const MyCanvas = struct {
     
 
     pub fn removePauseCommand(self: *Self) void {
-        _ = Inheritance.call(self, "removeCommand", .{ MyCommandsFactory.getInstance().?.PAUSE_COMMAND });
+        _ = Inheritance.call(self, "removeCommand", .{ Inheritance.fieldPointer(MyCommandsFactory.getInstance().?, "PAUSE_COMMAND").* });
     }
     
 
@@ -174,9 +185,9 @@ pub const MyCanvas = struct {
         // Java synchronized method
         const javaMonitor = Object.monitor(self).enter();
         defer javaMonitor.exit();
-        _ = Inheritance.call(self.logUtil.?, "putF", .{ self.commonStrings.?.START, self, self.canvasStrings.?.PAUSE });
+        _ = Inheritance.call(self.logUtil.?, "putF", .{ Inheritance.fieldPointer(self.commonStrings.?, "START").*, self, Inheritance.fieldPointer(self.canvasStrings.?, "PAUSE").* });
         _ = self.removePauseCommand();
-        _ = Inheritance.call(self, "addCommand", .{ MyCommandsFactory.getInstance().?.RESUME_COMMAND });
+        _ = Inheritance.call(self, "addCommand", .{ Inheritance.fieldPointer(MyCommandsFactory.getInstance().?, "RESUME_COMMAND").* });
         _ = Inheritance.call(self, "setPaused", .{ true });
     }
     
@@ -185,9 +196,9 @@ pub const MyCanvas = struct {
         // Java synchronized method
         const javaMonitor = Object.monitor(self).enter();
         defer javaMonitor.exit();
-        _ = Inheritance.call(self.logUtil.?, "putF", .{ self.commonStrings.?.START, self, self.canvasStrings.?.UN_PAUSE });
-        _ = Inheritance.call(self, "removeCommand", .{ MyCommandsFactory.getInstance().?.RESUME_COMMAND });
-        _ = Inheritance.call(self, "addCommand", .{ MyCommandsFactory.getInstance().?.PAUSE_COMMAND });
+        _ = Inheritance.call(self.logUtil.?, "putF", .{ Inheritance.fieldPointer(self.commonStrings.?, "START").*, self, Inheritance.fieldPointer(self.canvasStrings.?, "UN_PAUSE").* });
+        _ = Inheritance.call(self, "removeCommand", .{ Inheritance.fieldPointer(MyCommandsFactory.getInstance().?, "RESUME_COMMAND").* });
+        _ = Inheritance.call(self, "addCommand", .{ Inheritance.fieldPointer(MyCommandsFactory.getInstance().?, "PAUSE_COMMAND").* });
         _ = Inheritance.call(self, "setPaused", .{ false });
     }
     

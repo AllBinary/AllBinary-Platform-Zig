@@ -19,6 +19,7 @@ const String = @import("java/lang/String.zig").String;
 const Object = @import("java/lang/Object.zig").Object;
 const Inheritance = @import("zig/Inheritance.zig");
 const GameCanvasRunnableInterface = @import("org/allbinary/game/displayable/canvas/GameCanvasRunnableInterface.zig").GameCanvasRunnableInterface;
+const Exception = @import("java/lang/Exception.zig").Exception;
 
 // Java interface: an implementation is a pointer and a table of functions
 pub const DemoGameMidletJs = struct {
@@ -27,7 +28,7 @@ pub const DemoGameMidletJs = struct {
     pointer: *anyopaque,
     object: Object,
     toStringFn: *const fn (pointer: *anyopaque) ?*String,
-    createDemoGameCanvasRunnableInterfaceFn: *const fn (pointer: *anyopaque) ?*GameCanvasRunnableInterface,
+    createDemoGameCanvasRunnableInterfaceFn: *const fn (interface_pointer: *anyopaque) ?*GameCanvasRunnableInterface,
 
     pub fn createDemoGameCanvasRunnableInterface(self: *Self) ?*GameCanvasRunnableInterface {
         return self.createDemoGameCanvasRunnableInterfaceFn(self.pointer);
@@ -39,14 +40,14 @@ pub const DemoGameMidletJs = struct {
 
     // The interface value of an object with the methods. Like a Java class a method can be declared by the object or a superclass.
     pub fn of(object: anytype) ?*Self {
-        const Implementation = @TypeOf(object);
+        const ImplementationType = @TypeOf(object);
         const Methods = struct {
             fn toString(pointer: *anyopaque) ?*String {
-                const implementation: Implementation = @ptrCast(@alignCast(pointer));
+                const implementation: ImplementationType = @ptrCast(@alignCast(pointer));
                 return String.valueOf(implementation);
             }
-            fn createDemoGameCanvasRunnableInterface(pointer: *anyopaque) ?*GameCanvasRunnableInterface {
-                const implementation: Implementation = @ptrCast(@alignCast(pointer));
+            fn createDemoGameCanvasRunnableInterface(interface_pointer: *anyopaque) ?*GameCanvasRunnableInterface {
+                const implementation: ImplementationType = @ptrCast(@alignCast(interface_pointer));
                 return Inheritance.upcast(?*GameCanvasRunnableInterface, Inheritance.receiver(implementation, "createDemoGameCanvasRunnableInterface").createDemoGameCanvasRunnableInterface());
             }
         };

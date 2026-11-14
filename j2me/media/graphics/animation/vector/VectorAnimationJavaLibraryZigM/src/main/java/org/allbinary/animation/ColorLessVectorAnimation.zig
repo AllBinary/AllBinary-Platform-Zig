@@ -18,7 +18,7 @@ const allocator = std.heap.page_allocator;
 const String = @import("java/lang/String.zig").String;
 const Object = @import("java/lang/Object.zig").Object;
 const Inheritance = @import("zig/Inheritance.zig");
-// const Graphics = @import("javax/microedition/lcdui/Graphics.zig").Graphics;
+const Graphics = @import("javax/microedition/lcdui/Graphics.zig").Graphics;
 const BasicColorFactory = @import("org/allbinary/graphics/color/BasicColorFactory.zig").BasicColorFactory;
 const AnimationBehavior = @import("org/allbinary/animation/AnimationBehavior.zig").AnimationBehavior;
 const VectorAnimation = @import("org/allbinary/animation/VectorAnimation.zig").VectorAnimation;
@@ -32,7 +32,7 @@ pub const ColorLessVectorAnimation = struct {
     pub fn create2(currentPoints: [][][]i32, animationBehavior: ?*AnimationBehavior) *Self {
         const this = allocator.create(Self) catch unreachable;
         this.* = .{};
-        this.base = Inheritance.callStatic(VectorAnimation, "create3", .{ currentPoints, BasicColorFactory.getInstance().?.WHITE, animationBehavior }).*;
+        this.base = Inheritance.callStatic(VectorAnimation, "create3", .{ currentPoints, Inheritance.fieldPointer(BasicColorFactory.getInstance().?, "WHITE").*, animationBehavior }).*;
         Inheritance.bindOverrides(this);
         return this;
     }

@@ -28,7 +28,7 @@ pub const GameInputMapping = struct {
     gameKey: ?*GameKey = null,
 
     fn initFields(this: *Self) void {
-        this.name = Inheritance.upcast(?*String, StringUtil.getInstance().?.EMPTY_STRING);
+        this.name = Inheritance.upcast(?*String, Inheritance.fieldPointer(StringUtil.getInstance().?, "EMPTY_STRING").*);
         this.gameKey = Inheritance.upcast(?*GameKey, GameKey.NULL_GAME_KEY);
     }
     

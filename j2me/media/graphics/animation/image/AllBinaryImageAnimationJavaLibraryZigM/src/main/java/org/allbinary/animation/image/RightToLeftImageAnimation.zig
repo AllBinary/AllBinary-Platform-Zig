@@ -18,13 +18,14 @@ const allocator = std.heap.page_allocator;
 const String = @import("java/lang/String.zig").String;
 const Object = @import("java/lang/Object.zig").Object;
 const Inheritance = @import("zig/Inheritance.zig");
-// const Graphics = @import("javax/microedition/lcdui/Graphics.zig").Graphics;
-// const Image = @import("javax/microedition/lcdui/Image.zig").Image;
-// const Sprite = @import("javax/microedition/lcdui/game/Sprite.zig").Sprite;
+const Graphics = @import("javax/microedition/lcdui/Graphics.zig").Graphics;
+const Image = @import("javax/microedition/lcdui/Image.zig").Image;
+const Sprite = @import("javax/microedition/lcdui/game/Sprite.zig").Sprite;
 const AnimationBehavior = @import("org/allbinary/animation/AnimationBehavior.zig").AnimationBehavior;
 const Anchor = @import("org/allbinary/graphics/Anchor.zig").Anchor;
 const PrimitiveIntUtil = @import("org/allbinary/logic/math/PrimitiveIntUtil.zig").PrimitiveIntUtil;
 const ImageSegmentAnimation = @import("org/allbinary/animation/image/ImageSegmentAnimation.zig").ImageSegmentAnimation;
+const Exception = @import("java/lang/Exception.zig").Exception;
 
 pub const RightToLeftImageAnimation = struct {
     const Self = @This();
@@ -46,20 +47,20 @@ pub const RightToLeftImageAnimation = struct {
         this.* = .{};
         this.base = Inheritance.callStatic(ImageSegmentAnimation, "create3", .{ image, PrimitiveIntUtil.getArrayInstance(), animationBehavior }).*;
         this.initFields();
-        _ = Inheritance.call(this, "setFrame", .{ Inheritance.receiver(this, "getSize").getSize() - 1 });
+        _ = Inheritance.call(this, "setFrame", .{ Inheritance.arithmetic(.subtract, Inheritance.receiver(this, "getSize").getSize(), 1) });
         Inheritance.bindOverrides(this);
         return this;
     }
     
 
     pub fn nextFrame(self: *Self) void {
-        _ = self.base.previousFrame();
+        _ = Inheritance.receiver(&self.base, "previousFrame").previousFrame();
         _ = self.update();
     }
     
 
     pub fn previousFrame(self: *Self) void {
-        _ = self.base.nextFrame();
+        _ = Inheritance.receiver(&self.base, "nextFrame").nextFrame();
         _ = self.update();
     }
     
@@ -71,8 +72,8 @@ pub const RightToLeftImageAnimation = struct {
     
 
     pub fn update(self: *Self) void {
-        self.startWidth = (divide_N66230: { const left_N66230 = Inheritance.receiver(self, "getDrawWidth").getDrawWidth() * Inheritance.receiver(self, "getFrame").getFrame(); const right_N66230 = Inheritance.receiver(self, "getSize").getSize(); break :divide_N66230 if (comptime @typeInfo(@TypeOf(left_N66230)) == .int or @TypeOf(left_N66230) == comptime_int) @divTrunc(left_N66230, right_N66230) else left_N66230 / right_N66230; });
-        self.currentWidth = Inheritance.receiver(self, "getDrawWidth").getDrawWidth() - self.startWidth;
+        self.startWidth = (divide_N66230: { const left_N66230 = Inheritance.arithmetic(.multiply, Inheritance.receiver(self, "getDrawWidth").getDrawWidth(), Inheritance.receiver(self, "getFrame").getFrame()); const right_N66230 = Inheritance.receiver(self, "getSize").getSize(); break :divide_N66230 if (comptime @typeInfo(@TypeOf(left_N66230)) == .int or @TypeOf(left_N66230) == comptime_int) @divTrunc(left_N66230, right_N66230) else left_N66230 / right_N66230; });
+        self.currentWidth = Inheritance.arithmetic(.subtract, Inheritance.receiver(self, "getDrawWidth").getDrawWidth(), self.startWidth);
     }
     
 

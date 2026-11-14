@@ -52,11 +52,11 @@ pub const StoreRoleFactory = struct {
         this.* = .{};
         this.initFields();
         const basicUserRoleFactory: ?*BasicUserRoleFactory = Inheritance.upcast(?*BasicUserRoleFactory, BasicUserRoleFactory.getInstance());
-        _ = Inheritance.call(this.roles.?, "add", .{ basicUserRoleFactory.?.CUSTOMER });
-        _ = Inheritance.call(this.roles.?, "add", .{ basicUserRoleFactory.?.SUBSCRIBERCUSTOMER });
-        _ = Inheritance.call(this.roles.?, "add", .{ basicUserRoleFactory.?.WHOLESALECUSTOMER });
-        _ = Inheritance.call(this.subscriberRoles.?, "add", .{ basicUserRoleFactory.?.SUBSCRIBERCUSTOMER });
-        _ = Inheritance.call(this.wholesaleRoles.?, "add", .{ basicUserRoleFactory.?.WHOLESALECUSTOMER });
+        _ = Inheritance.call(this.roles.?, "add", .{ Inheritance.fieldPointer(basicUserRoleFactory.?, "CUSTOMER").* });
+        _ = Inheritance.call(this.roles.?, "add", .{ Inheritance.fieldPointer(basicUserRoleFactory.?, "SUBSCRIBERCUSTOMER").* });
+        _ = Inheritance.call(this.roles.?, "add", .{ Inheritance.fieldPointer(basicUserRoleFactory.?, "WHOLESALECUSTOMER").* });
+        _ = Inheritance.call(this.subscriberRoles.?, "add", .{ Inheritance.fieldPointer(basicUserRoleFactory.?, "SUBSCRIBERCUSTOMER").* });
+        _ = Inheritance.call(this.wholesaleRoles.?, "add", .{ Inheritance.fieldPointer(basicUserRoleFactory.?, "WHOLESALECUSTOMER").* });
         return this;
     }
     

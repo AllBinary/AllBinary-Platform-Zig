@@ -24,6 +24,7 @@ const TouchButtonRecognizer = @import("org/allbinary/input/motion/button/TouchBu
 const MotionGestureRecognizer = @import("org/allbinary/input/motion/gesture/MotionGestureRecognizer.zig").MotionGestureRecognizer;
 const LogUtil = @import("org/allbinary/logic/communication/log/LogUtil.zig").LogUtil;
 const MotionRecognizer = @import("org/allbinary/input/motion/MotionRecognizer.zig").MotionRecognizer;
+const Exception = @import("java/lang/Exception.zig").Exception;
 
 pub const AllMotionRecognizer = struct {
     const Self = @This();

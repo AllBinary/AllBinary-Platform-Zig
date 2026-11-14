@@ -27,6 +27,7 @@ const ProceduralAnimationInterfaceFactoryInterface = @import("org/allbinary/anim
 const VectorAnimationFactoryInterface = @import("org/allbinary/animation/VectorAnimationFactoryInterface.zig").VectorAnimationFactoryInterface;
 const VectorExplosionGenerator = @import("org/allbinary/animation/VectorExplosionGenerator.zig").VectorExplosionGenerator;
 const VectorRotationGenerator = @import("org/allbinary/animation/VectorRotationGenerator.zig").VectorRotationGenerator;
+const Exception = @import("java/lang/Exception.zig").Exception;
 
 pub const IndependentVectorExplosionRotationAnimationFactory = struct {
     const Self = @This();
@@ -40,7 +41,7 @@ pub const IndependentVectorExplosionRotationAnimationFactory = struct {
     // Implements ProceduralAnimationInterfaceFactoryInterface
 
     fn initFields(this: *Self) void {
-        this.framePoints = NullUtil.getInstance().?.NULL_INT_ARRAY_ARRAY_ARRAY;
+        this.framePoints = Inheritance.fieldPointer(NullUtil.getInstance().?, "NULL_INT_ARRAY_ARRAY_ARRAY").*;
         
         
         
@@ -69,11 +70,11 @@ pub const IndependentVectorExplosionRotationAnimationFactory = struct {
     // throws Exception
     pub fn getInstanceAnimation(self: *Self, animationInterface: ?*Animation) ?*Animation {
         var frame: i32 = 0;
-        if (animationInterface != null) {
+        if (!Object.isNull(animationInterface)) {
             const rotationAnimationInterface: ?*IndexedAnimation = Inheritance.cast(?*IndexedAnimation, animationInterface);
             frame = Inheritance.receiver(rotationAnimationInterface.?, "getFrame").getFrame();
         }
-        const points: [][][]i32 = Inheritance.call(self.vectorExplosionGenerator.?, "getInstance", .{ self.framePoints[@intCast(frame)], 6, self.vectorExplosionGenerator.?.ROTATION });
+        const points: [][][]i32 = Inheritance.call(self.vectorExplosionGenerator.?, "getInstance", .{ self.framePoints[@intCast(frame)], 6, Inheritance.fieldPointer(self.vectorExplosionGenerator.?, "ROTATION").* });
         return Inheritance.upcast(?*Animation, Inheritance.call(self.vectorAnimationFactoryInterface.?, "getInstance", .{ points, self.basicColor }));
     }
 };

@@ -28,8 +28,9 @@ pub const VectorAnimationInterface = struct {
     pointer: *anyopaque,
     object: Object,
     base: IndexedAnimationInterface,
+    base2: ColorCompositeInterface,
     toStringFn: *const fn (pointer: *anyopaque) ?*String,
-    getPointsFn: *const fn (pointer: *anyopaque, frame: i32) [][]i32,
+    getPointsFn: *const fn (interface_pointer: *anyopaque, frame: i32) [][]i32,
 
     pub fn getPoints(self: *Self, frame: i32) [][]i32 {
         return self.getPointsFn(self.pointer, frame);
@@ -41,19 +42,19 @@ pub const VectorAnimationInterface = struct {
 
     // The interface value of an object with the methods. Like a Java class a method can be declared by the object or a superclass.
     pub fn of(object: anytype) ?*Self {
-        const Implementation = @TypeOf(object);
+        const ImplementationType = @TypeOf(object);
         const Methods = struct {
             fn toString(pointer: *anyopaque) ?*String {
-                const implementation: Implementation = @ptrCast(@alignCast(pointer));
+                const implementation: ImplementationType = @ptrCast(@alignCast(pointer));
                 return String.valueOf(implementation);
             }
-            fn getPoints(pointer: *anyopaque, frame: i32) [][]i32 {
-                const implementation: Implementation = @ptrCast(@alignCast(pointer));
-                return Inheritance.receiver(implementation, "getPoints").getPoints(frame);
+            fn getPoints(interface_pointer: *anyopaque, frame: i32) [][]i32 {
+                const implementation: ImplementationType = @ptrCast(@alignCast(interface_pointer));
+                return Inheritance.call(implementation, "getPoints", .{ frame });
             }
         };
         const this = allocator.create(Self) catch unreachable;
-        this.* = .{ .pointer = object, .object = Object.of(object).?, .base = IndexedAnimationInterface.of(object).?.*, .toStringFn = Methods.toString, .getPointsFn = Methods.getPoints };
+        this.* = .{ .pointer = object, .object = Object.of(object).?, .base = IndexedAnimationInterface.of(object).?.*, .base2 = ColorCompositeInterface.of(object).?.*, .toStringFn = Methods.toString, .getPointsFn = Methods.getPoints };
         return this;
     }
 };

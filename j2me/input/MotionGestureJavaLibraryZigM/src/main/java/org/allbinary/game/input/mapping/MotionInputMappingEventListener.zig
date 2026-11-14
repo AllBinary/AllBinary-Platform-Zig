@@ -25,6 +25,7 @@ const BasicTouchInputFactory = @import("org/allbinary/input/motion/button/BasicT
 const ForcedLogUtil = @import("org/allbinary/logic/communication/log/ForcedLogUtil.zig").ForcedLogUtil;
 const AllBinaryEventObject = @import("org/allbinary/logic/util/event/AllBinaryEventObject.zig").AllBinaryEventObject;
 const EventStrings = @import("org/allbinary/logic/util/event/EventStrings.zig").EventStrings;
+const Exception = @import("java/lang/Exception.zig").Exception;
 
 pub const MotionInputMappingEventListener = struct {
     const Self = @This();
@@ -40,7 +41,7 @@ pub const MotionInputMappingEventListener = struct {
 
     pub fn onEvent(self: *Self, eventObject: ?*AllBinaryEventObject) void {
         _ = eventObject;
-        _ = Inheritance.callStatic(ForcedLogUtil, "log", .{ EventStrings.getInstance().?.PERFORMANCE_MESSAGE, self });
+        _ = Inheritance.callStatic(ForcedLogUtil, "log", .{ Inheritance.fieldPointer(EventStrings.getInstance().?, "PERFORMANCE_MESSAGE").*, self });
     }
     
 

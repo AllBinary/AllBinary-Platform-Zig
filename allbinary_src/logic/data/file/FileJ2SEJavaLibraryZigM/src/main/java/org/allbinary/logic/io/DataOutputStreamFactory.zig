@@ -22,6 +22,7 @@ const AbFile = @import("org/allbinary/logic/io/file/AbFile.zig").AbFile;
 const AbDataOutputStream = @import("org/allbinary/logic/io/AbDataOutputStream.zig").AbDataOutputStream;
 const AbFileOutputStream = @import("org/allbinary/logic/io/AbFileOutputStream.zig").AbFileOutputStream;
 const FileStreamFactory = @import("org/allbinary/logic/io/FileStreamFactory.zig").FileStreamFactory;
+const Exception = @import("java/lang/Exception.zig").Exception;
 
 pub const DataOutputStreamFactory = struct {
     const Self = @This();

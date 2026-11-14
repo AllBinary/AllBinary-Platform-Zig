@@ -26,6 +26,7 @@ const AllBinaryLayer = @import("org/allbinary/layer/AllBinaryLayer.zig").AllBina
 const ABHashtable = @import("org/allbinary/util/ABHashtable.zig").ABHashtable;
 const RandomPatrolAI = @import("org/allbinary/game/ag/ai/scroller/RandomPatrolAI.zig").RandomPatrolAI;
 const TimedFireAI = @import("org/allbinary/game/ag/ai/scroller/TimedFireAI.zig").TimedFireAI;
+const Exception = @import("java/lang/Exception.zig").Exception;
 
 pub const RandomPatrolFlockingFiringAIFactory = struct {
     const Self = @This();

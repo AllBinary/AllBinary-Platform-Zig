@@ -28,6 +28,7 @@ const BasicArrayListD = @import("org/allbinary/util/BasicArrayListD.zig").BasicA
 const BasicArrayListUtil = @import("org/allbinary/util/BasicArrayListUtil.zig").BasicArrayListUtil;
 const CountedLayerInterfaceFactoryPart = @import("org/allbinary/game/part/CountedLayerInterfaceFactoryPart.zig").CountedLayerInterfaceFactoryPart;
 const PartInterface = @import("org/allbinary/game/part/PartInterface.zig").PartInterface;
+const Exception = @import("java/lang/Exception.zig").Exception;
 
 pub const MakeCountedPartsSingletonArrayFactory = struct {
     const Self = @This();
@@ -74,7 +75,7 @@ pub const MakeCountedPartsSingletonArrayFactory = struct {
         {
             var index: i32 = 0;
             while (index < size) : (index += 1) {
-            layerInterfaceFactoryInterface = Inheritance.cast(?*CountedPickedUpLayerInterfaceFactory, countedBasicArrayList.?.objectArray[@intCast(index)]);
+            layerInterfaceFactoryInterface = Inheritance.cast(?*CountedPickedUpLayerInterfaceFactory, Inheritance.fieldPointer(countedBasicArrayList.?, "objectArray").*[@intCast(index)]);
             _ = Inheritance.call(self.list.?, "add", .{ Inheritance.callStatic(CountedLayerInterfaceFactoryPart, "create2", .{ 0, layerInterfaceFactoryInterface }) });
             }
         }
@@ -84,7 +85,7 @@ pub const MakeCountedPartsSingletonArrayFactory = struct {
         _ = Inheritance.call(stringBuffer.?, "append", .{ String.literal(" Counted: ") });
         _ = Inheritance.call(stringBuffer.?, "appendint", .{ countedBasicArrayList.?.size() });
         const commonStrings: ?*CommonStrings = Inheritance.upcast(?*CommonStrings, CommonStrings.getInstance());
-        _ = Inheritance.call(self.logUtil.?, "putF", .{ Object.toString(Object.of(stringBuffer)), self, commonStrings.?.GET_INSTANCE });
+        _ = Inheritance.call(self.logUtil.?, "putF", .{ Object.toString(Object.of(stringBuffer)), self, Inheritance.fieldPointer(commonStrings.?, "GET_INSTANCE").* });
         const newPartInterfaceArray: []?*PartInterface = array_N66812: { const array_N66812_array = allocator.alloc(?*PartInterface, @intCast(self.list.?.size())) catch unreachable; @memset(array_N66812_array, null); break :array_N66812 array_N66812_array; };
         const newSize: i32 = @as(i32, @intCast(newPartInterfaceArray.len));
         {

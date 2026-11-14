@@ -26,6 +26,7 @@ const BasicArrayList = @import("org/allbinary/util/BasicArrayList.zig").BasicArr
 const BasicArrayListD = @import("org/allbinary/util/BasicArrayListD.zig").BasicArrayListD;
 const NoSound = @import("org/allbinary/media/audio/NoSound.zig").NoSound;
 const Sound = @import("org/allbinary/media/audio/Sound.zig").Sound;
+const Exception = @import("java/lang/Exception.zig").Exception;
 
 pub const PlayerQueue = struct {
     const Self = @This();
@@ -58,7 +59,7 @@ pub const PlayerQueue = struct {
             }
         }
         // catch (Exception e):
-//             _ = Inheritance.callStatic(PreLogUtil, "put", .{ self.commonStrings.?.EXCEPTION, self, self.commonStrings.?.ADD });
+//             _ = Inheritance.callStatic(PreLogUtil, "put", .{ Inheritance.fieldPointer(self.commonStrings.?, "EXCEPTION").*, self, Inheritance.fieldPointer(self.commonStrings.?, "ADD").* });
     }
     
 
@@ -68,7 +69,7 @@ pub const PlayerQueue = struct {
             var played: bool = false;
             if (self.list.?.size() > 0) {
                 sound = Inheritance.cast(?*Sound, Inheritance.call(self.list.?, "removeAt", .{ 0 }));
-                if (sound != null) {
+                if (!Object.isNull(sound)) {
                     _ = Inheritance.receiverOf(sound.?.getPlayerP().?, "start").start();
                 }
                 while (self.list.?.size() > self.max) {
@@ -79,11 +80,11 @@ pub const PlayerQueue = struct {
             return played;
         }
         // catch (Exception e):
-//             var resource: ?*String = Inheritance.upcast(?*String, StringUtil.getInstance().?.EMPTY_STRING); _ = resource;
-//             if (sound != null) {
+//             var resource: ?*String = Inheritance.upcast(?*String, Inheritance.fieldPointer(StringUtil.getInstance().?, "EMPTY_STRING").*); _ = resource;
+//             if (!Object.isNull(sound)) {
 //                 resource = Inheritance.upcast(@TypeOf(resource), sound.?.getResource());
 //             }
-//             _ = Inheritance.callStatic(PreLogUtil, "put", .{ Object.toString(Object.of(Inheritance.call(Inheritance.call(StringMaker.create(), "append", .{ self.commonStrings.?.EXCEPTION_LABEL }).?, "append", .{ resource }))), self, self.commonStrings.?.PROCESS });
+//             _ = Inheritance.callStatic(PreLogUtil, "put", .{ Object.toString(Object.of(Inheritance.call(Inheritance.call(StringMaker.create(), "append", .{ Inheritance.fieldPointer(self.commonStrings.?, "EXCEPTION_LABEL").* }).?, "append", .{ resource }))), self, Inheritance.fieldPointer(self.commonStrings.?, "PROCESS").* });
 //             return false;
     }
     

@@ -18,7 +18,7 @@ const allocator = std.heap.page_allocator;
 const String = @import("java/lang/String.zig").String;
 const Object = @import("java/lang/Object.zig").Object;
 const Inheritance = @import("zig/Inheritance.zig");
-// const Graphics = @import("javax/microedition/lcdui/Graphics.zig").Graphics;
+const Graphics = @import("javax/microedition/lcdui/Graphics.zig").Graphics;
 const Layer = @import("org/allbinary/layer/Layer.zig").Layer;
 
 pub const NullLayer = struct {

@@ -50,11 +50,10 @@ pub const KeyValueFactory = struct {
     
 
     pub fn get(self: *Self, key: ?*String) ?*String {
-        const value: ?*String = Inheritance.cast(?*String, Inheritance.call(self.MAP.?, "get", .{ Inheritance.cast(?Object, key) }));
-        if (value == null) {
+        if (!Inheritance.call(self.MAP.?, "containsKey", .{ Inheritance.cast(?Object, key) })) {
             return key;
         }
-        return value;
+        return Inheritance.cast(?*String, Inheritance.call(self.MAP.?, "get", .{ Inheritance.cast(?Object, key) }));
     }
 };
 

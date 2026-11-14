@@ -19,6 +19,7 @@ const String = @import("java/lang/String.zig").String;
 const Object = @import("java/lang/Object.zig").Object;
 const Inheritance = @import("zig/Inheritance.zig");
 const GenericOperatingSystem = @import("org/allbinary/logic/system/os/GenericOperatingSystem.zig").GenericOperatingSystem;
+const Exception = @import("java/lang/Exception.zig").Exception;
 
 pub const WindowsOS = struct {
     const Self = @This();

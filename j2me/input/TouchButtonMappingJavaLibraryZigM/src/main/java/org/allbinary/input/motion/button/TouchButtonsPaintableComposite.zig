@@ -37,6 +37,7 @@ const EventStrings = @import("org/allbinary/logic/util/event/EventStrings.zig").
 const CommonStrings = @import("org/allbinary/string/CommonStrings.zig").CommonStrings;
 const TimeDelayHelper = @import("org/allbinary/time/TimeDelayHelper.zig").TimeDelayHelper;
 const TouchButtonsMappingPaintable = @import("org/allbinary/input/motion/button/TouchButtonsMappingPaintable.zig").TouchButtonsMappingPaintable;
+const Exception = @import("java/lang/Exception.zig").Exception;
 
 pub const TouchButtonsPaintableComposite = struct {
     const Self = @This();
@@ -83,23 +84,23 @@ pub const TouchButtonsPaintableComposite = struct {
 
     pub fn onEvent(self: *Self, eventObject: ?*AllBinaryEventObject) void {
         _ = eventObject;
-        _ = Inheritance.callStatic(ForcedLogUtil, "log", .{ EventStrings.getInstance().?.PERFORMANCE_MESSAGE, self });
+        _ = Inheritance.callStatic(ForcedLogUtil, "log", .{ Inheritance.fieldPointer(EventStrings.getInstance().?, "PERFORMANCE_MESSAGE").*, self });
     }
     
 
     pub fn onCompleteMotionGestureInputEvent(self: *Self, completeMotionGestureInputEvent: ?*CompleteMotionGestureInputEvent) void {
         { // try
-            _ = Inheritance.call(self.logUtil.?, "putF", .{ self.commonStrings.?.START, self, String.literal("onCompleteMotionGestureInputEvent") });
+            _ = Inheritance.call(self.logUtil.?, "putF", .{ Inheritance.fieldPointer(self.commonStrings.?, "START").*, self, String.literal("onCompleteMotionGestureInputEvent") });
             const touchMotionGestureFactory: ?*TouchMotionGestureFactory = Inheritance.upcast(?*TouchMotionGestureFactory, TouchMotionGestureFactory.getInstance());
             const gameKeyCompleteMotionGestureInputEvent: ?*GameKeyCompleteMotionGestureInputEvent = Inheritance.cast(?*GameKeyCompleteMotionGestureInputEvent, completeMotionGestureInputEvent);
             const gameKey: ?*GameKey = Inheritance.upcast(?*GameKey, Inheritance.receiver(gameKeyCompleteMotionGestureInputEvent.?, "getGameKey").getGameKey());
             const motionGestureInput: ?*MotionGestureInput = Inheritance.upcast(?*MotionGestureInput, Inheritance.receiver(completeMotionGestureInputEvent.?, "getMotionGestureInput").getMotionGestureInput());
-            if (Object.same(motionGestureInput, touchMotionGestureFactory.?.RELEASED)) {
+            if (Object.same(motionGestureInput, Inheritance.fieldPointer(touchMotionGestureFactory.?, "RELEASED").*)) {
                 _ = Inheritance.call(self.logUtil.?, "putF", .{ self.RELEASE, self, self.METHOD_NAME });
                 self.released = true;
                 return;
             }
-            if (Object.same(motionGestureInput, TouchMotionGestureFactory.getInstance().?.NO_MOTION) and !self.timeHelper.?.isTimeTNT()) {
+            if (Object.same(motionGestureInput, Inheritance.fieldPointer(TouchMotionGestureFactory.getInstance().?, "NO_MOTION").*) and !self.timeHelper.?.isTimeTNT()) {
                 _ = Inheritance.call(self.logUtil.?, "putF", .{ self.FAST_REPEAT, self, self.METHOD_NAME });
                 return;
             }
@@ -112,7 +113,7 @@ pub const TouchButtonsPaintableComposite = struct {
             _ = Inheritance.call(self.inputMappingInterface.?, "processInputMapping", .{ gameKey, motionGestureInput });
         }
         // catch (Exception e):
-//             _ = Inheritance.call(self.logUtil.?, "put", .{ self.commonStrings.?.EXCEPTION, self, self.METHOD_NAME, e });
+//             _ = Inheritance.call(self.logUtil.?, "put", .{ Inheritance.fieldPointer(self.commonStrings.?, "EXCEPTION").*, self, self.METHOD_NAME, e });
     }
     
 

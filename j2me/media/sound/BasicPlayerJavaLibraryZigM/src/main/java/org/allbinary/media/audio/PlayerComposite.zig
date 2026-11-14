@@ -18,16 +18,18 @@ const allocator = std.heap.page_allocator;
 const String = @import("java/lang/String.zig").String;
 const Object = @import("java/lang/Object.zig").Object;
 const Inheritance = @import("zig/Inheritance.zig");
-// const Control = @import("javax/microedition/media/Control.zig").Control;
-// const Controllable = @import("javax/microedition/media/Controllable.zig").Controllable;
-// const Player = @import("javax/microedition/media/Player.zig").Player;
-// const PlayerListener = @import("javax/microedition/media/PlayerListener.zig").PlayerListener;
+const Control = @import("javax/microedition/media/Control.zig").Control;
+const Controllable = @import("javax/microedition/media/Controllable.zig").Controllable;
+const Player = @import("javax/microedition/media/Player.zig").Player;
+const PlayerListener = @import("javax/microedition/media/PlayerListener.zig").PlayerListener;
 const LogUtil = @import("org/allbinary/logic/communication/log/LogUtil.zig").LogUtil;
 const CommonStrings = @import("org/allbinary/string/CommonStrings.zig").CommonStrings;
 const GameTickTimeDelayHelper = @import("org/allbinary/time/GameTickTimeDelayHelper.zig").GameTickTimeDelayHelper;
 const GameTickTimeDelayHelperFactory = @import("org/allbinary/time/GameTickTimeDelayHelperFactory.zig").GameTickTimeDelayHelperFactory;
 const TimeDelayHelper = @import("org/allbinary/time/TimeDelayHelper.zig").TimeDelayHelper;
 const Controllable2 = @import("org/allbinary/media/audio/Controllable2.zig").Controllable2;
+const Exception = @import("java/lang/Exception.zig").Exception;
+const RuntimeException = @import("java/lang/RuntimeException.zig").RuntimeException;
 
 //BasicPlayer
 pub const PlayerComposite = struct {
@@ -55,7 +57,7 @@ pub const PlayerComposite = struct {
         this.* = .{};
         this.initFields();
         this.player = player;
-        this.timeElapsedHelper.?.delay = Inheritance.upcast(@TypeOf(this.timeElapsedHelper.?.delay), repeatTime);
+        Inheritance.fieldPointer(this.timeElapsedHelper.?, "delay").* = Inheritance.upcast(@TypeOf(Inheritance.fieldPointer(this.timeElapsedHelper.?, "delay").*), repeatTime);
         return this;
     }
     
@@ -74,50 +76,50 @@ pub const PlayerComposite = struct {
     
 
     pub fn close(self: *Self) void {
-        _ = self.player.?.close();
+        _ = Inheritance.receiver(self.player.?, "close").close();
     }
     
 
     pub fn deallocate(self: *Self) void {
-        _ = self.player.?.deallocate();
+        _ = Inheritance.receiver(self.player.?, "deallocate").deallocate();
     }
     
 
     pub fn getContentType(self: *Self) ?*String {
-        return Inheritance.upcast(?*String, self.player.?.getContentType());
+        return Inheritance.upcast(?*String, Inheritance.receiver(self.player.?, "getContentType").getContentType());
     }
     
 
     pub fn getDuration(self: *Self) i64 {
-        return self.player.?.getDuration();
+        return Inheritance.receiver(self.player.?, "getDuration").getDuration();
     }
     
 
     pub fn getMediaTime(self: *Self) i64 {
-        return self.player.?.getMediaTime();
+        return Inheritance.receiver(self.player.?, "getMediaTime").getMediaTime();
     }
     
 
     pub fn prefetch(self: *Self) void {
         { // try
-            _ = self.player.?.prefetch();
+            _ = Inheritance.receiver(self.player.?, "prefetch").prefetch();
         }
         // catch (Exception e):
-//             _ = Inheritance.call(self.logUtil.?, "put", .{ self.commonStrings.?.EXCEPTION, self, String.literal("prefetch"), e });
+//             _ = Inheritance.call(self.logUtil.?, "put", .{ Inheritance.fieldPointer(self.commonStrings.?, "EXCEPTION").*, self, String.literal("prefetch"), e });
     }
     
 
     pub fn realize(self: *Self) void {
         { // try
-            _ = self.player.?.realize();
+            _ = Inheritance.receiver(self.player.?, "realize").realize();
         }
         // catch (Exception e):
-//             _ = Inheritance.call(self.logUtil.?, "put", .{ self.commonStrings.?.EXCEPTION, self, String.literal("realize"), e });
+//             _ = Inheritance.call(self.logUtil.?, "put", .{ Inheritance.fieldPointer(self.commonStrings.?, "EXCEPTION").*, self, String.literal("realize"), e });
     }
     
 
     pub fn getState(self: *Self) i32 {
-        return self.player.?.getState();
+        return Inheritance.receiver(self.player.?, "getState").getState();
     }
     
 
@@ -131,28 +133,28 @@ pub const PlayerComposite = struct {
             return Inheritance.call(self.player.?, "setMediaTime", .{ now });
         }
         // catch (Exception e):
-//             _ = Inheritance.call(self.logUtil.?, "put", .{ self.commonStrings.?.EXCEPTION, self, String.literal("setMediaTime"), e });
+//             _ = Inheritance.call(self.logUtil.?, "put", .{ Inheritance.fieldPointer(self.commonStrings.?, "EXCEPTION").*, self, String.literal("setMediaTime"), e });
 //             return @as(i64, @intCast(-1));
     }
     
 
     pub fn start(self: *Self) void {
         { // try
-            if (Inheritance.call(self.timeElapsedHelper.?, "isTime", .{ self.gameTickTimeDelayHelper.?.startTime })) {
-                _ = self.player.?.start();
+            if (Inheritance.call(self.timeElapsedHelper.?, "isTime", .{ Inheritance.fieldPointer(self.gameTickTimeDelayHelper.?, "startTime").* })) {
+                _ = Inheritance.receiver(self.player.?, "start").start();
             }
         }
         // catch (Exception e):
-//             _ = Inheritance.call(self.logUtil.?, "put", .{ self.commonStrings.?.EXCEPTION, self, self.commonStrings.?.START_METHOD_NAME, e });
+//             _ = Inheritance.call(self.logUtil.?, "put", .{ Inheritance.fieldPointer(self.commonStrings.?, "EXCEPTION").*, self, Inheritance.fieldPointer(self.commonStrings.?, "START_METHOD_NAME").*, e });
     }
     
 
     pub fn stop(self: *Self) void {
         { // try
-            _ = self.player.?.stop();
+            _ = Inheritance.receiver(self.player.?, "stop").stop();
         }
         // catch (Exception e):
-//             _ = Inheritance.call(self.logUtil.?, "put", .{ self.commonStrings.?.EXCEPTION, self, String.literal("stop"), e });
+//             _ = Inheritance.call(self.logUtil.?, "put", .{ Inheritance.fieldPointer(self.commonStrings.?, "EXCEPTION").*, self, String.literal("stop"), e });
     }
     
 

@@ -26,7 +26,7 @@ pub const PositionInterface = struct {
     pointer: *anyopaque,
     object: Object,
     toStringFn: *const fn (pointer: *anyopaque) ?*String,
-    setPositionFn: *const fn (pointer: *anyopaque, x: i32, y: i32, z: i32) void,
+    setPositionFn: *const fn (interface_pointer: *anyopaque, x: i32, y: i32, z: i32) void,
 
     pub fn setPosition(self: *Self, x: i32, y: i32, z: i32) void {
         return self.setPositionFn(self.pointer, x, y, z);
@@ -38,15 +38,15 @@ pub const PositionInterface = struct {
 
     // The interface value of an object with the methods. Like a Java class a method can be declared by the object or a superclass.
     pub fn of(object: anytype) ?*Self {
-        const Implementation = @TypeOf(object);
+        const ImplementationType = @TypeOf(object);
         const Methods = struct {
             fn toString(pointer: *anyopaque) ?*String {
-                const implementation: Implementation = @ptrCast(@alignCast(pointer));
+                const implementation: ImplementationType = @ptrCast(@alignCast(pointer));
                 return String.valueOf(implementation);
             }
-            fn setPosition(pointer: *anyopaque, x: i32, y: i32, z: i32) void {
-                const implementation: Implementation = @ptrCast(@alignCast(pointer));
-                return Inheritance.receiver(implementation, "setPosition").setPosition(x, y, z);
+            fn setPosition(interface_pointer: *anyopaque, x: i32, y: i32, z: i32) void {
+                const implementation: ImplementationType = @ptrCast(@alignCast(interface_pointer));
+                return Inheritance.call(implementation, "setPosition", .{ x, y, z });
             }
         };
         const this = allocator.create(Self) catch unreachable;

@@ -22,6 +22,7 @@ const AutomaticCacheInterface = @import("org/allbinary/logic/util/cache/Automati
 const CachePolicy = @import("org/allbinary/logic/util/cache/CachePolicy.zig").CachePolicy;
 const CacheType = @import("org/allbinary/logic/util/cache/CacheType.zig").CacheType;
 const CacheableInterfaceFactoryInterface = @import("org/allbinary/logic/util/cache/CacheableInterfaceFactoryInterface.zig").CacheableInterfaceFactoryInterface;
+const Exception = @import("java/lang/Exception.zig").Exception;
 
 pub const AutomaticCacheInterfaceFactory = struct {
     const Self = @This();

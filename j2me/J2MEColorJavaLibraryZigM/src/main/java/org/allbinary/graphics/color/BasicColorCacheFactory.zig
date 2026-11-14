@@ -63,7 +63,7 @@ pub const BasicColorCacheFactory = struct {
         const javaMonitor = Object.monitor(self).enter();
         defer javaMonitor.exit();
         var basicColor: ?*BasicColor = Inheritance.cast(?*BasicColor, Inheritance.call(self.hashtable.?, "get", .{ integer }));
-        if (basicColor == null) {
+        if (Object.isNull(basicColor)) {
             basicColor = Inheritance.upcast(@TypeOf(basicColor), Inheritance.call(BasicColorFactory.getInstance().?, "createInstance", .{ integer.?.intValue() }));
             _ = Inheritance.call(self.hashtable.?, "put", .{ integer, basicColor });
         }

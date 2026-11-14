@@ -18,8 +18,8 @@ const allocator = std.heap.page_allocator;
 const String = @import("java/lang/String.zig").String;
 const Object = @import("java/lang/Object.zig").Object;
 const Inheritance = @import("zig/Inheritance.zig");
-// const Font = @import("javax/microedition/lcdui/Font.zig").Font;
-// const Graphics = @import("javax/microedition/lcdui/Graphics.zig").Graphics;
+const Font = @import("javax/microedition/lcdui/Font.zig").Font;
+const Graphics = @import("javax/microedition/lcdui/Graphics.zig").Graphics;
 const Anchor = @import("org/allbinary/graphics/Anchor.zig").Anchor;
 const DisplayInfoSingleton = @import("org/allbinary/graphics/displayable/DisplayInfoSingleton.zig").DisplayInfoSingleton;
 const MyFontProcessor = @import("org/allbinary/graphics/font/MyFontProcessor.zig").MyFontProcessor;
@@ -70,15 +70,15 @@ pub const AllBinaryVisualDebugVibration = struct {
     pub fn vibrate(self: *Self, duration: i32, @"type": i32, volume: i32) void {
         _ = @"type";
         _ = volume;
-        self.timeDelayHelper.?.delay = Inheritance.upcast(@TypeOf(self.timeDelayHelper.?.delay), duration);
+        Inheritance.fieldPointer(self.timeDelayHelper.?, "delay").* = Inheritance.upcast(@TypeOf(Inheritance.fieldPointer(self.timeDelayHelper.?, "delay").*), duration);
     }
     
 
     pub fn paint(self: *Self, graphics: ?*Graphics) void {
         if (self.timeDelayHelper.?.isTimeTNT()) {
-            self.timeDelayHelper.?.delay = Inheritance.upcast(@TypeOf(self.timeDelayHelper.?.delay), @as(i32, std.math.maxInt(i32)));
+            Inheritance.fieldPointer(self.timeDelayHelper.?, "delay").* = Inheritance.upcast(@TypeOf(Inheritance.fieldPointer(self.timeDelayHelper.?, "delay").*), @as(i32, std.math.maxInt(i32)));
             _ = Inheritance.call(self.myFontProcessor.?, "process", .{ graphics });
-            _ = Inheritance.call(graphics.?, "drawString", .{ self.VIBRATING, self.displayInfoSingleton.?.getLastHalfWidth() - (self.width >> @intCast(1)), 0, self.anchor });
+            _ = Inheritance.call(graphics.?, "drawString", .{ self.VIBRATING, Inheritance.arithmetic(.subtract, self.displayInfoSingleton.?.getLastHalfWidth(), (self.width >> @intCast(1))), 0, self.anchor });
         }
     }
 };

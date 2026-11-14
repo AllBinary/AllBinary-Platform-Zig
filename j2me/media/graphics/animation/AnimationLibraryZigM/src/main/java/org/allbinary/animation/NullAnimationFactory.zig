@@ -18,11 +18,12 @@ const allocator = std.heap.page_allocator;
 const String = @import("java/lang/String.zig").String;
 const Object = @import("java/lang/Object.zig").Object;
 const Inheritance = @import("zig/Inheritance.zig");
-// const Graphics = @import("javax/microedition/lcdui/Graphics.zig").Graphics;
+const Graphics = @import("javax/microedition/lcdui/Graphics.zig").Graphics;
 const ScaleProperties = @import("org/allbinary/media/ScaleProperties.zig").ScaleProperties;
 const Animation = @import("org/allbinary/animation/Animation.zig").Animation;
 const AnimationInterfaceFactoryInterface = @import("org/allbinary/animation/AnimationInterfaceFactoryInterface.zig").AnimationInterfaceFactoryInterface;
 const ProceduralAnimationInterfaceFactoryInterface = @import("org/allbinary/animation/ProceduralAnimationInterfaceFactoryInterface.zig").ProceduralAnimationInterfaceFactoryInterface;
+const Exception = @import("java/lang/Exception.zig").Exception;
 
 pub const NullAnimationFactory = struct {
     const Self = @This();

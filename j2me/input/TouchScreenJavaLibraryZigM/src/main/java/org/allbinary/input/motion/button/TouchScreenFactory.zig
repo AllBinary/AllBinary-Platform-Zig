@@ -24,6 +24,7 @@ const StringUtil = @import("org/allbinary/logic/string/StringUtil.zig").StringUt
 const CommonStrings = @import("org/allbinary/string/CommonStrings.zig").CommonStrings;
 const TouchScreenType = @import("org/allbinary/input/motion/button/TouchScreenType.zig").TouchScreenType;
 const TouchScreenTypesFactory = @import("org/allbinary/input/motion/button/TouchScreenTypesFactory.zig").TouchScreenTypesFactory;
+const Exception = @import("java/lang/Exception.zig").Exception;
 
 pub const TouchScreenFactory = struct {
     const Self = @This();
@@ -45,7 +46,7 @@ pub const TouchScreenFactory = struct {
         this.touch = false;
         this.multiTouch = false;
         this.multiTouchDistinct = false;
-        this.touchScreenType = Inheritance.upcast(?*TouchScreenType, TouchScreenTypesFactory.getInstance().?.NOTOUCH);
+        this.touchScreenType = Inheritance.upcast(?*TouchScreenType, Inheritance.fieldPointer(TouchScreenTypesFactory.getInstance().?, "NOTOUCH").*);
     }
     
 
@@ -59,7 +60,7 @@ pub const TouchScreenFactory = struct {
         }
         // catch (Exception e):
 //             const commonStrings: ?*CommonStrings = Inheritance.upcast(?*CommonStrings, CommonStrings.getInstance()); _ = commonStrings;
-//             _ = Inheritance.call(this.logUtil.?, "put", .{ commonStrings.?.EXCEPTION, TouchScreenFactory.SINGLETON, commonStrings.?.GET_INSTANCE, e });
+//             _ = Inheritance.call(this.logUtil.?, "put", .{ Inheritance.fieldPointer(commonStrings.?, "EXCEPTION").*, TouchScreenFactory.SINGLETON, Inheritance.fieldPointer(commonStrings.?, "GET_INSTANCE").*, e });
         return this;
     }
     

@@ -18,7 +18,7 @@ const allocator = std.heap.page_allocator;
 const String = @import("java/lang/String.zig").String;
 const Object = @import("java/lang/Object.zig").Object;
 const Inheritance = @import("zig/Inheritance.zig");
-// const CommandListener = @import("javax/microedition/lcdui/CommandListener.zig").CommandListener;
+const CommandListener = @import("javax/microedition/lcdui/CommandListener.zig").CommandListener;
 const DestroyedLayerProcessor = @import("org/allbinary/game/combat/destroy/DestroyedLayerProcessor.zig").DestroyedLayerProcessor;
 const DestroyEventCircularStaticPool = @import("org/allbinary/game/combat/destroy/event/DestroyEventCircularStaticPool.zig").DestroyEventCircularStaticPool;
 const DestroyedEventHandler = @import("org/allbinary/game/combat/destroy/event/DestroyedEventHandler.zig").DestroyedEventHandler;
@@ -33,6 +33,7 @@ const HighScoresFactoryInterface = @import("org/allbinary/game/score/HighScoresF
 const ProgressCanvasFactory = @import("org/allbinary/graphics/canvas/transition/progress/ProgressCanvasFactory.zig").ProgressCanvasFactory;
 const BasicLayerProcessor = @import("org/allbinary/layer/BasicLayerProcessor.zig").BasicLayerProcessor;
 const AbeClientInformationInterface = @import("org/allbinary/logic/system/security/licensing/AbeClientInformationInterface.zig").AbeClientInformationInterface;
+const Exception = @import("java/lang/Exception.zig").Exception;
 
 pub const CombatGameCanvas = struct {
     const Self = @This();
@@ -74,7 +75,7 @@ pub const CombatGameCanvas = struct {
         _ = Inheritance.call(ProgressCanvasFactory.getInstance().?, "addNormalPortion", .{ portion, String.literal("Basic Processors") });
         const features: ?*Features = Inheritance.upcast(?*Features, Features.getInstance());
         const gameFeatureFactory: ?*GameFeatureFactory = Inheritance.upcast(?*GameFeatureFactory, GameFeatureFactory.getInstance());
-        if (Inheritance.call(features.?, "isFeature", .{ gameFeatureFactory.?.DROPPED_ITEMS }) and Inheritance.call(features.?, "isFeature", .{ gameFeatureFactory.?.DROPPED_ITEMS_FROM_DEATH })) {
+        if (Inheritance.call(features.?, "isFeature", .{ Inheritance.fieldPointer(gameFeatureFactory.?, "DROPPED_ITEMS").* }) and Inheritance.call(features.?, "isFeature", .{ Inheritance.fieldPointer(gameFeatureFactory.?, "DROPPED_ITEMS_FROM_DEATH").* })) {
             CombatGameCanvas.basicLayerProcessor = Inheritance.upcast(@TypeOf(CombatGameCanvas.basicLayerProcessor), array_N66965: { const array_N66965_array = allocator.alloc(?*BasicLayerProcessor, @intCast(2)) catch unreachable; @memset(array_N66965_array, null); break :array_N66965 array_N66965_array; });
             CombatGameCanvas.basicLayerProcessor[@intCast(0)] = Inheritance.upcast(@TypeOf(CombatGameCanvas.basicLayerProcessor[@intCast(0)]), DestroyedLayerProcessor.getInstance());
             CombatGameCanvas.basicLayerProcessor[@intCast(1)] = Inheritance.upcast(@TypeOf(CombatGameCanvas.basicLayerProcessor[@intCast(1)]), DropLayerProcessor.getInstance());
@@ -87,7 +88,7 @@ pub const CombatGameCanvas = struct {
 
     // throws Exception
     pub fn processPlayingGame(self: *Self) void {
-        _ = self.base.processPlayingGame();
+        _ = Inheritance.receiver(&self.base, "processPlayingGame").processPlayingGame();
         {
             var index: i32 = @as(i32, @intCast(CombatGameCanvas.basicLayerProcessor.len));
             while (value_N67222: { index -= 1; break :value_N67222 index; } >= 0) {
@@ -99,7 +100,7 @@ pub const CombatGameCanvas = struct {
 
     // throws Exception
     pub fn cleanupGame(self: *Self) void {
-        _ = self.base.cleanupGame();
+        _ = Inheritance.receiver(&self.base, "cleanupGame").cleanupGame();
         {
             var index: i32 = @as(i32, @intCast(CombatGameCanvas.basicLayerProcessor.len));
             while (value_N67411: { index -= 1; break :value_N67411 index; } >= 0) {

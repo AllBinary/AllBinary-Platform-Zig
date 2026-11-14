@@ -18,7 +18,7 @@ const allocator = std.heap.page_allocator;
 const String = @import("java/lang/String.zig").String;
 const Object = @import("java/lang/Object.zig").Object;
 const Inheritance = @import("zig/Inheritance.zig");
-// const Graphics = @import("javax/microedition/lcdui/Graphics.zig").Graphics;
+const Graphics = @import("javax/microedition/lcdui/Graphics.zig").Graphics;
 const MyFontProcessor = @import("org/allbinary/graphics/font/MyFontProcessor.zig").MyFontProcessor;
 const UpdateMyFontInterface = @import("org/allbinary/graphics/font/UpdateMyFontInterface.zig").UpdateMyFontInterface;
 const UpdateMyFontProcessor = @import("org/allbinary/graphics/font/UpdateMyFontProcessor.zig").UpdateMyFontProcessor;
@@ -39,7 +39,7 @@ pub const KeyValueDrawString = struct {
         
         
         this.valueX = 0;
-        this.value = Inheritance.upcast(?*String, StringUtil.getInstance().?.EMPTY_STRING);
+        this.value = Inheritance.upcast(?*String, Inheritance.fieldPointer(StringUtil.getInstance().?, "EMPTY_STRING").*);
     }
     
 
@@ -54,7 +54,7 @@ pub const KeyValueDrawString = struct {
     
 
     pub fn updateMeasurement(self: *Self, graphics: ?*Graphics) void {
-        const labelWidth: i32 = Inheritance.call(graphics.?.getFont().?, "stringWidth", .{ self.LABEL }) - self.LABEL.?.length();
+        const labelWidth: i32 = Inheritance.arithmetic(.subtract, Inheritance.call(graphics.?.getFont().?, "stringWidth", .{ self.LABEL }), self.LABEL.?.length());
         self.valueX = labelWidth + self.labelX;
         self.myFontProcessor = Inheritance.upcast(@TypeOf(self.myFontProcessor), MyFontProcessor.getInstance());
     }
@@ -68,9 +68,7 @@ pub const KeyValueDrawString = struct {
     
 
     pub fn update(self: *Self, value: ?*String) void {
-        if (value != null) {
-            self.value = value;
-        }
+        self.value = value;
     }
 };
 

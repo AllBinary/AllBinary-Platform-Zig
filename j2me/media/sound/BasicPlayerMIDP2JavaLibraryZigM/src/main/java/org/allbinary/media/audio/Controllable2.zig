@@ -26,7 +26,7 @@ pub const Controllable2 = struct {
     pointer: *anyopaque,
     object: Object,
     toStringFn: *const fn (pointer: *anyopaque) ?*String,
-    setVolumeFn: *const fn (pointer: *anyopaque, leftVolume: i32, rightVolume: i32) void,
+    setVolumeFn: *const fn (interface_pointer: *anyopaque, leftVolume: i32, rightVolume: i32) void,
 
     pub fn setVolume(self: *Self, leftVolume: i32, rightVolume: i32) void {
         return self.setVolumeFn(self.pointer, leftVolume, rightVolume);
@@ -38,15 +38,15 @@ pub const Controllable2 = struct {
 
     // The interface value of an object with the methods. Like a Java class a method can be declared by the object or a superclass.
     pub fn of(object: anytype) ?*Self {
-        const Implementation = @TypeOf(object);
+        const ImplementationType = @TypeOf(object);
         const Methods = struct {
             fn toString(pointer: *anyopaque) ?*String {
-                const implementation: Implementation = @ptrCast(@alignCast(pointer));
+                const implementation: ImplementationType = @ptrCast(@alignCast(pointer));
                 return String.valueOf(implementation);
             }
-            fn setVolume(pointer: *anyopaque, leftVolume: i32, rightVolume: i32) void {
-                const implementation: Implementation = @ptrCast(@alignCast(pointer));
-                return Inheritance.receiver(implementation, "setVolume").setVolume(leftVolume, rightVolume);
+            fn setVolume(interface_pointer: *anyopaque, leftVolume: i32, rightVolume: i32) void {
+                const implementation: ImplementationType = @ptrCast(@alignCast(interface_pointer));
+                return Inheritance.call(implementation, "setVolume", .{ leftVolume, rightVolume });
             }
         };
         const this = allocator.create(Self) catch unreachable;

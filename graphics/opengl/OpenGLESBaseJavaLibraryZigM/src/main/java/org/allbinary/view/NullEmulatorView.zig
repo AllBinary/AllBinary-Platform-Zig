@@ -18,8 +18,8 @@ const allocator = std.heap.page_allocator;
 const String = @import("java/lang/String.zig").String;
 const Object = @import("java/lang/Object.zig").Object;
 const Inheritance = @import("zig/Inheritance.zig");
-// const Displayable = @import("javax/microedition/lcdui/Displayable.zig").Displayable;
-// const MIDlet = @import("javax/microedition/midlet/MIDlet.zig").MIDlet;
+const Displayable = @import("javax/microedition/lcdui/Displayable.zig").Displayable;
+const MIDlet = @import("javax/microedition/midlet/MIDlet.zig").MIDlet;
 const EmulatorViewInterface = @import("org/allbinary/view/EmulatorViewInterface.zig").EmulatorViewInterface;
 
 pub const NullEmulatorView = struct {

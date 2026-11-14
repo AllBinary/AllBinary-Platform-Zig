@@ -21,6 +21,7 @@ const Inheritance = @import("zig/Inheritance.zig");
 const AnalogControllerConfigurationEvent = @import("org/allbinary/android/input/motion/event/AnalogControllerConfigurationEvent.zig").AnalogControllerConfigurationEvent;
 const AnalogControllerConfigurationEventHandler = @import("org/allbinary/android/input/motion/event/AnalogControllerConfigurationEventHandler.zig").AnalogControllerConfigurationEventHandler;
 const ScaleFactorFactory = @import("org/allbinary/logic/math/ScaleFactorFactory.zig").ScaleFactorFactory;
+const Exception = @import("java/lang/Exception.zig").Exception;
 
 pub const AnalogControllerConfigurationFactory = struct {
     const Self = @This();
@@ -37,8 +38,8 @@ pub const AnalogControllerConfigurationFactory = struct {
     }
 
     fn initFields(this: *Self) void {
-        this.SCALE_FACTOR = ScaleFactorFactory.getInstance().?.DEFAULT_SCALE_FACTOR;
-        this.SCALE_VALUE = ScaleFactorFactory.getInstance().?.DEFAULT_SCALE_VALUE;
+        this.SCALE_FACTOR = Inheritance.fieldPointer(ScaleFactorFactory.getInstance().?, "DEFAULT_SCALE_FACTOR").*;
+        this.SCALE_VALUE = Inheritance.fieldPointer(ScaleFactorFactory.getInstance().?, "DEFAULT_SCALE_VALUE").*;
         this.available = false;
         this.analogControllerConfigurationEvent = Inheritance.callStatic(AnalogControllerConfigurationEvent, "create1", .{ this });
     }

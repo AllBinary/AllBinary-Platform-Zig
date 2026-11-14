@@ -61,11 +61,11 @@ pub const GameKeyCompleteMotionGestureInputEventFactory = struct {
     
 
     pub fn updateAll(self: *Self) void {
-        _ = Inheritance.call(self.logUtil.?, "putF", .{ Object.toString(Object.of(Inheritance.call(Inheritance.call(StringMaker.create(), "append", .{ CommonLabels.getInstance().?.START_LABEL }).?, "appendint", .{ self.eventList.?.size() }))), self, String.literal("updateAll") });
+        _ = Inheritance.call(self.logUtil.?, "putF", .{ Object.toString(Object.of(Inheritance.call(Inheritance.call(StringMaker.create(), "append", .{ Inheritance.fieldPointer(CommonLabels.getInstance().?, "START_LABEL").* }).?, "appendint", .{ self.eventList.?.size() }))), self, String.literal("updateAll") });
         {
             var index: i32 = self.eventList.?.size() - 1;
             while (index >= 0) : (index -= 1) {
-            const gameKeyCompleteMotionGestureInputEvent: ?*GameKeyCompleteMotionGestureInputEvent = Inheritance.cast(?*GameKeyCompleteMotionGestureInputEvent, self.eventList.?.objectArray[@intCast(index)]);
+            const gameKeyCompleteMotionGestureInputEvent: ?*GameKeyCompleteMotionGestureInputEvent = Inheritance.cast(?*GameKeyCompleteMotionGestureInputEvent, Inheritance.fieldPointer(self.eventList.?, "objectArray").*[@intCast(index)]);
             _ = Inheritance.receiver(gameKeyCompleteMotionGestureInputEvent.?, "update").update();
             }
         }

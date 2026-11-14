@@ -19,6 +19,7 @@ const String = @import("java/lang/String.zig").String;
 const Object = @import("java/lang/Object.zig").Object;
 const Inheritance = @import("zig/Inheritance.zig");
 const AbFile = @import("org/allbinary/logic/io/file/AbFile.zig").AbFile;
+const Exception = @import("java/lang/Exception.zig").Exception;
 
 pub const FileFactory = struct {
     const Self = @This();

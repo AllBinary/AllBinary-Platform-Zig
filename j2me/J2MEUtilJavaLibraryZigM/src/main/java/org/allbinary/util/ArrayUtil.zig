@@ -160,16 +160,16 @@ pub const ArrayUtil = struct {
         {
             var index: i32 = 0;
             while (index < endIndex) : (index += 1) {
-            _ = Inheritance.call(stringBuffer.?, "append", .{ commonSeps.?.BRACE_OPEN });
+            _ = Inheritance.call(stringBuffer.?, "append", .{ Inheritance.fieldPointer(commonSeps.?, "BRACE_OPEN").* });
             {
                 var index2: i32 = 0;
                 while (index2 < endIndex2) : (index2 += 1) {
-                _ = Inheritance.call(stringBuffer.?, "appendint", .{ @as(i32, @intCast(twoDimensionalIntArray[@intCast(index)][@intCast(index2)])) });
-                _ = Inheritance.call(stringBuffer.?, "append", .{ commonSeps.?.COMMA_SEP });
+                _ = Inheritance.call(stringBuffer.?, "appendint", .{ Inheritance.number(i32, twoDimensionalIntArray[@intCast(index)][@intCast(index2)]) });
+                _ = Inheritance.call(stringBuffer.?, "append", .{ Inheritance.fieldPointer(commonSeps.?, "COMMA_SEP").* });
                 }
             }
-            _ = Inheritance.call(stringBuffer.?, "append", .{ commonSeps.?.BRACE_CLOSE });
-            _ = Inheritance.call(stringBuffer.?, "append", .{ commonSeps.?.NEW_LINE });
+            _ = Inheritance.call(stringBuffer.?, "append", .{ Inheritance.fieldPointer(commonSeps.?, "BRACE_CLOSE").* });
+            _ = Inheritance.call(stringBuffer.?, "append", .{ Inheritance.fieldPointer(commonSeps.?, "NEW_LINE").* });
             }
         }
         return Inheritance.upcast(?*String, Object.toString(Object.of(stringBuffer)));
@@ -184,7 +184,7 @@ pub const ArrayUtil = struct {
             var index: i32 = 0;
             while (index < @as(i32, @intCast(objectArray.len))) : (index += 1) {
             _ = Inheritance.call(stringBuffer.?, "append", .{ Inheritance.call(StringUtil.getInstance().?, "toString", .{ objectArray[@intCast(index)] }) });
-            _ = Inheritance.call(stringBuffer.?, "append", .{ commonSeps.?.COMMA_SEP });
+            _ = Inheritance.call(stringBuffer.?, "append", .{ Inheritance.fieldPointer(commonSeps.?, "COMMA_SEP").* });
             }
         }
         return Inheritance.upcast(?*String, Object.toString(Object.of(stringBuffer)));
@@ -199,7 +199,7 @@ pub const ArrayUtil = struct {
             var index: i32 = 0;
             while (index < @as(i32, @intCast(byteArray.len))) : (index += 1) {
             _ = Inheritance.call(stringBuffer.?, "appendbyte", .{ byteArray[@intCast(index)] });
-            _ = Inheritance.call(stringBuffer.?, "append", .{ commonSeps.?.COMMA_SEP });
+            _ = Inheritance.call(stringBuffer.?, "append", .{ Inheritance.fieldPointer(commonSeps.?, "COMMA_SEP").* });
             }
         }
         return Inheritance.upcast(?*String, Object.toString(Object.of(stringBuffer)));

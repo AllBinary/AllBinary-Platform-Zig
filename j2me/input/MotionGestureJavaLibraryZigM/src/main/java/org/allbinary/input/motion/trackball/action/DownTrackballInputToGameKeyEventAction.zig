@@ -31,12 +31,12 @@ pub const DownTrackballInputToGameKeyEventAction = struct {
 
     // Static fields with runtime initializers: call staticInit once at startup
     pub fn staticInit() void {
-        instance = Inheritance.upcast(?Object, NullUtil.getInstance().?.NULL_OBJECT);
+        instance = Inheritance.upcast(?Object, Inheritance.fieldPointer(NullUtil.getInstance().?, "NULL_OBJECT").*);
     }
     
 
     pub fn getInstance() ?*GameKeyCompleteMotionGestureInputEvent {
-        if (Object.same(DownTrackballInputToGameKeyEventAction.instance, NullUtil.getInstance().?.NULL_OBJECT)) {
+        if (Object.same(DownTrackballInputToGameKeyEventAction.instance, Inheritance.fieldPointer(NullUtil.getInstance().?, "NULL_OBJECT").*)) {
             DownTrackballInputToGameKeyEventAction.instance = Inheritance.upcast(@TypeOf(DownTrackballInputToGameKeyEventAction.instance), DownTrackballInputToGameKeyEventAction.create());
         }
         return Inheritance.cast(?*GameKeyCompleteMotionGestureInputEvent, DownTrackballInputToGameKeyEventAction.instance);
@@ -46,7 +46,7 @@ pub const DownTrackballInputToGameKeyEventAction = struct {
     pub fn create() *Self {
         const this = allocator.create(Self) catch unreachable;
         this.* = .{};
-        this.base = Inheritance.callStatic(GameKeyCompleteMotionGestureInputEvent, "create3", .{ String.literal("Down Action"), TrackballMotionGestureFactory.getInstance().?.DOWN, Inheritance.receiverOf(Inheritance.receiverOf(PlatformInputMappingFactory.getInstance().?, "getPersistentInputMappingInstance").getPersistentInputMappingInstance().?, "getInputMapping").getInputMapping() }).*;
+        this.base = Inheritance.callStatic(GameKeyCompleteMotionGestureInputEvent, "create3", .{ String.literal("Down Action"), Inheritance.fieldPointer(TrackballMotionGestureFactory.getInstance().?, "DOWN").*, Inheritance.receiverOf(Inheritance.receiverOf(PlatformInputMappingFactory.getInstance().?, "getPersistentInputMappingInstance").getPersistentInputMappingInstance().?, "getInputMapping").getInputMapping() }).*;
         Inheritance.bindOverrides(this);
         return this;
     }

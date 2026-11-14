@@ -77,7 +77,7 @@ pub const SmallLongFactory = struct {
     
 
     pub fn init(self: *Self) void {
-        if (self.INTEGER_ARRAY[@intCast(0)] == null) {
+        if (Object.isNull(self.INTEGER_ARRAY[@intCast(0)])) {
             if (self.lastMin < self.POSITIVE_MAX or self.lastNegativeMin < self.NEGATIVE_MAX) {
                 {
                     var index: i32 = self.POSITIVE_MAX - 1;
@@ -116,7 +116,7 @@ pub const SmallLongFactory = struct {
 
     pub fn getString(self: *Self, index: i32) ?*String {
         const i: i32 = index + self.NEGATIVE_MAX;
-        if (self.STRING_ARRAY[@intCast(i)] == null) {
+        if (Object.isNull(self.STRING_ARRAY[@intCast(i)])) {
             self.STRING_ARRAY[@intCast(i)] = Inheritance.upcast(@TypeOf(self.STRING_ARRAY[@intCast(i)]), String.valueOf(self.INTEGER_ARRAY[@intCast(i)].?));
         }
         return Inheritance.upcast(?*String, self.STRING_ARRAY[@intCast(i)]);

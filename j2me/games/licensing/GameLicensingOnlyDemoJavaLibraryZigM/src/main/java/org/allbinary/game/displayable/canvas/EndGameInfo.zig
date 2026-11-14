@@ -35,7 +35,7 @@ pub const EndGameInfo = struct {
         this.NORMAL_GAME_OVER_WIN = String.literal("You Won");
         this.TEASER_DEMO_GAME_END_LAST_LEVEL = String.literal("End of Demo.");
         this.TEASER_DEMO_GAME_END = String.literal("Demo Game Over.");
-        this.gameOverStr = Inheritance.upcast(?*String, StringUtil.getInstance().?.EMPTY_STRING);
+        this.gameOverStr = Inheritance.upcast(?*String, Inheritance.fieldPointer(StringUtil.getInstance().?, "EMPTY_STRING").*);
         this.winStr = this.gameOverStr;
     }
 

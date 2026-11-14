@@ -47,7 +47,7 @@ pub const AllBinaryLayerFactory = struct {
     
 
     pub fn getInstance(self: *Self) ?*AllBinaryLayer {
-        return Inheritance.callStatic(AllBinaryLayer, "create3", .{ StringUtil.getInstance().?.EMPTY_STRING, self.rectangle, ViewPosition.getInstanceD() });
+        return Inheritance.callStatic(AllBinaryLayer, "create3", .{ Inheritance.fieldPointer(StringUtil.getInstance().?, "EMPTY_STRING").*, self.rectangle, ViewPosition.getInstanceD() });
     }
 };
 

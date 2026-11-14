@@ -18,9 +18,9 @@ const allocator = std.heap.page_allocator;
 const String = @import("java/lang/String.zig").String;
 const Object = @import("java/lang/Object.zig").Object;
 const Inheritance = @import("zig/Inheritance.zig");
-// const Graphics = @import("javax/microedition/lcdui/Graphics.zig").Graphics;
-// const Image = @import("javax/microedition/lcdui/Image.zig").Image;
-// const Sprite = @import("javax/microedition/lcdui/game/Sprite.zig").Sprite;
+const Graphics = @import("javax/microedition/lcdui/Graphics.zig").Graphics;
+const Image = @import("javax/microedition/lcdui/Image.zig").Image;
+const Sprite = @import("javax/microedition/lcdui/game/Sprite.zig").Sprite;
 const AnimationBehavior = @import("org/allbinary/animation/AnimationBehavior.zig").AnimationBehavior;
 const IndexedAnimation = @import("org/allbinary/animation/IndexedAnimation.zig").IndexedAnimation;
 const BasicColor = @import("org/allbinary/graphics/color/BasicColor.zig").BasicColor;
@@ -29,6 +29,8 @@ const ColorCompositeInterface = @import("org/allbinary/graphics/color/ColorCompo
 const PrimitiveIntUtil = @import("org/allbinary/logic/math/PrimitiveIntUtil.zig").PrimitiveIntUtil;
 const StringMaker = @import("org/allbinary/logic/string/StringMaker.zig").StringMaker;
 const CommonLabels = @import("org/allbinary/string/CommonLabels.zig").CommonLabels;
+const Throwable = @import("java/lang/Throwable.zig").Throwable;
+const Exception = @import("java/lang/Exception.zig").Exception;
 
 pub const SpriteIndexedAnimation = struct {
     const Self = @This();
@@ -56,7 +58,7 @@ pub const SpriteIndexedAnimation = struct {
         this.image = image;
         this.basicColorArray = basicColorArray;
         if (@as(i32, @intCast(this.basicColorArray.len)) != 0 and this.getSize() != @as(i32, @intCast(this.basicColorArray.len))) {
-            std.debug.panic("{any}", .{exception: { _ = Object.toString(Object.of(Inheritance.call(Inheritance.call(Inheritance.call(Inheritance.call(StringMaker.create(), "append", .{ CommonLabels.getInstance().?.TOTAL_LABEL }).?, "appendint", .{ this.getSize() }).?, "append", .{ String.literal("!=") }).?, "appendint", .{ @as(i32, @intCast(this.basicColorArray.len)) }))); break :exception error.Exception; }});
+            std.debug.panic("{any}", .{exception: { _ = Object.toString(Object.of(Inheritance.call(Inheritance.call(Inheritance.call(Inheritance.call(StringMaker.create(), "append", .{ Inheritance.fieldPointer(CommonLabels.getInstance().?, "TOTAL_LABEL").* }).?, "appendint", .{ this.getSize() }).?, "append", .{ String.literal("!=") }).?, "appendint", .{ @as(i32, @intCast(this.basicColorArray.len)) }))); break :exception error.Exception; }});
         }
         Inheritance.bindOverrides(this);
         return this;
@@ -86,7 +88,7 @@ pub const SpriteIndexedAnimation = struct {
         if (@as(i32, @intCast(self.basicColorArray.len)) < self.getFrame()) {
             return Inheritance.upcast(?*BasicColor, self.basicColorArray[@intCast(self.getFrame())]);
         } else {
-            return Inheritance.upcast(?*BasicColor, BasicColorFactory.getInstance().?.WHITE);
+            return Inheritance.upcast(?*BasicColor, Inheritance.fieldPointer(BasicColorFactory.getInstance().?, "WHITE").*);
         }
     }
     
@@ -110,17 +112,17 @@ pub const SpriteIndexedAnimation = struct {
     
 
     pub fn nextFrame(self: *Self) void {
-        _ = self.sprite.?.nextFrame();
+        _ = Inheritance.receiver(self.sprite.?, "nextFrame").nextFrame();
     }
     
 
     pub fn previousFrame(self: *Self) void {
-        _ = self.sprite.?.prevFrame();
+        _ = Inheritance.receiver(self.sprite.?, "prevFrame").prevFrame();
     }
     
 
     pub fn getSize(self: *Self) i32 {
-        return self.sprite.?.getRawFrameCount();
+        return Inheritance.receiver(self.sprite.?, "getRawFrameCount").getRawFrameCount();
     }
     
 
@@ -130,12 +132,12 @@ pub const SpriteIndexedAnimation = struct {
     
 
     pub fn getFrame(self: *Self) i32 {
-        return self.sprite.?.getFrame();
+        return Inheritance.receiver(self.sprite.?, "getFrame").getFrame();
     }
     
 
     pub fn isLastFrame(self: *Self) bool {
-        if (self.sprite.?.getFrame() == self.getSize() - 1) {
+        if (Inheritance.receiver(self.sprite.?, "getFrame").getFrame() == self.getSize() - 1) {
             return true;
         } else {
             return false;

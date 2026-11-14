@@ -20,6 +20,7 @@ const Object = @import("java/lang/Object.zig").Object;
 const Inheritance = @import("zig/Inheritance.zig");
 const ItemPaintable = @import("org/allbinary/graphics/form/ItemPaintable.zig").ItemPaintable;
 const PaintableForm = @import("org/allbinary/graphics/form/PaintableForm.zig").PaintableForm;
+const Exception = @import("java/lang/Exception.zig").Exception;
 
 pub const ItemPaintableFactory = struct {
     const Self = @This();

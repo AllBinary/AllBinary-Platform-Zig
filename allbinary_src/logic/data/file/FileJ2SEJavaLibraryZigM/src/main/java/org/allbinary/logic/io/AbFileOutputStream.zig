@@ -19,7 +19,7 @@ const String = @import("java/lang/String.zig").String;
 const Object = @import("java/lang/Object.zig").Object;
 const Inheritance = @import("zig/Inheritance.zig");
 // const FileNotFoundException = @import("java/io/FileNotFoundException.zig").FileNotFoundException;
-// const FileOutputStream = @import("java/io/FileOutputStream.zig").FileOutputStream;
+const FileOutputStream = @import("java/io/FileOutputStream.zig").FileOutputStream;
 const AbFile = @import("org/allbinary/logic/io/file/AbFile.zig").AbFile;
 const AbFileNativeUtil = @import("org/allbinary/logic/io/file/AbFileNativeUtil.zig").AbFileNativeUtil;
 

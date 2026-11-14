@@ -18,8 +18,8 @@ const allocator = std.heap.page_allocator;
 const String = @import("java/lang/String.zig").String;
 const Object = @import("java/lang/Object.zig").Object;
 const Inheritance = @import("zig/Inheritance.zig");
-// const Font = @import("javax/microedition/lcdui/Font.zig").Font;
-// const Graphics = @import("javax/microedition/lcdui/Graphics.zig").Graphics;
+const Font = @import("javax/microedition/lcdui/Font.zig").Font;
+const Graphics = @import("javax/microedition/lcdui/Graphics.zig").Graphics;
 const Anchor = @import("org/allbinary/graphics/Anchor.zig").Anchor;
 const BasicColor = @import("org/allbinary/graphics/color/BasicColor.zig").BasicColor;
 const DisplayInfoSingleton = @import("org/allbinary/graphics/displayable/DisplayInfoSingleton.zig").DisplayInfoSingleton;
@@ -76,7 +76,7 @@ pub const SimpleTextPaintable = struct {
 
     pub fn paint(self: *Self, graphics: ?*Graphics) void {
         _ = Inheritance.call(self.myFontProcessor.?, "process", .{ graphics });
-        const width: i32 = self.displayInfoSingleton.?.getLast()[@intCast(self.displayInfoSingleton.?.WIDTH)];
+        const width: i32 = self.displayInfoSingleton.?.getLast()[@intCast(Inheritance.fieldPointer(self.displayInfoSingleton.?, "WIDTH").*)];
         _ = Inheritance.call(graphics.?, "setColor", .{ Inheritance.receiverOf(self.getBasicColorP().?, "intValue").intValue() });
         _ = Inheritance.call(graphics.?, "drawString", .{ self.text, (width >> @intCast(1)) - self.topScoresWidth, self.fontHeight, self.anchor });
     }

@@ -26,7 +26,7 @@ pub const RawKeyEventListener = struct {
     pointer: *anyopaque,
     object: Object,
     toStringFn: *const fn (pointer: *anyopaque) ?*String,
-    onEventRawFn: *const fn (pointer: *anyopaque, keyCode: i32, deviceId: i32, repeated: bool) void,
+    onEventRawFn: *const fn (interface_pointer: *anyopaque, keyCode: i32, deviceId: i32, repeated: bool) void,
 
     pub fn onEventRaw(self: *Self, keyCode: i32, deviceId: i32, repeated: bool) void {
         return self.onEventRawFn(self.pointer, keyCode, deviceId, repeated);
@@ -38,15 +38,15 @@ pub const RawKeyEventListener = struct {
 
     // The interface value of an object with the methods. Like a Java class a method can be declared by the object or a superclass.
     pub fn of(object: anytype) ?*Self {
-        const Implementation = @TypeOf(object);
+        const ImplementationType = @TypeOf(object);
         const Methods = struct {
             fn toString(pointer: *anyopaque) ?*String {
-                const implementation: Implementation = @ptrCast(@alignCast(pointer));
+                const implementation: ImplementationType = @ptrCast(@alignCast(pointer));
                 return String.valueOf(implementation);
             }
-            fn onEventRaw(pointer: *anyopaque, keyCode: i32, deviceId: i32, repeated: bool) void {
-                const implementation: Implementation = @ptrCast(@alignCast(pointer));
-                return Inheritance.receiver(implementation, "onEventRaw").onEventRaw(keyCode, deviceId, repeated);
+            fn onEventRaw(interface_pointer: *anyopaque, keyCode: i32, deviceId: i32, repeated: bool) void {
+                const implementation: ImplementationType = @ptrCast(@alignCast(interface_pointer));
+                return Inheritance.call(implementation, "onEventRaw", .{ keyCode, deviceId, repeated });
             }
         };
         const this = allocator.create(Self) catch unreachable;

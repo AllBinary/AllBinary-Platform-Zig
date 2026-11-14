@@ -22,6 +22,7 @@ const ForcedLogUtil = @import("org/allbinary/logic/communication/log/ForcedLogUt
 const LogUtil = @import("org/allbinary/logic/communication/log/LogUtil.zig").LogUtil;
 const CommonStrings = @import("org/allbinary/string/CommonStrings.zig").CommonStrings;
 const AllBinarySensorListener = @import("org/allbinary/input/AllBinarySensorListener.zig").AllBinarySensorListener;
+const Exception = @import("java/lang/Exception.zig").Exception;
 
 pub const AllBinarySensor = struct {
     const Self = @This();
@@ -80,12 +81,12 @@ pub const AllBinarySensor = struct {
     
 
     pub fn shutdown(self: *Self) void {
-        _ = Inheritance.call(self.logUtil.?, "putF", .{ self.commonStrings.?.START, self, String.literal("shutdown") });
+        _ = Inheritance.call(self.logUtil.?, "putF", .{ Inheritance.fieldPointer(self.commonStrings.?, "START").*, self, String.literal("shutdown") });
     }
     
 
     pub fn onSensorChange(self: *Self) void {
-        _ = Inheritance.callStatic(ForcedLogUtil, "log", .{ self.commonStrings.?.NOT_IMPLEMENTED, self });
+        _ = Inheritance.callStatic(ForcedLogUtil, "log", .{ Inheritance.fieldPointer(self.commonStrings.?, "NOT_IMPLEMENTED").*, self });
     }
 };
 

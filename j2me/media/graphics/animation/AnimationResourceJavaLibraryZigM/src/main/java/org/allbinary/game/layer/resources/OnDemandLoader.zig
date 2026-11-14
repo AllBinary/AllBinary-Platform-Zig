@@ -30,6 +30,7 @@ const StringMaker = @import("org/allbinary/logic/string/StringMaker.zig").String
 const CommonStrings = @import("org/allbinary/string/CommonStrings.zig").CommonStrings;
 const OnDemandResources = @import("org/allbinary/game/layer/resources/OnDemandResources.zig").OnDemandResources;
 const OnDemandResourcesFactory = @import("org/allbinary/game/layer/resources/OnDemandResourcesFactory.zig").OnDemandResourcesFactory;
+const Exception = @import("java/lang/Exception.zig").Exception;
 
 pub const OnDemandLoader = struct {
     const Self = @This();
@@ -60,12 +61,12 @@ pub const OnDemandLoader = struct {
     // throws Exception
     pub fn init(self: *Self, imageCache: ?*ImageCache, level: i32, loadingString: ?*String) void {
         const resourceLoadingLevelFactory: ?*ResourceLoadingLevelFactory = Inheritance.upcast(?*ResourceLoadingLevelFactory, ResourceLoadingLevelFactory.getInstance());
-        if (Inheritance.call(Features.getInstance().?, "isFeature", .{ MainFeatureFactory.getInstance().?.LOAD_ALL })) {
+        if (Inheritance.call(Features.getInstance().?, "isFeature", .{ Inheritance.fieldPointer(MainFeatureFactory.getInstance().?, "LOAD_ALL").* })) {
             if (self.resourceAnimationInterfaceFactoryInterfaceFactory.?.isInitialized()) {
                 return;
             }
             _ = Inheritance.call(self, "initAll", .{ imageCache, loadingString });
-        } else if (level != Inheritance.receiverOf(resourceLoadingLevelFactory.?.LOAD_ALL.?, "getLevel").getLevel()) {
+        } else if (level != Inheritance.receiverOf(Inheritance.fieldPointer(resourceLoadingLevelFactory.?, "LOAD_ALL").*.?, "getLevel").getLevel()) {
             const layerPlacementInterfaceBasicArrayListFactoryInterface: ?*LayerPlacementInterfaceBasicArrayListFactoryInterface = Inheritance.upcast(?*LayerPlacementInterfaceBasicArrayListFactoryInterface, Inheritance.call(self.gameLayerPlacementInterfaceBasicArrayListFactoryInterfaceFactory.?, "getInstance", .{ level }));
             _ = Inheritance.call(self, "initLevel", .{ layerPlacementInterfaceBasicArrayListFactoryInterface, imageCache, level, loadingString });
         }
@@ -96,7 +97,7 @@ pub const OnDemandLoader = struct {
         const portion: i32 = 120;
         var index: i32 = 0;
         const onDemandArray: []i32 = layerPlacementInterfaceBasicArrayListFactoryInterface.?.getOnDemandResources();
-        _ = Inheritance.callStatic(PreLogUtil, "put", .{ Object.toString(Object.of(Inheritance.call(Inheritance.call(StringMaker.create(), "append", .{ commonStrings.?.START }).?, "appendint", .{ @as(i32, @intCast(onDemandArray.len)) }))), self, String.literal("initLevel") });
+        _ = Inheritance.callStatic(PreLogUtil, "put", .{ Object.toString(Object.of(Inheritance.call(Inheritance.call(StringMaker.create(), "append", .{ Inheritance.fieldPointer(commonStrings.?, "START").* }).?, "appendint", .{ @as(i32, @intCast(onDemandArray.len)) }))), self, String.literal("initLevel") });
         var onDemandResources: ?*OnDemandResources = null;
         {
             var onDemandIndex: i32 = @as(i32, @intCast(onDemandArray.len));

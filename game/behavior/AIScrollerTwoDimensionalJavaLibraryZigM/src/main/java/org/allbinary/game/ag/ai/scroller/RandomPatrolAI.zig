@@ -18,13 +18,14 @@ const allocator = std.heap.page_allocator;
 const String = @import("java/lang/String.zig").String;
 const Object = @import("java/lang/Object.zig").Object;
 const Inheritance = @import("zig/Inheritance.zig");
-// const Canvas = @import("javax/microedition/lcdui/Canvas.zig").Canvas;
+const Canvas = @import("javax/microedition/lcdui/Canvas.zig").Canvas;
 const GameInput = @import("org/allbinary/game/input/GameInput.zig").GameInput;
 const MyRandomFactory = @import("org/allbinary/game/rand/MyRandomFactory.zig").MyRandomFactory;
 const AllBinaryLayer = @import("org/allbinary/layer/AllBinaryLayer.zig").AllBinaryLayer;
 const AllBinaryLayerManager = @import("org/allbinary/layer/AllBinaryLayerManager.zig").AllBinaryLayerManager;
 const ABHashtable = @import("org/allbinary/util/ABHashtable.zig").ABHashtable;
 const BasePatrolAI = @import("org/allbinary/game/ag/ai/scroller/BasePatrolAI.zig").BasePatrolAI;
+const Exception = @import("java/lang/Exception.zig").Exception;
 
 pub const RandomPatrolAI = struct {
     const Self = @This();
@@ -56,7 +57,7 @@ pub const RandomPatrolAI = struct {
     // throws Exception
     pub fn processAI(self: *Self, allBinaryLayerManager: ?*AllBinaryLayerManager) void {
         _ = allBinaryLayerManager;
-        _ = self.base.update();
+        _ = Inheritance.receiver(&self.base, "update").update();
         _ = Inheritance.call(&self.base, "processKeyAI", .{ Inheritance.fieldPointer(self, "keyDirection").* });
         if (self.changedDirection) {
             _ = Inheritance.call(&self.base, "processKeyAI", .{ Canvas.KEY_NUM1 });
@@ -67,7 +68,7 @@ pub const RandomPatrolAI = struct {
     
 
     pub fn nextDirection(self: *Self) void {
-        _ = self.base.nextDirection();
+        _ = Inheritance.receiver(&self.base, "nextDirection").nextDirection();
         self.changedDirection = true;
     }
 };

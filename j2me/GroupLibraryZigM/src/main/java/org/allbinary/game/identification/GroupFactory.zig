@@ -60,7 +60,7 @@ pub const GroupFactory = struct {
     
 
     pub fn getNextGroup(self: *Self) ?*Group {
-        const group: ?*Group = Inheritance.cast(?*Group, self.list.?.objectArray[@intCast(self.index)]);
+        const group: ?*Group = Inheritance.cast(?*Group, Inheritance.fieldPointer(self.list.?, "objectArray").*[@intCast(self.index)]);
         self.index += 1;
         return group;
     }
@@ -82,7 +82,7 @@ pub const GroupFactory = struct {
         var size: i32 = self.list.?.size();
         var name: ?*String = null;
         while (size < @as(i32, @intCast(groups))) {
-            name = Inheritance.upcast(@TypeOf(name), stringUtil.?.EMPTY_STRING);
+            name = Inheritance.upcast(@TypeOf(name), Inheritance.fieldPointer(stringUtil.?, "EMPTY_STRING").*);
             if (size < @as(i32, @intCast(nameArray.len))) {
                 name = Inheritance.upcast(@TypeOf(name), nameArray[@intCast(size)]);
             } else {

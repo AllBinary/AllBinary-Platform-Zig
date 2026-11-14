@@ -22,6 +22,7 @@ const AllBinaryLayer = @import("org/allbinary/layer/AllBinaryLayer.zig").AllBina
 const AllBinaryEventCircularPool = @import("org/allbinary/logic/util/event/AllBinaryEventCircularPool.zig").AllBinaryEventCircularPool;
 const TrackingEvent = @import("org/allbinary/game/tracking/TrackingEvent.zig").TrackingEvent;
 const TrackingEventFactory = @import("org/allbinary/game/tracking/TrackingEventFactory.zig").TrackingEventFactory;
+const Exception = @import("java/lang/Exception.zig").Exception;
 
 pub const TrackingEventCircularStaticPool = struct {
     const Self = @This();

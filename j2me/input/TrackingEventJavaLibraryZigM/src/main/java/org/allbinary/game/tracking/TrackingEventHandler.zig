@@ -23,6 +23,7 @@ const EventListenerInterface = @import("org/allbinary/logic/util/event/EventList
 const BasicEventHandler = @import("org/allbinary/logic/util/event/handler/BasicEventHandler.zig").BasicEventHandler;
 const TrackingEvent = @import("org/allbinary/game/tracking/TrackingEvent.zig").TrackingEvent;
 const TrackingEventListenerInterface = @import("org/allbinary/game/tracking/TrackingEventListenerInterface.zig").TrackingEventListenerInterface;
+const Exception = @import("java/lang/Exception.zig").Exception;
 
 pub const TrackingEventHandler = struct {
     const Self = @This();

@@ -25,6 +25,7 @@ const OpenGLFeatureFactory = @import("org/allbinary/graphics/opengles/OpenGLFeat
 const ImageCache = @import("org/allbinary/image/ImageCache.zig").ImageCache;
 const ImageCacheFactory = @import("org/allbinary/image/ImageCacheFactory.zig").ImageCacheFactory;
 const StdUtil = @import("org/allbinary/logic/StdUtil.zig").StdUtil;
+const Exception = @import("java/lang/Exception.zig").Exception;
 
 pub const TouchButtonResourceAnimationInterfaceFactoryInterfaceFactory = struct {
     const Self = @This();
@@ -64,7 +65,7 @@ pub const TouchButtonResourceAnimationInterfaceFactoryInterfaceFactory = struct 
 
     pub fn isLoadingLevel(self: *Self, level: i32) bool {
         const resourceLoadingLevelFactory: ?*ResourceLoadingLevelFactory = Inheritance.upcast(?*ResourceLoadingLevelFactory, ResourceLoadingLevelFactory.getInstance());
-        if (level == Inheritance.receiverOf(resourceLoadingLevelFactory.?.LOAD_TOUCH.?, "getLevel").getLevel()) {
+        if (level == Inheritance.receiverOf(Inheritance.fieldPointer(resourceLoadingLevelFactory.?, "LOAD_TOUCH").*.?, "getLevel").getLevel()) {
             return true;
         } else {
             return Inheritance.call(&self.base, "isLoadingLevel", .{ level });
@@ -74,7 +75,7 @@ pub const TouchButtonResourceAnimationInterfaceFactoryInterfaceFactory = struct 
 
     pub fn isFeature(self: *Self) bool {
         _ = self;
-        if (!Inheritance.call(Features.getInstance().?, "isDefault", .{ OpenGLFeatureFactory.getInstance().?.OPENGL })) {
+        if (!Inheritance.call(Features.getInstance().?, "isDefault", .{ Inheritance.fieldPointer(OpenGLFeatureFactory.getInstance().?, "OPENGL").* })) {
             return true;
         } else {
             return false;

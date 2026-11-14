@@ -34,6 +34,7 @@ const NoOperatingSystem = @import("org/allbinary/logic/system/os/NoOperatingSyst
 const OperatingSystems = @import("org/allbinary/logic/system/os/OperatingSystems.zig").OperatingSystems;
 const SystemProperties = @import("org/allbinary/logic/system/os/SystemProperties.zig").SystemProperties;
 const System = @import("java/lang/System.zig").System;
+const Exception = @import("java/lang/Exception.zig").Exception;
 
 pub const OperatingSystemFactory = struct {
     const Self = @This();
@@ -81,35 +82,35 @@ pub const OperatingSystemFactory = struct {
             const osArch: ?*String = Inheritance.upcast(?*String, systemProperties.?.getArch()); _ = osArch;
             const osVersion: ?*String = Inheritance.upcast(?*String, systemProperties.?.getVersion()); _ = osVersion;
             if (!self.hasDetected) {
-                _ = Inheritance.call(self.logUtil.?, "putF", .{ String.plus(String.literal("osName: "), osName), self, self.commonStrings.?.GET_INSTANCE });
+                _ = Inheritance.call(self.logUtil.?, "putF", .{ String.plus(String.literal("osName: "), osName), self, Inheritance.fieldPointer(self.commonStrings.?, "GET_INSTANCE").* });
                 self.hasDetected = true;
-                if (Inheritance.call(osName.?, "indexOf", .{ operatingSystems.?.LINUX }) >= 0) {
-                    if (Inheritance.call(LogConfigTypes.LOGGING.?, "contains", .{ LogConfigTypeFactory.getInstance().?.FACTORYERROR })) {
-                        _ = Inheritance.call(self.logUtil.?, "putF", .{ String.literal("Found a Linux OS"), self, self.commonStrings.?.GET_INSTANCE });
+                if (Inheritance.arithmetic(.greater_equal, Inheritance.call(osName.?, "indexOf", .{ Inheritance.fieldPointer(operatingSystems.?, "LINUX").* }), 0)) {
+                    if (Inheritance.call(LogConfigTypes.LOGGING.?, "contains", .{ Inheritance.fieldPointer(LogConfigTypeFactory.getInstance().?, "FACTORYERROR").* })) {
+                        _ = Inheritance.call(self.logUtil.?, "putF", .{ String.literal("Found a Linux OS"), self, Inheritance.fieldPointer(self.commonStrings.?, "GET_INSTANCE").* });
                     }
                     self.genericOperatingSystem = Inheritance.upcast(@TypeOf(self.genericOperatingSystem), Inheritance.receiverOf(LinuxOperatingSystemFactory.getInstance().?, "getOperatingSystemInstance").getOperatingSystemInstance());
-                } else if (Inheritance.call(osName.?, "indexOf", .{ operatingSystems.?.WINDOWS }) >= 0) {
-                    if (Inheritance.call(LogConfigTypes.LOGGING.?, "contains", .{ LogConfigTypeFactory.getInstance().?.FACTORYERROR })) {
-                        _ = Inheritance.call(self.logUtil.?, "putF", .{ String.literal("Found a Windows OS"), self, self.commonStrings.?.GET_INSTANCE });
+                } else if (Inheritance.arithmetic(.greater_equal, Inheritance.call(osName.?, "indexOf", .{ Inheritance.fieldPointer(operatingSystems.?, "WINDOWS").* }), 0)) {
+                    if (Inheritance.call(LogConfigTypes.LOGGING.?, "contains", .{ Inheritance.fieldPointer(LogConfigTypeFactory.getInstance().?, "FACTORYERROR").* })) {
+                        _ = Inheritance.call(self.logUtil.?, "putF", .{ String.literal("Found a Windows OS"), self, Inheritance.fieldPointer(self.commonStrings.?, "GET_INSTANCE").* });
                     }
                     self.genericOperatingSystem = Inheritance.upcast(@TypeOf(self.genericOperatingSystem), Inheritance.receiverOf(WindowsOperatingSystemFactory.getInstance().?, "getOperatingSystemInstance").getOperatingSystemInstance());
-                } else if (Inheritance.call(osName.?, "indexOf", .{ operatingSystems.?.SOLARIS }) >= 0) {
-                    if (Inheritance.call(LogConfigTypes.LOGGING.?, "contains", .{ LogConfigTypeFactory.getInstance().?.FACTORYERROR })) {
-                        _ = Inheritance.call(self.logUtil.?, "putF", .{ String.literal("Found a Solaris OS"), self, self.commonStrings.?.GET_INSTANCE });
+                } else if (Inheritance.arithmetic(.greater_equal, Inheritance.call(osName.?, "indexOf", .{ Inheritance.fieldPointer(operatingSystems.?, "SOLARIS").* }), 0)) {
+                    if (Inheritance.call(LogConfigTypes.LOGGING.?, "contains", .{ Inheritance.fieldPointer(LogConfigTypeFactory.getInstance().?, "FACTORYERROR").* })) {
+                        _ = Inheritance.call(self.logUtil.?, "putF", .{ String.literal("Found a Solaris OS"), self, Inheritance.fieldPointer(self.commonStrings.?, "GET_INSTANCE").* });
                     }
                     self.genericOperatingSystem = Inheritance.upcast(@TypeOf(self.genericOperatingSystem), Inheritance.receiverOf(SolarisOperatingSystemFactory.getInstance().?, "getOperatingSystemInstance").getOperatingSystemInstance());
                 } else {
                     std.debug.panic("{any}", .{exception: { _ = Object.toString(Object.of(Inheritance.call(Inheritance.call(StringMaker.create(), "append", .{ String.literal("OS Not Supported: ") }).?, "append", .{ osName }))); break :exception error.Exception; }});
                 }
-                const log: ?*Log = Inheritance.upcast(?*Log, Inheritance.callStatic(LogFactory, "getInstanceF", .{ Object.toString(Object.of(Inheritance.call(Inheritance.call(StringMaker.create(), "append", .{ String.literal("OperatingSystem Info: ") }).?, "append", .{ Inheritance.call(StringUtil.getInstance().?, "toString", .{ self.genericOperatingSystem }) }))), self, self.commonStrings.?.GET_INSTANCE }));
+                const log: ?*Log = Inheritance.upcast(?*Log, Inheritance.callStatic(LogFactory, "getInstanceF", .{ Object.toString(Object.of(Inheritance.call(Inheritance.call(StringMaker.create(), "append", .{ String.literal("OperatingSystem Info: ") }).?, "append", .{ Inheritance.call(StringUtil.getInstance().?, "toString", .{ self.genericOperatingSystem }) }))), self, Inheritance.fieldPointer(self.commonStrings.?, "GET_INSTANCE").* }));
                 _ = std.debug.print("{s}\n", .{String.text(Object.toString(Object.of(log)))});
                 _ = Inheritance.call(self.logUtil.?, "putL", .{ log });
             }
             return self.genericOperatingSystem;
         }
         // catch (Exception e):
-//             if (Inheritance.call(LogConfigTypes.LOGGING.?, "contains", .{ LogConfigTypeFactory.getInstance().?.FACTORYERROR })) {
-//                 _ = Inheritance.call(self.logUtil.?, "put", .{ self.commonStrings.?.EXCEPTION, self, self.commonStrings.?.GET_INSTANCE, e });
+//             if (Inheritance.call(LogConfigTypes.LOGGING.?, "contains", .{ Inheritance.fieldPointer(LogConfigTypeFactory.getInstance().?, "FACTORYERROR").* })) {
+//                 _ = Inheritance.call(self.logUtil.?, "put", .{ Inheritance.fieldPointer(self.commonStrings.?, "EXCEPTION").*, self, Inheritance.fieldPointer(self.commonStrings.?, "GET_INSTANCE").*, e });
 //             }
 //             return Inheritance.upcast(?*GenericOperatingSystem, NoOperatingSystem.NO_OPERATING_SYSTEM);
     }

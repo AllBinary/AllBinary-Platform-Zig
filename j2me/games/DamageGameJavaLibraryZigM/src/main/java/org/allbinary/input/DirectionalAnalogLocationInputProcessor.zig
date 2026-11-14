@@ -29,6 +29,7 @@ const CustomGPoint = @import("org/allbinary/graphics/CustomGPoint.zig").CustomGP
 const AllBinaryLayerManager = @import("org/allbinary/layer/AllBinaryLayerManager.zig").AllBinaryLayerManager;
 const LogUtil = @import("org/allbinary/logic/communication/log/LogUtil.zig").LogUtil;
 const CommonStrings = @import("org/allbinary/string/CommonStrings.zig").CommonStrings;
+const Exception = @import("java/lang/Exception.zig").Exception;
 
 pub const DirectionalAnalogLocationInputProcessor = struct {
     const Self = @This();
@@ -65,16 +66,16 @@ pub const DirectionalAnalogLocationInputProcessor = struct {
         this.initFields();
         this.inputProcessorArray = inputProcessorArray;
         { // try
-            this.leftGameKeyEvent = Inheritance.upcast(@TypeOf(this.leftGameKeyEvent), Inheritance.call(GameKeyEventFactory.getInstance().?, "getInstanceForInput", .{ this, this.gameKeyFactory.?.LEFT }));
-            this.rightGameKeyEvent = Inheritance.upcast(@TypeOf(this.rightGameKeyEvent), Inheritance.call(GameKeyEventFactory.getInstance().?, "getInstanceForInput", .{ this, this.gameKeyFactory.?.RIGHT }));
-            this.upGameKeyEvent = Inheritance.upcast(@TypeOf(this.upGameKeyEvent), Inheritance.call(GameKeyEventFactory.getInstance().?, "getInstanceForInput", .{ this, this.gameKeyFactory.?.UP }));
-            this.downGameKeyEvent = Inheritance.upcast(@TypeOf(this.downGameKeyEvent), Inheritance.call(GameKeyEventFactory.getInstance().?, "getInstanceForInput", .{ this, this.gameKeyFactory.?.DOWN }));
-            this.leftTriggerGameKeyEvent = Inheritance.upcast(@TypeOf(this.leftTriggerGameKeyEvent), Inheritance.call(GameKeyEventFactory.getInstance().?, "getInstanceForInput", .{ this, this.gameKeyFactory.?.KEY_NUM0 }));
-            this.rightTriggerGameKeyEvent = Inheritance.upcast(@TypeOf(this.rightTriggerGameKeyEvent), Inheritance.call(GameKeyEventFactory.getInstance().?, "getInstanceForInput", .{ this, this.gameKeyFactory.?.KEY_NUM5 }));
+            this.leftGameKeyEvent = Inheritance.upcast(@TypeOf(this.leftGameKeyEvent), Inheritance.call(GameKeyEventFactory.getInstance().?, "getInstanceForInput", .{ this, Inheritance.fieldPointer(this.gameKeyFactory.?, "LEFT").* }));
+            this.rightGameKeyEvent = Inheritance.upcast(@TypeOf(this.rightGameKeyEvent), Inheritance.call(GameKeyEventFactory.getInstance().?, "getInstanceForInput", .{ this, Inheritance.fieldPointer(this.gameKeyFactory.?, "RIGHT").* }));
+            this.upGameKeyEvent = Inheritance.upcast(@TypeOf(this.upGameKeyEvent), Inheritance.call(GameKeyEventFactory.getInstance().?, "getInstanceForInput", .{ this, Inheritance.fieldPointer(this.gameKeyFactory.?, "UP").* }));
+            this.downGameKeyEvent = Inheritance.upcast(@TypeOf(this.downGameKeyEvent), Inheritance.call(GameKeyEventFactory.getInstance().?, "getInstanceForInput", .{ this, Inheritance.fieldPointer(this.gameKeyFactory.?, "DOWN").* }));
+            this.leftTriggerGameKeyEvent = Inheritance.upcast(@TypeOf(this.leftTriggerGameKeyEvent), Inheritance.call(GameKeyEventFactory.getInstance().?, "getInstanceForInput", .{ this, Inheritance.fieldPointer(this.gameKeyFactory.?, "KEY_NUM0").* }));
+            this.rightTriggerGameKeyEvent = Inheritance.upcast(@TypeOf(this.rightTriggerGameKeyEvent), Inheritance.call(GameKeyEventFactory.getInstance().?, "getInstanceForInput", .{ this, Inheritance.fieldPointer(this.gameKeyFactory.?, "KEY_NUM5").* }));
         }
         // catch (Exception e):
 //             const commonStrings: ?*CommonStrings = Inheritance.upcast(?*CommonStrings, CommonStrings.getInstance()); _ = commonStrings;
-//             _ = Inheritance.call(this.logUtil.?, "put", .{ commonStrings.?.EXCEPTION, this, commonStrings.?.CONSTRUCTOR, e });
+//             _ = Inheritance.call(this.logUtil.?, "put", .{ Inheritance.fieldPointer(commonStrings.?, "EXCEPTION").*, this, Inheritance.fieldPointer(commonStrings.?, "CONSTRUCTOR").*, e });
         Inheritance.bindOverrides(this);
         return this;
     }
@@ -107,7 +108,7 @@ pub const DirectionalAnalogLocationInputProcessor = struct {
         }
         // catch (Exception e):
 //             const commonStrings: ?*CommonStrings = Inheritance.upcast(?*CommonStrings, CommonStrings.getInstance()); _ = commonStrings;
-//             _ = Inheritance.call(self.logUtil.?, "put", .{ String.literal("Unable to process analog input"), self, commonStrings.?.PROCESS, e });
+//             _ = Inheritance.call(self.logUtil.?, "put", .{ String.literal("Unable to process analog input"), self, Inheritance.fieldPointer(commonStrings.?, "PROCESS").*, e });
     }
     
 

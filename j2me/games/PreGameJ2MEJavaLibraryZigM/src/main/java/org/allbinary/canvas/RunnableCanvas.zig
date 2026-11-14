@@ -18,7 +18,7 @@ const allocator = std.heap.page_allocator;
 const String = @import("java/lang/String.zig").String;
 const Object = @import("java/lang/Object.zig").Object;
 const Inheritance = @import("zig/Inheritance.zig");
-// const CommandListener = @import("javax/microedition/lcdui/CommandListener.zig").CommandListener;
+const CommandListener = @import("javax/microedition/lcdui/CommandListener.zig").CommandListener;
 const TsUtil = @import("org/allbinary/TsUtil.zig").TsUtil;
 const NullWaitGameRunnable = @import("org/allbinary/game/displayable/canvas/NullWaitGameRunnable.zig").NullWaitGameRunnable;
 const MyCanvas = @import("org/allbinary/graphics/displayable/MyCanvas.zig").MyCanvas;
@@ -37,6 +37,7 @@ const BasicArrayList = @import("org/allbinary/util/BasicArrayList.zig").BasicArr
 const Processor = @import("org/allbinary/canvas/Processor.zig").Processor;
 const RunnableCanvasRefreshHelper = @import("org/allbinary/canvas/RunnableCanvasRefreshHelper.zig").RunnableCanvasRefreshHelper;
 const Thread = @import("java/lang/Thread.zig").Thread;
+const Exception = @import("java/lang/Exception.zig").Exception;
 
 pub const RunnableCanvas = struct {
     const Self = @This();
@@ -73,7 +74,7 @@ pub const RunnableCanvas = struct {
         this.thread = Inheritance.upcast(?*Thread, NullThread.NULL_THREAD);
         this.currentThread = Inheritance.upcast(?*Thread, NullThread.NULL_THREAD);
         this.running = false;
-        this.loopTimeHelper = Inheritance.callStatic(TimeDelayHelper, "create1", .{ NullWaitGameRunnable.getInstance().?.WAIT });
+        this.loopTimeHelper = Inheritance.callStatic(TimeDelayHelper, "create1", .{ Inheritance.fieldPointer(NullWaitGameRunnable.getInstance().?, "WAIT").* });
         this.runnableCanvasRefreshHelper = Inheritance.upcast(?*Processor, Processor.getInstance());
         this.commonLabels = Inheritance.upcast(?*CommonLabels, CommonLabels.getInstance());
         this.threadObjectUtil = Inheritance.upcast(?*ThreadObjectUtil, ThreadObjectUtil.getInstance());
@@ -93,11 +94,11 @@ pub const RunnableCanvas = struct {
     pub fn create3(commandListener: ?*CommandListener, childNameList: ?*BasicArrayList, hasParam: bool) *Self {
         const this = allocator.create(Self) catch unreachable;
         this.* = .{};
-        this.base = Inheritance.callStatic(MyCanvas, "create2", .{ CommonStrings.getInstance().?.UNKNOWN, childNameList }).*;
+        this.base = Inheritance.callStatic(MyCanvas, "create2", .{ Inheritance.fieldPointer(CommonStrings.getInstance().?, "UNKNOWN").*, childNameList }).*;
         this.initFields();
-        _ = Inheritance.call(Inheritance.fieldPointer(this, "logUtil").*.?, "putF", .{ Object.toString(Object.of(Inheritance.call(Inheritance.call(StringMaker.create(), "append", .{ String.literal("RunnableCanvas delay: ") }).?, "appendint", .{ @as(i32, @intCast(this.loopTimeHelper.?.delay)) }))), this, Inheritance.fieldPointer(this, "commonStrings").*.?.CONSTRUCTOR });
+        _ = Inheritance.call(Inheritance.fieldPointer(this, "logUtil").*.?, "putF", .{ Object.toString(Object.of(Inheritance.call(Inheritance.call(StringMaker.create(), "append", .{ String.literal("RunnableCanvas delay: ") }).?, "appendint", .{ Inheritance.number(i32, Inheritance.fieldPointer(this.loopTimeHelper.?, "delay").*) }))), this, Inheritance.fieldPointer(Inheritance.fieldPointer(this, "commonStrings").*.?, "CONSTRUCTOR").* });
         this.runnableCanvasRefreshHelper = Inheritance.upcast(@TypeOf(this.runnableCanvasRefreshHelper), Inheritance.callStatic(RunnableCanvasRefreshHelper, "create1", .{ this }));
-        if (commandListener != null) {
+        if (!Object.isNull(commandListener)) {
             _ = Inheritance.call(this, "initCommands", .{ commandListener });
         } else if (hasParam) {
             _ = Inheritance.call(Inheritance.fieldPointer(this, "logUtil").*.?, "putF", .{ String.literal("commandListener was null"), this, String.literal("initCommands") });
@@ -109,12 +110,12 @@ pub const RunnableCanvas = struct {
 
     pub fn initCommands(self: *Self, cmdListener: ?*CommandListener) void {
         _ = cmdListener;
-        _ = Inheritance.call(Inheritance.fieldPointer(self, "logUtil").*.?, "putF", .{ Inheritance.fieldPointer(self, "commonStrings").*.?.NOT_IMPLEMENTED, self, String.literal("initCommands") });
+        _ = Inheritance.call(Inheritance.fieldPointer(self, "logUtil").*.?, "putF", .{ Inheritance.fieldPointer(Inheritance.fieldPointer(self, "commonStrings").*.?, "NOT_IMPLEMENTED").*, self, String.literal("initCommands") });
     }
     
 
     pub fn isMainCanvas(self: *Self) bool {
-        if (Inheritance.receiver(self, "getCustomCommandListener").getCustomCommandListener() != null) {
+        if (!Object.isNull(Inheritance.receiver(self, "getCustomCommandListener").getCustomCommandListener())) {
             return true;
         } else {
             return false;
@@ -150,11 +151,11 @@ pub const RunnableCanvas = struct {
         } else {
             const stringBuffer: ?*StringMaker = StringMaker.create();
             _ = Inheritance.call(stringBuffer.?, "append", .{ self.THREAD });
-            if (self.thread != null) {
+            if (!Object.isNull(self.thread)) {
                 _ = Inheritance.call(stringBuffer.?, "append", .{ Object.toString(Object.of(self.thread)) });
             }
             _ = Inheritance.call(stringBuffer.?, "append", .{ self.NOT_EQUAL });
-            if (self.currentThread != null) {
+            if (!Object.isNull(self.currentThread)) {
                 _ = Inheritance.call(stringBuffer.?, "append", .{ Inheritance.call(StringUtil.getInstance().?, "toString", .{ self.currentThread }) });
             }
             _ = Inheritance.call(Inheritance.fieldPointer(self, "logUtil").*.?, "putF", .{ Object.toString(Object.of(stringBuffer)), self, self.IS_RUNNING });
@@ -169,14 +170,14 @@ pub const RunnableCanvas = struct {
     
 
     pub fn setWait(self: *Self, wait: i32) void {
-        self.loopTimeHelper.?.delay = Inheritance.upcast(@TypeOf(self.loopTimeHelper.?.delay), wait);
+        Inheritance.fieldPointer(self.loopTimeHelper.?, "delay").* = Inheritance.upcast(@TypeOf(Inheritance.fieldPointer(self.loopTimeHelper.?, "delay").*), wait);
         self.pauseWait = @as(i64, @intCast(wait)) * 3;
-        _ = Inheritance.call(Inheritance.fieldPointer(self, "logUtil").*.?, "putF", .{ Object.toString(Object.of(Inheritance.call(Inheritance.call(StringMaker.create(), "append", .{ String.literal("setWait - delay: ") }).?, "appendint", .{ @as(i32, @intCast(self.loopTimeHelper.?.delay)) }))), self, Inheritance.fieldPointer(self, "commonStrings").*.?.CONSTRUCTOR });
+        _ = Inheritance.call(Inheritance.fieldPointer(self, "logUtil").*.?, "putF", .{ Object.toString(Object.of(Inheritance.call(Inheritance.call(StringMaker.create(), "append", .{ String.literal("setWait - delay: ") }).?, "appendint", .{ Inheritance.number(i32, Inheritance.fieldPointer(self.loopTimeHelper.?, "delay").*) }))), self, Inheritance.fieldPointer(Inheritance.fieldPointer(self, "commonStrings").*.?, "CONSTRUCTOR").* });
     }
     
 
     pub fn getWait(self: *Self) i32 {
-        return self.loopTimeHelper.?.delay;
+        return Inheritance.fieldPointer(self.loopTimeHelper.?, "delay").*;
     }
     
 
@@ -195,7 +196,7 @@ pub const RunnableCanvas = struct {
             _ = self.stopWaiting();
         }
         // catch (Exception e):
-//             _ = Inheritance.call(Inheritance.fieldPointer(self, "logUtil").*.?, "put", .{ Inheritance.fieldPointer(self, "commonStrings").*.?.EXCEPTION, self, String.literal("showNotify"), e });
+//             _ = Inheritance.call(Inheritance.fieldPointer(self, "logUtil").*.?, "put", .{ Inheritance.fieldPointer(Inheritance.fieldPointer(self, "commonStrings").*.?, "EXCEPTION").*, self, String.literal("showNotify"), e });
     }
     
 
@@ -265,7 +266,7 @@ pub const RunnableCanvas = struct {
             }
         }
         var elapsedTime: i64 = self.loopTimeHelper.?.getElapsedTNT();
-        const wait: i64 = @as(i64, @intCast(self.loopTimeHelper.?.delay));
+        const wait: i64 = Inheritance.number(i64, Inheritance.fieldPointer(self.loopTimeHelper.?, "delay").*);
         if (elapsedTime > wait) {
             elapsedTime = wait;
         } else {

@@ -18,7 +18,7 @@ const allocator = std.heap.page_allocator;
 const String = @import("java/lang/String.zig").String;
 const Object = @import("java/lang/Object.zig").Object;
 const Inheritance = @import("zig/Inheritance.zig");
-// const Graphics = @import("javax/microedition/lcdui/Graphics.zig").Graphics;
+const Graphics = @import("javax/microedition/lcdui/Graphics.zig").Graphics;
 const Processor = @import("org/allbinary/canvas/Processor.zig").Processor;
 const Rectangle = @import("org/allbinary/graphics/Rectangle.zig").Rectangle;
 const BasicColor = @import("org/allbinary/graphics/color/BasicColor.zig").BasicColor;
@@ -28,9 +28,16 @@ const UpdateMyFontProcessor = @import("org/allbinary/graphics/font/UpdateMyFontP
 const ABCustomItem = @import("org/allbinary/graphics/form/item/ABCustomItem.zig").ABCustomItem;
 const FormType = @import("org/allbinary/graphics/form/FormType.zig").FormType;
 const FormTypeFactory = @import("org/allbinary/graphics/form/FormTypeFactory.zig").FormTypeFactory;
+const HorizontalFormProcessor = @import("org/allbinary/graphics/form/HorizontalFormProcessor.zig").HorizontalFormProcessor;
+const HorizontalItemIndexDx = @import("org/allbinary/graphics/form/HorizontalItemIndexDx.zig").HorizontalItemIndexDx;
 const ItemIndexDx = @import("org/allbinary/graphics/form/ItemIndexDx.zig").ItemIndexDx;
 const ItemPaintableFactory = @import("org/allbinary/graphics/form/ItemPaintableFactory.zig").ItemPaintableFactory;
 const ScrollSelectionForm = @import("org/allbinary/graphics/form/ScrollSelectionForm.zig").ScrollSelectionForm;
+const TempHorizontalFormProcessor = @import("org/allbinary/graphics/form/TempHorizontalFormProcessor.zig").TempHorizontalFormProcessor;
+const TempHorizontalItemIndexDx = @import("org/allbinary/graphics/form/TempHorizontalItemIndexDx.zig").TempHorizontalItemIndexDx;
+const VerticalFormProcessor = @import("org/allbinary/graphics/form/VerticalFormProcessor.zig").VerticalFormProcessor;
+const VerticalItemIndexDx = @import("org/allbinary/graphics/form/VerticalItemIndexDx.zig").VerticalItemIndexDx;
+const Exception = @import("java/lang/Exception.zig").Exception;
 
 pub const ScrollCurrentSelectionForm = struct {
     const Self = @This();
@@ -73,18 +80,18 @@ pub const ScrollCurrentSelectionForm = struct {
     pub fn init(self: *Self, rectangle: ?*Rectangle, formType: ?*FormType) void {
         _ = Inheritance.call(&self.base, "init", .{ rectangle, formType });
         const formTypeFactory: ?*FormTypeFactory = Inheritance.upcast(?*FormTypeFactory, FormTypeFactory.getInstance());
-        if (Object.same(formType, formTypeFactory.?.TEMP_HORIZONTAL_FORM)) {
+        if (Object.same(formType, Inheritance.fieldPointer(formTypeFactory.?, "TEMP_HORIZONTAL_FORM").*)) {
             self.processor = Inheritance.upcast(@TypeOf(self.processor), Inheritance.callStatic(TempHorizontalFormProcessor, "create1", .{ self }));
             self.preItemIndexDx = Inheritance.upcast(@TypeOf(self.preItemIndexDx), Inheritance.callStatic(TempHorizontalItemIndexDx, "create1", .{ self }));
-        } else if (Object.same(formType, formTypeFactory.?.HORIZONTAL_FORM)) {
+        } else if (Object.same(formType, Inheritance.fieldPointer(formTypeFactory.?, "HORIZONTAL_FORM").*)) {
             self.processor = Inheritance.upcast(@TypeOf(self.processor), Inheritance.callStatic(HorizontalFormProcessor, "create1", .{ self }));
             self.preItemIndexDx = Inheritance.upcast(@TypeOf(self.preItemIndexDx), Inheritance.callStatic(HorizontalItemIndexDx, "create1", .{ self }));
-        } else if (Object.same(formType, formTypeFactory.?.VERTICAL_CENTER_FORM)) {
+        } else if (Object.same(formType, Inheritance.fieldPointer(formTypeFactory.?, "VERTICAL_CENTER_FORM").*)) {
             self.processor = Inheritance.upcast(@TypeOf(self.processor), Inheritance.callStatic(VerticalFormProcessor, "create1", .{ self }));
             self.preItemIndexDx = Inheritance.upcast(@TypeOf(self.preItemIndexDx), Inheritance.callStatic(VerticalItemIndexDx, "create1", .{ self }));
-        } else if (Object.same(formType, formTypeFactory.?.NULL_FORM_TYPE)) {
+        } else if (Object.same(formType, Inheritance.fieldPointer(formTypeFactory.?, "NULL_FORM_TYPE").*)) {
         } else {
-            _ = Inheritance.call(Inheritance.fieldPointer(self, "logUtil").*.?, "putF", .{ formTypeFactory.?.UNK, self, Inheritance.fieldPointer(self, "commonStrings").*.?.INIT });
+            _ = Inheritance.call(Inheritance.fieldPointer(self, "logUtil").*.?, "putF", .{ Inheritance.fieldPointer(formTypeFactory.?, "UNK").*, self, Inheritance.fieldPointer(Inheritance.fieldPointer(self, "commonStrings").*.?, "INIT").* });
         }
         self.myFontProcessor = self.updateMyFontProcessor;
     }
@@ -97,7 +104,7 @@ pub const ScrollCurrentSelectionForm = struct {
     
 
     pub fn processTempHorizontalForm(self: *Self) void {
-        self.dx = Inheritance.fieldPointer(self, "x").* - 30 + (Inheritance.fieldPointer(self, "rectangle").*.?.getWidth() >> @intCast(1));
+        self.dx = Inheritance.plus(Inheritance.arithmetic(.subtract, Inheritance.fieldPointer(self, "x").*, 30), (Inheritance.receiver(Inheritance.fieldPointer(self, "rectangle").*.?, "getWidth").getWidth() >> @intCast(1)));
         self.dy = Inheritance.fieldPointer(self, "y").*;
     }
     
@@ -110,11 +117,11 @@ pub const ScrollCurrentSelectionForm = struct {
             var index: i32 = 0;
             while (index < size) : (index += 1) {
             item = Inheritance.upcast(@TypeOf(item), Inheritance.call(self, "get", .{ index }));
-            totalWidth += item.?.getMinimumWidth() + Inheritance.fieldPointer(self, "border").*;
+            totalWidth += Inheritance.plus(item.?.getMinimumWidth(), Inheritance.fieldPointer(self, "border").*);
             }
         }
-        self.dx = Inheritance.fieldPointer(self, "x").* + (Inheritance.fieldPointer(self, "rectangle").*.?.getWidth() >> @intCast(1)) - (totalWidth >> @intCast(1));
-        self.dy = Inheritance.fieldPointer(self, "y").* + (Inheritance.fieldPointer(self, "rectangle").*.?.getHeight() >> @intCast(1));
+        self.dx = Inheritance.arithmetic(.subtract, Inheritance.plus(Inheritance.fieldPointer(self, "x").*, (Inheritance.receiver(Inheritance.fieldPointer(self, "rectangle").*.?, "getWidth").getWidth() >> @intCast(1))), (totalWidth >> @intCast(1)));
+        self.dy = Inheritance.plus(Inheritance.fieldPointer(self, "y").*, (Inheritance.receiver(Inheritance.fieldPointer(self, "rectangle").*.?, "getHeight").getHeight() >> @intCast(1)));
         if (self.moveForSmallScreen) {
             const maxTitleHeight: i32 = 175;
             if (self.dy < maxTitleHeight) {
@@ -132,15 +139,15 @@ pub const ScrollCurrentSelectionForm = struct {
             var index: i32 = 0;
             while (index < size) : (index += 1) {
             item2 = Inheritance.upcast(@TypeOf(item2), Inheritance.call(self, "get", .{ index }));
-            if (self.maxWidth < item2.?.getMinimumWidth()) {
+            if (Inheritance.arithmetic(.less, self.maxWidth, item2.?.getMinimumWidth())) {
                 self.maxWidth = item2.?.getMinimumWidth();
             }
-            totalHeight += item2.?.getMinimumHeight() + Inheritance.fieldPointer(self, "border").*;
+            totalHeight += Inheritance.plus(item2.?.getMinimumHeight(), Inheritance.fieldPointer(self, "border").*);
             }
         }
-        self.dx = ((divide_N69940: { const left_N69940 = (Inheritance.fieldPointer(self, "rectangle").*.?.getWidth() - self.maxWidth); const right_N69940 = 2; break :divide_N69940 if (comptime @typeInfo(@TypeOf(left_N69940)) == .int or @TypeOf(left_N69940) == comptime_int) @divTrunc(left_N69940, right_N69940) else left_N69940 / right_N69940; }));
+        self.dx = ((divide_N68257: { const left_N68257 = (Inheritance.arithmetic(.subtract, Inheritance.receiver(Inheritance.fieldPointer(self, "rectangle").*.?, "getWidth").getWidth(), self.maxWidth)); const right_N68257 = 2; break :divide_N68257 if (comptime @typeInfo(@TypeOf(left_N68257)) == .int or @TypeOf(left_N68257) == comptime_int) @divTrunc(left_N68257, right_N68257) else left_N68257 / right_N68257; }));
         if (Inheritance.receiver(self, "size").size() > 0) {
-            self.dy = Inheritance.fieldPointer(self, "y").* + ((divide_N70097: { const left_N70097 = (Inheritance.fieldPointer(self, "rectangle").*.?.getHeight() - totalHeight); const right_N70097 = 2; break :divide_N70097 if (comptime @typeInfo(@TypeOf(left_N70097)) == .int or @TypeOf(left_N70097) == comptime_int) @divTrunc(left_N70097, right_N70097) else left_N70097 / right_N70097; }));
+            self.dy = Inheritance.plus(Inheritance.fieldPointer(self, "y").*, ((divide_N68414: { const left_N68414 = (Inheritance.arithmetic(.subtract, Inheritance.receiver(Inheritance.fieldPointer(self, "rectangle").*.?, "getHeight").getHeight(), totalHeight)); const right_N68414 = 2; break :divide_N68414 if (comptime @typeInfo(@TypeOf(left_N68414)) == .int or @TypeOf(left_N68414) == comptime_int) @divTrunc(left_N68414, right_N68414) else left_N68414 / right_N68414; })));
             if (self.moveForSmallScreen) {
                 const maxTitleHeight: i32 = 175;
                 if (self.dy < maxTitleHeight) {
@@ -180,7 +187,7 @@ pub const ScrollCurrentSelectionForm = struct {
     
 
     pub fn getDiffX(self: *Self, item: ?*ABCustomItem) i32 {
-        return ((self.maxWidth - item.?.getMinimumWidth()) >> @intCast(1));
+        return ((Inheritance.arithmetic(.subtract, self.maxWidth, item.?.getMinimumWidth())) >> @intCast(1));
     }
     
 
@@ -215,190 +222,19 @@ pub const ScrollCurrentSelectionForm = struct {
                     delta = Inheritance.call(self, "paintUnselectedItem", .{ graphics, index, item, deltaX + diffX, deltaY });
                     _ = Inheritance.call(Inheritance.fieldPointer(self, "paintable").*.?, "paint", .{ graphics, index, deltaX + diffX, deltaY });
                 }
-                if (Object.same(Inheritance.fieldPointer(self, "formType").*, formTypeFactory.?.TEMP_HORIZONTAL_FORM)) {
-                } else if (Object.same(Inheritance.fieldPointer(self, "formType").*, formTypeFactory.?.HORIZONTAL_FORM)) {
+                if (Object.same(Inheritance.fieldPointer(self, "formType").*, Inheritance.fieldPointer(formTypeFactory.?, "TEMP_HORIZONTAL_FORM").*)) {
+                } else if (Object.same(Inheritance.fieldPointer(self, "formType").*, Inheritance.fieldPointer(formTypeFactory.?, "HORIZONTAL_FORM").*)) {
                     deltaX = delta;
-                } else if (Object.same(Inheritance.fieldPointer(self, "formType").*, formTypeFactory.?.VERTICAL_CENTER_FORM)) {
+                } else if (Object.same(Inheritance.fieldPointer(self, "formType").*, Inheritance.fieldPointer(formTypeFactory.?, "VERTICAL_CENTER_FORM").*)) {
                     deltaY = delta;
                 } else {
-                    std.debug.panic("{any}", .{exception: { _ = formTypeFactory.?.UNK; break :exception error.Exception; }});
+                    std.debug.panic("{any}", .{exception: { _ = Inheritance.fieldPointer(formTypeFactory.?, "UNK").*; break :exception error.Exception; }});
                 }
                 }
             }
         }
         // catch (Exception e):
-//             _ = Inheritance.call(Inheritance.fieldPointer(self, "logUtil").*.?, "put", .{ Inheritance.fieldPointer(self, "commonStrings").*.?.EXCEPTION, self, Inheritance.fieldPointer(self, "canvasStrings").*.?.PAINT, e });
+//             _ = Inheritance.call(Inheritance.fieldPointer(self, "logUtil").*.?, "put", .{ Inheritance.fieldPointer(Inheritance.fieldPointer(self, "commonStrings").*.?, "EXCEPTION").*, self, Inheritance.fieldPointer(Inheritance.fieldPointer(self, "canvasStrings").*.?, "PAINT").*, e });
     }
-    pub const TempHorizontalFormProcessor = struct {
-        const Self = @This();
-        pub const java_name = "org.allbinary.graphics.form.TempHorizontalFormProcessor";
-        base: Processor = undefined,
-        scrollCurrentSelectionForm: ?*ScrollCurrentSelectionForm = null,
-
-    fn initFields(this: *Self) void {
-        _ = this;
-            
-    }
-        
-
-        pub fn create1(scrollCurrentSelectionForm: ?*ScrollCurrentSelectionForm) *Self {
-            const this = allocator.create(Self) catch unreachable;
-            this.* = .{};
-        this.base = Processor.create().*;
-            this.initFields();
-            Inheritance.fieldPointer(this, "scrollCurrentSelectionForm").* = scrollCurrentSelectionForm;
-            Inheritance.bindOverrides(this);
-            return this;
-        }
-        
-
-        // throws Exception
-        pub fn process(self: *Self) void {
-            _ = Inheritance.receiver(Inheritance.fieldPointer(self, "scrollCurrentSelectionForm").*.?, "processTempHorizontalForm").processTempHorizontalForm();
-            Inheritance.fieldPointer(self, "scrollCurrentSelectionForm").*.?.processor = Inheritance.upcast(@TypeOf(Inheritance.fieldPointer(self, "scrollCurrentSelectionForm").*.?.processor), Processor.getInstance());
-        }
-    };
-    pub const HorizontalFormProcessor = struct {
-        const Self = @This();
-        pub const java_name = "org.allbinary.graphics.form.HorizontalFormProcessor";
-        base: Processor = undefined,
-        scrollCurrentSelectionForm: ?*ScrollCurrentSelectionForm = null,
-
-    fn initFields(this: *Self) void {
-        _ = this;
-            
-    }
-        
-
-        pub fn create1(scrollCurrentSelectionForm: ?*ScrollCurrentSelectionForm) *Self {
-            const this = allocator.create(Self) catch unreachable;
-            this.* = .{};
-        this.base = Processor.create().*;
-            this.initFields();
-            Inheritance.fieldPointer(this, "scrollCurrentSelectionForm").* = scrollCurrentSelectionForm;
-            Inheritance.bindOverrides(this);
-            return this;
-        }
-        
-
-        // throws Exception
-        pub fn process(self: *Self) void {
-            _ = Inheritance.receiver(Inheritance.fieldPointer(self, "scrollCurrentSelectionForm").*.?, "processHorizontalForm").processHorizontalForm();
-            Inheritance.fieldPointer(self, "scrollCurrentSelectionForm").*.?.processor = Inheritance.upcast(@TypeOf(Inheritance.fieldPointer(self, "scrollCurrentSelectionForm").*.?.processor), Processor.getInstance());
-        }
-    };
-    pub const VerticalFormProcessor = struct {
-        const Self = @This();
-        pub const java_name = "org.allbinary.graphics.form.VerticalFormProcessor";
-        base: Processor = undefined,
-        scrollCurrentSelectionForm: ?*ScrollCurrentSelectionForm = null,
-
-    fn initFields(this: *Self) void {
-        _ = this;
-            
-    }
-        
-
-        pub fn create1(scrollCurrentSelectionForm: ?*ScrollCurrentSelectionForm) *Self {
-            const this = allocator.create(Self) catch unreachable;
-            this.* = .{};
-        this.base = Processor.create().*;
-            this.initFields();
-            Inheritance.fieldPointer(this, "scrollCurrentSelectionForm").* = scrollCurrentSelectionForm;
-            Inheritance.bindOverrides(this);
-            return this;
-        }
-        
-
-        // throws Exception
-        pub fn process(self: *Self) void {
-            _ = Inheritance.receiver(Inheritance.fieldPointer(self, "scrollCurrentSelectionForm").*.?, "processVerticalForm").processVerticalForm();
-            Inheritance.fieldPointer(self, "scrollCurrentSelectionForm").*.?.processor = Inheritance.upcast(@TypeOf(Inheritance.fieldPointer(self, "scrollCurrentSelectionForm").*.?.processor), Processor.getInstance());
-        }
-    };
-    pub const TempHorizontalItemIndexDx = struct {
-        const Self = @This();
-        pub const java_name = "org.allbinary.graphics.form.TempHorizontalItemIndexDx";
-        base: ItemIndexDx = undefined,
-        scrollCurrentSelectionForm: ?*ScrollCurrentSelectionForm = null,
-
-    fn initFields(this: *Self) void {
-        _ = this;
-            
-    }
-        
-
-        pub fn create1(scrollCurrentSelectionForm: ?*ScrollCurrentSelectionForm) *Self {
-            const this = allocator.create(Self) catch unreachable;
-            this.* = .{};
-        this.base = ItemIndexDx.create().*;
-            this.initFields();
-            Inheritance.fieldPointer(this, "scrollCurrentSelectionForm").* = scrollCurrentSelectionForm;
-            Inheritance.bindOverrides(this);
-            return this;
-        }
-        
-
-        // throws Exception
-        pub fn getDx(self: *Self, index: i32, item: ?*ABCustomItem, dx: i32, dy: i32) i32 {
-            return Inheritance.call(Inheritance.fieldPointer(self, "scrollCurrentSelectionForm").*.?, "getXTempHorizontalForm", .{ index, item, dx, dy });
-        }
-    };
-    pub const HorizontalItemIndexDx = struct {
-        const Self = @This();
-        pub const java_name = "org.allbinary.graphics.form.HorizontalItemIndexDx";
-        base: ItemIndexDx = undefined,
-        scrollCurrentSelectionForm: ?*ScrollCurrentSelectionForm = null,
-
-    fn initFields(this: *Self) void {
-        _ = this;
-            
-    }
-        
-
-        pub fn create1(scrollCurrentSelectionForm: ?*ScrollCurrentSelectionForm) *Self {
-            const this = allocator.create(Self) catch unreachable;
-            this.* = .{};
-        this.base = ItemIndexDx.create().*;
-            this.initFields();
-            Inheritance.fieldPointer(this, "scrollCurrentSelectionForm").* = scrollCurrentSelectionForm;
-            Inheritance.bindOverrides(this);
-            return this;
-        }
-        
-
-        // throws Exception
-        pub fn getDx(self: *Self, index: i32, item: ?*ABCustomItem, dx: i32, dy: i32) i32 {
-            return Inheritance.call(Inheritance.fieldPointer(self, "scrollCurrentSelectionForm").*.?, "getXHorizontalForm", .{ index, item, dx, dy });
-        }
-    };
-    pub const VerticalItemIndexDx = struct {
-        const Self = @This();
-        pub const java_name = "org.allbinary.graphics.form.VerticalItemIndexDx";
-        base: ItemIndexDx = undefined,
-        scrollCurrentSelectionForm: ?*ScrollCurrentSelectionForm = null,
-
-    fn initFields(this: *Self) void {
-        _ = this;
-            
-    }
-        
-
-        pub fn create1(scrollCurrentSelectionForm: ?*ScrollCurrentSelectionForm) *Self {
-            const this = allocator.create(Self) catch unreachable;
-            this.* = .{};
-        this.base = ItemIndexDx.create().*;
-            this.initFields();
-            Inheritance.fieldPointer(this, "scrollCurrentSelectionForm").* = scrollCurrentSelectionForm;
-            Inheritance.bindOverrides(this);
-            return this;
-        }
-        
-
-        // throws Exception
-        pub fn getDx(self: *Self, index: i32, item: ?*ABCustomItem, dx: i32, dy: i32) i32 {
-            return Inheritance.call(Inheritance.fieldPointer(self, "scrollCurrentSelectionForm").*.?, "getXVerticalForm", .{ index, item, dx, dy });
-        }
-    };
 };
 

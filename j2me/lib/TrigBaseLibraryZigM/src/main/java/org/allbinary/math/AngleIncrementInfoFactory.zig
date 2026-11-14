@@ -33,7 +33,7 @@ pub const AngleIncrementInfoFactory = struct {
     }
 
     fn initFields(this: *Self) void {
-        this.angleIncrementInfo = array_N65698: { const array_N65698_array = allocator.alloc(?*AngleIncrementInfo, @intCast(@as(i32, @intCast(AngleFactory.getInstance().?.TOTAL_ANGLE)))) catch unreachable; @memset(array_N65698_array, null); break :array_N65698 array_N65698_array; };
+        this.angleIncrementInfo = array_N65698: { const array_N65698_array = allocator.alloc(?*AngleIncrementInfo, @intCast(Inheritance.number(i32, Inheritance.fieldPointer(AngleFactory.getInstance().?, "TOTAL_ANGLE").*))) catch unreachable; @memset(array_N65698_array, null); break :array_N65698 array_N65698_array; };
     }
 
     pub fn create() *Self {
@@ -53,14 +53,14 @@ pub const AngleIncrementInfoFactory = struct {
         const halfAngleIncrement: i32 = (@as(i32, @intCast(angleIncrement)) >> @intCast(1));
         var angleIncrementInfo: ?*AngleIncrementInfo = null;
         const angleIncrementInfoCanBeNull: ?*AngleIncrementInfo = Inheritance.upcast(?*AngleIncrementInfo, self.angleIncrementInfo[@intCast(halfAngleIncrement)]);
-        if (angleIncrementInfoCanBeNull == null) {
-            angleIncrementInfo = Inheritance.upcast(@TypeOf(angleIncrementInfo), Inheritance.callStatic(AngleIncrementInfo, "create1", .{ angleIncrement }));
+        if (Object.isNull(angleIncrementInfoCanBeNull)) {
+            angleIncrementInfo = Inheritance.callStatic(AngleIncrementInfo, "create1", .{ angleIncrement });
             self.angleIncrementInfo[@intCast(halfAngleIncrement)] = Inheritance.upcast(@TypeOf(self.angleIncrementInfo[@intCast(halfAngleIncrement)]), angleIncrementInfo);
-            return Inheritance.upcast(?*AngleIncrementInfo, angleIncrementInfo);
+            return angleIncrementInfo;
         } else {
-            angleIncrementInfo = Inheritance.upcast(@TypeOf(angleIncrementInfo), angleIncrementInfoCanBeNull);
+            angleIncrementInfo = angleIncrementInfoCanBeNull;
         }
-        return Inheritance.upcast(?*AngleIncrementInfo, angleIncrementInfo);
+        return angleIncrementInfo;
     }
 };
 

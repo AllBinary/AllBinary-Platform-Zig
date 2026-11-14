@@ -6,11 +6,14 @@ const allocator = std.heap.page_allocator;
 const String = @import("java/lang/String.zig").String;
 const Object = @import("java/lang/Object.zig").Object;
 const Inheritance = @import("zig/Inheritance.zig");
+const Command = @import("javax/microedition/lcdui/Command.zig").Command;
+const CommandListener = @import("javax/microedition/lcdui/CommandListener.zig").CommandListener;
 const Displayable = @import("javax/microedition/lcdui/Displayable.zig").Displayable;
 
 pub const NullCommandListener = struct {
     const Self = @This();
     pub const java_name = "javax.microedition.lcdui.NullCommandListener";
+    pub const java_interfaces = .{ CommandListener };
     // Implements CommandListener
     pub var NULL_COMMAND_LISTENER: ?*NullCommandListener = undefined;
 

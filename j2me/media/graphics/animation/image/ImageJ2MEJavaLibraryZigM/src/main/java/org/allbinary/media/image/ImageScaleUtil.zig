@@ -18,8 +18,9 @@ const allocator = std.heap.page_allocator;
 const String = @import("java/lang/String.zig").String;
 const Object = @import("java/lang/Object.zig").Object;
 const Inheritance = @import("zig/Inheritance.zig");
-// const Image = @import("javax/microedition/lcdui/Image.zig").Image;
+const Image = @import("javax/microedition/lcdui/Image.zig").Image;
 const ImageCache = @import("org/allbinary/image/ImageCache.zig").ImageCache;
+const Exception = @import("java/lang/Exception.zig").Exception;
 
 pub const ImageScaleUtil = struct {
     const Self = @This();

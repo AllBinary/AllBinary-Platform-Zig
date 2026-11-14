@@ -36,6 +36,7 @@ const InputFeatureFactory = @import("org/allbinary/game/configuration/feature/In
 const MainFeatureFactory = @import("org/allbinary/game/configuration/feature/MainFeatureFactory.zig").MainFeatureFactory;
 const SensorFeatureFactory = @import("org/allbinary/game/configuration/feature/SensorFeatureFactory.zig").SensorFeatureFactory;
 const TouchFeatureFactory = @import("org/allbinary/game/configuration/feature/TouchFeatureFactory.zig").TouchFeatureFactory;
+const Exception = @import("java/lang/Exception.zig").Exception;
 
 pub const Features = struct {
     const Self = @This();
@@ -48,7 +49,7 @@ pub const Features = struct {
 
     // Static fields with runtime initializers: call staticInit once at startup
     pub fn staticInit() void {
-        SINGLETON = Inheritance.upcast(?Object, NullUtil.getInstance().?.NULL_OBJECT);
+        SINGLETON = Inheritance.upcast(?Object, Inheritance.fieldPointer(NullUtil.getInstance().?, "NULL_OBJECT").*);
     }
 
     fn initFields(this: *Self) void {
@@ -60,7 +61,7 @@ pub const Features = struct {
     
 
     pub fn getInstance() ?*Features {
-        if (Object.same(Features.SINGLETON, NullUtil.getInstance().?.NULL_OBJECT)) {
+        if (Object.same(Features.SINGLETON, Inheritance.fieldPointer(NullUtil.getInstance().?, "NULL_OBJECT").*)) {
             Features.SINGLETON = Inheritance.upcast(@TypeOf(Features.SINGLETON), Features.create());
         }
         return Inheritance.cast(?*Features, Features.SINGLETON);
@@ -90,7 +91,7 @@ pub const Features = struct {
     // throws Exception
     pub fn add(self: *Self, gameFeature: ?*Feature) void {
         if (!Inheritance.call(self.list.?, "contains", .{ gameFeature })) {
-            _ = Inheritance.call(self.logUtil.?, "putF", .{ Object.toString(Object.of(Inheritance.call(Inheritance.call(StringMaker.create(), "append", .{ CommonLabels.getInstance().?.START_LABEL }).?, "append", .{ Object.toString(Object.of(gameFeature)) }))), self, self.commonStrings.?.ADD });
+            _ = Inheritance.call(self.logUtil.?, "putF", .{ Object.toString(Object.of(Inheritance.call(Inheritance.call(StringMaker.create(), "append", .{ Inheritance.fieldPointer(CommonLabels.getInstance().?, "START_LABEL").* }).?, "append", .{ Object.toString(Object.of(gameFeature)) }))), self, Inheritance.fieldPointer(self.commonStrings.?, "ADD").* });
             _ = Inheritance.call(self.list.?, "add", .{ gameFeature });
             _ = Inheritance.call(GameFeatureEventHandler.getInstance().?, "fireEvent", .{ Inheritance.callStatic(GameFeatureEvent, "create2", .{ gameFeature, Object.toString(Object.of(gameFeature)) }) });
         }
@@ -99,7 +100,7 @@ pub const Features = struct {
 
     // throws Exception
     pub fn removeDefault(self: *Self, gameFeature: ?*Feature) void {
-        _ = Inheritance.call(self.logUtil.?, "putF", .{ Object.toString(Object.of(Inheritance.call(Inheritance.call(StringMaker.create(), "append", .{ CommonLabels.getInstance().?.START_LABEL }).?, "append", .{ Object.toString(Object.of(gameFeature)) }))), self, String.literal("removeDefault") });
+        _ = Inheritance.call(self.logUtil.?, "putF", .{ Object.toString(Object.of(Inheritance.call(Inheritance.call(StringMaker.create(), "append", .{ Inheritance.fieldPointer(CommonLabels.getInstance().?, "START_LABEL").* }).?, "append", .{ Object.toString(Object.of(gameFeature)) }))), self, String.literal("removeDefault") });
         _ = Inheritance.call(self, "remove", .{ gameFeature });
         _ = Inheritance.call(self.defaultList.?, "remove", .{ gameFeature });
     }
@@ -108,7 +109,7 @@ pub const Features = struct {
     // throws Exception
     pub fn remove(self: *Self, gameFeature: ?*Feature) void {
         if (Inheritance.call(self.list.?, "contains", .{ gameFeature })) {
-            _ = Inheritance.call(self.logUtil.?, "putF", .{ self.commonStrings.?.START, self, self.commonStrings.?.REMOVE });
+            _ = Inheritance.call(self.logUtil.?, "putF", .{ Inheritance.fieldPointer(self.commonStrings.?, "START").*, self, Inheritance.fieldPointer(self.commonStrings.?, "REMOVE").* });
             _ = Inheritance.call(self.list.?, "remove", .{ gameFeature });
             _ = Inheritance.call(GameFeatureEventHandler.getInstance().?, "fireEvent", .{ Inheritance.callStatic(GameFeatureEvent, "create2", .{ gameFeature, Object.toString(Object.of(gameFeature)) }) });
         }
@@ -121,28 +122,28 @@ pub const Features = struct {
             const inputFeatureFactory: ?*InputFeatureFactory = Inheritance.upcast(?*InputFeatureFactory, InputFeatureFactory.getInstance());
             const sensorFeatureFactory: ?*SensorFeatureFactory = Inheritance.upcast(?*SensorFeatureFactory, SensorFeatureFactory.getInstance());
             const touchFeatureFactory: ?*TouchFeatureFactory = Inheritance.upcast(?*TouchFeatureFactory, TouchFeatureFactory.getInstance());
-            _ = Inheritance.call(self, "addDefault", .{ gameFeatureFactory.?.ARTIFICIAL_INTELLEGENCE_PROCESSOR });
-            _ = Inheritance.call(self, "addDefault", .{ gameFeatureFactory.?.COLLIDABLE_INTERFACE_LAYER_PROCESSOR });
-            _ = Inheritance.call(self, "addDefault", .{ gameFeatureFactory.?.GAME_INPUT_LAYER_PROCESSOR });
-            _ = Inheritance.call(self, "addDefault", .{ gameFeatureFactory.?.TICKABLE_LAYER_PROCESSOR });
-            _ = Inheritance.call(self, "addDefault", .{ inputFeatureFactory.?.MULTI_KEY_PRESS });
-            _ = Inheritance.call(self, "addDefault", .{ inputFeatureFactory.?.REMOVE_DUPLICATE_KEY_PRESSES });
-            _ = Inheritance.call(self, "addDefault", .{ gameFeatureFactory.?.SCREEN_SHAKE });
-            _ = Inheritance.call(self, "addDefault", .{ gameFeatureFactory.?.POST_IMAGE_LOADING_MODIFICATION });
+            _ = Inheritance.call(self, "addDefault", .{ Inheritance.fieldPointer(gameFeatureFactory.?, "ARTIFICIAL_INTELLEGENCE_PROCESSOR").* });
+            _ = Inheritance.call(self, "addDefault", .{ Inheritance.fieldPointer(gameFeatureFactory.?, "COLLIDABLE_INTERFACE_LAYER_PROCESSOR").* });
+            _ = Inheritance.call(self, "addDefault", .{ Inheritance.fieldPointer(gameFeatureFactory.?, "GAME_INPUT_LAYER_PROCESSOR").* });
+            _ = Inheritance.call(self, "addDefault", .{ Inheritance.fieldPointer(gameFeatureFactory.?, "TICKABLE_LAYER_PROCESSOR").* });
+            _ = Inheritance.call(self, "addDefault", .{ Inheritance.fieldPointer(inputFeatureFactory.?, "MULTI_KEY_PRESS").* });
+            _ = Inheritance.call(self, "addDefault", .{ Inheritance.fieldPointer(inputFeatureFactory.?, "REMOVE_DUPLICATE_KEY_PRESSES").* });
+            _ = Inheritance.call(self, "addDefault", .{ Inheritance.fieldPointer(gameFeatureFactory.?, "SCREEN_SHAKE").* });
+            _ = Inheritance.call(self, "addDefault", .{ Inheritance.fieldPointer(gameFeatureFactory.?, "POST_IMAGE_LOADING_MODIFICATION").* });
             const operatingSystemInterface: ?*GenericOperatingSystem = Inheritance.upcast(?*GenericOperatingSystem, Inheritance.receiverOf(OperatingSystemFactory.getInstance().?, "getOperatingSystemInstance").getOperatingSystemInstance());
             if (operatingSystemInterface.?.isOverScan()) {
-                _ = Inheritance.call(self, "addDefault", .{ sensorFeatureFactory.?.NO_ORIENTATION });
-                _ = Inheritance.call(self, "addDefault", .{ touchFeatureFactory.?.HIDE_SCREEN_BUTTONS });
+                _ = Inheritance.call(self, "addDefault", .{ Inheritance.fieldPointer(sensorFeatureFactory.?, "NO_ORIENTATION").* });
+                _ = Inheritance.call(self, "addDefault", .{ Inheritance.fieldPointer(touchFeatureFactory.?, "HIDE_SCREEN_BUTTONS").* });
             } else {
-                _ = Inheritance.call(self, "addDefault", .{ sensorFeatureFactory.?.ORIENTATION_SENSORS });
-                _ = Inheritance.call(self, "addDefault", .{ touchFeatureFactory.?.AUTO_HIDE_SHOW_SCREEN_BUTTONS });
+                _ = Inheritance.call(self, "addDefault", .{ Inheritance.fieldPointer(sensorFeatureFactory.?, "ORIENTATION_SENSORS").* });
+                _ = Inheritance.call(self, "addDefault", .{ Inheritance.fieldPointer(touchFeatureFactory.?, "AUTO_HIDE_SHOW_SCREEN_BUTTONS").* });
             }
-            _ = Inheritance.call(self, "addDefault", .{ touchFeatureFactory.?.TOUCH_ENABLED });
-            _ = Inheritance.call(self, "addDefault", .{ MainFeatureFactory.getInstance().?.FULL_SCREEN });
-            _ = Inheritance.call(self, "addDefault", .{ MainFeatureFactory.getInstance().?.LOAD_ONDEMAND });
+            _ = Inheritance.call(self, "addDefault", .{ Inheritance.fieldPointer(touchFeatureFactory.?, "TOUCH_ENABLED").* });
+            _ = Inheritance.call(self, "addDefault", .{ Inheritance.fieldPointer(MainFeatureFactory.getInstance().?, "FULL_SCREEN").* });
+            _ = Inheritance.call(self, "addDefault", .{ Inheritance.fieldPointer(MainFeatureFactory.getInstance().?, "LOAD_ONDEMAND").* });
         }
         // catch (Exception e):
-//             _ = Inheritance.callStatic(PreLogUtil, "putOE", .{ self.commonStrings.?.EXCEPTION, self, self.commonStrings.?.INIT, e });
+//             _ = Inheritance.callStatic(PreLogUtil, "putOE", .{ Inheritance.fieldPointer(self.commonStrings.?, "EXCEPTION").*, self, Inheritance.fieldPointer(self.commonStrings.?, "INIT").*, e });
     }
     
 

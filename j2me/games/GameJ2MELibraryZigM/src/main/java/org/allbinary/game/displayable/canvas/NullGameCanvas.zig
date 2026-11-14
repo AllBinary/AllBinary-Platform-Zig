@@ -18,9 +18,9 @@ const allocator = std.heap.page_allocator;
 const String = @import("java/lang/String.zig").String;
 const Object = @import("java/lang/Object.zig").Object;
 const Inheritance = @import("zig/Inheritance.zig");
-// const CommandListener = @import("javax/microedition/lcdui/CommandListener.zig").CommandListener;
-// const Graphics = @import("javax/microedition/lcdui/Graphics.zig").Graphics;
-// const NullCommandListener = @import("javax/microedition/lcdui/NullCommandListener.zig").NullCommandListener;
+const CommandListener = @import("javax/microedition/lcdui/CommandListener.zig").CommandListener;
+const Graphics = @import("javax/microedition/lcdui/Graphics.zig").Graphics;
+const NullCommandListener = @import("javax/microedition/lcdui/NullCommandListener.zig").NullCommandListener;
 const BasicBuildGameInitializerFactory = @import("org/allbinary/game/init/BasicBuildGameInitializerFactory.zig").BasicBuildGameInitializerFactory;
 const AllBinaryGameLayerManager = @import("org/allbinary/game/layer/AllBinaryGameLayerManager.zig").AllBinaryGameLayerManager;
 const NoHighScoresFactory = @import("org/allbinary/game/score/NoHighScoresFactory.zig").NoHighScoresFactory;
@@ -28,6 +28,8 @@ const NullUtil = @import("org/allbinary/logic/NullUtil.zig").NullUtil;
 const LogUtil = @import("org/allbinary/logic/communication/log/LogUtil.zig").LogUtil;
 const CommonStrings = @import("org/allbinary/string/CommonStrings.zig").CommonStrings;
 const AllBinaryGameCanvas = @import("org/allbinary/game/displayable/canvas/AllBinaryGameCanvas.zig").AllBinaryGameCanvas;
+const Exception = @import("java/lang/Exception.zig").Exception;
+const RuntimeException = @import("java/lang/RuntimeException.zig").RuntimeException;
 
 pub const NullGameCanvas = struct {
     const Self = @This();
@@ -40,7 +42,7 @@ pub const NullGameCanvas = struct {
 
     // Static fields with runtime initializers: call staticInit once at startup
     pub fn staticInit() void {
-        instance = Inheritance.upcast(?Object, NullUtil.getInstance().?.NULL_OBJECT);
+        instance = Inheritance.upcast(?Object, Inheritance.fieldPointer(NullUtil.getInstance().?, "NULL_OBJECT").*);
     }
 
     fn initFields(this: *Self) void {
@@ -53,13 +55,13 @@ pub const NullGameCanvas = struct {
             return Inheritance.callStatic(NullGameCanvas, "create1", .{ AllBinaryGameLayerManager.getNullInstance() });
         }
         // catch (Exception e):
-//             _ = Inheritance.call(LogUtil.getInstance().?, "put", .{ CommonStrings.getInstance().?.EXCEPTION, String.literal("NullGameCanvas"), CommonStrings.getInstance().?.GET_INSTANCE, e });
+//             _ = Inheritance.call(LogUtil.getInstance().?, "put", .{ Inheritance.fieldPointer(CommonStrings.getInstance().?, "EXCEPTION").*, String.literal("NullGameCanvas"), Inheritance.fieldPointer(CommonStrings.getInstance().?, "GET_INSTANCE").*, e });
 //             std.debug.panic("{any}", .{error.RuntimeException});
     }
     
 
     pub fn getInstance() ?*NullGameCanvas {
-        if (Object.same(NullGameCanvas.instance, NullUtil.getInstance().?.NULL_OBJECT)) {
+        if (Object.same(NullGameCanvas.instance, Inheritance.fieldPointer(NullUtil.getInstance().?, "NULL_OBJECT").*)) {
             NullGameCanvas.instance = Inheritance.upcast(@TypeOf(NullGameCanvas.instance), NullGameCanvas.createNull());
         }
         return Inheritance.cast(?*NullGameCanvas, NullGameCanvas.instance);
@@ -144,11 +146,11 @@ pub const NullGameCanvas = struct {
 
     pub fn run(self: *Self) void {
         { // try
-            _ = Inheritance.call(Inheritance.fieldPointer(self, "logUtil").*.?, "putF", .{ Inheritance.fieldPointer(self, "commonStrings").*.?.START_RUNNABLE, self, Inheritance.fieldPointer(self, "commonStrings").*.?.RUN });
-            _ = Inheritance.call(Inheritance.fieldPointer(self, "logUtil").*.?, "putF", .{ Inheritance.fieldPointer(self, "commonStrings").*.?.END_RUNNABLE, self, Inheritance.fieldPointer(self, "commonStrings").*.?.RUN });
+            _ = Inheritance.call(Inheritance.fieldPointer(self, "logUtil").*.?, "putF", .{ Inheritance.fieldPointer(Inheritance.fieldPointer(self, "commonStrings").*.?, "START_RUNNABLE").*, self, Inheritance.fieldPointer(Inheritance.fieldPointer(self, "commonStrings").*.?, "RUN").* });
+            _ = Inheritance.call(Inheritance.fieldPointer(self, "logUtil").*.?, "putF", .{ Inheritance.fieldPointer(Inheritance.fieldPointer(self, "commonStrings").*.?, "END_RUNNABLE").*, self, Inheritance.fieldPointer(Inheritance.fieldPointer(self, "commonStrings").*.?, "RUN").* });
         }
         // catch (Exception e):
-//             _ = Inheritance.call(Inheritance.fieldPointer(self, "logUtil").*.?, "put", .{ Inheritance.fieldPointer(self, "commonStrings").*.?.EXCEPTION, self, Inheritance.fieldPointer(self, "commonStrings").*.?.RUN, e });
+//             _ = Inheritance.call(Inheritance.fieldPointer(self, "logUtil").*.?, "put", .{ Inheritance.fieldPointer(Inheritance.fieldPointer(self, "commonStrings").*.?, "EXCEPTION").*, self, Inheritance.fieldPointer(Inheritance.fieldPointer(self, "commonStrings").*.?, "RUN").*, e });
     }
     
 

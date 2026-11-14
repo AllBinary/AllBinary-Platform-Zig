@@ -21,6 +21,7 @@ const Inheritance = @import("zig/Inheritance.zig");
 const File = @import("java/io/File.zig").File;
 const PreLogUtil = @import("org/allbinary/logic/communication/log/PreLogUtil.zig").PreLogUtil;
 const AbFile = @import("org/allbinary/logic/io/file/AbFile.zig").AbFile;
+const Exception = @import("java/lang/Exception.zig").Exception;
 
 pub const FileWrapperUtil = struct {
     const Self = @This();

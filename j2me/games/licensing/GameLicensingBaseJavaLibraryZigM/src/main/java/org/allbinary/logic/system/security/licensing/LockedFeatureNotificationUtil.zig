@@ -27,6 +27,7 @@ const SmallIntegerSingletonFactory = @import("org/allbinary/logic/math/SmallInte
 const ErrorSound = @import("org/allbinary/media/audio/ErrorSound.zig").ErrorSound;
 const PrimaryPlayerQueueFactory = @import("org/allbinary/media/audio/PrimaryPlayerQueueFactory.zig").PrimaryPlayerQueueFactory;
 const LicenseStrings = @import("org/allbinary/logic/system/security/licensing/LicenseStrings.zig").LicenseStrings;
+const Exception = @import("java/lang/Exception.zig").Exception;
 
 pub const LockedFeatureNotificationUtil = struct {
     const Self = @This();
@@ -40,7 +41,7 @@ pub const LockedFeatureNotificationUtil = struct {
     }
 
     fn initFields(this: *Self) void {
-        this.gameNotificationEvent = Inheritance.callStatic(GameNotificationEvent, "create5", .{ this, LicenseStrings.getInstance().?.LOCKED, Inheritance.call(SmallIntegerSingletonFactory.getInstance().?, "getAt", .{ 3 }), BasicColorFactory.getInstance().?.RED, BooleanFactory.getInstance().?.FALSE });
+        this.gameNotificationEvent = Inheritance.callStatic(GameNotificationEvent, "create5", .{ this, Inheritance.fieldPointer(LicenseStrings.getInstance().?, "LOCKED").*, Inheritance.call(SmallIntegerSingletonFactory.getInstance().?, "getAt", .{ 3 }), Inheritance.fieldPointer(BasicColorFactory.getInstance().?, "RED").*, Inheritance.fieldPointer(BooleanFactory.getInstance().?, "FALSE").* });
     }
 
     pub fn create() *Self {

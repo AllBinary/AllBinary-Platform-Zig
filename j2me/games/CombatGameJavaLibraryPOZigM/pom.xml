@@ -48,11 +48,11 @@
         <module>../../../allbinary_src/licensing/ClientInfoLicensingJavaLibraryZigM</module>
 
         <module>../../games/licensing/PartnerJ2MEJavaLibraryZigM</module>
-        <module>../../games/licensing/PartnerHTMLJavaLibraryZigM</module>
-        <module>../../games/licensing/PartnerAndroidJavaLibraryZigM</module>
+        <!--<module>../../games/licensing/PartnerHTMLJavaLibraryZigM</module>-->
+        <!--<module>../../games/licensing/PartnerAndroidJavaLibraryZigM</module>-->
         <module>../../games/licensing/NoGameLicensingJavaLibraryZigM</module>
         <module>../../games/licensing/GameLicensingOnlyDemoJavaLibraryZigM</module>
-        <module>../../games/licensing/GameLicensingOnlyNormalJavaLibraryZigM</module>
+        <!--<module>../../games/licensing/GameLicensingOnlyNormalJavaLibraryZigM</module>-->
         <module>../../games/licensing/GameLicensingBaseJavaLibraryZigM</module>
 
         <!--
@@ -61,7 +61,7 @@
         <module>../../games/GameScoresBaseJ2MELibraryZigM</module>
         -->
         <module>../../games/GameScoresLocalJavaLibraryZigM</module>
-        <module>../../games/GameScoresRemoteAndLocalJavaLibraryZigM</module>
+        <!--<module>../../games/GameScoresRemoteAndLocalJavaLibraryZigM</module>-->
 
         <module>../../../store/ThirdPartyStoreJavaLibraryZigM</module>
         <module>../../../store/NoThirdPartyStoreJavaLibraryZigM</module>
@@ -111,20 +111,20 @@
         <module>../../../../work/j2me/games/strategy/rts/RTSGameJavaLibraryP</module>
         -->
 
-        <module>../../media/graphics/OtherGraphicsMediaLibraryP</module>
+        <module>../../media/graphics/OtherGraphicsMediaLibraryZigP</module>
 
         <module>../../input/NoTouchButtonResourceAnimationJavaLibraryZigM</module>
         <module>../../input/TouchButtonResourceAnimationJavaLibraryZigM</module>
         <module>../../input/TouchButtonResourceOpenGLESAnimationJavaLibraryZigM</module>
 
         <module>../../input/TrackingEventJavaLibraryZigM</module>
-        <module>../../../game/behavior/BehaviorLibraryP</module>
+        <module>../../../game/behavior/BehaviorLibraryZigP</module>
 
-        <module>../../media/sound/OtherSoundMediaLibraryP</module>
+        <module>../../media/sound/OtherSoundMediaLibraryZigP</module>
 
         <module>../../../allbinary_src/licensing/ApplicationConfigurationJavaLibraryZigM</module>
         <module>../../../allbinary_src/licensing/ApplicationConfigurationNoFSJavaLibraryZigM</module>
-        <module>../../input/AllBinaryMagneticFieldSensorJavaLibraryZigM</module>
+        <!--<module>../../input/AllBinaryMagneticFieldSensorJavaLibraryZigM</module>-->
         <module>../../android/VirtualKeyboardJavaLibraryZigM</module>
 
     </modules>

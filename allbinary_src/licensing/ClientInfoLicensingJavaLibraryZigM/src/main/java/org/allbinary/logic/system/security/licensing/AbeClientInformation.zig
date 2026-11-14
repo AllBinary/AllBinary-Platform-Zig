@@ -27,6 +27,7 @@ const StringValidationUtil = @import("org/allbinary/logic/string/StringValidatio
 const OperatingSystemFactory = @import("org/allbinary/logic/system/os/OperatingSystemFactory.zig").OperatingSystemFactory;
 const CommonStrings = @import("org/allbinary/string/CommonStrings.zig").CommonStrings;
 const ClientInformation = @import("org/allbinary/logic/system/security/licensing/ClientInformation.zig").ClientInformation;
+const Exception = @import("java/lang/Exception.zig").Exception;
 
 // This is the information sent to the license server
 pub const AbeClientInformation = struct {
@@ -62,12 +63,12 @@ pub const AbeClientInformation = struct {
                 _ = Inheritance.call(self, "setLicenseId", .{ NONE });
             }
             const commonStrings: ?*CommonStrings = Inheritance.upcast(?*CommonStrings, CommonStrings.getInstance());
-            _ = Inheritance.callStatic(PreLogUtil, "put", .{ Object.toString(Object.of(Inheritance.call(Inheritance.call(StringMaker.create(), "append", .{ String.literal("Special Name: ") }).?, "append", .{ Inheritance.receiver(self, "getSpecialName").getSpecialName() }))), self, commonStrings.?.CONSTRUCTOR });
+            _ = Inheritance.callStatic(PreLogUtil, "put", .{ Object.toString(Object.of(Inheritance.call(Inheritance.call(StringMaker.create(), "append", .{ String.literal("Special Name: ") }).?, "append", .{ Inheritance.receiver(self, "getSpecialName").getSpecialName() }))), self, Inheritance.fieldPointer(commonStrings.?, "CONSTRUCTOR").* });
         }
         // catch (Exception e):
 //             const logUtil: ?*LogUtil = Inheritance.upcast(?*LogUtil, LogUtil.getInstance()); _ = logUtil;
 //             const commonStrings: ?*CommonStrings = Inheritance.upcast(?*CommonStrings, CommonStrings.getInstance());
-//             _ = Inheritance.call(logUtil.?, "put", .{ commonStrings.?.EXCEPTION, self, commonStrings.?.CONSTRUCTOR, e });
+//             _ = Inheritance.call(logUtil.?, "put", .{ Inheritance.fieldPointer(commonStrings.?, "EXCEPTION").*, self, Inheritance.fieldPointer(commonStrings.?, "CONSTRUCTOR").*, e });
     }
 };
 

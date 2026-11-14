@@ -26,7 +26,7 @@ pub const GameKeyEventSourceInterface = struct {
     pointer: *anyopaque,
     object: Object,
     toStringFn: *const fn (pointer: *anyopaque) ?*String,
-    getSourceIdFn: *const fn (pointer: *anyopaque) i32,
+    getSourceIdFn: *const fn (interface_pointer: *anyopaque) i32,
 
     pub fn getSourceId(self: *Self) i32 {
         return self.getSourceIdFn(self.pointer);
@@ -38,14 +38,14 @@ pub const GameKeyEventSourceInterface = struct {
 
     // The interface value of an object with the methods. Like a Java class a method can be declared by the object or a superclass.
     pub fn of(object: anytype) ?*Self {
-        const Implementation = @TypeOf(object);
+        const ImplementationType = @TypeOf(object);
         const Methods = struct {
             fn toString(pointer: *anyopaque) ?*String {
-                const implementation: Implementation = @ptrCast(@alignCast(pointer));
+                const implementation: ImplementationType = @ptrCast(@alignCast(pointer));
                 return String.valueOf(implementation);
             }
-            fn getSourceId(pointer: *anyopaque) i32 {
-                const implementation: Implementation = @ptrCast(@alignCast(pointer));
+            fn getSourceId(interface_pointer: *anyopaque) i32 {
+                const implementation: ImplementationType = @ptrCast(@alignCast(interface_pointer));
                 return Inheritance.receiver(implementation, "getSourceId").getSourceId();
             }
         };

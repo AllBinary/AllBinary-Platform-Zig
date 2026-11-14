@@ -18,7 +18,7 @@ const allocator = std.heap.page_allocator;
 const String = @import("java/lang/String.zig").String;
 const Object = @import("java/lang/Object.zig").Object;
 const Inheritance = @import("zig/Inheritance.zig");
-// const Graphics = @import("javax/microedition/lcdui/Graphics.zig").Graphics;
+const Graphics = @import("javax/microedition/lcdui/Graphics.zig").Graphics;
 const HealthInterface = @import("org/allbinary/game/health/HealthInterface.zig").HealthInterface;
 const HealthVisitorInterface = @import("org/allbinary/game/health/HealthVisitorInterface.zig").HealthVisitorInterface;
 const PointFactory = @import("org/allbinary/graphics/PointFactory.zig").PointFactory;
@@ -26,6 +26,7 @@ const Rectangle = @import("org/allbinary/graphics/Rectangle.zig").Rectangle;
 const AllBinaryLayer = @import("org/allbinary/layer/AllBinaryLayer.zig").AllBinaryLayer;
 const StringUtil = @import("org/allbinary/logic/string/StringUtil.zig").StringUtil;
 const ViewPosition = @import("org/allbinary/view/ViewPosition.zig").ViewPosition;
+const Exception = @import("java/lang/Exception.zig").Exception;
 
 pub const HealLayer = struct {
     const Self = @This();
@@ -37,7 +38,7 @@ pub const HealLayer = struct {
     pub fn create() *Self {
         const this = allocator.create(Self) catch unreachable;
         this.* = .{};
-        this.base = Inheritance.callStatic(AllBinaryLayer, "create3", .{ StringUtil.getInstance().?.EMPTY_STRING, Inheritance.callStatic(Rectangle, "create3", .{ PointFactory.getInstance().?.ZERO_ZERO, 0, 0 }), ViewPosition.getInstanceD() }).*;
+        this.base = Inheritance.callStatic(AllBinaryLayer, "create3", .{ Inheritance.fieldPointer(StringUtil.getInstance().?, "EMPTY_STRING").*, Inheritance.callStatic(Rectangle, "create3", .{ Inheritance.fieldPointer(PointFactory.getInstance().?, "ZERO_ZERO").*, 0, 0 }), ViewPosition.getInstanceD() }).*;
         Inheritance.bindOverrides(this);
         return this;
     }

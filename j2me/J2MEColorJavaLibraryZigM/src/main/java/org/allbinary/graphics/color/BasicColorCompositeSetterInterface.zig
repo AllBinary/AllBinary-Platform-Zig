@@ -29,7 +29,7 @@ pub const BasicColorCompositeSetterInterface = struct {
     pointer: *anyopaque,
     object: Object,
     toStringFn: *const fn (pointer: *anyopaque) ?*String,
-    setBasicColorPFn: *const fn (pointer: *anyopaque, basicColor: ?*BasicColor) void,
+    setBasicColorPFn: *const fn (interface_pointer: *anyopaque, basicColor: ?*BasicColor) void,
 
     pub fn setBasicColorP(self: *Self, basicColor: ?*BasicColor) void {
         return self.setBasicColorPFn(self.pointer, basicColor);
@@ -41,15 +41,15 @@ pub const BasicColorCompositeSetterInterface = struct {
 
     // The interface value of an object with the methods. Like a Java class a method can be declared by the object or a superclass.
     pub fn of(object: anytype) ?*Self {
-        const Implementation = @TypeOf(object);
+        const ImplementationType = @TypeOf(object);
         const Methods = struct {
             fn toString(pointer: *anyopaque) ?*String {
-                const implementation: Implementation = @ptrCast(@alignCast(pointer));
+                const implementation: ImplementationType = @ptrCast(@alignCast(pointer));
                 return String.valueOf(implementation);
             }
-            fn setBasicColorP(pointer: *anyopaque, basicColor: ?*BasicColor) void {
-                const implementation: Implementation = @ptrCast(@alignCast(pointer));
-                return Inheritance.receiver(implementation, "setBasicColorP").setBasicColorP(basicColor);
+            fn setBasicColorP(interface_pointer: *anyopaque, basicColor: ?*BasicColor) void {
+                const implementation: ImplementationType = @ptrCast(@alignCast(interface_pointer));
+                return Inheritance.call(implementation, "setBasicColorP", .{ basicColor });
             }
         };
         const this = allocator.create(Self) catch unreachable;

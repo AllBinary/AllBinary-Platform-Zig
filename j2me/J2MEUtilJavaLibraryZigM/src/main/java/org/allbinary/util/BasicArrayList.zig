@@ -45,7 +45,7 @@ pub const BasicArrayList = struct {
     pub fn addAt(self: *Self, index: i32, element: ?Object) void {
         if (index > self.currentIndex or index < 0) {
             const stringBuffer: ?*StringMaker = StringMaker.create();
-            _ = Inheritance.call(stringBuffer.?, "append", .{ CommonLabels.getInstance().?.INDEX_LABEL });
+            _ = Inheritance.call(stringBuffer.?, "append", .{ Inheritance.fieldPointer(CommonLabels.getInstance().?, "INDEX_LABEL").* });
             _ = Inheritance.call(stringBuffer.?, "appendint", .{ index });
             _ = Inheritance.call(stringBuffer.?, "append", .{ BasicArrayList.SIZE });
             _ = Inheritance.call(stringBuffer.?, "appendint", .{ self.currentIndex });
@@ -68,7 +68,7 @@ pub const BasicArrayList = struct {
     pub fn removeAt(self: *Self, index: i32) ?Object {
         if (index >= self.currentIndex) {
             const stringBuffer: ?*StringMaker = StringMaker.create();
-            _ = Inheritance.call(stringBuffer.?, "append", .{ CommonLabels.getInstance().?.INDEX_LABEL });
+            _ = Inheritance.call(stringBuffer.?, "append", .{ Inheritance.fieldPointer(CommonLabels.getInstance().?, "INDEX_LABEL").* });
             _ = Inheritance.call(stringBuffer.?, "appendint", .{ index });
             _ = Inheritance.call(stringBuffer.?, "append", .{ BasicArrayList.SIZE });
             _ = Inheritance.call(stringBuffer.?, "appendint", .{ self.currentIndex });
@@ -85,11 +85,11 @@ pub const BasicArrayList = struct {
     
 
     pub fn remove(self: *Self, anyType: ?Object) bool {
-        if (anyType == null) {
+        if (Object.isNull(anyType)) {
             {
                 var index: i32 = 0;
                 while (index < self.currentIndex) : (index += 1) {
-                if (self.objectArray[@intCast(index)] == null) {
+                if (Object.isNull(self.objectArray[@intCast(index)])) {
                     const numMoved: i32 = self.currentIndex - index - 1;
                     if (numMoved > 0) {
                         _ = @memmove(self.objectArray[@intCast(index)..@intCast(index + numMoved)], self.objectArray[@intCast(index + 1)..@intCast(index + 1 + numMoved)]);
@@ -183,11 +183,11 @@ pub const BasicArrayList = struct {
     
 
     pub fn indexOf(self: *Self, anyType: ?Object) i32 {
-        if (anyType == null) {
+        if (Object.isNull(anyType)) {
             {
                 var i: i32 = 0;
                 while (i < self.currentIndex) : (i += 1) {
-                if (self.objectArray[@intCast(i)] == null) {
+                if (Object.isNull(self.objectArray[@intCast(i)])) {
                     return i;
                 }
                 }
@@ -207,11 +207,11 @@ pub const BasicArrayList = struct {
     
 
     pub fn lastIndexOf(self: *Self, anyType: ?Object) i32 {
-        if (anyType == null) {
+        if (Object.isNull(anyType)) {
             {
                 var i: i32 = self.currentIndex - 1;
                 while (i >= 0) : (i -= 1) {
-                if (self.objectArray[@intCast(i)] == null) {
+                if (Object.isNull(self.objectArray[@intCast(i)])) {
                     return i;
                 }
                 }
@@ -233,7 +233,7 @@ pub const BasicArrayList = struct {
     pub fn get(self: *Self, index: i32) ?Object {
         if (index >= self.currentIndex) {
             const stringBuffer: ?*StringMaker = StringMaker.create();
-            _ = Inheritance.call(stringBuffer.?, "append", .{ CommonLabels.getInstance().?.INDEX_LABEL });
+            _ = Inheritance.call(stringBuffer.?, "append", .{ Inheritance.fieldPointer(CommonLabels.getInstance().?, "INDEX_LABEL").* });
             _ = Inheritance.call(stringBuffer.?, "appendint", .{ index });
             _ = Inheritance.call(stringBuffer.?, "append", .{ BasicArrayList.SIZE });
             _ = Inheritance.call(stringBuffer.?, "appendint", .{ self.currentIndex });
@@ -246,7 +246,7 @@ pub const BasicArrayList = struct {
     pub fn set(self: *Self, index: i32, element: ?Object) ?Object {
         if (index >= self.currentIndex) {
             const stringBuffer: ?*StringMaker = StringMaker.create();
-            _ = Inheritance.call(stringBuffer.?, "append", .{ CommonLabels.getInstance().?.INDEX_LABEL });
+            _ = Inheritance.call(stringBuffer.?, "append", .{ Inheritance.fieldPointer(CommonLabels.getInstance().?, "INDEX_LABEL").* });
             _ = Inheritance.call(stringBuffer.?, "appendint", .{ index });
             _ = Inheritance.call(stringBuffer.?, "append", .{ BasicArrayList.SIZE });
             _ = Inheritance.call(stringBuffer.?, "appendint", .{ self.currentIndex });
@@ -317,7 +317,7 @@ pub const BasicArrayList = struct {
     
 
     pub fn toString(self: *Self) ?*String {
-        const COMMA_SEP: ?*String = Inheritance.upcast(?*String, CommonSeps.getInstance().?.COMMA_SEP);
+        const COMMA_SEP: ?*String = Inheritance.upcast(?*String, Inheritance.fieldPointer(CommonSeps.getInstance().?, "COMMA_SEP").*);
         const stringBuffer: ?*StringMaker = StringMaker.create();
         {
             var index: i32 = 0;

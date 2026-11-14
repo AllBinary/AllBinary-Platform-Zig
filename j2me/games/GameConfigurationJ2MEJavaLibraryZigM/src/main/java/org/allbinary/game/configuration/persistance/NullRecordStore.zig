@@ -18,7 +18,7 @@ const allocator = std.heap.page_allocator;
 const String = @import("java/lang/String.zig").String;
 const Object = @import("java/lang/Object.zig").Object;
 const Inheritance = @import("zig/Inheritance.zig");
-// const RecordStore = @import("javax/microedition/rms/RecordStore.zig").RecordStore;
+const RecordStore = @import("javax/microedition/rms/RecordStore.zig").RecordStore;
 
 pub const NullRecordStore = struct {
     const Self = @This();

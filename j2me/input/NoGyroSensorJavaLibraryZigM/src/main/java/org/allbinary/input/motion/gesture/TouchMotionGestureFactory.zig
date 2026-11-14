@@ -43,7 +43,7 @@ pub const TouchMotionGestureFactory = struct {
 
     // Static fields with runtime initializers: call staticInit once at startup
     pub fn staticInit() void {
-        instance = Inheritance.upcast(?Object, NullUtil.getInstance().?.NULL_OBJECT);
+        instance = Inheritance.upcast(?Object, Inheritance.fieldPointer(NullUtil.getInstance().?, "NULL_OBJECT").*);
     }
 
     fn initFields(this: *Self) void {
@@ -66,7 +66,7 @@ pub const TouchMotionGestureFactory = struct {
     
 
     pub fn getInstance() ?*TouchMotionGestureFactory {
-        if (Object.same(TouchMotionGestureFactory.instance, NullUtil.getInstance().?.NULL_OBJECT)) {
+        if (Object.same(TouchMotionGestureFactory.instance, Inheritance.fieldPointer(NullUtil.getInstance().?, "NULL_OBJECT").*)) {
             TouchMotionGestureFactory.instance = Inheritance.upcast(@TypeOf(TouchMotionGestureFactory.instance), TouchMotionGestureFactory.create());
         }
         return Inheritance.cast(?*TouchMotionGestureFactory, TouchMotionGestureFactory.instance);
@@ -77,7 +77,7 @@ pub const TouchMotionGestureFactory = struct {
         const this = allocator.create(Self) catch unreachable;
         this.* = .{};
         this.initFields();
-        const MAX: i32 = InputFactory.getInstance().?.MAX;
+        const MAX: i32 = Inheritance.fieldPointer(InputFactory.getInstance().?, "MAX").*;
         this.LEFT = Inheritance.callStatic(MotionGestureInput, "create2", .{ MAX - 3, String.literal("Left Touch") });
         this.RIGHT = Inheritance.callStatic(MotionGestureInput, "create2", .{ MAX - 4, String.literal("Right Touch") });
         this.UP = Inheritance.callStatic(MotionGestureInput, "create2", .{ MAX - 5, String.literal("Up Touch") });

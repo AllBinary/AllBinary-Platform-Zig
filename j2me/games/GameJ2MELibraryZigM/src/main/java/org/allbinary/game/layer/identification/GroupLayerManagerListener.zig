@@ -33,6 +33,7 @@ const CommonLabels = @import("org/allbinary/string/CommonLabels.zig").CommonLabe
 const CommonSeps = @import("org/allbinary/string/CommonSeps.zig").CommonSeps;
 const BasicArrayList = @import("org/allbinary/util/BasicArrayList.zig").BasicArrayList;
 const BasicArrayListD = @import("org/allbinary/util/BasicArrayListD.zig").BasicArrayListD;
+const Exception = @import("java/lang/Exception.zig").Exception;
 
 pub const GroupLayerManagerListener = struct {
     const Self = @This();
@@ -75,7 +76,7 @@ pub const GroupLayerManagerListener = struct {
         {
             var index: i32 = size - 1;
             while (index >= 0) : (index -= 1) {
-            groupList = Inheritance.cast(?*BasicArrayList, self.list.?.objectArray[@intCast(index)]);
+            groupList = Inheritance.cast(?*BasicArrayList, Inheritance.fieldPointer(self.list.?, "objectArray").*[@intCast(index)]);
             _ = groupList.?.clear();
             }
         }
@@ -89,32 +90,32 @@ pub const GroupLayerManagerListener = struct {
     
 
     pub fn getGroupSize(self: *Self, groupInterface: ?*Group) i32 {
-        const id: i32 = @as(i32, @intCast(groupInterface.?.getGroupId()));
+        const id: i32 = Inheritance.number(i32, groupInterface.?.getGroupId());
         return Inheritance.call(self, "getGroupSizeById", .{ id });
     }
     
 
     pub fn getList(self: *Self, groupInterface: ?*Group) ?*BasicArrayList {
-        const id: i32 = @as(i32, @intCast(groupInterface.?.getGroupId()));
+        const id: i32 = Inheritance.number(i32, groupInterface.?.getGroupId());
         return Inheritance.upcast(?*BasicArrayList, Inheritance.call(self, "getListById", .{ id }));
     }
     
 
     pub fn getListById(self: *Self, groupId: i32) ?*BasicArrayList {
-        const groupList: ?*BasicArrayList = Inheritance.cast(?*BasicArrayList, self.list.?.objectArray[@intCast(groupId)]);
+        const groupList: ?*BasicArrayList = Inheritance.cast(?*BasicArrayList, Inheritance.fieldPointer(self.list.?, "objectArray").*[@intCast(groupId)]);
         return groupList;
     }
     
 
     pub fn getGroupSizeById(self: *Self, groupId: i32) i32 {
-        const groupList: ?*BasicArrayList = Inheritance.cast(?*BasicArrayList, self.list.?.objectArray[@intCast(groupId)]);
+        const groupList: ?*BasicArrayList = Inheritance.cast(?*BasicArrayList, Inheritance.fieldPointer(self.list.?, "objectArray").*[@intCast(groupId)]);
         const size: i32 = groupList.?.size();
         return size;
     }
     
 
     pub fn areAllOtherGroupsEmpty(self: *Self, groupInterface: ?*Group) bool {
-        const id: i32 = @as(i32, @intCast(groupInterface.?.getGroupId()));
+        const id: i32 = Inheritance.number(i32, groupInterface.?.getGroupId());
         const size: i32 = self.list.?.size();
         {
             var index: i32 = size - 1;
@@ -141,13 +142,13 @@ pub const GroupLayerManagerListener = struct {
         {
             var index: i32 = size - 1;
             while (index >= 0) : (index -= 1) {
-            groupInterfaceArray = Inheritance.cast([]?*Group, excludeGroupList.?.objectArray[@intCast(index)]);
+            groupInterfaceArray = Inheritance.cast([]?*Group, Inheritance.fieldPointer(excludeGroupList.?, "objectArray").*[@intCast(index)]);
             const size2: i32 = @as(i32, @intCast(groupInterfaceArray.len));
             {
                 var index2: i32 = 0;
                 while (index2 < size2) : (index2 += 1) {
                 groupInterface = Inheritance.upcast(@TypeOf(groupInterface), groupInterfaceArray[@intCast(index2)]);
-                groupId = @as(i32, @intCast(groupInterface.?.getGroupId()));
+                groupId = Inheritance.number(i32, groupInterface.?.getGroupId());
                 if (groupId == id) {
                     return true;
                 }
@@ -185,7 +186,7 @@ pub const GroupLayerManagerListener = struct {
 
     pub fn onEvent(self: *Self, eventObject: ?*AllBinaryEventObject) void {
         _ = eventObject;
-        _ = Inheritance.callStatic(ForcedLogUtil, "log", .{ EventStrings.getInstance().?.PERFORMANCE_MESSAGE, self });
+        _ = Inheritance.callStatic(ForcedLogUtil, "log", .{ Inheritance.fieldPointer(EventStrings.getInstance().?, "PERFORMANCE_MESSAGE").*, self });
     }
     
 
@@ -199,9 +200,9 @@ pub const GroupLayerManagerListener = struct {
         {
             var index: i32 = 0;
             while (index < size) : (index += 1) {
-            id = @as(i32, @intCast(groupInterfaceArray[@intCast(index)].?.getGroupId()));
-            groupList = Inheritance.cast(?*BasicArrayList, self.list.?.objectArray[@intCast(id)]);
-            if (groupList == null) {
+            id = Inheritance.number(i32, groupInterfaceArray[@intCast(index)].?.getGroupId());
+            groupList = Inheritance.cast(?*BasicArrayList, Inheritance.fieldPointer(self.list.?, "objectArray").*[@intCast(id)]);
+            if (Object.isNull(groupList)) {
                 _ = Inheritance.call(self.logUtil.?, "putF", .{ Object.toString(Object.of(Inheritance.call(Inheritance.call(StringMaker.create(), "append", .{ String.literal("id: ") }).?, "appendint", .{ id }))), self, String.literal("onCreateLayerManagerEvent") });
             }
             if (!Inheritance.call(groupList.?, "contains", .{ layerInterface })) {
@@ -223,8 +224,8 @@ pub const GroupLayerManagerListener = struct {
         {
             var index: i32 = 0;
             while (index < size) : (index += 1) {
-            id = @as(i32, @intCast(groupInterfaceArray[@intCast(index)].?.getGroupId()));
-            groupList = Inheritance.cast(?*BasicArrayList, self.list.?.objectArray[@intCast(id)]);
+            id = Inheritance.number(i32, groupInterfaceArray[@intCast(index)].?.getGroupId());
+            groupList = Inheritance.cast(?*BasicArrayList, Inheritance.fieldPointer(self.list.?, "objectArray").*[@intCast(id)]);
             _ = Inheritance.call(groupList.?, "remove", .{ layerInterface });
             }
         }
@@ -234,13 +235,13 @@ pub const GroupLayerManagerListener = struct {
     pub fn log(self: *Self) void {
         const stringBuffer: ?*StringMaker = StringMaker.create();
         const GROUP: ?*String = String.literal("Group: ");
-        const SPACE: ?*String = Inheritance.upcast(?*String, CommonSeps.getInstance().?.SPACE);
-        const TOTAL_LABEL: ?*String = Inheritance.upcast(?*String, CommonLabels.getInstance().?.TOTAL_LABEL);
+        const SPACE: ?*String = Inheritance.upcast(?*String, Inheritance.fieldPointer(CommonSeps.getInstance().?, "SPACE").*);
+        const TOTAL_LABEL: ?*String = Inheritance.upcast(?*String, Inheritance.fieldPointer(CommonLabels.getInstance().?, "TOTAL_LABEL").*);
         const size: i32 = self.list.?.size();
         {
             var index: i32 = size - 1;
             while (index >= 0) : (index -= 1) {
-            const groupList: ?*BasicArrayList = Inheritance.cast(?*BasicArrayList, self.list.?.objectArray[@intCast(index)]);
+            const groupList: ?*BasicArrayList = Inheritance.cast(?*BasicArrayList, Inheritance.fieldPointer(self.list.?, "objectArray").*[@intCast(index)]);
             _ = Inheritance.call(stringBuffer.?, "append", .{ GROUP });
             _ = Inheritance.call(stringBuffer.?, "appendint", .{ index });
             _ = Inheritance.call(stringBuffer.?, "append", .{ SPACE });

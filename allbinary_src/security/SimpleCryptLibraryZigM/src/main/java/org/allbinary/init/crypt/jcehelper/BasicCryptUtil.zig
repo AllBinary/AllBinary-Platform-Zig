@@ -18,12 +18,13 @@ const allocator = std.heap.page_allocator;
 const String = @import("java/lang/String.zig").String;
 const Object = @import("java/lang/Object.zig").Object;
 const Inheritance = @import("zig/Inheritance.zig");
-// const ByteArrayInputStream = @import("java/io/ByteArrayInputStream.zig").ByteArrayInputStream;
+const ByteArrayInputStream = @import("java/io/ByteArrayInputStream.zig").ByteArrayInputStream;
 const ByteArrayOutputStream = @import("java/io/ByteArrayOutputStream.zig").ByteArrayOutputStream;
-// const InputStream = @import("java/io/InputStream.zig").InputStream;
+const InputStream = @import("java/io/InputStream.zig").InputStream;
 const TsUtil = @import("org/allbinary/TsUtil.zig").TsUtil;
 const LogUtil = @import("org/allbinary/logic/communication/log/LogUtil.zig").LogUtil;
 const CryptInterface = @import("org/allbinary/init/crypt/jcehelper/CryptInterface.zig").CryptInterface;
+const Exception = @import("java/lang/Exception.zig").Exception;
 
 pub const BasicCryptUtil = struct {
     const Self = @This();

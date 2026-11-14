@@ -32,7 +32,7 @@ pub const AbFileLocalInputStream = struct {
     pub fn create1(file: ?*AbFile) *Self {
         const this = allocator.create(Self) catch unreachable;
         this.* = .{};
-        this.base = Inheritance.callStatic(AbFileInputStream, "create1", .{ Inheritance.callStatic(AbFileNativeUtil, "get", .{ file }) }).*;
+        this.base = Inheritance.callStatic(AbFileInputStream, "create1", .{ Inheritance.receiverOf(Inheritance.callStatic(AbFileNativeUtil, "get", .{ file }).?, "getPath").getPath() }).*;
         Inheritance.bindOverrides(this);
         return this;
     }

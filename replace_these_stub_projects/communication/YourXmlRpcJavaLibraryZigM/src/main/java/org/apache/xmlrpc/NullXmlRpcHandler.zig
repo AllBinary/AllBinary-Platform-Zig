@@ -22,6 +22,7 @@ const BasicArrayList = @import("org/allbinary/util/BasicArrayList.zig").BasicArr
 const BasicArrayListD = @import("org/allbinary/util/BasicArrayListD.zig").BasicArrayListD;
 const NullUtil = @import("org/allbinary/logic/NullUtil.zig").NullUtil;
 const XmlRpcHandler = @import("org/apache/xmlrpc/XmlRpcHandler.zig").XmlRpcHandler;
+const Exception = @import("java/lang/Exception.zig").Exception;
 
 pub const NullXmlRpcHandler = struct {
     const Self = @This();
@@ -47,7 +48,7 @@ pub const NullXmlRpcHandler = struct {
         _ = method;
         _ = params;
         _ = self;
-        return Inheritance.upcast(?Object, NullUtil.getInstance().?.NULL_OBJECT);
+        return Inheritance.upcast(?Object, Inheritance.fieldPointer(NullUtil.getInstance().?, "NULL_OBJECT").*);
     }
 };
 

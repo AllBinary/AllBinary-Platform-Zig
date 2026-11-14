@@ -18,7 +18,7 @@ const allocator = std.heap.page_allocator;
 const String = @import("java/lang/String.zig").String;
 const Object = @import("java/lang/Object.zig").Object;
 const Inheritance = @import("zig/Inheritance.zig");
-// const CommandListener = @import("javax/microedition/lcdui/CommandListener.zig").CommandListener;
+const CommandListener = @import("javax/microedition/lcdui/CommandListener.zig").CommandListener;
 const ResourceInitialization = @import("org/allbinary/game/resource/ResourceInitialization.zig").ResourceInitialization;
 const ResourceLoadingLevelFactory = @import("org/allbinary/game/resource/ResourceLoadingLevelFactory.zig").ResourceLoadingLevelFactory;
 const PointFactory = @import("org/allbinary/graphics/PointFactory.zig").PointFactory;
@@ -29,6 +29,7 @@ const AbeClientInformationInterface = @import("org/allbinary/logic/system/securi
 const AngleFactory = @import("org/allbinary/math/AngleFactory.zig").AngleFactory;
 const CommonStrings = @import("org/allbinary/string/CommonStrings.zig").CommonStrings;
 const BaseGameInitialization = @import("org/allbinary/game/init/BaseGameInitialization.zig").BaseGameInitialization;
+const Exception = @import("java/lang/Exception.zig").Exception;
 
 pub const CommonGameInitialization = struct {
     const Self = @This();
@@ -55,7 +56,7 @@ pub const CommonGameInitialization = struct {
     pub fn init(self: *Self, abeClientInformation: ?*AbeClientInformationInterface, commandListener: ?*CommandListener, level: i32) void {
         _ = Inheritance.call(&self.base, "init", .{ abeClientInformation, commandListener, level });
         const resourceLoadingLevelFactory: ?*ResourceLoadingLevelFactory = Inheritance.upcast(?*ResourceLoadingLevelFactory, ResourceLoadingLevelFactory.getInstance());
-        if (!Inheritance.receiver(self, "isGameInitialized").isGameInitialized() and level == Inheritance.receiverOf(resourceLoadingLevelFactory.?.LOAD_ALL.?, "getLevel").getLevel()) {
+        if (!Inheritance.receiver(self, "isGameInitialized").isGameInitialized() and level == Inheritance.receiverOf(Inheritance.fieldPointer(resourceLoadingLevelFactory.?, "LOAD_ALL").*.?, "getLevel").getLevel()) {
             _ = Inheritance.call(self, "setGameInitialized", .{ true });
             const progressCanvas: ?*ProgressCanvas = Inheritance.upcast(?*ProgressCanvas, ProgressCanvasFactory.getInstance());
             _ = Inheritance.receiverOf(SmallIntegerSingletonFactory.getInstance().?, "init").init();
@@ -73,7 +74,7 @@ pub const CommonGameInitialization = struct {
 
     // throws Exception
     pub fn initGame(self: *Self) void {
-        std.debug.panic("{any}", .{exception: { _ = self.commonStrings.?.NOT_IMPLEMENTED; break :exception error.Exception; }});
+        std.debug.panic("{any}", .{exception: { _ = Inheritance.fieldPointer(self.commonStrings.?, "NOT_IMPLEMENTED").*; break :exception error.Exception; }});
     }
 };
 

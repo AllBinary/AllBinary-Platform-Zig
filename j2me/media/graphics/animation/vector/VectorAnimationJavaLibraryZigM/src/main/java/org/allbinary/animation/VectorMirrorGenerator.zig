@@ -26,6 +26,7 @@ const CommonStrings = @import("org/allbinary/string/CommonStrings.zig").CommonSt
 const BasicArrayList = @import("org/allbinary/util/BasicArrayList.zig").BasicArrayList;
 const BasicArrayListS = @import("org/allbinary/util/BasicArrayListS.zig").BasicArrayListS;
 const VectorAnimationUtil = @import("org/allbinary/animation/VectorAnimationUtil.zig").VectorAnimationUtil;
+const Exception = @import("java/lang/Exception.zig").Exception;
 
 pub const VectorMirrorGenerator = struct {
     const Self = @This();
@@ -58,7 +59,7 @@ pub const VectorMirrorGenerator = struct {
     }
     
 
-    pub fn getInstance2(self: *Self, points: [][][]i32, width: i32) [][][]i32 {
+    pub fn getInstance2__intArrayArrayArray_int(self: *Self, points: [][][]i32, width: i32) [][][]i32 {
         { // try
             const pointFactory: ?*PointFactory = Inheritance.upcast(?*PointFactory, PointFactory.getInstance());
             var pointBasicArrayList: ?*BasicArrayList = null;
@@ -84,7 +85,7 @@ pub const VectorMirrorGenerator = struct {
             {
                 var index: i32 = 0;
                 while (index < @as(i32, @intCast(points.len))) : (index += 1) {
-                _ = Inheritance.call(pointsBasicArrayList.?, "add", .{ Inheritance.call(self, "getInstance", .{ Inheritance.cast(?*BasicArrayList, pointsBasicArrayList.?.objectArray[@intCast(index)]), width }) });
+                _ = Inheritance.call(pointsBasicArrayList.?, "add", .{ Inheritance.call(self, "getInstance", .{ Inheritance.cast(?*BasicArrayList, Inheritance.fieldPointer(pointsBasicArrayList.?, "objectArray").*[@intCast(index)]), width }) });
                 }
             }
             const newPoints: [][][]i32 = Inheritance.call(self.vectorAnimationUtil.?, "toAnimationArrayFromListOfPointList", .{ pointsBasicArrayList });
@@ -92,14 +93,14 @@ pub const VectorMirrorGenerator = struct {
         }
         // catch (Exception e):
 //             const commonStrings: ?*CommonStrings = Inheritance.upcast(?*CommonStrings, CommonStrings.getInstance()); _ = commonStrings;
-//             _ = Inheritance.call(self.logUtil.?, "put", .{ commonStrings.?.EXCEPTION, self, commonStrings.?.GET_INSTANCE, e });
-//             return NullUtil.getInstance().?.NULL_INT_ARRAY_ARRAY_ARRAY;
+//             _ = Inheritance.call(self.logUtil.?, "put", .{ Inheritance.fieldPointer(commonStrings.?, "EXCEPTION").*, self, Inheritance.fieldPointer(commonStrings.?, "GET_INSTANCE").*, e });
+//             return Inheritance.fieldPointer(NullUtil.getInstance().?, "NULL_INT_ARRAY_ARRAY_ARRAY").*;
     }
     
 
     // throws Exception
     // Java overloaded method with the same parameter count: Zig needs a different name
-    pub fn getInstance2(self: *Self, pointBasicArrayList: ?*BasicArrayList, width: i32) ?*BasicArrayList {
+    pub fn getInstance2__BasicArrayList_int(self: *Self, pointBasicArrayList: ?*BasicArrayList, width: i32) ?*BasicArrayList {
         _ = self;
         const graphicsPipe: ?*BasicGraphicsPipeline = Inheritance.callStatic(BasicGraphicsPipeline, "create1", .{ pointBasicArrayList });
         _ = graphicsPipe.?.createMatrix();

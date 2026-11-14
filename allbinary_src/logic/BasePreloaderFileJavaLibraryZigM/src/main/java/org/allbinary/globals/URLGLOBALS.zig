@@ -20,6 +20,7 @@ const Object = @import("java/lang/Object.zig").Object;
 const Inheritance = @import("zig/Inheritance.zig");
 const AppUrlGlobals = @import("org/allbinary/globals/AppUrlGlobals.zig").AppUrlGlobals;
 const UrlGlobalsInterface = @import("org/allbinary/globals/UrlGlobalsInterface.zig").UrlGlobalsInterface;
+const Exception = @import("java/lang/Exception.zig").Exception;
 
 pub const URLGLOBALS = struct {
     const Self = @This();

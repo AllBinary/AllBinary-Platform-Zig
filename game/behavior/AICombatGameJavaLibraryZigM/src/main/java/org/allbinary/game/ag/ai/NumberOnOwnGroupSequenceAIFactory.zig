@@ -30,6 +30,7 @@ const BasicArrayListD = @import("org/allbinary/util/BasicArrayListD.zig").BasicA
 const NumberInSameGroupSequence = @import("org/allbinary/game/ag/ai/NumberInSameGroupSequence.zig").NumberInSameGroupSequence;
 const NumberOnOwnGroupSequenceAI = @import("org/allbinary/game/ag/ai/NumberOnOwnGroupSequenceAI.zig").NumberOnOwnGroupSequenceAI;
 const Integer = @import("java/lang/Integer.zig").Integer;
+const Exception = @import("java/lang/Exception.zig").Exception;
 
 pub const NumberOnOwnGroupSequenceAIFactory = struct {
     const Self = @This();
@@ -50,13 +51,13 @@ pub const NumberOnOwnGroupSequenceAIFactory = struct {
 
     // throws Exception
     pub fn getInstance(self: *Self, hashtable: ?*ABHashtable, artificialIntelligenceInterface: []?*ArtificialIntelligenceInterface, ownerLayerInterface: ?*AllBinaryLayer, gameInput: ?*GameInput) ?*ArtificialIntelligenceInterface {
-        const integerArray: []?*Integer = NumberInSameGroupSequence.getInstance().?.NUMBER_ON_SAME_TEAM_SEQUENCE;
+        const integerArray: []?*Integer = Inheritance.fieldPointer(NumberInSameGroupSequence.getInstance().?, "NUMBER_ON_SAME_TEAM_SEQUENCE").*;
         const list: ?*BasicArrayList = Inheritance.upcast(?*BasicArrayList, BasicArrayListD.create());
         {
             var index: i32 = 0;
             while (index < @as(i32, @intCast(integerArray.len))) : (index += 1) {
             const integerCanBeNull: ?Object = Inheritance.upcast(?Object, Inheritance.call(hashtable.?, "get", .{ Inheritance.cast(?Object, integerArray[@intCast(index)]) }));
-            if (integerCanBeNull == null) {
+            if (Object.isNull(integerCanBeNull)) {
                 break;
             }
             _ = Inheritance.call(list.?, "add", .{ integerCanBeNull });
@@ -69,7 +70,7 @@ pub const NumberOnOwnGroupSequenceAIFactory = struct {
         _ = Inheritance.call(stringBuffer.?, "appendint", .{ @as(i32, @intCast(artificialIntelligenceInterface.len)) });
         _ = Inheritance.call(stringBuffer.?, "append", .{ String.literal(" + 1") });
         const commonStrings: ?*CommonStrings = Inheritance.upcast(?*CommonStrings, CommonStrings.getInstance());
-        _ = Inheritance.call(self.logUtil.?, "putF", .{ Object.toString(Object.of(stringBuffer)), self, commonStrings.?.GET_INSTANCE });
+        _ = Inheritance.call(self.logUtil.?, "putF", .{ Object.toString(Object.of(stringBuffer)), self, Inheritance.fieldPointer(commonStrings.?, "GET_INSTANCE").* });
         if (@as(i32, @intCast(artificialIntelligenceInterface.len)) - 1 > list.?.size()) {
             std.debug.panic("{any}", .{exception: { _ = String.literal("Not enough AI properties."); break :exception error.Exception; }});
         }
@@ -80,7 +81,7 @@ pub const NumberOnOwnGroupSequenceAIFactory = struct {
         {
             var index: i32 = 0;
             while (index < @as(i32, @intCast(numberOnSameTeam.len))) : (index += 1) {
-            numberOnSameTeam[@intCast(index)] = Inheritance.cast(?*Integer, list.?.objectArray[@intCast(index)]);
+            numberOnSameTeam[@intCast(index)] = Inheritance.cast(?*Integer, Inheritance.fieldPointer(list.?, "objectArray").*[@intCast(index)]);
             }
         }
         return Inheritance.upcast(?*ArtificialIntelligenceInterface, Inheritance.callStatic(NumberOnOwnGroupSequenceAI, "create4", .{ numberOnSameTeam, artificialIntelligenceInterface, ownerLayerInterface, gameInput }));

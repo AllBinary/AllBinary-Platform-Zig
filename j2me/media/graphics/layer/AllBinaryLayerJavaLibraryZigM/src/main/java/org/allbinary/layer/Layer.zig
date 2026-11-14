@@ -18,7 +18,7 @@ const allocator = std.heap.page_allocator;
 const String = @import("java/lang/String.zig").String;
 const Object = @import("java/lang/Object.zig").Object;
 const Inheritance = @import("zig/Inheritance.zig");
-// const Graphics = @import("javax/microedition/lcdui/Graphics.zig").Graphics;
+const Graphics = @import("javax/microedition/lcdui/Graphics.zig").Graphics;
 const CanvasStrings = @import("org/allbinary/graphics/displayable/CanvasStrings.zig").CanvasStrings;
 const LogUtil = @import("org/allbinary/logic/communication/log/LogUtil.zig").LogUtil;
 const SmallIntegerSingletonFactory = @import("org/allbinary/logic/math/SmallIntegerSingletonFactory.zig").SmallIntegerSingletonFactory;
@@ -129,7 +129,7 @@ pub const Layer = struct {
         _ = graphics;
         const commonStrings: ?*CommonStrings = Inheritance.upcast(?*CommonStrings, CommonStrings.getInstance());
         const canvasStrings: ?*CanvasStrings = Inheritance.upcast(?*CanvasStrings, CanvasStrings.getInstance());
-        _ = Inheritance.call(self.logUtil.?, "putF", .{ commonStrings.?.NOT_IMPLEMENTED, self, canvasStrings.?.PAINT });
+        _ = Inheritance.call(self.logUtil.?, "putF", .{ Inheritance.fieldPointer(commonStrings.?, "NOT_IMPLEMENTED").*, self, Inheritance.fieldPointer(canvasStrings.?, "PAINT").* });
     }
     
 

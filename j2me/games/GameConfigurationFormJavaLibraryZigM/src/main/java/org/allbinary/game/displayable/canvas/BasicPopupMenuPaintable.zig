@@ -18,8 +18,8 @@ const allocator = std.heap.page_allocator;
 const String = @import("java/lang/String.zig").String;
 const Object = @import("java/lang/Object.zig").Object;
 const Inheritance = @import("zig/Inheritance.zig");
-// const Font = @import("javax/microedition/lcdui/Font.zig").Font;
-// const Graphics = @import("javax/microedition/lcdui/Graphics.zig").Graphics;
+const Font = @import("javax/microedition/lcdui/Font.zig").Font;
+const Graphics = @import("javax/microedition/lcdui/Graphics.zig").Graphics;
 const AndroidUtil = @import("org/allbinary/AndroidUtil.zig").AndroidUtil;
 const J2MEUtil = @import("org/allbinary/J2MEUtil.zig").J2MEUtil;
 const Animation = @import("org/allbinary/animation/Animation.zig").Animation;
@@ -40,6 +40,7 @@ const OpenGLFeatureFactory = @import("org/allbinary/graphics/opengles/OpenGLFeat
 const OpenGLFeatureUtil = @import("org/allbinary/graphics/opengles/OpenGLFeatureUtil.zig").OpenGLFeatureUtil;
 const Paintable = @import("org/allbinary/graphics/paint/Paintable.zig").Paintable;
 const SWTJOGLProcessor = @import("org/allbinary/graphics/threed/SWTJOGLProcessor.zig").SWTJOGLProcessor;
+const Exception = @import("java/lang/Exception.zig").Exception;
 
 pub const BasicPopupMenuPaintable = struct {
     const Self = @This();
@@ -84,7 +85,7 @@ pub const BasicPopupMenuPaintable = struct {
         if (J2MEUtil.isJ2ME() or J2MEUtil.isHTML()) {
             this.animationInterface = Inheritance.upcast(@TypeOf(this.animationInterface), Inheritance.call(NullAnimationFactory.getFactoryInstance().?, "getInstance", .{ 0 }));
         } else {
-            this.animationInterface = Inheritance.upcast(@TypeOf(this.animationInterface), Inheritance.callStatic(RectangleFilledAnimation, "create3", .{ this.rectangle.?.getWidth(), this.rectangle.?.getHeight(), BasicColorFactory.getInstance().?.TRANSPARENT_GREY }));
+            this.animationInterface = Inheritance.upcast(@TypeOf(this.animationInterface), Inheritance.callStatic(RectangleFilledAnimation, "create3", .{ Inheritance.receiver(this.rectangle.?, "getWidth").getWidth(), Inheritance.receiver(this.rectangle.?, "getHeight").getHeight(), Inheritance.fieldPointer(BasicColorFactory.getInstance().?, "TRANSPARENT_GREY").* }));
         }
         _ = Inheritance.call(this, "init", .{ rectangle });
         Inheritance.bindOverrides(this);
@@ -95,7 +96,7 @@ pub const BasicPopupMenuPaintable = struct {
     pub fn updateMeasurement(self: *Self, graphics: ?*Graphics) void {
         const font: ?*Font = Inheritance.upcast(?*Font, graphics.?.getFont());
         const features: ?*Features = Inheritance.upcast(?*Features, Features.getInstance());
-        const isOpenGL: bool = Inheritance.call(features.?, "isDefault", .{ OpenGLFeatureFactory.getInstance().?.OPENGL });
+        const isOpenGL: bool = Inheritance.call(features.?, "isDefault", .{ Inheritance.fieldPointer(OpenGLFeatureFactory.getInstance().?, "OPENGL").* });
         _ = Inheritance.call(self.drawStringUtil.?, "updateMeasurement", .{ graphics, self.label });
         var BORDER: i32 = 0;
         if (J2MEUtil.isHTML() or isOpenGL) {
@@ -103,10 +104,10 @@ pub const BasicPopupMenuPaintable = struct {
         } else if (AndroidUtil.isAndroid() or J2MEUtil.isJ2SE() or SWTUtil.isSWT) {
             BORDER = Inheritance.callStatic(MyFontProcessor, "defaultCharWidth", .{ font });
         } else {
-            BORDER = Inheritance.callStatic(MyFontProcessor, "defaultCharWidth", .{ font }) * 2;
+            BORDER = Inheritance.arithmetic(.multiply, Inheritance.callStatic(MyFontProcessor, "defaultCharWidth", .{ font }), 2);
         }
         self.BORDER = BORDER;
-        self.heightOffset = self.rectangle.?.getHeight() - (font.?.getHeight() * Inheritance.receiverOf(BasicPopupMenuPaintable.NAME.?, "length").length());
+        self.heightOffset = Inheritance.arithmetic(.subtract, Inheritance.receiver(self.rectangle.?, "getHeight").getHeight(), (Inheritance.arithmetic(.multiply, font.?.getHeight(), Inheritance.receiverOf(BasicPopupMenuPaintable.NAME.?, "length").length())));
         if (Inheritance.receiverOf(OpenGLFeatureUtil.getInstance().?, "isAnyThreed").isAnyThreed()) {
             self.heightOffset -= font.?.getHeight() + 2;
             if (AndroidUtil.isAndroid()) {
@@ -115,7 +116,7 @@ pub const BasicPopupMenuPaintable = struct {
                 self.heightOffset -= font.?.getHeight() + 2;
             }
         }
-        self.offset = (self.heightOffset >> @intCast(1)) + ((if (Inheritance.receiverOf(SWTJOGLProcessor.getInstance().?, "isJOGL").isJOGL()) 4 else 0));
+        self.offset = (self.heightOffset >> @intCast(1)) + ((if (Inheritance.receiverOf(SWTJOGLProcessor.getInstance().?, "isJOGL").isJOGL()) @as(i32, 4) else 0));
         self.myFontProcessor = Inheritance.upcast(@TypeOf(self.myFontProcessor), MyFontProcessor.getInstance());
     }
     
@@ -123,8 +124,8 @@ pub const BasicPopupMenuPaintable = struct {
     // throws Exception
     pub fn init(self: *Self, rectangle: ?*Rectangle) void {
         self.rectangle = rectangle;
-        const width: i32 = self.rectangle.?.getWidth();
-        const height: i32 = self.rectangle.?.getHeight();
+        const width: i32 = Inheritance.receiver(self.rectangle.?, "getWidth").getWidth();
+        const height: i32 = Inheritance.receiver(self.rectangle.?, "getHeight").getHeight();
         if (J2MEUtil.isJ2ME() or J2MEUtil.isHTML()) {
         } else {
             const rectangleFilledAnimation: ?*RectangleFilledAnimation = Inheritance.cast(?*RectangleFilledAnimation, self.animationInterface);
@@ -136,11 +137,11 @@ pub const BasicPopupMenuPaintable = struct {
 
     pub fn paint(self: *Self, graphics: ?*Graphics) void {
         _ = Inheritance.call(self.myFontProcessor.?, "process", .{ graphics });
-        const point: ?*GPoint = Inheritance.upcast(?*GPoint, self.rectangle.?.getPoint());
+        const point: ?*GPoint = Inheritance.upcast(?*GPoint, Inheritance.receiver(self.rectangle.?, "getPoint").getPoint());
         const x: i32 = point.?.getX();
         const y: i32 = point.?.getY();
-        const width: i32 = self.rectangle.?.getWidth();
-        const height: i32 = self.rectangle.?.getHeight();
+        const width: i32 = Inheritance.receiver(self.rectangle.?, "getWidth").getWidth();
+        const height: i32 = Inheritance.receiver(self.rectangle.?, "getHeight").getHeight();
         _ = Inheritance.call(self.animationInterface.?, "paintXY", .{ graphics, x, y });
         _ = Inheritance.call(self.basicSetColorUtil.?, "setBasicColorP", .{ graphics, self.foregroundBasicColor });
         _ = Inheritance.call(self.drawStringUtil.?, "paintVerticle", .{ graphics, self.label, x + self.BORDER, y + self.offset, 0 });

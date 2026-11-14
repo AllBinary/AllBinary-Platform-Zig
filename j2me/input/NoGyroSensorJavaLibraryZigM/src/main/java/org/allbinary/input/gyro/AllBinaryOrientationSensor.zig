@@ -22,6 +22,7 @@ const CompleteMotionGestureInputEventListenerInterface = @import("org/allbinary/
 const NoCompleteMotionGestureInputEventListener = @import("org/allbinary/game/input/motion/action/NoCompleteMotionGestureInputEventListener.zig").NoCompleteMotionGestureInputEventListener;
 const AllBinarySensor = @import("org/allbinary/input/AllBinarySensor.zig").AllBinarySensor;
 const Orientation = @import("org/allbinary/logic/math/Orientation.zig").Orientation;
+const Exception = @import("java/lang/Exception.zig").Exception;
 
 pub const AllBinaryOrientationSensor = struct {
     const Self = @This();
@@ -57,7 +58,7 @@ pub const AllBinaryOrientationSensor = struct {
 
     // throws Exception
     pub fn getOrientation(self: *Self) ?*Orientation {
-        std.debug.panic("{any}", .{exception: { _ = Inheritance.fieldPointer(self, "commonStrings").*.?.NOT_IMPLEMENTED; break :exception error.Exception; }});
+        std.debug.panic("{any}", .{exception: { _ = Inheritance.fieldPointer(Inheritance.fieldPointer(self, "commonStrings").*.?, "NOT_IMPLEMENTED").*; break :exception error.Exception; }});
     }
 };
 

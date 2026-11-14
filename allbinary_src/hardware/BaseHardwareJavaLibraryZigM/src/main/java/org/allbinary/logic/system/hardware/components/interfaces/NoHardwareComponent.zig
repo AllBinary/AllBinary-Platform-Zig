@@ -55,7 +55,7 @@ pub const NoHardwareComponent = struct {
 
     pub fn toString(self: *Self) ?*String {
         _ = self;
-        return Inheritance.upcast(?*String, StringUtil.getInstance().?.NULL_STRING);
+        return Inheritance.upcast(?*String, Inheritance.fieldPointer(StringUtil.getInstance().?, "NULL_STRING").*);
     }
 };
 

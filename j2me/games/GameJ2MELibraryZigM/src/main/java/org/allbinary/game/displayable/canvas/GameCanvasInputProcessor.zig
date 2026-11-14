@@ -18,7 +18,7 @@ const allocator = std.heap.page_allocator;
 const String = @import("java/lang/String.zig").String;
 const Object = @import("java/lang/Object.zig").Object;
 const Inheritance = @import("zig/Inheritance.zig");
-// const Canvas = @import("javax/microedition/lcdui/Canvas.zig").Canvas;
+const Canvas = @import("javax/microedition/lcdui/Canvas.zig").Canvas;
 const GameKey = @import("org/allbinary/game/input/GameKey.zig").GameKey;
 const GameKeyEventSourceInterface = @import("org/allbinary/game/input/GameKeyEventSourceInterface.zig").GameKeyEventSourceInterface;
 const GameKeyFactory = @import("org/allbinary/game/input/GameKeyFactory.zig").GameKeyFactory;
@@ -35,6 +35,7 @@ const SmallIntegerSingletonFactory = @import("org/allbinary/logic/math/SmallInte
 const StringMaker = @import("org/allbinary/logic/string/StringMaker.zig").StringMaker;
 const AllBinaryGameCanvas = @import("org/allbinary/game/displayable/canvas/AllBinaryGameCanvas.zig").AllBinaryGameCanvas;
 const Integer = @import("java/lang/Integer.zig").Integer;
+const Exception = @import("java/lang/Exception.zig").Exception;
 
 pub const GameCanvasInputProcessor = struct {
     const Self = @This();
@@ -83,14 +84,14 @@ pub const GameCanvasInputProcessor = struct {
                 _ = Inheritance.call(self.downGameKeyEventHandler.?, "fireEvent", .{ gameKeyEvent });
                 _ = Inheritance.call(Inheritance.call(self.downGameKeyEventHandler.?, "getInstanceForDevice", .{ deviceId }).?, "fireEvent", .{ gameKeyEvent });
             } else {
-                _ = Inheritance.call(self.logUtil.?, "putF", .{ Object.toString(Object.of(Inheritance.call(Inheritance.call(StringMaker.create(), "append", .{ Inheritance.fieldPointer(self, "gameInputStrings").*.?.NO_KEY }).?, "appendint", .{ keyCode }))), self, Inheritance.fieldPointer(self, "gameInputStrings").*.?.ADD_KEY_EVENT });
+                _ = Inheritance.call(self.logUtil.?, "putF", .{ Object.toString(Object.of(Inheritance.call(Inheritance.call(StringMaker.create(), "append", .{ Inheritance.fieldPointer(Inheritance.fieldPointer(self, "gameInputStrings").*.?, "NO_KEY").* }).?, "appendint", .{ keyCode }))), self, Inheritance.fieldPointer(Inheritance.fieldPointer(self, "gameInputStrings").*.?, "ADD_KEY_EVENT").* });
             }
             const keyCodeAsInteger: ?*Integer = Inheritance.upcast(?*Integer, Inheritance.call(self.smallIntegerSingletonFactory.?, "getAtNoThrow", .{ keyCode }));
             _ = Inheritance.call(self.downKeyEventHandler.?, "fireEventI", .{ keyCodeAsInteger });
             _ = Inheritance.call(Inheritance.call(self.downKeyEventHandler.?, "getInstanceForDevice", .{ deviceId }).?, "fireEventI", .{ keyCodeAsInteger });
         }
         // catch (Exception e):
-//             _ = Inheritance.call(self.logUtil.?, "put", .{ String.literal("Key Event Error"), self, Inheritance.fieldPointer(self, "gameInputStrings").*.?.ADD_KEY_EVENT, e });
+//             _ = Inheritance.call(self.logUtil.?, "put", .{ String.literal("Key Event Error"), self, Inheritance.fieldPointer(Inheritance.fieldPointer(self, "gameInputStrings").*.?, "ADD_KEY_EVENT").*, e });
     }
     
 
@@ -109,11 +110,11 @@ pub const GameCanvasInputProcessor = struct {
                 _ = Inheritance.call(self.upGameKeyEventHandler.?, "fireEvent", .{ gameKeyEvent });
                 _ = Inheritance.call(Inheritance.call(self.upGameKeyEventHandler.?, "getInstanceForDevice", .{ deviceId }).?, "fireEvent", .{ gameKeyEvent });
             } else {
-                _ = Inheritance.call(self.logUtil.?, "putF", .{ Object.toString(Object.of(Inheritance.call(Inheritance.call(StringMaker.create(), "append", .{ Inheritance.fieldPointer(self, "gameInputStrings").*.?.NO_KEY }).?, "appendint", .{ keyCode }))), self, Inheritance.fieldPointer(self, "gameInputStrings").*.?.REMOVE_KEY_EVENT });
+                _ = Inheritance.call(self.logUtil.?, "putF", .{ Object.toString(Object.of(Inheritance.call(Inheritance.call(StringMaker.create(), "append", .{ Inheritance.fieldPointer(Inheritance.fieldPointer(self, "gameInputStrings").*.?, "NO_KEY").* }).?, "appendint", .{ keyCode }))), self, Inheritance.fieldPointer(Inheritance.fieldPointer(self, "gameInputStrings").*.?, "REMOVE_KEY_EVENT").* });
             }
         }
         // catch (Exception e):
-//             _ = Inheritance.call(self.logUtil.?, "put", .{ String.literal("Key Event Error"), self, Inheritance.fieldPointer(self, "gameInputStrings").*.?.REMOVE_KEY_EVENT, e });
+//             _ = Inheritance.call(self.logUtil.?, "put", .{ String.literal("Key Event Error"), self, Inheritance.fieldPointer(Inheritance.fieldPointer(self, "gameInputStrings").*.?, "REMOVE_KEY_EVENT").*, e });
     }
 };
 

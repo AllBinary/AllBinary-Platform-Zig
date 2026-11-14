@@ -22,6 +22,7 @@ const CollidableCompositeLayer = @import("org/allbinary/game/layer/CollidableCom
 const AllBinaryLayer = @import("org/allbinary/layer/AllBinaryLayer.zig").AllBinaryLayer;
 const NamedInterface = @import("org/allbinary/layer/NamedInterface.zig").NamedInterface;
 const CollisionType = @import("org/allbinary/game/collision/CollisionType.zig").CollisionType;
+const Exception = @import("java/lang/Exception.zig").Exception;
 
 // Java interface: an implementation is a pointer and a table of functions
 pub const CollidableInterface = struct {
@@ -31,10 +32,10 @@ pub const CollidableInterface = struct {
     object: Object,
     base: NamedInterface,
     toStringFn: *const fn (pointer: *anyopaque) ?*String,
-    isCollidableFn: *const fn (pointer: *anyopaque, ownerLayer: ?*CollidableCompositeLayer) bool,
-    isCollisionFn: *const fn (pointer: *anyopaque, ownerLayer: ?*CollidableCompositeLayer, collidableInterfaceCompositeInterface: ?*CollidableCompositeLayer) bool,
-    collideFn: *const fn (pointer: *anyopaque, ownerLayer: ?*CollidableCompositeLayer, collidableInterfaceCompositeInterface: ?*CollidableCompositeLayer) void,
-    getCollisionTypeWithFn: *const fn (pointer: *anyopaque, layerInterface: ?*AllBinaryLayer) ?*CollisionType,
+    isCollidableFn: *const fn (interface_pointer: *anyopaque, ownerLayer: ?*CollidableCompositeLayer) bool,
+    isCollisionFn: *const fn (interface_pointer: *anyopaque, ownerLayer: ?*CollidableCompositeLayer, collidableInterfaceCompositeInterface: ?*CollidableCompositeLayer) bool,
+    collideFn: *const fn (interface_pointer: *anyopaque, ownerLayer: ?*CollidableCompositeLayer, collidableInterfaceCompositeInterface: ?*CollidableCompositeLayer) void,
+    getCollisionTypeWithFn: *const fn (interface_pointer: *anyopaque, layerInterface: ?*AllBinaryLayer) ?*CollisionType,
 
     pub fn isCollidable(self: *Self, ownerLayer: ?*CollidableCompositeLayer) bool {
         return self.isCollidableFn(self.pointer, ownerLayer);
@@ -58,27 +59,27 @@ pub const CollidableInterface = struct {
 
     // The interface value of an object with the methods. Like a Java class a method can be declared by the object or a superclass.
     pub fn of(object: anytype) ?*Self {
-        const Implementation = @TypeOf(object);
+        const ImplementationType = @TypeOf(object);
         const Methods = struct {
             fn toString(pointer: *anyopaque) ?*String {
-                const implementation: Implementation = @ptrCast(@alignCast(pointer));
+                const implementation: ImplementationType = @ptrCast(@alignCast(pointer));
                 return String.valueOf(implementation);
             }
-            fn isCollidable(pointer: *anyopaque, ownerLayer: ?*CollidableCompositeLayer) bool {
-                const implementation: Implementation = @ptrCast(@alignCast(pointer));
-                return Inheritance.receiver(implementation, "isCollidable").isCollidable(ownerLayer);
+            fn isCollidable(interface_pointer: *anyopaque, ownerLayer: ?*CollidableCompositeLayer) bool {
+                const implementation: ImplementationType = @ptrCast(@alignCast(interface_pointer));
+                return Inheritance.call(implementation, "isCollidable", .{ ownerLayer });
             }
-            fn isCollision(pointer: *anyopaque, ownerLayer: ?*CollidableCompositeLayer, collidableInterfaceCompositeInterface: ?*CollidableCompositeLayer) bool {
-                const implementation: Implementation = @ptrCast(@alignCast(pointer));
-                return Inheritance.receiver(implementation, "isCollision").isCollision(ownerLayer, collidableInterfaceCompositeInterface);
+            fn isCollision(interface_pointer: *anyopaque, ownerLayer: ?*CollidableCompositeLayer, collidableInterfaceCompositeInterface: ?*CollidableCompositeLayer) bool {
+                const implementation: ImplementationType = @ptrCast(@alignCast(interface_pointer));
+                return Inheritance.call(implementation, "isCollision", .{ ownerLayer, collidableInterfaceCompositeInterface });
             }
-            fn collide(pointer: *anyopaque, ownerLayer: ?*CollidableCompositeLayer, collidableInterfaceCompositeInterface: ?*CollidableCompositeLayer) void {
-                const implementation: Implementation = @ptrCast(@alignCast(pointer));
-                return Inheritance.receiver(implementation, "collide").collide(ownerLayer, collidableInterfaceCompositeInterface);
+            fn collide(interface_pointer: *anyopaque, ownerLayer: ?*CollidableCompositeLayer, collidableInterfaceCompositeInterface: ?*CollidableCompositeLayer) void {
+                const implementation: ImplementationType = @ptrCast(@alignCast(interface_pointer));
+                return Inheritance.call(implementation, "collide", .{ ownerLayer, collidableInterfaceCompositeInterface });
             }
-            fn getCollisionTypeWith(pointer: *anyopaque, layerInterface: ?*AllBinaryLayer) ?*CollisionType {
-                const implementation: Implementation = @ptrCast(@alignCast(pointer));
-                return Inheritance.upcast(?*CollisionType, Inheritance.receiver(implementation, "getCollisionTypeWith").getCollisionTypeWith(layerInterface));
+            fn getCollisionTypeWith(interface_pointer: *anyopaque, layerInterface: ?*AllBinaryLayer) ?*CollisionType {
+                const implementation: ImplementationType = @ptrCast(@alignCast(interface_pointer));
+                return Inheritance.upcast(?*CollisionType, Inheritance.call(implementation, "getCollisionTypeWith", .{ layerInterface }));
             }
         };
         const this = allocator.create(Self) catch unreachable;

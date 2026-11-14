@@ -23,6 +23,7 @@ const AbFile = @import("org/allbinary/logic/io/file/AbFile.zig").AbFile;
 const AbPath = @import("org/allbinary/logic/io/path/AbPath.zig").AbPath;
 const AbFileInputStream = @import("org/allbinary/logic/io/AbFileInputStream.zig").AbFileInputStream;
 const AbFileOutputStream = @import("org/allbinary/logic/io/AbFileOutputStream.zig").AbFileOutputStream;
+const Exception = @import("java/lang/Exception.zig").Exception;
 
 pub const FileStreamFactory = struct {
     const Self = @This();
@@ -31,12 +32,12 @@ pub const FileStreamFactory = struct {
 
     // Static fields with runtime initializers: call staticInit once at startup
     pub fn staticInit() void {
-        SINGLETON = Inheritance.upcast(?Object, NullUtil.getInstance().?.NULL_OBJECT);
+        SINGLETON = Inheritance.upcast(?Object, Inheritance.fieldPointer(NullUtil.getInstance().?, "NULL_OBJECT").*);
     }
     
 
     pub fn getInstance() ?*FileStreamFactory {
-        if (Object.same(FileStreamFactory.SINGLETON, NullUtil.getInstance().?.NULL_OBJECT)) {
+        if (Object.same(FileStreamFactory.SINGLETON, Inheritance.fieldPointer(NullUtil.getInstance().?, "NULL_OBJECT").*)) {
             FileStreamFactory.SINGLETON = Inheritance.upcast(@TypeOf(FileStreamFactory.SINGLETON), FileStreamFactory.create());
         }
         return Inheritance.cast(?*FileStreamFactory, FileStreamFactory.SINGLETON);
@@ -55,7 +56,7 @@ pub const FileStreamFactory = struct {
         _ = self;
         const FILEABPATH: ?*AbPath = Inheritance.callStatic(AbPath, "create2", .{ path, fileName });
         const file: ?*AbFile = Inheritance.upcast(?*AbFile, Inheritance.callStatic(AbFile, "createAbFileFromAbPath", .{ FILEABPATH }));
-        return Inheritance.callStatic(AbFileInputStream, "create1", .{ file });
+        return Inheritance.upcast(?*AbFileInputStream, Inheritance.callStatic(AbFileInputStream, "createFromAbFile", .{ file }));
     }
     
 

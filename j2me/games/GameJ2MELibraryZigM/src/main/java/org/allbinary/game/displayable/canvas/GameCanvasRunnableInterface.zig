@@ -18,12 +18,13 @@ const allocator = std.heap.page_allocator;
 const String = @import("java/lang/String.zig").String;
 const Object = @import("java/lang/Object.zig").Object;
 const Inheritance = @import("zig/Inheritance.zig");
-// const CommandListener = @import("javax/microedition/lcdui/CommandListener.zig").CommandListener;
-// const ItemStateListener = @import("javax/microedition/lcdui/ItemStateListener.zig").ItemStateListener;
+const CommandListener = @import("javax/microedition/lcdui/CommandListener.zig").CommandListener;
+const ItemStateListener = @import("javax/microedition/lcdui/ItemStateListener.zig").ItemStateListener;
 const GameStateCompositeInterface = @import("org/allbinary/game/state/GameStateCompositeInterface.zig").GameStateCompositeInterface;
 const PaintableInterface = @import("org/allbinary/graphics/paint/PaintableInterface.zig").PaintableInterface;
 const RunnableInterface = @import("org/allbinary/thread/RunnableInterface.zig").RunnableInterface;
 const ABHashtable = @import("org/allbinary/util/ABHashtable.zig").ABHashtable;
+const Exception = @import("java/lang/Exception.zig").Exception;
 
 // Java interface: an implementation is a pointer and a table of functions
 pub const GameCanvasRunnableInterface = struct {
@@ -32,21 +33,24 @@ pub const GameCanvasRunnableInterface = struct {
     pointer: *anyopaque,
     object: Object,
     base: RunnableInterface,
+    base2: PaintableInterface,
+    base3: ItemStateListener,
+    base4: GameStateCompositeInterface,
     toStringFn: *const fn (pointer: *anyopaque) ?*String,
-    getTitleFn: *const fn (pointer: *anyopaque) ?*String,
-    isInitializedFn: *const fn (pointer: *anyopaque) bool,
-    isPausedFn: *const fn (pointer: *anyopaque) bool,
-    unPauseFn: *const fn (pointer: *anyopaque) void,
-    pauseFn: *const fn (pointer: *anyopaque) void,
-    isHighScoreSubmittedFn: *const fn (pointer: *anyopaque) bool,
-    setHighScoreSubmittedFn: *const fn (pointer: *anyopaque, highScoreSubmitted: bool) void,
-    processGameOverFn: *const fn (pointer: *anyopaque) void,
-    isGameOverFn: *const fn (pointer: *anyopaque) bool,
-    initCommandsFn: *const fn (pointer: *anyopaque, cmdListener: ?*CommandListener) void,
-    getCurrentStateHashtableFn: *const fn (pointer: *anyopaque) ?*ABHashtable,
-    getLoadStateHashtableFn: *const fn (pointer: *anyopaque) ?*ABHashtable,
-    setLoadStateHashtableFn: *const fn (pointer: *anyopaque, hashtable: ?*ABHashtable) void,
-    getTypeFn: *const fn (pointer: *anyopaque) i32,
+    getTitleFn: *const fn (interface_pointer: *anyopaque) ?*String,
+    isInitializedFn: *const fn (interface_pointer: *anyopaque) bool,
+    isPausedFn: *const fn (interface_pointer: *anyopaque) bool,
+    unPauseFn: *const fn (interface_pointer: *anyopaque) void,
+    pauseFn: *const fn (interface_pointer: *anyopaque) void,
+    isHighScoreSubmittedFn: *const fn (interface_pointer: *anyopaque) bool,
+    setHighScoreSubmittedFn: *const fn (interface_pointer: *anyopaque, highScoreSubmitted: bool) void,
+    processGameOverFn: *const fn (interface_pointer: *anyopaque) void,
+    isGameOverFn: *const fn (interface_pointer: *anyopaque) bool,
+    initCommandsFn: *const fn (interface_pointer: *anyopaque, cmdListener: ?*CommandListener) void,
+    getCurrentStateHashtableFn: *const fn (interface_pointer: *anyopaque) ?*ABHashtable,
+    getLoadStateHashtableFn: *const fn (interface_pointer: *anyopaque) ?*ABHashtable,
+    setLoadStateHashtableFn: *const fn (interface_pointer: *anyopaque, hashtable: ?*ABHashtable) void,
+    getTypeFn: *const fn (interface_pointer: *anyopaque) i32,
 
     pub fn getTitle(self: *Self) ?*String {
         return self.getTitleFn(self.pointer);
@@ -110,71 +114,71 @@ pub const GameCanvasRunnableInterface = struct {
 
     // The interface value of an object with the methods. Like a Java class a method can be declared by the object or a superclass.
     pub fn of(object: anytype) ?*Self {
-        const Implementation = @TypeOf(object);
+        const ImplementationType = @TypeOf(object);
         const Methods = struct {
             fn toString(pointer: *anyopaque) ?*String {
-                const implementation: Implementation = @ptrCast(@alignCast(pointer));
+                const implementation: ImplementationType = @ptrCast(@alignCast(pointer));
                 return String.valueOf(implementation);
             }
-            fn getTitle(pointer: *anyopaque) ?*String {
-                const implementation: Implementation = @ptrCast(@alignCast(pointer));
+            fn getTitle(interface_pointer: *anyopaque) ?*String {
+                const implementation: ImplementationType = @ptrCast(@alignCast(interface_pointer));
                 return Inheritance.upcast(?*String, Inheritance.receiver(implementation, "getTitle").getTitle());
             }
-            fn isInitialized(pointer: *anyopaque) bool {
-                const implementation: Implementation = @ptrCast(@alignCast(pointer));
+            fn isInitialized(interface_pointer: *anyopaque) bool {
+                const implementation: ImplementationType = @ptrCast(@alignCast(interface_pointer));
                 return Inheritance.receiver(implementation, "isInitialized").isInitialized();
             }
-            fn isPaused(pointer: *anyopaque) bool {
-                const implementation: Implementation = @ptrCast(@alignCast(pointer));
+            fn isPaused(interface_pointer: *anyopaque) bool {
+                const implementation: ImplementationType = @ptrCast(@alignCast(interface_pointer));
                 return Inheritance.receiver(implementation, "isPaused").isPaused();
             }
-            fn unPause(pointer: *anyopaque) void {
-                const implementation: Implementation = @ptrCast(@alignCast(pointer));
+            fn unPause(interface_pointer: *anyopaque) void {
+                const implementation: ImplementationType = @ptrCast(@alignCast(interface_pointer));
                 return Inheritance.receiver(implementation, "unPause").unPause();
             }
-            fn pause(pointer: *anyopaque) void {
-                const implementation: Implementation = @ptrCast(@alignCast(pointer));
+            fn pause(interface_pointer: *anyopaque) void {
+                const implementation: ImplementationType = @ptrCast(@alignCast(interface_pointer));
                 return Inheritance.receiver(implementation, "pause").pause();
             }
-            fn isHighScoreSubmitted(pointer: *anyopaque) bool {
-                const implementation: Implementation = @ptrCast(@alignCast(pointer));
+            fn isHighScoreSubmitted(interface_pointer: *anyopaque) bool {
+                const implementation: ImplementationType = @ptrCast(@alignCast(interface_pointer));
                 return Inheritance.receiver(implementation, "isHighScoreSubmitted").isHighScoreSubmitted();
             }
-            fn setHighScoreSubmitted(pointer: *anyopaque, highScoreSubmitted: bool) void {
-                const implementation: Implementation = @ptrCast(@alignCast(pointer));
-                return Inheritance.receiver(implementation, "setHighScoreSubmitted").setHighScoreSubmitted(highScoreSubmitted);
+            fn setHighScoreSubmitted(interface_pointer: *anyopaque, highScoreSubmitted: bool) void {
+                const implementation: ImplementationType = @ptrCast(@alignCast(interface_pointer));
+                return Inheritance.call(implementation, "setHighScoreSubmitted", .{ highScoreSubmitted });
             }
-            fn processGameOver(pointer: *anyopaque) void {
-                const implementation: Implementation = @ptrCast(@alignCast(pointer));
+            fn processGameOver(interface_pointer: *anyopaque) void {
+                const implementation: ImplementationType = @ptrCast(@alignCast(interface_pointer));
                 return Inheritance.receiver(implementation, "processGameOver").processGameOver();
             }
-            fn isGameOver(pointer: *anyopaque) bool {
-                const implementation: Implementation = @ptrCast(@alignCast(pointer));
+            fn isGameOver(interface_pointer: *anyopaque) bool {
+                const implementation: ImplementationType = @ptrCast(@alignCast(interface_pointer));
                 return Inheritance.receiver(implementation, "isGameOver").isGameOver();
             }
-            fn initCommands(pointer: *anyopaque, cmdListener: ?*CommandListener) void {
-                const implementation: Implementation = @ptrCast(@alignCast(pointer));
-                return Inheritance.receiver(implementation, "initCommands").initCommands(cmdListener);
+            fn initCommands(interface_pointer: *anyopaque, cmdListener: ?*CommandListener) void {
+                const implementation: ImplementationType = @ptrCast(@alignCast(interface_pointer));
+                return Inheritance.call(implementation, "initCommands", .{ cmdListener });
             }
-            fn getCurrentStateHashtable(pointer: *anyopaque) ?*ABHashtable {
-                const implementation: Implementation = @ptrCast(@alignCast(pointer));
+            fn getCurrentStateHashtable(interface_pointer: *anyopaque) ?*ABHashtable {
+                const implementation: ImplementationType = @ptrCast(@alignCast(interface_pointer));
                 return Inheritance.upcast(?*ABHashtable, Inheritance.receiver(implementation, "getCurrentStateHashtable").getCurrentStateHashtable());
             }
-            fn getLoadStateHashtable(pointer: *anyopaque) ?*ABHashtable {
-                const implementation: Implementation = @ptrCast(@alignCast(pointer));
+            fn getLoadStateHashtable(interface_pointer: *anyopaque) ?*ABHashtable {
+                const implementation: ImplementationType = @ptrCast(@alignCast(interface_pointer));
                 return Inheritance.upcast(?*ABHashtable, Inheritance.receiver(implementation, "getLoadStateHashtable").getLoadStateHashtable());
             }
-            fn setLoadStateHashtable(pointer: *anyopaque, hashtable: ?*ABHashtable) void {
-                const implementation: Implementation = @ptrCast(@alignCast(pointer));
-                return Inheritance.receiver(implementation, "setLoadStateHashtable").setLoadStateHashtable(hashtable);
+            fn setLoadStateHashtable(interface_pointer: *anyopaque, hashtable: ?*ABHashtable) void {
+                const implementation: ImplementationType = @ptrCast(@alignCast(interface_pointer));
+                return Inheritance.call(implementation, "setLoadStateHashtable", .{ hashtable });
             }
-            fn getType(pointer: *anyopaque) i32 {
-                const implementation: Implementation = @ptrCast(@alignCast(pointer));
+            fn getType(interface_pointer: *anyopaque) i32 {
+                const implementation: ImplementationType = @ptrCast(@alignCast(interface_pointer));
                 return Inheritance.receiver(implementation, "getType").getType();
             }
         };
         const this = allocator.create(Self) catch unreachable;
-        this.* = .{ .pointer = object, .object = Object.of(object).?, .base = RunnableInterface.of(object).?.*, .toStringFn = Methods.toString, .getTitleFn = Methods.getTitle, .isInitializedFn = Methods.isInitialized, .isPausedFn = Methods.isPaused, .unPauseFn = Methods.unPause, .pauseFn = Methods.pause, .isHighScoreSubmittedFn = Methods.isHighScoreSubmitted, .setHighScoreSubmittedFn = Methods.setHighScoreSubmitted, .processGameOverFn = Methods.processGameOver, .isGameOverFn = Methods.isGameOver, .initCommandsFn = Methods.initCommands, .getCurrentStateHashtableFn = Methods.getCurrentStateHashtable, .getLoadStateHashtableFn = Methods.getLoadStateHashtable, .setLoadStateHashtableFn = Methods.setLoadStateHashtable, .getTypeFn = Methods.getType };
+        this.* = .{ .pointer = object, .object = Object.of(object).?, .base = RunnableInterface.of(object).?.*, .base2 = PaintableInterface.of(object).?.*, .base3 = ItemStateListener.of(object).?.*, .base4 = GameStateCompositeInterface.of(object).?.*, .toStringFn = Methods.toString, .getTitleFn = Methods.getTitle, .isInitializedFn = Methods.isInitialized, .isPausedFn = Methods.isPaused, .unPauseFn = Methods.unPause, .pauseFn = Methods.pause, .isHighScoreSubmittedFn = Methods.isHighScoreSubmitted, .setHighScoreSubmittedFn = Methods.setHighScoreSubmitted, .processGameOverFn = Methods.processGameOver, .isGameOverFn = Methods.isGameOver, .initCommandsFn = Methods.initCommands, .getCurrentStateHashtableFn = Methods.getCurrentStateHashtable, .getLoadStateHashtableFn = Methods.getLoadStateHashtable, .setLoadStateHashtableFn = Methods.setLoadStateHashtable, .getTypeFn = Methods.getType };
         return this;
     }
 };

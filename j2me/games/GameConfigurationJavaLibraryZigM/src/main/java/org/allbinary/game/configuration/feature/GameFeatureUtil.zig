@@ -19,7 +19,7 @@ const String = @import("java/lang/String.zig").String;
 const Object = @import("java/lang/Object.zig").Object;
 const Inheritance = @import("zig/Inheritance.zig");
 const Enumeration = @import("java/util/Enumeration.zig").Enumeration;
-// const ChoiceGroup = @import("javax/microedition/lcdui/ChoiceGroup.zig").ChoiceGroup;
+const ChoiceGroup = @import("javax/microedition/lcdui/ChoiceGroup.zig").ChoiceGroup;
 const TsUtil = @import("org/allbinary/TsUtil.zig").TsUtil;
 const LogUtil = @import("org/allbinary/logic/communication/log/LogUtil.zig").LogUtil;
 const StringMaker = @import("org/allbinary/logic/string/StringMaker.zig").StringMaker;
@@ -31,6 +31,7 @@ const HashtableUtil = @import("org/allbinary/util/HashtableUtil.zig").HashtableU
 const Feature = @import("org/allbinary/game/configuration/feature/Feature.zig").Feature;
 const Features = @import("org/allbinary/game/configuration/feature/Features.zig").Features;
 const GameFeatureChoiceGroups = @import("org/allbinary/game/configuration/feature/GameFeatureChoiceGroups.zig").GameFeatureChoiceGroups;
+const Exception = @import("java/lang/Exception.zig").Exception;
 
 pub const GameFeatureUtil = struct {
     const Self = @This();
@@ -74,7 +75,7 @@ pub const GameFeatureUtil = struct {
         const METHOD_NAME: ?*String = String.literal("setDefault");
         const SELECTED_ARRAY_RETURN: ?*String = String.literal("selectedArray_return[");
         const SELECTED_SEP: ?*String = String.literal("] = ");
-        const selectedArray_return: []bool = array_N66345: { const array_N66345_array = allocator.alloc(bool, @intCast(choiceGroup.?.size())) catch unreachable; @memset(array_N66345_array, false); break :array_N66345 array_N66345_array; };
+        const selectedArray_return: []bool = array_N66345: { const array_N66345_array = allocator.alloc(bool, @intCast(Inheritance.receiver(choiceGroup.?, "size").size())) catch unreachable; @memset(array_N66345_array, false); break :array_N66345 array_N66345_array; };
         const total: i32 = Inheritance.call(choiceGroup.?, "getSelectedFlags", .{ selectedArray_return });
         _ = Inheritance.call(stringBuffer.?, "append", .{ String.literal("Multiple Total Choices: ") });
         _ = Inheritance.call(stringBuffer.?, "appendint", .{ total });
@@ -110,7 +111,7 @@ pub const GameFeatureUtil = struct {
         const METHOD_NAME: ?*String = String.literal("updateMultiple");
         const SELECTED_ARRAY_RETURN: ?*String = String.literal("selectedArray_return[");
         const SELECTED_SEP: ?*String = String.literal("] = ");
-        const selectedArray_return: []bool = array_N67447: { const array_N67447_array = allocator.alloc(bool, @intCast(choiceGroup.?.size())) catch unreachable; @memset(array_N67447_array, false); break :array_N67447 array_N67447_array; };
+        const selectedArray_return: []bool = array_N67447: { const array_N67447_array = allocator.alloc(bool, @intCast(Inheritance.receiver(choiceGroup.?, "size").size())) catch unreachable; @memset(array_N67447_array, false); break :array_N67447 array_N67447_array; };
         const total: i32 = Inheritance.call(choiceGroup.?, "getSelectedFlags", .{ selectedArray_return });
         _ = Inheritance.call(stringBuffer.?, "append", .{ String.literal("Multiple Total Choices: ") });
         _ = Inheritance.call(stringBuffer.?, "appendint", .{ total });
@@ -144,7 +145,7 @@ pub const GameFeatureUtil = struct {
         const METHOD_NAME: ?*String = String.literal("updateExclusive");
         const SELECTED_ARRAY_RETURN: ?*String = String.literal("selectedArray_return[");
         const SELECTED_SEP: ?*String = String.literal("] = ");
-        const selectedArray_return: []bool = array_N68546: { const array_N68546_array = allocator.alloc(bool, @intCast(choiceGroup.?.size())) catch unreachable; @memset(array_N68546_array, false); break :array_N68546 array_N68546_array; };
+        const selectedArray_return: []bool = array_N68546: { const array_N68546_array = allocator.alloc(bool, @intCast(Inheritance.receiver(choiceGroup.?, "size").size())) catch unreachable; @memset(array_N68546_array, false); break :array_N68546 array_N68546_array; };
         const total: i32 = Inheritance.call(choiceGroup.?, "getSelectedFlags", .{ selectedArray_return });
         _ = Inheritance.call(stringBuffer.?, "append", .{ String.literal("Exclusive Total Choices: 1==") });
         _ = Inheritance.call(stringBuffer.?, "appendint", .{ total });
@@ -183,7 +184,7 @@ pub const GameFeatureUtil = struct {
 
     // throws Exception
     pub fn updateExclusive(self: *Self, selectedChoiceLabel: ?*String) void {
-        _ = Inheritance.call(self.logUtil.?, "putF", .{ Object.toString(Object.of(Inheritance.call(Inheritance.call(StringMaker.create(), "append", .{ CommonLabels.getInstance().?.ITEM_LABEL }).?, "append", .{ selectedChoiceLabel }))), self, String.literal("updateExclusive") });
+        _ = Inheritance.call(self.logUtil.?, "putF", .{ Object.toString(Object.of(Inheritance.call(Inheritance.call(StringMaker.create(), "append", .{ Inheritance.fieldPointer(CommonLabels.getInstance().?, "ITEM_LABEL").* }).?, "append", .{ selectedChoiceLabel }))), self, String.literal("updateExclusive") });
         const gameFeature: ?*Feature = Inheritance.upcast(?*Feature, Inheritance.callStatic(Feature, "getInstance", .{ selectedChoiceLabel }));
         const hashtable: ?*ABHashtable = Inheritance.upcast(?*ABHashtable, Inheritance.receiverOf(GameFeatureChoiceGroups.getExclusiveInstance().?, "get").get());
         const objectArray: []?Object = Inheritance.call(HashtableUtil.getInstance().?, "getKeysAsArray", .{ hashtable });
@@ -212,9 +213,9 @@ pub const GameFeatureUtil = struct {
                 var index: i32 = 0;
                 while (index < size) : (index += 1) {
                 if (addIndex != index) {
-                    _ = Inheritance.call(features.?, "remove", .{ Inheritance.cast(?*Feature, list.?.objectArray[@intCast(index)]) });
+                    _ = Inheritance.call(features.?, "remove", .{ Inheritance.cast(?*Feature, Inheritance.fieldPointer(list.?, "objectArray").*[@intCast(index)]) });
                 } else {
-                    _ = Inheritance.call(features.?, "add", .{ Inheritance.cast(?*Feature, list.?.objectArray[@intCast(index)]) });
+                    _ = Inheritance.call(features.?, "add", .{ Inheritance.cast(?*Feature, Inheritance.fieldPointer(list.?, "objectArray").*[@intCast(index)]) });
                 }
                 }
             }

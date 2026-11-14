@@ -42,7 +42,7 @@ pub const AutoCompoundRotationAnimationInterfaceFactory = struct {
 
     pub fn createArray(self: *Self, size: i32) []?*Animation {
         _ = self;
-        return array_N65807: { const array_N65807_array = allocator.alloc(?*RotationAnimation, @intCast(size)) catch unreachable; @memset(array_N65807_array, null); break :array_N65807 array_N65807_array; };
+        return array_N65807: { const array_N65807_array = allocator.alloc(?*Animation, @intCast(size)) catch unreachable; @memset(array_N65807_array, null); break :array_N65807 array_N65807_array; };
     }
     
 

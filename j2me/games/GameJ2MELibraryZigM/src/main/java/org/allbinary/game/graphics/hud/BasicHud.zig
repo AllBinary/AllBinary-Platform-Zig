@@ -18,7 +18,7 @@ const allocator = std.heap.page_allocator;
 const String = @import("java/lang/String.zig").String;
 const Object = @import("java/lang/Object.zig").Object;
 const Inheritance = @import("zig/Inheritance.zig");
-// const Graphics = @import("javax/microedition/lcdui/Graphics.zig").Graphics;
+const Graphics = @import("javax/microedition/lcdui/Graphics.zig").Graphics;
 const J2MEUtil = @import("org/allbinary/J2MEUtil.zig").J2MEUtil;
 const Anchor = @import("org/allbinary/graphics/Anchor.zig").Anchor;
 const GPoint = @import("org/allbinary/graphics/GPoint.zig").GPoint;
@@ -39,6 +39,7 @@ const EventStrings = @import("org/allbinary/logic/util/event/EventStrings.zig").
 const CommonStrings = @import("org/allbinary/string/CommonStrings.zig").CommonStrings;
 const BasicHudFactory = @import("org/allbinary/game/graphics/hud/BasicHudFactory.zig").BasicHudFactory;
 const HudGraphicsPosition = @import("org/allbinary/game/graphics/hud/HudGraphicsPosition.zig").HudGraphicsPosition;
+const Exception = @import("java/lang/Exception.zig").Exception;
 
 pub const BasicHud = struct {
     const Self = @This();
@@ -79,7 +80,7 @@ pub const BasicHud = struct {
         this.hudGraphicsPosition = Inheritance.upcast(?*HudGraphicsPosition, HudGraphicsPosition.NULL_HUD_GRAPHICS_POSITION);
         this.x = 0;
         this.y = 0;
-        this.basicColor = Inheritance.upcast(?*BasicColor, BasicColorFactory.getInstance().?.BLACK);
+        this.basicColor = Inheritance.upcast(?*BasicColor, Inheritance.fieldPointer(BasicColorFactory.getInstance().?, "BLACK").*);
         
         this.updateMaxWidth = 0;
         this.updateMaxHeight = 0;
@@ -94,7 +95,7 @@ pub const BasicHud = struct {
         _ = Inheritance.call(this, "setLocation", .{ location });
         _ = Inheritance.call(this, "setDirection", .{ direction });
         _ = Inheritance.call(this, "setBufferZone", .{ bufferZone });
-        _ = Inheritance.call(this, "onDisplayChangeEvent", .{ DisplayInfoSingleton.getInstance().?.displayChangeEvent });
+        _ = Inheritance.call(this, "onDisplayChangeEvent", .{ Inheritance.fieldPointer(DisplayInfoSingleton.getInstance().?, "displayChangeEvent").* });
         _ = Inheritance.call(this, "setBasicColorP", .{ basicColor });
         this.color = basicColor.?.intValue();
         return this;
@@ -110,7 +111,7 @@ pub const BasicHud = struct {
         }
         // catch (Exception e):
 //             const commonStrings: ?*CommonStrings = Inheritance.upcast(?*CommonStrings, CommonStrings.getInstance()); _ = commonStrings;
-//             _ = Inheritance.call(self.logUtil.?, "put", .{ commonStrings.?.EXCEPTION, self, self.canvasStrings.?.ON_DISPLAY_CHANGE_EVENT, e });
+//             _ = Inheritance.call(self.logUtil.?, "put", .{ Inheritance.fieldPointer(commonStrings.?, "EXCEPTION").*, self, Inheritance.fieldPointer(self.canvasStrings.?, "ON_DISPLAY_CHANGE_EVENT").*, e });
         self.myFontProcessor = Inheritance.upcast(@TypeOf(self.myFontProcessor), MyFontProcessor.getInstance());
     }
     
@@ -131,31 +132,31 @@ pub const BasicHud = struct {
         var y: i32 = 0;
         var anchor: i32 = 0;
         const basicHudFactory: ?*BasicHudFactory = Inheritance.upcast(?*BasicHudFactory, BasicHudFactory.getInstance());
-        if (basicHudFactory.?.BOTTOMLEFT == self.getLocation()) {
+        if (Inheritance.fieldPointer(basicHudFactory.?, "BOTTOMLEFT").* == self.getLocation()) {
             x = self.bufferZone + 2;
             y = height - maxHeight - self.bufferZone;
             anchor = Graphics.BOTTOM & Graphics.LEFT;
-        } else if (basicHudFactory.?.BOTTOMRIGHT == self.getLocation()) {
+        } else if (Inheritance.fieldPointer(basicHudFactory.?, "BOTTOMRIGHT").* == self.getLocation()) {
             x = width - maxWidth;
             y = height - maxHeight - self.bufferZone;
             anchor = Graphics.BOTTOM & Graphics.RIGHT;
-        } else if (basicHudFactory.?.TOPLEFT == self.getLocation()) {
+        } else if (Inheritance.fieldPointer(basicHudFactory.?, "TOPLEFT").* == self.getLocation()) {
             x = self.bufferZone + 2;
             y = self.bufferZoneY;
             anchor = Anchor.TOP_LEFT;
-        } else if (basicHudFactory.?.TOPRIGHT == self.getLocation()) {
+        } else if (Inheritance.fieldPointer(basicHudFactory.?, "TOPRIGHT").* == self.getLocation()) {
             x = width - maxWidth;
             y = self.bufferZoneY;
             anchor = Graphics.TOP & Graphics.RIGHT;
-        } else if (basicHudFactory.?.TOPCENTER == self.getLocation()) {
+        } else if (Inheritance.fieldPointer(basicHudFactory.?, "TOPCENTER").* == self.getLocation()) {
             x = (@divTrunc((width - maxWidth), 2));
             y = self.bufferZoneY;
             anchor = Graphics.TOP & Graphics.HCENTER;
-        } else if (basicHudFactory.?.BOTTOMCENTER == self.getLocation()) {
+        } else if (Inheritance.fieldPointer(basicHudFactory.?, "BOTTOMCENTER").* == self.getLocation()) {
             x = (@divTrunc((width - maxWidth), 2));
             y = height - maxHeight - self.bufferZone;
             anchor = Graphics.BOTTOM & Graphics.HCENTER;
-        } else if (basicHudFactory.?.ABSOLUTE == self.getLocation()) {
+        } else if (Inheritance.fieldPointer(basicHudFactory.?, "ABSOLUTE").* == self.getLocation()) {
             x = maxHeight;
             y = maxWidth;
             anchor = 0;
@@ -166,7 +167,7 @@ pub const BasicHud = struct {
 
     pub fn onEvent(self: *Self, eventObject: ?*AllBinaryEventObject) void {
         _ = eventObject;
-        _ = Inheritance.callStatic(ForcedLogUtil, "log", .{ EventStrings.getInstance().?.PERFORMANCE_MESSAGE, self });
+        _ = Inheritance.callStatic(ForcedLogUtil, "log", .{ Inheritance.fieldPointer(EventStrings.getInstance().?, "PERFORMANCE_MESSAGE").*, self });
     }
     
 
@@ -177,6 +178,7 @@ pub const BasicHud = struct {
     
 
     pub fn getPoint(self: *Self, x: i32, y: i32) ?*GPoint {
+        _ = self;
         return Inheritance.upcast(?*GPoint, Inheritance.call(PointFactory.getInstance().?, "createXY", .{ x, y }));
     }
     

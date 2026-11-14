@@ -23,6 +23,7 @@ const EventListenerInterface = @import("org/allbinary/logic/util/event/EventList
 const BasicEventHandler = @import("org/allbinary/logic/util/event/handler/BasicEventHandler.zig").BasicEventHandler;
 const InputMappingEvent = @import("org/allbinary/game/input/mapping/event/InputMappingEvent.zig").InputMappingEvent;
 const InputMappingEventListenerInterface = @import("org/allbinary/game/input/mapping/event/InputMappingEventListenerInterface.zig").InputMappingEventListenerInterface;
+const Exception = @import("java/lang/Exception.zig").Exception;
 
 pub const InputMappingEventHandler = struct {
     const Self = @This();

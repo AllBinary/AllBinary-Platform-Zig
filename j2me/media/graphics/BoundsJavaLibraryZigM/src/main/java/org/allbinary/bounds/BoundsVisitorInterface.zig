@@ -26,12 +26,12 @@ pub const BoundsVisitorInterface = struct {
     pointer: *anyopaque,
     object: Object,
     toStringFn: *const fn (pointer: *anyopaque) ?*String,
-    getXFn: *const fn (pointer: *anyopaque) i32,
-    getYFn: *const fn (pointer: *anyopaque) i32,
-    maxXFn: *const fn (pointer: *anyopaque) void,
-    maxYFn: *const fn (pointer: *anyopaque) void,
-    minXFn: *const fn (pointer: *anyopaque) void,
-    minYFn: *const fn (pointer: *anyopaque) void,
+    getXFn: *const fn (interface_pointer: *anyopaque) i32,
+    getYFn: *const fn (interface_pointer: *anyopaque) i32,
+    maxXFn: *const fn (interface_pointer: *anyopaque) void,
+    maxYFn: *const fn (interface_pointer: *anyopaque) void,
+    minXFn: *const fn (interface_pointer: *anyopaque) void,
+    minYFn: *const fn (interface_pointer: *anyopaque) void,
 
     pub fn getX(self: *Self) i32 {
         return self.getXFn(self.pointer);
@@ -63,34 +63,34 @@ pub const BoundsVisitorInterface = struct {
 
     // The interface value of an object with the methods. Like a Java class a method can be declared by the object or a superclass.
     pub fn of(object: anytype) ?*Self {
-        const Implementation = @TypeOf(object);
+        const ImplementationType = @TypeOf(object);
         const Methods = struct {
             fn toString(pointer: *anyopaque) ?*String {
-                const implementation: Implementation = @ptrCast(@alignCast(pointer));
+                const implementation: ImplementationType = @ptrCast(@alignCast(pointer));
                 return String.valueOf(implementation);
             }
-            fn getX(pointer: *anyopaque) i32 {
-                const implementation: Implementation = @ptrCast(@alignCast(pointer));
+            fn getX(interface_pointer: *anyopaque) i32 {
+                const implementation: ImplementationType = @ptrCast(@alignCast(interface_pointer));
                 return Inheritance.receiver(implementation, "getX").getX();
             }
-            fn getY(pointer: *anyopaque) i32 {
-                const implementation: Implementation = @ptrCast(@alignCast(pointer));
+            fn getY(interface_pointer: *anyopaque) i32 {
+                const implementation: ImplementationType = @ptrCast(@alignCast(interface_pointer));
                 return Inheritance.receiver(implementation, "getY").getY();
             }
-            fn maxX(pointer: *anyopaque) void {
-                const implementation: Implementation = @ptrCast(@alignCast(pointer));
+            fn maxX(interface_pointer: *anyopaque) void {
+                const implementation: ImplementationType = @ptrCast(@alignCast(interface_pointer));
                 return Inheritance.receiver(implementation, "maxX").maxX();
             }
-            fn maxY(pointer: *anyopaque) void {
-                const implementation: Implementation = @ptrCast(@alignCast(pointer));
+            fn maxY(interface_pointer: *anyopaque) void {
+                const implementation: ImplementationType = @ptrCast(@alignCast(interface_pointer));
                 return Inheritance.receiver(implementation, "maxY").maxY();
             }
-            fn minX(pointer: *anyopaque) void {
-                const implementation: Implementation = @ptrCast(@alignCast(pointer));
+            fn minX(interface_pointer: *anyopaque) void {
+                const implementation: ImplementationType = @ptrCast(@alignCast(interface_pointer));
                 return Inheritance.receiver(implementation, "minX").minX();
             }
-            fn minY(pointer: *anyopaque) void {
-                const implementation: Implementation = @ptrCast(@alignCast(pointer));
+            fn minY(interface_pointer: *anyopaque) void {
+                const implementation: ImplementationType = @ptrCast(@alignCast(interface_pointer));
                 return Inheritance.receiver(implementation, "minY").minY();
             }
         };

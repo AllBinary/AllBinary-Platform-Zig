@@ -23,6 +23,7 @@ const ScaleProperties = @import("org/allbinary/media/ScaleProperties.zig").Scale
 const Animation = @import("org/allbinary/animation/Animation.zig").Animation;
 const AnimationInterfaceFactoryInterface = @import("org/allbinary/animation/AnimationInterfaceFactoryInterface.zig").AnimationInterfaceFactoryInterface;
 const ProceduralAnimationInterfaceFactoryInterface = @import("org/allbinary/animation/ProceduralAnimationInterfaceFactoryInterface.zig").ProceduralAnimationInterfaceFactoryInterface;
+const Exception = @import("java/lang/Exception.zig").Exception;
 
 pub const NullSpecialAnimationFactory = struct {
     const Self = @This();

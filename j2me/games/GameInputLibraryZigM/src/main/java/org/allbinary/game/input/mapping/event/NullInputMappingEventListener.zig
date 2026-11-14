@@ -21,6 +21,7 @@ const Inheritance = @import("zig/Inheritance.zig");
 const AllBinaryEventObject = @import("org/allbinary/logic/util/event/AllBinaryEventObject.zig").AllBinaryEventObject;
 const InputMappingEvent = @import("org/allbinary/game/input/mapping/event/InputMappingEvent.zig").InputMappingEvent;
 const InputMappingEventListenerInterface = @import("org/allbinary/game/input/mapping/event/InputMappingEventListenerInterface.zig").InputMappingEventListenerInterface;
+const Exception = @import("java/lang/Exception.zig").Exception;
 
 pub const NullInputMappingEventListener = struct {
     const Self = @This();

@@ -18,9 +18,10 @@ const allocator = std.heap.page_allocator;
 const String = @import("java/lang/String.zig").String;
 const Object = @import("java/lang/Object.zig").Object;
 const Inheritance = @import("zig/Inheritance.zig");
-// const Displayable = @import("javax/microedition/lcdui/Displayable.zig").Displayable;
+const Displayable = @import("javax/microedition/lcdui/Displayable.zig").Displayable;
 const Processor = @import("org/allbinary/canvas/Processor.zig").Processor;
 const ScreenRepaintUtil = @import("org/allbinary/graphics/displayable/screen/ScreenRepaintUtil.zig").ScreenRepaintUtil;
+const Exception = @import("java/lang/Exception.zig").Exception;
 
 pub const ScreenRepaintProcessor = struct {
     const Self = @This();

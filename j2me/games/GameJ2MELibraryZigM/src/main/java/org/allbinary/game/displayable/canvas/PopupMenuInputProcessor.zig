@@ -18,7 +18,7 @@ const allocator = std.heap.page_allocator;
 const String = @import("java/lang/String.zig").String;
 const Object = @import("java/lang/Object.zig").Object;
 const Inheritance = @import("zig/Inheritance.zig");
-// const Canvas = @import("javax/microedition/lcdui/Canvas.zig").Canvas;
+const Canvas = @import("javax/microedition/lcdui/Canvas.zig").Canvas;
 const GameInputStrings = @import("org/allbinary/game/input/GameInputStrings.zig").GameInputStrings;
 const GameKeyEvent = @import("org/allbinary/game/input/event/GameKeyEvent.zig").GameKeyEvent;
 const GPoint = @import("org/allbinary/graphics/GPoint.zig").GPoint;
@@ -35,6 +35,7 @@ const TimeDelayHelper = @import("org/allbinary/time/TimeDelayHelper.zig").TimeDe
 const BasicArrayList = @import("org/allbinary/util/BasicArrayList.zig").BasicArrayList;
 const AllBinaryGameCanvas = @import("org/allbinary/game/displayable/canvas/AllBinaryGameCanvas.zig").AllBinaryGameCanvas;
 const BasicMenuInputProcessor = @import("org/allbinary/game/displayable/canvas/BasicMenuInputProcessor.zig").BasicMenuInputProcessor;
+const Exception = @import("java/lang/Exception.zig").Exception;
 
 pub const PopupMenuInputProcessor = struct {
     const Self = @This();
@@ -91,8 +92,8 @@ pub const PopupMenuInputProcessor = struct {
             {
                 var index: i32 = 0;
                 while (index < size) : (index += 1) {
-                gameKeyEvent = Inheritance.cast(?*GameKeyEvent, list.?.objectArray[@intCast(index)]);
-                if (gameKeyEvent != null) {
+                gameKeyEvent = Inheritance.cast(?*GameKeyEvent, Inheritance.fieldPointer(list.?, "objectArray").*[@intCast(index)]);
+                if (!Object.isNull(gameKeyEvent)) {
                     key = Inheritance.receiver(gameKeyEvent.?, "getKey").getKey();
                     if (Inheritance.call(self, "processInput", .{ key }) == 1) {
                         break;
@@ -108,7 +109,7 @@ pub const PopupMenuInputProcessor = struct {
             }
         }
         // catch (Exception e):
-//             _ = Inheritance.call(Inheritance.fieldPointer(self, "logUtil").*.?, "put", .{ Inheritance.fieldPointer(self, "commonStrings").*.?.EXCEPTION, self, GameInputStrings.getInstance().?.PROCESS_INPUT, e });
+//             _ = Inheritance.call(Inheritance.fieldPointer(self, "logUtil").*.?, "put", .{ Inheritance.fieldPointer(Inheritance.fieldPointer(self, "commonStrings").*.?, "EXCEPTION").*, self, Inheritance.fieldPointer(GameInputStrings.getInstance().?, "PROCESS_INPUT").*, e });
 //             return -1;
     }
     
@@ -117,7 +118,7 @@ pub const PopupMenuInputProcessor = struct {
     pub fn processMotionInputs(self: *Self) i32 {
         const lastIndex: i32 = Inheritance.receiverOf(Inheritance.fieldPointer(self, "motionGestureEventList").*.?, "size").size() - 1;
         if (lastIndex >= 0) {
-            const motionGestureEvent: ?*MotionGestureEvent = Inheritance.cast(?*MotionGestureEvent, Inheritance.fieldPointer(self, "motionGestureEventList").*.?.objectArray[@intCast(lastIndex)]);
+            const motionGestureEvent: ?*MotionGestureEvent = Inheritance.cast(?*MotionGestureEvent, Inheritance.fieldPointer(Inheritance.fieldPointer(self, "motionGestureEventList").*.?, "objectArray").*[@intCast(lastIndex)]);
             _ = Inheritance.call(self, "processMotionInput", .{ motionGestureEvent });
         }
         _ = Inheritance.receiverOf(Inheritance.fieldPointer(self, "motionGestureEventList").*.?, "clear").clear();
@@ -127,16 +128,16 @@ pub const PopupMenuInputProcessor = struct {
 
     // throws Exception
     pub fn processMotionInput(self: *Self, motionGestureEvent: ?*MotionGestureEvent) void {
-        if (motionGestureEvent == null) {
-            _ = Inheritance.call(Inheritance.fieldPointer(self, "logUtil").*.?, "putF", .{ String.literal("Exception: Bug"), self, Inheritance.fieldPointer(self, "gameInputStrings").*.?.PROCESS_MOTION_INPUT });
+        if (Object.isNull(motionGestureEvent)) {
+            _ = Inheritance.call(Inheritance.fieldPointer(self, "logUtil").*.?, "putF", .{ String.literal("Exception: Bug"), self, Inheritance.fieldPointer(Inheritance.fieldPointer(self, "gameInputStrings").*.?, "PROCESS_MOTION_INPUT").* });
             return;
         }
         const touchMotionGestureFactory: ?*TouchMotionGestureFactory = Inheritance.upcast(?*TouchMotionGestureFactory, TouchMotionGestureFactory.getInstance());
         const motionGestureInput: ?*MotionGestureInput = Inheritance.upcast(?*MotionGestureInput, Inheritance.receiver(motionGestureEvent.?, "getMotionGesture").getMotionGesture());
-        if (Object.same(motionGestureInput, touchMotionGestureFactory.?.RELEASED)) {
+        if (Object.same(motionGestureInput, Inheritance.fieldPointer(touchMotionGestureFactory.?, "RELEASED").*)) {
             const point: ?*GPoint = Inheritance.upcast(?*GPoint, Inheritance.receiver(motionGestureEvent.?, "getCurrentPoint").getCurrentPoint());
-            const rectPoint: ?*GPoint = Inheritance.upcast(?*GPoint, self.rectangle.?.getPoint());
-            if (Inheritance.call(self.rectangleCollisionUtil.?, "isInside", .{ rectPoint.?.getX(), rectPoint.?.getY(), self.rectangle.?.getMaxX() + 20, self.rectangle.?.getMaxY(), point.?.getX(), point.?.getY() })) {
+            const rectPoint: ?*GPoint = Inheritance.upcast(?*GPoint, Inheritance.receiver(self.rectangle.?, "getPoint").getPoint());
+            if (Inheritance.call(self.rectangleCollisionUtil.?, "isInside", .{ rectPoint.?.getX(), rectPoint.?.getY(), Inheritance.receiver(self.rectangle.?, "getMaxX").getMaxX() + 20, Inheritance.receiver(self.rectangle.?, "getMaxY").getMaxY(), point.?.getX(), point.?.getY() })) {
                 if (self.clickTimeHelper.?.isTimeTNT()) {
                     const gameCanvas: ?*AllBinaryGameCanvas = Inheritance.cast(?*AllBinaryGameCanvas, Inheritance.receiver(self, "getCanvas").getCanvas());
                     _ = Inheritance.receiver(gameCanvas.?, "toggleMenu").toggleMenu();

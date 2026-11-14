@@ -28,6 +28,7 @@ const CommonStrings = @import("org/allbinary/string/CommonStrings.zig").CommonSt
 const BasicArrayList = @import("org/allbinary/util/BasicArrayList.zig").BasicArrayList;
 const BasicArrayListD = @import("org/allbinary/util/BasicArrayListD.zig").BasicArrayListD;
 const Byte = @import("java/lang/Byte.zig").Byte;
+const Exception = @import("java/lang/Exception.zig").Exception;
 
 pub const DatabaseEncoder = struct {
     const Self = @This();
@@ -48,9 +49,9 @@ pub const DatabaseEncoder = struct {
             {
                 var index: i32 = 0;
                 while (index < @as(i32, @intCast(array.len))) : (index += 1) {
-                _ = Inheritance.call(stringBuffer.?, "append", .{ String.valueOf(Inheritance.callStatic(Byte, "create1", .{ array[@intCast(index)] }).?) });
+                _ = Inheritance.call(stringBuffer.?, "append", .{ String.valueOf(Inheritance.callStatic(Byte, "create1", .{ array[@intCast(index)] })) });
                 if (index < @as(i32, @intCast(array.len)) - 1) {
-                    _ = Inheritance.call(stringBuffer.?, "append", .{ CommonSeps.getInstance().?.SPACE });
+                    _ = Inheritance.call(stringBuffer.?, "append", .{ Inheritance.fieldPointer(CommonSeps.getInstance().?, "SPACE").* });
                 }
                 }
             }
@@ -58,42 +59,31 @@ pub const DatabaseEncoder = struct {
         }
         // catch (Exception e):
 //             const commonStrings: ?*CommonStrings = Inheritance.upcast(?*CommonStrings, CommonStrings.getInstance()); _ = commonStrings;
-//             _ = Inheritance.callStatic(PreLogUtil, "putOE", .{ commonStrings.?.EXCEPTION, String.literal("DatabaseEncoder"), String.literal("decode"), e });
-//             return Inheritance.upcast(?*String, StringUtil.getInstance().?.EMPTY_STRING);
+//             _ = Inheritance.callStatic(PreLogUtil, "putOE", .{ Inheritance.fieldPointer(commonStrings.?, "EXCEPTION").*, String.literal("DatabaseEncoder"), String.literal("decode"), e });
+//             return Inheritance.upcast(?*String, Inheritance.fieldPointer(StringUtil.getInstance().?, "EMPTY_STRING").*);
     }
     
 
     pub fn decode(value: ?*String) []i8 {
         { // try
-            const tokenizer: ?*Tokenizer = Inheritance.callStatic(Tokenizer, "create1", .{ CommonSeps.getInstance().?.SPACE });
+            const tokenizer: ?*Tokenizer = Inheritance.callStatic(Tokenizer, "create1", .{ Inheritance.fieldPointer(CommonSeps.getInstance().?, "SPACE").* });
             const vector: ?*BasicArrayList = Inheritance.upcast(?*BasicArrayList, Inheritance.call(tokenizer.?, "getTokensFromString", .{ value, BasicArrayListD.create() }));
-            const byteVector: ?*BasicArrayList = Inheritance.upcast(?*BasicArrayList, BasicArrayListD.create());
             const size: i32 = vector.?.size();
+            const decode_: []i8 = array_N66680: { const array_N66680_array = allocator.alloc(i8, @intCast(size)) catch unreachable; @memset(array_N66680_array, 0); break :array_N66680 array_N66680_array; };
             var byteOfData: ?*String = null;
             {
                 var index: i32 = 0;
                 while (index < size) : (index += 1) {
-                byteOfData = Inheritance.cast(?*String, vector.?.objectArray[@intCast(index)]);
-                _ = Inheritance.call(byteVector.?, "add", .{ Inheritance.callStatic(Byte, "create1", .{ byteOfData }) });
-                }
-            }
-            const decode_: []i8 = array_N66930: { const array_N66930_array = allocator.alloc(i8, @intCast(byteVector.?.size())) catch unreachable; @memset(array_N66930_array, 0); break :array_N66930 array_N66930_array; };
-            var decodeIndex: i32 = 0;
-            var aByte: ?*Byte = null;
-            {
-                var index: i32 = 0;
-                while (index < size) : (index += 1) {
-                aByte = Inheritance.cast(?*Byte, byteVector.?.objectArray[@intCast(index)]);
-                decode_[@intCast(decodeIndex)] = aByte.?.byteValue();
-                decodeIndex += 1;
+                byteOfData = Inheritance.cast(?*String, Inheritance.fieldPointer(vector.?, "objectArray").*[@intCast(index)]);
+                decode_[@intCast(index)] = (std.fmt.parseInt(i8, byteOfData.?.bytes, 10) catch @panic("java.lang.NumberFormatException"));
                 }
             }
             return decode_;
         }
         // catch (Exception e):
 //             const commonStrings: ?*CommonStrings = Inheritance.upcast(?*CommonStrings, CommonStrings.getInstance()); _ = commonStrings;
-//             _ = Inheritance.callStatic(PreLogUtil, "putSE", .{ commonStrings.?.EXCEPTION, String.literal("DatabaseEncoder"), String.literal("decode"), e });
-//             return NullUtil.getInstance().?.NULL_BYTE_ARRAY;
+//             _ = Inheritance.callStatic(PreLogUtil, "putSE", .{ Inheritance.fieldPointer(commonStrings.?, "EXCEPTION").*, String.literal("DatabaseEncoder"), String.literal("decode"), e });
+//             return Inheritance.fieldPointer(NullUtil.getInstance().?, "NULL_BYTE_ARRAY").*;
     }
 };
 

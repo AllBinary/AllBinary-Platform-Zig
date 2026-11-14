@@ -24,6 +24,7 @@ const RelativeRelationship = @import("org/allbinary/graphics/RelativeRelationshi
 const AllBinaryLayer = @import("org/allbinary/layer/AllBinaryLayer.zig").AllBinaryLayer;
 const BasicWeaponPart = @import("org/allbinary/game/part/weapon/BasicWeaponPart.zig").BasicWeaponPart;
 const BasicWeaponPartFactoryInterface = @import("org/allbinary/game/part/weapon/BasicWeaponPartFactoryInterface.zig").BasicWeaponPartFactoryInterface;
+const Exception = @import("java/lang/Exception.zig").Exception;
 
 pub const BasicWeaponPartCircularPool = struct {
     const Self = @This();

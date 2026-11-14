@@ -19,6 +19,8 @@ const String = @import("java/lang/String.zig").String;
 const Object = @import("java/lang/Object.zig").Object;
 const Inheritance = @import("zig/Inheritance.zig");
 const JsType = @import("jsinterop/annotations/JsType.zig").JsType;
+const Throwable = @import("java/lang/Throwable.zig").Throwable;
+const Exception = @import("java/lang/Exception.zig").Exception;
 
 //ActualPlatform
 pub const ExceptionUtil = struct {

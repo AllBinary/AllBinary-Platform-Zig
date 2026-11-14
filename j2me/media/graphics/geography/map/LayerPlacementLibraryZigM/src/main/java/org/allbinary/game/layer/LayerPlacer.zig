@@ -30,6 +30,7 @@ const EnumerationUtil = @import("org/allbinary/util/EnumerationUtil.zig").Enumer
 const LayerPlacementInterface = @import("org/allbinary/game/layer/LayerPlacementInterface.zig").LayerPlacementInterface;
 const LayerPlacementType = @import("org/allbinary/game/layer/LayerPlacementType.zig").LayerPlacementType;
 const LayerPlacementTypeFactory = @import("org/allbinary/game/layer/LayerPlacementTypeFactory.zig").LayerPlacementTypeFactory;
+const Exception = @import("java/lang/Exception.zig").Exception;
 
 pub const LayerPlacer = struct {
     const Self = @This();
@@ -62,7 +63,7 @@ pub const LayerPlacer = struct {
         {
             var index: i32 = 0;
             while (index < size) : (index += 1) {
-            layerPlacementInterface = Inheritance.cast(?*LayerPlacementInterface, list.?.objectArray[@intCast(index)]);
+            layerPlacementInterface = Inheritance.cast(?*LayerPlacementInterface, Inheritance.fieldPointer(list.?, "objectArray").*[@intCast(index)]);
             _ = Inheritance.call(self, "process", .{ layerPlacementInterface });
             }
         }
@@ -84,9 +85,9 @@ pub const LayerPlacer = struct {
         while (Inheritance.call(self.enumerationUtil.?, "hasMoreElements", .{ enumeration })) {
             point = Inheritance.cast(?*GPoint, Inheritance.call(self.enumerationUtil.?, "nextElement", .{ enumeration }));
             layerHashtable = Inheritance.cast(?*ABHashtable, Inheritance.call(hashtable.?, "get", .{ point }));
-            x = point.?.getX() + relativePoint.?.getX();
-            y = point.?.getY() + relativePoint.?.getY();
-            z = point.?.getZ() + relativePoint.?.getZ();
+            x = Inheritance.plus(point.?.getX(), relativePoint.?.getX());
+            y = Inheritance.plus(point.?.getY(), relativePoint.?.getY());
+            z = Inheritance.plus(point.?.getZ(), relativePoint.?.getZ());
             layerInterface = Inheritance.upcast(@TypeOf(layerInterface), Inheritance.call(layerInterfaceFactory.?, "getNexInstance", .{ layerHashtable, x, y, z }));
             _ = Inheritance.call(self.layerInterfaceVisitor.?, "visit", .{ layerInterface });
         }
@@ -97,16 +98,16 @@ pub const LayerPlacer = struct {
     pub fn getPoint(self: *Self, layerPlacementInterface: ?*LayerPlacementInterface) ?*GPoint {
         const pointFactory: ?*PointFactory = Inheritance.upcast(?*PointFactory, PointFactory.getInstance());
         const layerPlacementType: ?*LayerPlacementType = Inheritance.upcast(?*LayerPlacementType, layerPlacementInterface.?.getLayerType());
-        if (Object.same(layerPlacementType, LayerPlacementTypeFactory.getInstance().?.MAP)) {
+        if (Object.same(layerPlacementType, Inheritance.fieldPointer(LayerPlacementTypeFactory.getInstance().?, "MAP").*)) {
             const width: i32 = layerPlacementInterface.?.getWidth();
             const height: i32 = layerPlacementInterface.?.getHeight();
-            const x: i32 = ((divide_N67840: { const left_N67840 = (self.dimension.?.getX() - width); const right_N67840 = 2; break :divide_N67840 if (comptime @typeInfo(@TypeOf(left_N67840)) == .int or @TypeOf(left_N67840) == comptime_int) @divTrunc(left_N67840, right_N67840) else left_N67840 / right_N67840; }));
-            const y: i32 = ((divide_N67919: { const left_N67919 = (self.dimension.?.getY() - height); const right_N67919 = 2; break :divide_N67919 if (comptime @typeInfo(@TypeOf(left_N67919)) == .int or @TypeOf(left_N67919) == comptime_int) @divTrunc(left_N67919, right_N67919) else left_N67919 / right_N67919; }));
+            const x: i32 = ((divide_N67840: { const left_N67840 = (Inheritance.arithmetic(.subtract, self.dimension.?.getX(), width)); const right_N67840 = 2; break :divide_N67840 if (comptime @typeInfo(@TypeOf(left_N67840)) == .int or @TypeOf(left_N67840) == comptime_int) @divTrunc(left_N67840, right_N67840) else left_N67840 / right_N67840; }));
+            const y: i32 = ((divide_N67919: { const left_N67919 = (Inheritance.arithmetic(.subtract, self.dimension.?.getY(), height)); const right_N67919 = 2; break :divide_N67919 if (comptime @typeInfo(@TypeOf(left_N67919)) == .int or @TypeOf(left_N67919) == comptime_int) @divTrunc(left_N67919, right_N67919) else left_N67919 / right_N67919; }));
             return Inheritance.upcast(?*GPoint, Inheritance.call(pointFactory.?, "createXY", .{ x, y }));
-        } else if (Object.same(layerPlacementType, LayerPlacementTypeFactory.getInstance().?.UP)) {
+        } else if (Object.same(layerPlacementType, Inheritance.fieldPointer(LayerPlacementTypeFactory.getInstance().?, "UP").*)) {
             const width: i32 = layerPlacementInterface.?.getWidth();
             const height: i32 = layerPlacementInterface.?.getHeight();
-            const x: i32 = ((divide_N67579: { const left_N67579 = (self.dimension.?.getX() - width); const right_N67579 = 2; break :divide_N67579 if (comptime @typeInfo(@TypeOf(left_N67579)) == .int or @TypeOf(left_N67579) == comptime_int) @divTrunc(left_N67579, right_N67579) else left_N67579 / right_N67579; }));
+            const x: i32 = ((divide_N67579: { const left_N67579 = (Inheritance.arithmetic(.subtract, self.dimension.?.getX(), width)); const right_N67579 = 2; break :divide_N67579 if (comptime @typeInfo(@TypeOf(left_N67579)) == .int or @TypeOf(left_N67579) == comptime_int) @divTrunc(left_N67579, right_N67579) else left_N67579 / right_N67579; }));
             const y: i32 = -height;
             return Inheritance.upcast(?*GPoint, Inheritance.call(pointFactory.?, "createXY", .{ x, y }));
         } else {

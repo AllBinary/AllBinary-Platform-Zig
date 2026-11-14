@@ -52,7 +52,7 @@ pub const GenericOperatingSystem = struct {
         this.initFields();
         const systemProperties: ?*SystemProperties = Inheritance.upcast(?*SystemProperties, SystemProperties.getInstance());
         const stringValidationUtil: ?*StringValidationUtil = Inheritance.upcast(?*StringValidationUtil, StringValidationUtil.getInstance());
-        const EMPTY_STRING: ?*String = Inheritance.upcast(?*String, StringUtil.getInstance().?.EMPTY_STRING);
+        const EMPTY_STRING: ?*String = Inheritance.upcast(?*String, Inheritance.fieldPointer(StringUtil.getInstance().?, "EMPTY_STRING").*);
         if (Inheritance.call(stringValidationUtil.?, "isEmpty", .{ systemProperties.?.getName() })) {
             this.osName = EMPTY_STRING;
         } else {
@@ -122,7 +122,7 @@ pub const GenericOperatingSystem = struct {
     
 
     pub fn toString(self: *Self) ?*String {
-        const NEW_LINE: ?*String = Inheritance.upcast(?*String, CommonSeps.getInstance().?.NEW_LINE);
+        const NEW_LINE: ?*String = Inheritance.upcast(?*String, Inheritance.fieldPointer(CommonSeps.getInstance().?, "NEW_LINE").*);
         const osBuffer: ?*StringMaker = StringMaker.create();
         _ = Inheritance.call(osBuffer.?, "append", .{ String.literal("Operating System Info: \n") });
         _ = Inheritance.call(osBuffer.?, "append", .{ self.getName() });

@@ -18,8 +18,8 @@ const allocator = std.heap.page_allocator;
 const String = @import("java/lang/String.zig").String;
 const Object = @import("java/lang/Object.zig").Object;
 const Inheritance = @import("zig/Inheritance.zig");
-// const Canvas = @import("javax/microedition/lcdui/Canvas.zig").Canvas;
-// const Graphics = @import("javax/microedition/lcdui/Graphics.zig").Graphics;
+const Canvas = @import("javax/microedition/lcdui/Canvas.zig").Canvas;
+const Graphics = @import("javax/microedition/lcdui/Graphics.zig").Graphics;
 const GameKeyEvent = @import("org/allbinary/game/input/event/GameKeyEvent.zig").GameKeyEvent;
 const AllBinaryGameLayer = @import("org/allbinary/game/layer/AllBinaryGameLayer.zig").AllBinaryGameLayer;
 const RectangleFactory = @import("org/allbinary/graphics/RectangleFactory.zig").RectangleFactory;
@@ -34,6 +34,7 @@ const GameInputProcessor = @import("org/allbinary/game/input/GameInputProcessor.
 const GameInputProcessorUtil = @import("org/allbinary/game/input/GameInputProcessorUtil.zig").GameInputProcessorUtil;
 const InputFactory = @import("org/allbinary/game/input/InputFactory.zig").InputFactory;
 const TestInputInterface = @import("org/allbinary/game/input/TestInputInterface.zig").TestInputInterface;
+const Exception = @import("java/lang/Exception.zig").Exception;
 
 pub const TestingInputSingleton = struct {
     const Self = @This();
@@ -51,7 +52,7 @@ pub const TestingInputSingleton = struct {
     }
 
     fn initFields(this: *Self) void {
-        this.inputProcessorArray = array_N66033: { const array_N66033_array = allocator.alloc(?*GameInputProcessor, @intCast(InputFactory.getInstance().?.MAX)) catch unreachable; @memset(array_N66033_array, null); break :array_N66033 array_N66033_array; };
+        this.inputProcessorArray = array_N66033: { const array_N66033_array = allocator.alloc(?*GameInputProcessor, @intCast(Inheritance.fieldPointer(InputFactory.getInstance().?, "MAX").*)) catch unreachable; @memset(array_N66033_array, null); break :array_N66033 array_N66033_array; };
         this.paintable = Inheritance.upcast(?*PaintableInterface, NullPaintable.getInstance());
     }
     
@@ -64,7 +65,7 @@ pub const TestingInputSingleton = struct {
     pub fn create() *Self {
         const this = allocator.create(Self) catch unreachable;
         this.* = .{};
-        this.base = Inheritance.callStatic(AllBinaryGameLayer, "create3", .{ StringUtil.getInstance().?.EMPTY_STRING, RectangleFactory.SINGLETON, ViewPosition.getInstanceD() }).*;
+        this.base = Inheritance.callStatic(AllBinaryGameLayer, "create3", .{ Inheritance.fieldPointer(StringUtil.getInstance().?, "EMPTY_STRING").*, RectangleFactory.SINGLETON, ViewPosition.getInstanceD() }).*;
         this.initFields();
         _ = Inheritance.callStatic(GameInputProcessorUtil, "init", .{ this.inputProcessorArray });
         Inheritance.bindOverrides(this);
@@ -161,7 +162,7 @@ pub const TestingInputSingleton = struct {
         {
             var index: i32 = 0;
             while (index < size) : (index += 1) {
-            gameKeyEvent = Inheritance.upcast(@TypeOf(gameKeyEvent), (Inheritance.cast(?*GameKeyEvent, list.?.objectArray[@intCast(index)])));
+            gameKeyEvent = Inheritance.upcast(@TypeOf(gameKeyEvent), (Inheritance.cast(?*GameKeyEvent, Inheritance.fieldPointer(list.?, "objectArray").*[@intCast(index)])));
             key = Inheritance.receiver(gameKeyEvent.?, "getKey").getKey();
             _ = Inheritance.call(self.inputProcessorArray[@intCast(key)].?, "processEvent", .{ allbinaryLayerManager, GameKeyEvent.NONE });
             }

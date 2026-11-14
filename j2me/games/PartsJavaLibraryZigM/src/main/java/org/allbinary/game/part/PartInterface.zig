@@ -28,6 +28,7 @@ pub const PartInterface = struct {
     pointer: *anyopaque,
     object: Object,
     base: PaintableInterface,
+    base2: AnimationInterfaceCompositeInterface,
     toStringFn: *const fn (pointer: *anyopaque) ?*String,
 
     pub fn toString(self: *Self) ?*String {
@@ -36,15 +37,15 @@ pub const PartInterface = struct {
 
     // The interface value of an object with the methods. Like a Java class a method can be declared by the object or a superclass.
     pub fn of(object: anytype) ?*Self {
-        const Implementation = @TypeOf(object);
+        const ImplementationType = @TypeOf(object);
         const Methods = struct {
             fn toString(pointer: *anyopaque) ?*String {
-                const implementation: Implementation = @ptrCast(@alignCast(pointer));
+                const implementation: ImplementationType = @ptrCast(@alignCast(pointer));
                 return String.valueOf(implementation);
             }
         };
         const this = allocator.create(Self) catch unreachable;
-        this.* = .{ .pointer = object, .object = Object.of(object).?, .base = PaintableInterface.of(object).?.*, .toStringFn = Methods.toString };
+        this.* = .{ .pointer = object, .object = Object.of(object).?, .base = PaintableInterface.of(object).?.*, .base2 = AnimationInterfaceCompositeInterface.of(object).?.*, .toStringFn = Methods.toString };
         return this;
     }
 };

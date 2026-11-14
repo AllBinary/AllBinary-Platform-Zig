@@ -23,6 +23,7 @@ const EventListenerInterface = @import("org/allbinary/logic/util/event/EventList
 const BasicEventHandler = @import("org/allbinary/logic/util/event/handler/BasicEventHandler.zig").BasicEventHandler;
 const DisplayChangeEvent = @import("org/allbinary/graphics/displayable/event/DisplayChangeEvent.zig").DisplayChangeEvent;
 const DisplayChangeEventListener = @import("org/allbinary/graphics/displayable/event/DisplayChangeEventListener.zig").DisplayChangeEventListener;
+const Exception = @import("java/lang/Exception.zig").Exception;
 
 pub const LastDisplayChangeEventHandler = struct {
     const Self = @This();

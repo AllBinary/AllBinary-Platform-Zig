@@ -19,6 +19,7 @@ const String = @import("java/lang/String.zig").String;
 const Object = @import("java/lang/Object.zig").Object;
 const Inheritance = @import("zig/Inheritance.zig");
 const ABCustomItem = @import("org/allbinary/graphics/form/item/ABCustomItem.zig").ABCustomItem;
+const Exception = @import("java/lang/Exception.zig").Exception;
 
 pub const ItemIndexDx = struct {
     const Self = @This();

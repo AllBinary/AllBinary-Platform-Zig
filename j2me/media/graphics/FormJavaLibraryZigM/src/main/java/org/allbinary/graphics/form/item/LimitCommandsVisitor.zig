@@ -18,7 +18,7 @@ const allocator = std.heap.page_allocator;
 const String = @import("java/lang/String.zig").String;
 const Object = @import("java/lang/Object.zig").Object;
 const Inheritance = @import("zig/Inheritance.zig");
-// const Command = @import("javax/microedition/lcdui/Command.zig").Command;
+const Command = @import("javax/microedition/lcdui/Command.zig").Command;
 const GameCommandsFactory = @import("org/allbinary/game/commands/GameCommandsFactory.zig").GameCommandsFactory;
 const DisplayInfoSingleton = @import("org/allbinary/graphics/displayable/DisplayInfoSingleton.zig").DisplayInfoSingleton;
 const ScreenInfo = @import("org/allbinary/graphics/form/ScreenInfo.zig").ScreenInfo;
@@ -43,7 +43,7 @@ pub const LimitCommandsVisitor = struct {
         this.base = Visitor.create().*;
         this.initFields();
         const displayInfo: ?*DisplayInfoSingleton = Inheritance.upcast(?*DisplayInfoSingleton, DisplayInfoSingleton.getInstance());
-        this.isNotSmallDisplay = (displayInfo.?.isPortrait() and displayInfo.?.getLastHeight() > ScreenInfo.getInstance().?.SMALL_WIDTH) or (!displayInfo.?.isPortrait() and displayInfo.?.getLastHeight() > ScreenInfo.getInstance().?.SMALL_HEIGHT);
+        this.isNotSmallDisplay = (displayInfo.?.isPortrait() and Inheritance.arithmetic(.greater, displayInfo.?.getLastHeight(), Inheritance.fieldPointer(ScreenInfo.getInstance().?, "SMALL_WIDTH").*)) or (!displayInfo.?.isPortrait() and Inheritance.arithmetic(.greater, displayInfo.?.getLastHeight(), Inheritance.fieldPointer(ScreenInfo.getInstance().?, "SMALL_HEIGHT").*));
         Inheritance.bindOverrides(this);
         return this;
     }
@@ -52,10 +52,10 @@ pub const LimitCommandsVisitor = struct {
     pub fn visit(self: *Self, anyType: ?Object) ?Object {
         const command: ?*Command = Inheritance.cast(?*Command, anyType);
         const booleanFactory: ?*BooleanFactory = Inheritance.upcast(?*BooleanFactory, BooleanFactory.getInstance());
-        if (self.isNotSmallDisplay or command.?.getPriority() == 1 or Object.same(command, GameCommandsFactory.getInstance().?.EXIT_COMMAND) or Object.same(command, GameCommandsFactory.getInstance().?.EXIT_WITHOUT_PROGRESS_COMMAND)) {
-            return Inheritance.upcast(?Object, booleanFactory.?.TRUE);
+        if (self.isNotSmallDisplay or command.?.getPriority() == 1 or Object.same(command, Inheritance.fieldPointer(GameCommandsFactory.getInstance().?, "EXIT_COMMAND").*) or Object.same(command, Inheritance.fieldPointer(GameCommandsFactory.getInstance().?, "EXIT_WITHOUT_PROGRESS_COMMAND").*)) {
+            return Inheritance.upcast(?Object, Inheritance.fieldPointer(booleanFactory.?, "TRUE").*);
         } else {
-            return Inheritance.upcast(?Object, booleanFactory.?.FALSE);
+            return Inheritance.upcast(?Object, Inheritance.fieldPointer(booleanFactory.?, "FALSE").*);
         }
     }
 };

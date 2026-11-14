@@ -29,10 +29,11 @@ pub const RotationAnimationInterface = struct {
     pointer: *anyopaque,
     object: Object,
     base: IndexedAnimationInterface,
+    base2: DirectionalInterface,
     toStringFn: *const fn (pointer: *anyopaque) ?*String,
-    getAngleInfoPFn: *const fn (pointer: *anyopaque) ?*AngleInfo,
-    nextRotationFn: *const fn (pointer: *anyopaque) void,
-    previousRotationFn: *const fn (pointer: *anyopaque) void,
+    getAngleInfoPFn: *const fn (interface_pointer: *anyopaque) ?*AngleInfo,
+    nextRotationFn: *const fn (interface_pointer: *anyopaque) void,
+    previousRotationFn: *const fn (interface_pointer: *anyopaque) void,
 
     pub fn getAngleInfoP(self: *Self) ?*AngleInfo {
         return self.getAngleInfoPFn(self.pointer);
@@ -52,27 +53,27 @@ pub const RotationAnimationInterface = struct {
 
     // The interface value of an object with the methods. Like a Java class a method can be declared by the object or a superclass.
     pub fn of(object: anytype) ?*Self {
-        const Implementation = @TypeOf(object);
+        const ImplementationType = @TypeOf(object);
         const Methods = struct {
             fn toString(pointer: *anyopaque) ?*String {
-                const implementation: Implementation = @ptrCast(@alignCast(pointer));
+                const implementation: ImplementationType = @ptrCast(@alignCast(pointer));
                 return String.valueOf(implementation);
             }
-            fn getAngleInfoP(pointer: *anyopaque) ?*AngleInfo {
-                const implementation: Implementation = @ptrCast(@alignCast(pointer));
+            fn getAngleInfoP(interface_pointer: *anyopaque) ?*AngleInfo {
+                const implementation: ImplementationType = @ptrCast(@alignCast(interface_pointer));
                 return Inheritance.upcast(?*AngleInfo, Inheritance.receiver(implementation, "getAngleInfoP").getAngleInfoP());
             }
-            fn nextRotation(pointer: *anyopaque) void {
-                const implementation: Implementation = @ptrCast(@alignCast(pointer));
+            fn nextRotation(interface_pointer: *anyopaque) void {
+                const implementation: ImplementationType = @ptrCast(@alignCast(interface_pointer));
                 return Inheritance.receiver(implementation, "nextRotation").nextRotation();
             }
-            fn previousRotation(pointer: *anyopaque) void {
-                const implementation: Implementation = @ptrCast(@alignCast(pointer));
+            fn previousRotation(interface_pointer: *anyopaque) void {
+                const implementation: ImplementationType = @ptrCast(@alignCast(interface_pointer));
                 return Inheritance.receiver(implementation, "previousRotation").previousRotation();
             }
         };
         const this = allocator.create(Self) catch unreachable;
-        this.* = .{ .pointer = object, .object = Object.of(object).?, .base = IndexedAnimationInterface.of(object).?.*, .toStringFn = Methods.toString, .getAngleInfoPFn = Methods.getAngleInfoP, .nextRotationFn = Methods.nextRotation, .previousRotationFn = Methods.previousRotation };
+        this.* = .{ .pointer = object, .object = Object.of(object).?, .base = IndexedAnimationInterface.of(object).?.*, .base2 = DirectionalInterface.of(object).?.*, .toStringFn = Methods.toString, .getAngleInfoPFn = Methods.getAngleInfoP, .nextRotationFn = Methods.nextRotation, .previousRotationFn = Methods.previousRotation };
         return this;
     }
 };

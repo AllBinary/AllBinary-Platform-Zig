@@ -62,7 +62,7 @@ pub const ArtificialIntelligenceInterfaceFactoryInterfaceFactory = struct {
     pub fn getInstanceFromCollection(self: *Self, hashtable: ?*ABHashtable) ?*ArtificialIntelligenceInterfaceFactoryInterface {
         const typeInteger: ?*Integer = Inheritance.cast(?*Integer, Inheritance.call(hashtable.?, "get", .{ Inheritance.cast(?Object, BasicAI.ID) }));
         const @"type": i32 = typeInteger.?.intValue();
-        const artificialIntelligenceInterfaceFactoryInterface: ?*ArtificialIntelligenceInterfaceFactoryInterface = Inheritance.cast(?*ArtificialIntelligenceInterfaceFactoryInterface, self.list.?.objectArray[@intCast(@"type" - 1)]);
+        const artificialIntelligenceInterfaceFactoryInterface: ?*ArtificialIntelligenceInterfaceFactoryInterface = Inheritance.cast(?*ArtificialIntelligenceInterfaceFactoryInterface, Inheritance.fieldPointer(self.list.?, "objectArray").*[@intCast(@"type" - 1)]);
         return artificialIntelligenceInterfaceFactoryInterface;
     }
     

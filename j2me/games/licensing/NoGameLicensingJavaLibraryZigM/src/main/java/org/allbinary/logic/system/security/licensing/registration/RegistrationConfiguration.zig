@@ -19,6 +19,7 @@ const String = @import("java/lang/String.zig").String;
 const Object = @import("java/lang/Object.zig").Object;
 const Inheritance = @import("zig/Inheritance.zig");
 const StringMaker = @import("org/allbinary/logic/string/StringMaker.zig").StringMaker;
+const Exception = @import("java/lang/Exception.zig").Exception;
 
 pub const RegistrationConfiguration = struct {
     const Self = @This();

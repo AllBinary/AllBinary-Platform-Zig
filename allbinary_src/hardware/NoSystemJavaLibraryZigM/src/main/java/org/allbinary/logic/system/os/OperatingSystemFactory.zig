@@ -24,6 +24,7 @@ const CommonStrings = @import("org/allbinary/string/CommonStrings.zig").CommonSt
 const GenericOperatingSystem = @import("org/allbinary/logic/system/os/GenericOperatingSystem.zig").GenericOperatingSystem;
 const NoOperatingSystem = @import("org/allbinary/logic/system/os/NoOperatingSystem.zig").NoOperatingSystem;
 const System = @import("java/lang/System.zig").System;
+const Exception = @import("java/lang/Exception.zig").Exception;
 
 pub const OperatingSystemFactory = struct {
     const Self = @This();
@@ -64,10 +65,10 @@ pub const OperatingSystemFactory = struct {
         { // try
             const osString: ?*String = Inheritance.upcast(?*String, Object.toString(Object.of(Inheritance.call(Inheritance.call(StringMaker.create(), "append", .{ String.literal("OperatingSystem Info: ") }).?, "append", .{ Object.toString(Object.of(self.genericOperatingSystem)) }))));
             _ = std.debug.print("{s}\n", .{String.text(osString)});
-            _ = Inheritance.call(self.logUtil.?, "putF", .{ osString, self, commonStrings.?.GET_INSTANCE });
+            _ = Inheritance.call(self.logUtil.?, "putF", .{ osString, self, Inheritance.fieldPointer(commonStrings.?, "GET_INSTANCE").* });
         }
         // catch (Exception e):
-//             _ = Inheritance.call(self.logUtil.?, "put", .{ commonStrings.?.EXCEPTION, self, commonStrings.?.GET_INSTANCE, e });
+//             _ = Inheritance.call(self.logUtil.?, "put", .{ Inheritance.fieldPointer(commonStrings.?, "EXCEPTION").*, self, Inheritance.fieldPointer(commonStrings.?, "GET_INSTANCE").*, e });
         return self.genericOperatingSystem;
     }
 };

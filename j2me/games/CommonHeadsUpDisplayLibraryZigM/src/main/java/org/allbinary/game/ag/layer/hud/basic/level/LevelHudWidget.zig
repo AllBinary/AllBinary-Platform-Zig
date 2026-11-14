@@ -18,13 +18,14 @@ const allocator = std.heap.page_allocator;
 const String = @import("java/lang/String.zig").String;
 const Object = @import("java/lang/Object.zig").Object;
 const Inheritance = @import("zig/Inheritance.zig");
-// const Font = @import("javax/microedition/lcdui/Font.zig").Font;
-// const Graphics = @import("javax/microedition/lcdui/Graphics.zig").Graphics;
+const Font = @import("javax/microedition/lcdui/Font.zig").Font;
+const Graphics = @import("javax/microedition/lcdui/Graphics.zig").Graphics;
 const BasicHud = @import("org/allbinary/game/graphics/hud/BasicHud.zig").BasicHud;
 const BasicColorFactory = @import("org/allbinary/graphics/color/BasicColorFactory.zig").BasicColorFactory;
 const PaintableInterface = @import("org/allbinary/graphics/paint/PaintableInterface.zig").PaintableInterface;
 const NullUtil = @import("org/allbinary/logic/NullUtil.zig").NullUtil;
 const PrimitiveLongUtil = @import("org/allbinary/logic/math/PrimitiveLongUtil.zig").PrimitiveLongUtil;
+const Exception = @import("java/lang/Exception.zig").Exception;
 
 pub const LevelHudWidget = struct {
     const Self = @This();
@@ -43,7 +44,7 @@ pub const LevelHudWidget = struct {
         
         
         
-        this.levelNumberCharArray = NullUtil.getInstance().?.NULL_CHAR_ARRAY;
+        this.levelNumberCharArray = Inheritance.fieldPointer(NullUtil.getInstance().?, "NULL_CHAR_ARRAY").*;
         this.levelNumberTotalDigits = 0;
         this.offset = 0;
         
@@ -59,7 +60,7 @@ pub const LevelHudWidget = struct {
     pub fn create3(maxlevel: i32, location: i32, direction: i32) *Self {
         const this = allocator.create(Self) catch unreachable;
         this.* = .{};
-        this.base = Inheritance.callStatic(BasicHud, "create4", .{ location, direction, 2, BasicColorFactory.getInstance().?.GREY }).*;
+        this.base = Inheritance.callStatic(BasicHud, "create4", .{ location, direction, 2, Inheritance.fieldPointer(BasicColorFactory.getInstance().?, "GREY").* }).*;
         this.initFields();
         this.primitiveLongUtil = Inheritance.upcast(@TypeOf(this.primitiveLongUtil), Inheritance.callStatic(PrimitiveLongUtil, "createPowerOfTen", .{ 1000 }));
         const LEVEL: ?*String = String.literal("Lv ");
@@ -75,8 +76,8 @@ pub const LevelHudWidget = struct {
 
     pub fn updateMeasurement(self: *Self, graphics: ?*Graphics) void {
         const font: ?*Font = Inheritance.upcast(?*Font, graphics.?.getFont());
-        Inheritance.fieldPointer(self, "updateMaxWidth").* = Inheritance.upcast(@TypeOf(Inheritance.fieldPointer(self, "updateMaxWidth").*), font.?.getSize() * 4);
-        self.offset = Inheritance.call(font.?, "charsWidth", .{ self.levelString, 0, @as(i32, @intCast(self.levelString.len)) }) + font.?.getSize();
+        Inheritance.fieldPointer(self, "updateMaxWidth").* = Inheritance.upcast(@TypeOf(Inheritance.fieldPointer(self, "updateMaxWidth").*), Inheritance.arithmetic(.multiply, font.?.getSize(), 4));
+        self.offset = Inheritance.plus(Inheritance.call(font.?, "charsWidth", .{ self.levelString, 0, @as(i32, @intCast(self.levelString.len)) }), font.?.getSize());
         _ = Inheritance.call(&self.base, "updateMeasurement", .{ graphics });
     }
     

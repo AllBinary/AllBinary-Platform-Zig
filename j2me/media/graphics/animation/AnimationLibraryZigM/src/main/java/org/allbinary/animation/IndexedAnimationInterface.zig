@@ -28,9 +28,9 @@ pub const IndexedAnimationInterface = struct {
     object: Object,
     base: SequentialAnimationInterface,
     toStringFn: *const fn (pointer: *anyopaque) ?*String,
-    resetFn: *const fn (pointer: *anyopaque) void,
-    setFrameFn: *const fn (pointer: *anyopaque, index: i32) void,
-    getFrameFn: *const fn (pointer: *anyopaque) i32,
+    resetFn: *const fn (interface_pointer: *anyopaque) void,
+    setFrameFn: *const fn (interface_pointer: *anyopaque, index: i32) void,
+    getFrameFn: *const fn (interface_pointer: *anyopaque) i32,
 
     pub fn reset(self: *Self) void {
         return self.resetFn(self.pointer);
@@ -50,22 +50,22 @@ pub const IndexedAnimationInterface = struct {
 
     // The interface value of an object with the methods. Like a Java class a method can be declared by the object or a superclass.
     pub fn of(object: anytype) ?*Self {
-        const Implementation = @TypeOf(object);
+        const ImplementationType = @TypeOf(object);
         const Methods = struct {
             fn toString(pointer: *anyopaque) ?*String {
-                const implementation: Implementation = @ptrCast(@alignCast(pointer));
+                const implementation: ImplementationType = @ptrCast(@alignCast(pointer));
                 return String.valueOf(implementation);
             }
-            fn reset(pointer: *anyopaque) void {
-                const implementation: Implementation = @ptrCast(@alignCast(pointer));
+            fn reset(interface_pointer: *anyopaque) void {
+                const implementation: ImplementationType = @ptrCast(@alignCast(interface_pointer));
                 return Inheritance.receiver(implementation, "reset").reset();
             }
-            fn setFrame(pointer: *anyopaque, index: i32) void {
-                const implementation: Implementation = @ptrCast(@alignCast(pointer));
-                return Inheritance.receiver(implementation, "setFrame").setFrame(index);
+            fn setFrame(interface_pointer: *anyopaque, index: i32) void {
+                const implementation: ImplementationType = @ptrCast(@alignCast(interface_pointer));
+                return Inheritance.call(implementation, "setFrame", .{ index });
             }
-            fn getFrame(pointer: *anyopaque) i32 {
-                const implementation: Implementation = @ptrCast(@alignCast(pointer));
+            fn getFrame(interface_pointer: *anyopaque) i32 {
+                const implementation: ImplementationType = @ptrCast(@alignCast(interface_pointer));
                 return Inheritance.receiver(implementation, "getFrame").getFrame();
             }
         };

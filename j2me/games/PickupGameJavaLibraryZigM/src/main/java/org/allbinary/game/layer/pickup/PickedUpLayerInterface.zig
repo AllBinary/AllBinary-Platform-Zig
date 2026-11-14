@@ -29,8 +29,8 @@ pub const PickedUpLayerInterface = struct {
     object: Object,
     base: LayerInterface,
     toStringFn: *const fn (pointer: *anyopaque) ?*String,
-    getPickedUpLayerInterfaceFactoryInterfaceFn: *const fn (pointer: *anyopaque) ?*PickedUpLayerInterfaceFactoryInterface,
-    setPickedUpFn: *const fn (pointer: *anyopaque) void,
+    getPickedUpLayerInterfaceFactoryInterfaceFn: *const fn (interface_pointer: *anyopaque) ?*PickedUpLayerInterfaceFactoryInterface,
+    setPickedUpFn: *const fn (interface_pointer: *anyopaque) void,
 
     pub fn getPickedUpLayerInterfaceFactoryInterface(self: *Self) ?*PickedUpLayerInterfaceFactoryInterface {
         return self.getPickedUpLayerInterfaceFactoryInterfaceFn(self.pointer);
@@ -46,18 +46,18 @@ pub const PickedUpLayerInterface = struct {
 
     // The interface value of an object with the methods. Like a Java class a method can be declared by the object or a superclass.
     pub fn of(object: anytype) ?*Self {
-        const Implementation = @TypeOf(object);
+        const ImplementationType = @TypeOf(object);
         const Methods = struct {
             fn toString(pointer: *anyopaque) ?*String {
-                const implementation: Implementation = @ptrCast(@alignCast(pointer));
+                const implementation: ImplementationType = @ptrCast(@alignCast(pointer));
                 return String.valueOf(implementation);
             }
-            fn getPickedUpLayerInterfaceFactoryInterface(pointer: *anyopaque) ?*PickedUpLayerInterfaceFactoryInterface {
-                const implementation: Implementation = @ptrCast(@alignCast(pointer));
+            fn getPickedUpLayerInterfaceFactoryInterface(interface_pointer: *anyopaque) ?*PickedUpLayerInterfaceFactoryInterface {
+                const implementation: ImplementationType = @ptrCast(@alignCast(interface_pointer));
                 return Inheritance.upcast(?*PickedUpLayerInterfaceFactoryInterface, Inheritance.receiver(implementation, "getPickedUpLayerInterfaceFactoryInterface").getPickedUpLayerInterfaceFactoryInterface());
             }
-            fn setPickedUp(pointer: *anyopaque) void {
-                const implementation: Implementation = @ptrCast(@alignCast(pointer));
+            fn setPickedUp(interface_pointer: *anyopaque) void {
+                const implementation: ImplementationType = @ptrCast(@alignCast(interface_pointer));
                 return Inheritance.receiver(implementation, "setPickedUp").setPickedUp();
             }
         };

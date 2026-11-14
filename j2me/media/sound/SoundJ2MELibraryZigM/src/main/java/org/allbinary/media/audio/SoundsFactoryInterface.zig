@@ -19,6 +19,7 @@ const String = @import("java/lang/String.zig").String;
 const Object = @import("java/lang/Object.zig").Object;
 const Inheritance = @import("zig/Inheritance.zig");
 const Sound = @import("org/allbinary/media/audio/Sound.zig").Sound;
+const Exception = @import("java/lang/Exception.zig").Exception;
 
 // Java interface: an implementation is a pointer and a table of functions
 pub const SoundsFactoryInterface = struct {
@@ -27,10 +28,10 @@ pub const SoundsFactoryInterface = struct {
     pointer: *anyopaque,
     object: Object,
     toStringFn: *const fn (pointer: *anyopaque) ?*String,
-    initFn: *const fn (pointer: *anyopaque) void,
-    getSoundInterfaceArrayFn: *const fn (pointer: *anyopaque) []?*Sound,
-    setInitializedFn: *const fn (pointer: *anyopaque, initialized: bool) void,
-    isInitializedFn: *const fn (pointer: *anyopaque) bool,
+    initFn: *const fn (interface_pointer: *anyopaque) void,
+    getSoundInterfaceArrayFn: *const fn (interface_pointer: *anyopaque) []?*Sound,
+    setInitializedFn: *const fn (interface_pointer: *anyopaque, initialized: bool) void,
+    isInitializedFn: *const fn (interface_pointer: *anyopaque) bool,
 
     pub fn init(self: *Self) void {
         return self.initFn(self.pointer);
@@ -54,26 +55,26 @@ pub const SoundsFactoryInterface = struct {
 
     // The interface value of an object with the methods. Like a Java class a method can be declared by the object or a superclass.
     pub fn of(object: anytype) ?*Self {
-        const Implementation = @TypeOf(object);
+        const ImplementationType = @TypeOf(object);
         const Methods = struct {
             fn toString(pointer: *anyopaque) ?*String {
-                const implementation: Implementation = @ptrCast(@alignCast(pointer));
+                const implementation: ImplementationType = @ptrCast(@alignCast(pointer));
                 return String.valueOf(implementation);
             }
-            fn init(pointer: *anyopaque) void {
-                const implementation: Implementation = @ptrCast(@alignCast(pointer));
+            fn init(interface_pointer: *anyopaque) void {
+                const implementation: ImplementationType = @ptrCast(@alignCast(interface_pointer));
                 return Inheritance.receiver(implementation, "init").init();
             }
-            fn getSoundInterfaceArray(pointer: *anyopaque) []?*Sound {
-                const implementation: Implementation = @ptrCast(@alignCast(pointer));
+            fn getSoundInterfaceArray(interface_pointer: *anyopaque) []?*Sound {
+                const implementation: ImplementationType = @ptrCast(@alignCast(interface_pointer));
                 return Inheritance.receiver(implementation, "getSoundInterfaceArray").getSoundInterfaceArray();
             }
-            fn setInitialized(pointer: *anyopaque, initialized: bool) void {
-                const implementation: Implementation = @ptrCast(@alignCast(pointer));
-                return Inheritance.receiver(implementation, "setInitialized").setInitialized(initialized);
+            fn setInitialized(interface_pointer: *anyopaque, initialized: bool) void {
+                const implementation: ImplementationType = @ptrCast(@alignCast(interface_pointer));
+                return Inheritance.call(implementation, "setInitialized", .{ initialized });
             }
-            fn isInitialized(pointer: *anyopaque) bool {
-                const implementation: Implementation = @ptrCast(@alignCast(pointer));
+            fn isInitialized(interface_pointer: *anyopaque) bool {
+                const implementation: ImplementationType = @ptrCast(@alignCast(interface_pointer));
                 return Inheritance.receiver(implementation, "isInitialized").isInitialized();
             }
         };

@@ -24,6 +24,7 @@ const AnimationInterfaceFactoryInterface = @import("org/allbinary/animation/Anim
 const NullAnimationFactory = @import("org/allbinary/animation/NullAnimationFactory.zig").NullAnimationFactory;
 const ForcedLogUtil = @import("org/allbinary/logic/communication/log/ForcedLogUtil.zig").ForcedLogUtil;
 const ScaleProperties = @import("org/allbinary/media/ScaleProperties.zig").ScaleProperties;
+const Exception = @import("java/lang/Exception.zig").Exception;
 
 pub const CompoundAnimationInterfaceFactory = struct {
     const Self = @This();
@@ -66,7 +67,7 @@ pub const CompoundAnimationInterfaceFactory = struct {
     pub fn createArray(self: *Self, size: i32) []?*Animation {
         _ = size;
         _ = self;
-        return NullAnimationFactory.getFactoryInstance().?.EMPTY_ARRAY;
+        return Inheritance.fieldPointer(NullAnimationFactory.getFactoryInstance().?, "EMPTY_ARRAY").*;
     }
     
 

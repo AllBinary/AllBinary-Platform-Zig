@@ -22,6 +22,7 @@ const AllBinaryEventCircularPool = @import("org/allbinary/logic/util/event/AllBi
 const BasicTerrainInfo = @import("org/allbinary/game/terrain/BasicTerrainInfo.zig").BasicTerrainInfo;
 const TerrainEvent = @import("org/allbinary/game/terrain/TerrainEvent.zig").TerrainEvent;
 const TerrainEventFactory = @import("org/allbinary/game/terrain/TerrainEventFactory.zig").TerrainEventFactory;
+const Exception = @import("java/lang/Exception.zig").Exception;
 
 pub const TerrainEventCircularStaticPool = struct {
     const Self = @This();

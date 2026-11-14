@@ -37,12 +37,12 @@ pub const LogFactory = struct {
     pub fn getInstanceD() ?*Log {
         const stringUtil: ?*StringUtil = Inheritance.upcast(?*StringUtil, StringUtil.getInstance());
         const nullUtil: ?*NullUtil = Inheritance.upcast(?*NullUtil, NullUtil.getInstance());
-        return Inheritance.callStatic(Log, "create4", .{ stringUtil.?.EMPTY_STRING, nullUtil.?.NULL_OBJECT, stringUtil.?.EMPTY_STRING, nullUtil.?.NULL_OBJECT });
+        return Inheritance.callStatic(Log, "create4", .{ Inheritance.fieldPointer(stringUtil.?, "EMPTY_STRING").*, Inheritance.fieldPointer(nullUtil.?, "NULL_OBJECT").*, Inheritance.fieldPointer(stringUtil.?, "EMPTY_STRING").*, Inheritance.fieldPointer(nullUtil.?, "NULL_OBJECT").* });
     }
     
 
     pub fn getInstanceNoF(specialMessage: ?*String, anyType: ?Object, exception: ?Object) ?*Log {
-        return Inheritance.callStatic(Log, "create4", .{ specialMessage, anyType, StringUtil.getInstance().?.EMPTY_STRING, exception });
+        return Inheritance.callStatic(Log, "create4", .{ specialMessage, anyType, Inheritance.fieldPointer(StringUtil.getInstance().?, "EMPTY_STRING").*, exception });
     }
     
 
@@ -53,7 +53,7 @@ pub const LogFactory = struct {
 
     pub fn getInstanceF(specialMessage: ?*String, anyType: ?Object, functionName: ?*String) ?*Log {
         const nullUtil: ?*NullUtil = Inheritance.upcast(?*NullUtil, NullUtil.getInstance());
-        return Inheritance.callStatic(Log, "create4", .{ specialMessage, anyType, functionName, nullUtil.?.NULL_OBJECT });
+        return Inheritance.callStatic(Log, "create4", .{ specialMessage, anyType, functionName, Inheritance.fieldPointer(nullUtil.?, "NULL_OBJECT").* });
     }
 };
 

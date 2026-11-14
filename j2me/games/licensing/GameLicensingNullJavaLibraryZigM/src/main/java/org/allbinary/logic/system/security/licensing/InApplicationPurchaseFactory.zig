@@ -108,7 +108,7 @@ pub const InApplicationPurchaseFactory = struct {
 
     pub fn getUserName(self: *Self) ?*String {
         _ = self;
-        return Inheritance.upcast(?*String, StringUtil.getInstance().?.EMPTY_STRING);
+        return Inheritance.upcast(?*String, Inheritance.fieldPointer(StringUtil.getInstance().?, "EMPTY_STRING").*);
     }
     
 

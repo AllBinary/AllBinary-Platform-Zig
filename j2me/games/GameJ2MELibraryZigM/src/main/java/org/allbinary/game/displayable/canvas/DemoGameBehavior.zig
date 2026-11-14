@@ -24,6 +24,7 @@ const LogUtil = @import("org/allbinary/logic/communication/log/LogUtil.zig").Log
 const AbeClientInformationInterface = @import("org/allbinary/logic/system/security/licensing/AbeClientInformationInterface.zig").AbeClientInformationInterface;
 const CommonStrings = @import("org/allbinary/string/CommonStrings.zig").CommonStrings;
 const AllBinaryGameCanvas = @import("org/allbinary/game/displayable/canvas/AllBinaryGameCanvas.zig").AllBinaryGameCanvas;
+const Exception = @import("java/lang/Exception.zig").Exception;
 
 pub const DemoGameBehavior = struct {
     const Self = @This();
@@ -116,7 +117,7 @@ pub const DemoGameBehavior = struct {
     pub fn run(self: *Self, allBinaryGameCanvas: ?*AllBinaryGameCanvas) void {
         _ = allBinaryGameCanvas;
         const commonStrings: ?*CommonStrings = Inheritance.upcast(?*CommonStrings, CommonStrings.getInstance());
-        _ = Inheritance.call(self.logUtil.?, "putF", .{ Object.toString(Object.of(GameTypeFactory.getInstance().?.BOT)), self, commonStrings.?.RUN });
+        _ = Inheritance.call(self.logUtil.?, "putF", .{ Object.toString(Object.of(Inheritance.fieldPointer(GameTypeFactory.getInstance().?, "BOT").*)), self, Inheritance.fieldPointer(commonStrings.?, "RUN").* });
     }
     
 

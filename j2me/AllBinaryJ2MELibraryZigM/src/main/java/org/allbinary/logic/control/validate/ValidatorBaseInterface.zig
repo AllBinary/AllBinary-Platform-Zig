@@ -29,10 +29,10 @@ pub const ValidatorBaseInterface = struct {
     pointer: *anyopaque,
     object: Object,
     toStringFn: *const fn (pointer: *anyopaque) ?*String,
-    isValidFn: *const fn (pointer: *anyopaque) ?*Boolean,
-    validationInfoFn: *const fn (pointer: *anyopaque) ?*String,
-    toHashtableFn: *const fn (pointer: *anyopaque) ?*ABHashtable,
-    toListFn: *const fn (pointer: *anyopaque) ?*BasicArrayList,
+    isValidFn: *const fn (interface_pointer: *anyopaque) ?*Boolean,
+    validationInfoFn: *const fn (interface_pointer: *anyopaque) ?*String,
+    toHashtableFn: *const fn (interface_pointer: *anyopaque) ?*ABHashtable,
+    toListFn: *const fn (interface_pointer: *anyopaque) ?*BasicArrayList,
 
     pub fn isValid(self: *Self) ?*Boolean {
         return self.isValidFn(self.pointer);
@@ -56,26 +56,26 @@ pub const ValidatorBaseInterface = struct {
 
     // The interface value of an object with the methods. Like a Java class a method can be declared by the object or a superclass.
     pub fn of(object: anytype) ?*Self {
-        const Implementation = @TypeOf(object);
+        const ImplementationType = @TypeOf(object);
         const Methods = struct {
             fn toString(pointer: *anyopaque) ?*String {
-                const implementation: Implementation = @ptrCast(@alignCast(pointer));
+                const implementation: ImplementationType = @ptrCast(@alignCast(pointer));
                 return String.valueOf(implementation);
             }
-            fn isValid(pointer: *anyopaque) ?*Boolean {
-                const implementation: Implementation = @ptrCast(@alignCast(pointer));
+            fn isValid(interface_pointer: *anyopaque) ?*Boolean {
+                const implementation: ImplementationType = @ptrCast(@alignCast(interface_pointer));
                 return Inheritance.upcast(?*Boolean, Inheritance.receiver(implementation, "isValid").isValid());
             }
-            fn validationInfo(pointer: *anyopaque) ?*String {
-                const implementation: Implementation = @ptrCast(@alignCast(pointer));
+            fn validationInfo(interface_pointer: *anyopaque) ?*String {
+                const implementation: ImplementationType = @ptrCast(@alignCast(interface_pointer));
                 return Inheritance.upcast(?*String, Inheritance.receiver(implementation, "validationInfo").validationInfo());
             }
-            fn toHashtable(pointer: *anyopaque) ?*ABHashtable {
-                const implementation: Implementation = @ptrCast(@alignCast(pointer));
+            fn toHashtable(interface_pointer: *anyopaque) ?*ABHashtable {
+                const implementation: ImplementationType = @ptrCast(@alignCast(interface_pointer));
                 return Inheritance.upcast(?*ABHashtable, Inheritance.receiver(implementation, "toHashtable").toHashtable());
             }
-            fn toList(pointer: *anyopaque) ?*BasicArrayList {
-                const implementation: Implementation = @ptrCast(@alignCast(pointer));
+            fn toList(interface_pointer: *anyopaque) ?*BasicArrayList {
+                const implementation: ImplementationType = @ptrCast(@alignCast(interface_pointer));
                 return Inheritance.upcast(?*BasicArrayList, Inheritance.receiver(implementation, "toList").toList());
             }
         };

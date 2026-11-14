@@ -25,6 +25,7 @@ const LogUtil = @import("org/allbinary/logic/communication/log/LogUtil.zig").Log
 const CommonStrings = @import("org/allbinary/string/CommonStrings.zig").CommonStrings;
 const AllBinaryGameCanvas = @import("org/allbinary/game/displayable/canvas/AllBinaryGameCanvas.zig").AllBinaryGameCanvas;
 const GameRunnable = @import("org/allbinary/game/displayable/canvas/GameRunnable.zig").GameRunnable;
+const Exception = @import("java/lang/Exception.zig").Exception;
 
 pub const GameCanvasPauseRunnable = struct {
     const Self = @This();
@@ -59,14 +60,14 @@ pub const GameCanvasPauseRunnable = struct {
     pub fn processLoopSleep(self: *Self) void {
         { // try
             const features: ?*Features = Inheritance.upcast(?*Features, Features.getInstance());
-            const isOpenGL: bool = Inheritance.call(features.?, "isDefault", .{ OpenGLFeatureFactory.getInstance().?.OPENGL });
+            const isOpenGL: bool = Inheritance.call(features.?, "isDefault", .{ Inheritance.fieldPointer(OpenGLFeatureFactory.getInstance().?, "OPENGL").* });
             if (isOpenGL) {
                 _ = Inheritance.receiver(self.allBinaryGameCanvas.?, "processSleep").processSleep();
             }
         }
         // catch (Exception e):
 //             const commonStrings: ?*CommonStrings = Inheritance.upcast(?*CommonStrings, CommonStrings.getInstance()); _ = commonStrings;
-//             _ = Inheritance.call(self.logUtil.?, "put", .{ commonStrings.?.EXCEPTION, self, commonStrings.?.RUN, e });
+//             _ = Inheritance.call(self.logUtil.?, "put", .{ Inheritance.fieldPointer(commonStrings.?, "EXCEPTION").*, self, Inheritance.fieldPointer(commonStrings.?, "RUN").*, e });
     }
 };
 

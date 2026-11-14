@@ -25,6 +25,7 @@ const BasicEventHandler = @import("org/allbinary/logic/util/event/handler/BasicE
 const BasicArrayList = @import("org/allbinary/util/BasicArrayList.zig").BasicArrayList;
 const GameNotificationEvent = @import("org/allbinary/game/layer/hud/event/GameNotificationEvent.zig").GameNotificationEvent;
 const GameNotificationListenerInterface = @import("org/allbinary/game/layer/hud/event/GameNotificationListenerInterface.zig").GameNotificationListenerInterface;
+const Exception = @import("java/lang/Exception.zig").Exception;
 
 pub const GameNotificationEventHandler = struct {
     const Self = @This();
@@ -60,9 +61,9 @@ pub const GameNotificationEventHandler = struct {
         var eventListenerInterface: ?*EventListenerInterface = Inheritance.upcast(?*EventListenerInterface, NullEventListener.NULL_EVENT_LISTENER);
         const list: ?*BasicArrayList = Inheritance.upcast(?*BasicArrayList, Inheritance.fieldPointer(self, "eventListenerInterfaceList").*);
         if (list.?.size() > 0) {
-            eventListenerInterface = Inheritance.cast(?*EventListenerInterface, list.?.objectArray[@intCast(0)]);
+            eventListenerInterface = Inheritance.cast(?*EventListenerInterface, Inheritance.fieldPointer(list.?, "objectArray").*[@intCast(0)]);
         }
-        _ = self.base.removeAllListeners();
+        _ = Inheritance.receiver(&self.base, "removeAllListeners").removeAllListeners();
         if (!Object.same(eventListenerInterface, NullEventListener.NULL_EVENT_LISTENER)) {
             _ = Inheritance.call(self, "addListenerInterface", .{ eventListenerInterface });
         }

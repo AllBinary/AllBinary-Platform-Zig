@@ -30,6 +30,7 @@ const BasicProbabilityAIDataFactory = @import("org/allbinary/game/ag/ai/BasicPro
 const DiveAndDirectionalTrackingAI = @import("org/allbinary/game/ag/ai/DiveAndDirectionalTrackingAI.zig").DiveAndDirectionalTrackingAI;
 const LastKeyAIVisitorFactory = @import("org/allbinary/game/ag/ai/LastKeyAIVisitorFactory.zig").LastKeyAIVisitorFactory;
 const ThrustAIVisitorFactory = @import("org/allbinary/game/ag/ai/ThrustAIVisitorFactory.zig").ThrustAIVisitorFactory;
+const Exception = @import("java/lang/Exception.zig").Exception;
 
 pub const DiveAndDirectionalTrackingAIFactory = struct {
     const Self = @This();
@@ -47,7 +48,7 @@ pub const DiveAndDirectionalTrackingAIFactory = struct {
     pub fn getInstance(self: *Self, hashtable: ?*ABHashtable, ownerLayerInterface: ?*AllBinaryLayer, gameInput: ?*GameInput) ?*ArtificialIntelligenceInterface {
         _ = self;
         var visitorCanBeNull: ?Object = Inheritance.upcast(?Object, Inheritance.call(hashtable.?, "get", .{ Inheritance.cast(?Object, BasicAI.AI_VISITOR) }));
-        if (visitorCanBeNull == null) {
+        if (Object.isNull(visitorCanBeNull)) {
             visitorCanBeNull = Inheritance.upcast(@TypeOf(visitorCanBeNull), ThrustAIVisitorFactory.getInstance());
         }
         const hashtable2: ?*ABHashtable = Inheritance.upcast(?*ABHashtable, BasicProbabilityAIDataFactory.create().getInstance());

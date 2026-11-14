@@ -26,7 +26,7 @@ pub const VisitorInterface = struct {
     pointer: *anyopaque,
     object: Object,
     toStringFn: *const fn (pointer: *anyopaque) ?*String,
-    visitFn: *const fn (pointer: *anyopaque, anyType: ?Object) ?Object,
+    visitFn: *const fn (interface_pointer: *anyopaque, anyType: ?Object) ?Object,
 
     pub fn visit(self: *Self, anyType: ?Object) ?Object {
         return self.visitFn(self.pointer, anyType);
@@ -38,15 +38,15 @@ pub const VisitorInterface = struct {
 
     // The interface value of an object with the methods. Like a Java class a method can be declared by the object or a superclass.
     pub fn of(object: anytype) ?*Self {
-        const Implementation = @TypeOf(object);
+        const ImplementationType = @TypeOf(object);
         const Methods = struct {
             fn toString(pointer: *anyopaque) ?*String {
-                const implementation: Implementation = @ptrCast(@alignCast(pointer));
+                const implementation: ImplementationType = @ptrCast(@alignCast(pointer));
                 return String.valueOf(implementation);
             }
-            fn visit(pointer: *anyopaque, anyType: ?Object) ?Object {
-                const implementation: Implementation = @ptrCast(@alignCast(pointer));
-                return Inheritance.upcast(?Object, Inheritance.receiver(implementation, "visit").visit(anyType));
+            fn visit(interface_pointer: *anyopaque, anyType: ?Object) ?Object {
+                const implementation: ImplementationType = @ptrCast(@alignCast(interface_pointer));
+                return Inheritance.upcast(?Object, Inheritance.call(implementation, "visit", .{ anyType }));
             }
         };
         const this = allocator.create(Self) catch unreachable;

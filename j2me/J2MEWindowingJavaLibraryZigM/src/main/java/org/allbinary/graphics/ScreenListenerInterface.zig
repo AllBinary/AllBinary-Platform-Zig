@@ -26,8 +26,8 @@ pub const ScreenListenerInterface = struct {
     pointer: *anyopaque,
     object: Object,
     toStringFn: *const fn (pointer: *anyopaque) ?*String,
-    onFullScreenFn: *const fn (pointer: *anyopaque, isFullScreen: bool) void,
-    onFullScreenDisplayFn: *const fn (pointer: *anyopaque) void,
+    onFullScreenFn: *const fn (interface_pointer: *anyopaque, isFullScreen: bool) void,
+    onFullScreenDisplayFn: *const fn (interface_pointer: *anyopaque) void,
 
     pub fn onFullScreen(self: *Self, isFullScreen: bool) void {
         return self.onFullScreenFn(self.pointer, isFullScreen);
@@ -43,18 +43,18 @@ pub const ScreenListenerInterface = struct {
 
     // The interface value of an object with the methods. Like a Java class a method can be declared by the object or a superclass.
     pub fn of(object: anytype) ?*Self {
-        const Implementation = @TypeOf(object);
+        const ImplementationType = @TypeOf(object);
         const Methods = struct {
             fn toString(pointer: *anyopaque) ?*String {
-                const implementation: Implementation = @ptrCast(@alignCast(pointer));
+                const implementation: ImplementationType = @ptrCast(@alignCast(pointer));
                 return String.valueOf(implementation);
             }
-            fn onFullScreen(pointer: *anyopaque, isFullScreen: bool) void {
-                const implementation: Implementation = @ptrCast(@alignCast(pointer));
-                return Inheritance.receiver(implementation, "onFullScreen").onFullScreen(isFullScreen);
+            fn onFullScreen(interface_pointer: *anyopaque, isFullScreen: bool) void {
+                const implementation: ImplementationType = @ptrCast(@alignCast(interface_pointer));
+                return Inheritance.call(implementation, "onFullScreen", .{ isFullScreen });
             }
-            fn onFullScreenDisplay(pointer: *anyopaque) void {
-                const implementation: Implementation = @ptrCast(@alignCast(pointer));
+            fn onFullScreenDisplay(interface_pointer: *anyopaque) void {
+                const implementation: ImplementationType = @ptrCast(@alignCast(interface_pointer));
                 return Inheritance.receiver(implementation, "onFullScreenDisplay").onFullScreenDisplay();
             }
         };

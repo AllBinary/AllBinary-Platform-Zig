@@ -38,7 +38,7 @@ pub const DesktopGameInputMapping = struct {
 
     pub fn getDefault(self: *Self) ?*InputToGameKeyMapping {
         _ = self;
-        return Inheritance.upcast(?*InputToGameKeyMapping, DesktopDefaultGameInputMapping.create().getInputMapping());
+        return Inheritance.upcast(?*InputToGameKeyMapping, Inheritance.receiver(DesktopDefaultGameInputMapping.create(), "getInputMapping").getInputMapping());
     }
 };
 

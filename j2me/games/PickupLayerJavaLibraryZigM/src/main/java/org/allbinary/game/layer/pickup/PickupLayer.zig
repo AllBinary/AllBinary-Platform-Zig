@@ -18,8 +18,8 @@ const allocator = std.heap.page_allocator;
 const String = @import("java/lang/String.zig").String;
 const Object = @import("java/lang/Object.zig").Object;
 const Inheritance = @import("zig/Inheritance.zig");
-// const GL = @import("javax/microedition/khronos/opengles/GL.zig").GL;
-// const Graphics = @import("javax/microedition/lcdui/Graphics.zig").Graphics;
+const GL = @import("javax/microedition/khronos/opengles/GL.zig").GL;
+const Graphics = @import("javax/microedition/lcdui/Graphics.zig").Graphics;
 const Animation = @import("org/allbinary/animation/Animation.zig").Animation;
 const NullAnimationFactory = @import("org/allbinary/animation/NullAnimationFactory.zig").NullAnimationFactory;
 const CollidableAlwaysPickupNeverCollideBehaviorFactory = @import("org/allbinary/game/collision/CollidableAlwaysPickupNeverCollideBehaviorFactory.zig").CollidableAlwaysPickupNeverCollideBehaviorFactory;
@@ -34,6 +34,7 @@ const CountedPickedUpLayerInterfaceFactory = @import("org/allbinary/game/layer/p
 const PickedUpLayerInterface = @import("org/allbinary/game/layer/pickup/PickedUpLayerInterface.zig").PickedUpLayerInterface;
 const PickedUpLayerInterfaceFactoryInterface = @import("org/allbinary/game/layer/pickup/PickedUpLayerInterfaceFactoryInterface.zig").PickedUpLayerInterfaceFactoryInterface;
 const PickupableInterface = @import("org/allbinary/game/layer/pickup/PickupableInterface.zig").PickupableInterface;
+const Exception = @import("java/lang/Exception.zig").Exception;
 
 pub const PickupLayer = struct {
     const Self = @This();
@@ -57,7 +58,7 @@ pub const PickupLayer = struct {
         _ = total;
         const this = allocator.create(Self) catch unreachable;
         this.* = .{};
-        this.base = Inheritance.callStatic(MultiPlayerGameLayer, "create5", .{ remoteInfo, BasicGroupFactory.getInstance().?.NONE_ARRAY, name, rectangle, viewPosition }).*;
+        this.base = Inheritance.callStatic(MultiPlayerGameLayer, "create5", .{ remoteInfo, Inheritance.fieldPointer(BasicGroupFactory.getInstance().?, "NONE_ARRAY").*, name, rectangle, viewPosition }).*;
         this.initFields();
         _ = Inheritance.call(this, "setCollidableInferface", .{ Inheritance.receiverOf(CollidableAlwaysPickupNeverCollideBehaviorFactory.getInstance().?, "createBehavior").createBehavior() });
         _ = Inheritance.call(this, "setLayerWidth", .{ 10 });

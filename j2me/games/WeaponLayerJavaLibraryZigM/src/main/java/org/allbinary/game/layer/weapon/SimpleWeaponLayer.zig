@@ -28,6 +28,7 @@ const Movement = @import("org/allbinary/physics/movement/Movement.zig").Movement
 const ViewPositionBase = @import("org/allbinary/view/ViewPositionBase.zig").ViewPositionBase;
 const CollidableWeaponBehavior = @import("org/allbinary/game/layer/weapon/CollidableWeaponBehavior.zig").CollidableWeaponBehavior;
 const WeaponLayer = @import("org/allbinary/game/layer/weapon/WeaponLayer.zig").WeaponLayer;
+const Exception = @import("java/lang/Exception.zig").Exception;
 
 pub const SimpleWeaponLayer = struct {
     const Self = @This();
@@ -37,7 +38,7 @@ pub const SimpleWeaponLayer = struct {
 
     // throws Exception
     pub fn createDestroyed() ?*Animation {
-        return Inheritance.upcast(?*Animation, Inheritance.call(Inheritance.call(FeaturedAnimationInterfaceFactoryInterfaceFactory.getInstance().?, "getProcedural", .{ ExplosionResources.getInstance().?.THIRD_EXPLOSION_RESOURCE }).?, "getInstanceAnimation", .{ Inheritance.call(NullIndexedAnimationFactory.getFactoryInstance().?, "getInstance", .{ 0 }) }));
+        return Inheritance.upcast(?*Animation, Inheritance.call(Inheritance.call(FeaturedAnimationInterfaceFactoryInterfaceFactory.getInstance().?, "getProcedural", .{ Inheritance.fieldPointer(ExplosionResources.getInstance().?, "THIRD_EXPLOSION_RESOURCE").* }).?, "getInstanceAnimation", .{ Inheritance.call(NullIndexedAnimationFactory.getFactoryInstance().?, "getInstance", .{ 0 }) }));
     }
     
 

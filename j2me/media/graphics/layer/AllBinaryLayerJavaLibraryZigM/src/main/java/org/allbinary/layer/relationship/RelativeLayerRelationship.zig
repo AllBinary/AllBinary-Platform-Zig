@@ -46,17 +46,17 @@ pub const RelativeLayerRelationship = struct {
     
 
     pub fn getX(self: *Self) i32 {
-        return Inheritance.receiver(self.layer.?, "getXP").getXP() + self.base.getX();
+        return Inheritance.plus(Inheritance.receiver(self.layer.?, "getXP").getXP(), Inheritance.receiver(&self.base, "getX").getX());
     }
     
 
     pub fn getY(self: *Self) i32 {
-        return Inheritance.receiver(self.layer.?, "getYP").getYP() + self.base.getY();
+        return Inheritance.plus(Inheritance.receiver(self.layer.?, "getYP").getYP(), Inheritance.receiver(&self.base, "getY").getY());
     }
     
 
     pub fn getZ(self: *Self) i32 {
-        return Inheritance.receiver(self.layer.?, "getZP").getZP() + self.base.getZ();
+        return Inheritance.plus(Inheritance.receiver(self.layer.?, "getZP").getZP(), Inheritance.receiver(&self.base, "getZ").getZ());
     }
 };
 

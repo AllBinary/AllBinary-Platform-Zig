@@ -32,6 +32,7 @@ const AllBinaryLayer = @import("org/allbinary/layer/AllBinaryLayer.zig").AllBina
 const ABHashtable = @import("org/allbinary/util/ABHashtable.zig").ABHashtable;
 const BoundBounceAI = @import("org/allbinary/game/ag/ai/BoundBounceAI.zig").BoundBounceAI;
 const ReverseVelocityBoundsVisitor = @import("org/allbinary/game/ag/ai/ReverseVelocityBoundsVisitor.zig").ReverseVelocityBoundsVisitor;
+const Exception = @import("java/lang/Exception.zig").Exception;
 
 pub const TopUBoundBounceAIFactory = struct {
     const Self = @This();
@@ -52,11 +53,11 @@ pub const TopUBoundBounceAIFactory = struct {
         const velocityInterfaceCompositeInterface: ?*VelocityInterfaceCompositeInterface = Inheritance.cast(?*VelocityInterfaceCompositeInterface, ownerLayerInterface);
         const velocityInterface: ?*VelocityInterface = Inheritance.cast(?*VelocityInterface, velocityInterfaceCompositeInterface.?.getVelocityProperties());
         const maxDistancePerTick: i32 = (Inheritance.receiver(velocityInterface.?, "getMaxForwardVelocity").getMaxForwardVelocity() >> @intCast(Inheritance.receiverOf(Inheritance.receiver(velocityInterface.?, "getVelocityXBasicDecimalP").getVelocityXBasicDecimalP().?, "getScaledFactor").getScaledFactor()));
-        const halfWidth: i32 = Inheritance.receiver(ownerLayerInterface.?, "getWidth").getWidth() * 2 + maxDistancePerTick + 1;
-        const halfHeight: i32 = Inheritance.receiver(ownerLayerInterface.?, "getHeight").getHeight() * 2 + maxDistancePerTick + 1;
+        const halfWidth: i32 = Inheritance.arithmetic(.multiply, Inheritance.receiver(ownerLayerInterface.?, "getWidth").getWidth(), 2) + maxDistancePerTick + 1;
+        const halfHeight: i32 = Inheritance.arithmetic(.multiply, Inheritance.receiver(ownerLayerInterface.?, "getHeight").getHeight(), 2) + maxDistancePerTick + 1;
         const point: ?*GPoint = Inheritance.upcast(?*GPoint, Inheritance.call(PointFactory.getInstance().?, "createXY", .{ halfWidth, halfHeight + 60 }));
         const displayInfo: ?*DisplayInfoSingleton = Inheritance.upcast(?*DisplayInfoSingleton, DisplayInfoSingleton.getInstance());
-        const rectangle: ?*Rectangle = Inheritance.callStatic(Rectangle, "create3", .{ point, (displayInfo.?.getLastWidth() - halfWidth - point.?.getX()), (displayInfo.?.getLastHeight() - halfHeight - point.?.getY()) });
+        const rectangle: ?*Rectangle = Inheritance.callStatic(Rectangle, "create3", .{ point, (Inheritance.arithmetic(.subtract, Inheritance.arithmetic(.subtract, displayInfo.?.getLastWidth(), halfWidth), point.?.getX())), (Inheritance.arithmetic(.subtract, Inheritance.arithmetic(.subtract, displayInfo.?.getLastHeight(), halfHeight), point.?.getY())) });
         return Inheritance.upcast(?*ArtificialIntelligenceInterface, Inheritance.callStatic(BoundBounceAI, "create4", .{ ownerLayerInterface, gameInput, Inheritance.callStatic(TopULayerBounds, "create1", .{ rectangle }), Inheritance.callStatic(ReverseVelocityBoundsVisitor, "create1", .{ ownerLayerInterface }) }));
     }
 };

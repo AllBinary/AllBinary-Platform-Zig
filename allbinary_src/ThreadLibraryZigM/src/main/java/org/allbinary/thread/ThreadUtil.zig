@@ -20,6 +20,7 @@ const Object = @import("java/lang/Object.zig").Object;
 const Inheritance = @import("zig/Inheritance.zig");
 const LogUtil = @import("org/allbinary/logic/communication/log/LogUtil.zig").LogUtil;
 const Thread = @import("java/lang/Thread.zig").Thread;
+const Exception = @import("java/lang/Exception.zig").Exception;
 
 pub const ThreadUtil = struct {
     const Self = @This();
@@ -53,7 +54,7 @@ pub const ThreadUtil = struct {
 
     pub fn isRunning(self: *Self, thread: ?*Thread) bool {
         _ = self;
-        if (thread != null and thread.?.isAlive()) {
+        if (!Object.isNull(thread) and thread.?.isAlive()) {
             return true;
         } else {
             return false;

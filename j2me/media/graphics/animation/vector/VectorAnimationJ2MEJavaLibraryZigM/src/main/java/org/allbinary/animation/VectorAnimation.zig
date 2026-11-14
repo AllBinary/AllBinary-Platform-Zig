@@ -18,8 +18,8 @@ const allocator = std.heap.page_allocator;
 const String = @import("java/lang/String.zig").String;
 const Object = @import("java/lang/Object.zig").Object;
 const Inheritance = @import("zig/Inheritance.zig");
-// const Graphics = @import("javax/microedition/lcdui/Graphics.zig").Graphics;
-// const NullImage = @import("javax/microedition/lcdui/NullImage.zig").NullImage;
+const Graphics = @import("javax/microedition/lcdui/Graphics.zig").Graphics;
+const NullImage = @import("javax/microedition/lcdui/NullImage.zig").NullImage;
 const BasicColor = @import("org/allbinary/graphics/color/BasicColor.zig").BasicColor;
 const NullUtil = @import("org/allbinary/logic/NullUtil.zig").NullUtil;
 const PrimitiveIntUtil = @import("org/allbinary/logic/math/PrimitiveIntUtil.zig").PrimitiveIntUtil;
@@ -27,6 +27,7 @@ const CircularIndexUtil = @import("org/allbinary/util/CircularIndexUtil.zig").Ci
 const AnimationBehavior = @import("org/allbinary/animation/AnimationBehavior.zig").AnimationBehavior;
 const IndexedAnimation = @import("org/allbinary/animation/IndexedAnimation.zig").IndexedAnimation;
 const VectorAnimationInterface = @import("org/allbinary/animation/VectorAnimationInterface.zig").VectorAnimationInterface;
+const Exception = @import("java/lang/Exception.zig").Exception;
 
 pub const VectorAnimation = struct {
     const Self = @This();
@@ -38,14 +39,13 @@ pub const VectorAnimation = struct {
     // Implements VectorAnimationInterface
 
     fn initFields(this: *Self) void {
-        this.currentPoints = NullUtil.getInstance().?.NULL_INT_ARRAY_ARRAY_ARRAY;
+        this.currentPoints = Inheritance.fieldPointer(NullUtil.getInstance().?, "NULL_INT_ARRAY_ARRAY_ARRAY").*;
         this.circularIndexUtil = Inheritance.upcast(?*CircularIndexUtil, Inheritance.callStatic(CircularIndexUtil, "createInstance", .{ 0 }));
     }
     
 
     pub fn createVectorAnimation(currentPoints2: [][]i32, basicColor: ?*BasicColor, animationBehavior: ?*AnimationBehavior) ?*VectorAnimation {
-        const currentPoints: [][][]i32 = undefined // Otherwise - newArray - 3
-;
+        const currentPoints: [][][]i32 = array_N65786: { const array_N65786_array = allocator.alloc([][]i32, @intCast(1)) catch unreachable; for (array_N65786_array) |*array_N65786_row| { array_N65786_row.* = allocator.alloc([]i32, @intCast(@as(i32, @intCast(currentPoints2.len)))) catch unreachable; for (array_N65786_row.*) |*array_N65786_cell| { array_N65786_cell.* = allocator.alloc(i32, @intCast(2)) catch unreachable; @memset(array_N65786_cell.*, 0); } } break :array_N65786 array_N65786_array; };
         const size: i32 = @as(i32, @intCast(currentPoints2.len));
         {
             var index: i32 = 0;
@@ -72,7 +72,7 @@ pub const VectorAnimation = struct {
 
     pub fn setBasicColorP(self: *Self, basicColor: ?*BasicColor) void {
         var changed: bool = false;
-        if (Inheritance.receiver(self, "getBasicColorP").getBasicColorP() == null or !Object.same(Inheritance.receiverOf(Inheritance.receiver(self, "getBasicColorP").getBasicColorP().?, "intValue").intValue(), basicColor.?.intValue())) {
+        if (Object.isNull(self.getBasicColorP()) or !Object.same(Inheritance.receiverOf(self.getBasicColorP().?, "intValue").intValue(), basicColor.?.intValue())) {
             changed = true;
         }
         _ = Inheritance.call(&self.base, "setBasicColorP", .{ basicColor });
@@ -84,7 +84,7 @@ pub const VectorAnimation = struct {
 
     pub fn changeBasicColor(self: *Self, basicColor: ?*BasicColor) void {
         var changed: bool = false;
-        if (Inheritance.receiver(self, "getChangeBasicColor").getChangeBasicColor() == null or !Object.same(Inheritance.receiverOf(Inheritance.receiver(self, "getChangeBasicColor").getChangeBasicColor().?, "intValue").intValue(), basicColor.?.intValue())) {
+        if (Object.isNull(Inheritance.receiver(self, "getChangeBasicColor").getChangeBasicColor()) or !Object.same(Inheritance.receiverOf(Inheritance.receiver(self, "getChangeBasicColor").getChangeBasicColor().?, "intValue").intValue(), basicColor.?.intValue())) {
             changed = true;
         }
         _ = Inheritance.call(&self.base, "changeBasicColor", .{ basicColor });
@@ -180,7 +180,7 @@ pub const VectorAnimation = struct {
             }
         }
         // catch (Exception e):
-//             _ = Inheritance.call(Inheritance.fieldPointer(self, "logUtil").*.?, "put", .{ Inheritance.fieldPointer(self, "commonStrings").*.?.EXCEPTION, self, String.literal("paintVectors"), e });
+//             _ = Inheritance.call(Inheritance.fieldPointer(self, "logUtil").*.?, "put", .{ Inheritance.fieldPointer(Inheritance.fieldPointer(self, "commonStrings").*.?, "EXCEPTION").*, self, String.literal("paintVectors"), e });
     }
     
 
@@ -208,6 +208,11 @@ pub const VectorAnimation = struct {
     pub fn setPoints(self: *Self, currentPoints: [][][]i32) void {
         self.currentPoints = currentPoints;
         self.circularIndexUtil = Inheritance.upcast(@TypeOf(self.circularIndexUtil), Inheritance.callStatic(CircularIndexUtil, "createInstance", .{ @as(i32, @intCast(currentPoints.len)) }));
+    }
+    
+
+    pub fn getBasicColorP(self: *Self) ?*BasicColor {
+        return Inheritance.upcast(?*BasicColor, Inheritance.receiver(&self.base, "getBasicColorP").getBasicColorP());
     }
 };
 

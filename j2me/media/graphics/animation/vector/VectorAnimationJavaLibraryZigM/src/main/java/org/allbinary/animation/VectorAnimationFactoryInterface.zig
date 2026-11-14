@@ -28,7 +28,7 @@ pub const VectorAnimationFactoryInterface = struct {
     pointer: *anyopaque,
     object: Object,
     toStringFn: *const fn (pointer: *anyopaque) ?*String,
-    getInstanceFn: *const fn (pointer: *anyopaque, points: [][][]i32, basicColor: ?*BasicColor) ?*VectorAnimation,
+    getInstanceFn: *const fn (interface_pointer: *anyopaque, points: [][][]i32, basicColor: ?*BasicColor) ?*VectorAnimation,
 
     pub fn getInstance(self: *Self, points: [][][]i32, basicColor: ?*BasicColor) ?*VectorAnimation {
         return self.getInstanceFn(self.pointer, points, basicColor);
@@ -40,15 +40,15 @@ pub const VectorAnimationFactoryInterface = struct {
 
     // The interface value of an object with the methods. Like a Java class a method can be declared by the object or a superclass.
     pub fn of(object: anytype) ?*Self {
-        const Implementation = @TypeOf(object);
+        const ImplementationType = @TypeOf(object);
         const Methods = struct {
             fn toString(pointer: *anyopaque) ?*String {
-                const implementation: Implementation = @ptrCast(@alignCast(pointer));
+                const implementation: ImplementationType = @ptrCast(@alignCast(pointer));
                 return String.valueOf(implementation);
             }
-            fn getInstance(pointer: *anyopaque, points: [][][]i32, basicColor: ?*BasicColor) ?*VectorAnimation {
-                const implementation: Implementation = @ptrCast(@alignCast(pointer));
-                return Inheritance.upcast(?*VectorAnimation, Inheritance.receiver(implementation, "getInstance").getInstance(points, basicColor));
+            fn getInstance(interface_pointer: *anyopaque, points: [][][]i32, basicColor: ?*BasicColor) ?*VectorAnimation {
+                const implementation: ImplementationType = @ptrCast(@alignCast(interface_pointer));
+                return Inheritance.upcast(?*VectorAnimation, Inheritance.call(implementation, "getInstance", .{ points, basicColor }));
             }
         };
         const this = allocator.create(Self) catch unreachable;

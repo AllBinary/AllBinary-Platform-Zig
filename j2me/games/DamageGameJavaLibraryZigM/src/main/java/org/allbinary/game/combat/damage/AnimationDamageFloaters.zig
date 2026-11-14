@@ -18,7 +18,7 @@ const allocator = std.heap.page_allocator;
 const String = @import("java/lang/String.zig").String;
 const Object = @import("java/lang/Object.zig").Object;
 const Inheritance = @import("zig/Inheritance.zig");
-// const Graphics = @import("javax/microedition/lcdui/Graphics.zig").Graphics;
+const Graphics = @import("javax/microedition/lcdui/Graphics.zig").Graphics;
 const IndexedAnimation = @import("org/allbinary/animation/IndexedAnimation.zig").IndexedAnimation;
 const CanvasStrings = @import("org/allbinary/graphics/displayable/CanvasStrings.zig").CanvasStrings;
 const AllBinaryLayer = @import("org/allbinary/layer/AllBinaryLayer.zig").AllBinaryLayer;
@@ -28,6 +28,7 @@ const CircularIndexUtil = @import("org/allbinary/util/CircularIndexUtil.zig").Ci
 const ViewPosition = @import("org/allbinary/view/ViewPosition.zig").ViewPosition;
 const ViewPositionBase = @import("org/allbinary/view/ViewPositionBase.zig").ViewPositionBase;
 const DamageFloaters = @import("org/allbinary/game/combat/damage/DamageFloaters.zig").DamageFloaters;
+const Exception = @import("java/lang/Exception.zig").Exception;
 
 pub const AnimationDamageFloaters = struct {
     const Self = @This();
@@ -59,7 +60,7 @@ pub const AnimationDamageFloaters = struct {
         {
             var index: i32 = @as(i32, @intCast(this.animationInterfaceArray.len)) - 1;
             while (index >= 0) : (index -= 1) {
-            _ = Inheritance.call(this.animationInterfaceArray[@intCast(index)].?, "setFrame", .{ Inheritance.receiver(this.animationInterfaceArray[@intCast(index)].?, "getSize").getSize() - 1 });
+            _ = Inheritance.call(this.animationInterfaceArray[@intCast(index)].?, "setFrame", .{ Inheritance.arithmetic(.subtract, Inheritance.receiver(this.animationInterfaceArray[@intCast(index)].?, "getSize").getSize(), 1) });
             }
         }
         this.layerInterface = layerInterface;
@@ -88,8 +89,8 @@ pub const AnimationDamageFloaters = struct {
                 var index: i32 = 0;
                 while (index < @as(i32, @intCast(self.animationInterfaceArray.len))) : (index += 1) {
                 const animationInterface: ?*IndexedAnimation = Inheritance.upcast(?*IndexedAnimation, self.animationInterfaceArray[@intCast(index)]);
-                if (Inheritance.receiver(animationInterface.?, "getFrame").getFrame() < Inheritance.receiver(animationInterface.?, "getAnimationSize").getAnimationSize() - 1) {
-                    const delta: i32 = Inheritance.receiver(animationInterface.?, "getFrame").getFrame() * 20;
+                if (Inheritance.arithmetic(.less, Inheritance.receiver(animationInterface.?, "getFrame").getFrame(), Inheritance.arithmetic(.subtract, Inheritance.receiver(animationInterface.?, "getAnimationSize").getAnimationSize(), 1))) {
+                    const delta: i32 = Inheritance.arithmetic(.multiply, Inheritance.receiver(animationInterface.?, "getFrame").getFrame(), 20);
                     _ = Inheritance.call(animationInterface.?, "paintXY", .{ graphics, x + self.dx, y - delta + self.dy });
                     _ = Inheritance.receiver(animationInterface.?, "nextFrame").nextFrame();
                 }
@@ -99,7 +100,7 @@ pub const AnimationDamageFloaters = struct {
         // catch (Exception e):
 //             const commonStrings: ?*CommonStrings = Inheritance.upcast(?*CommonStrings, CommonStrings.getInstance()); _ = commonStrings;
 //             const canvasStrings: ?*CanvasStrings = Inheritance.upcast(?*CanvasStrings, CanvasStrings.getInstance()); _ = canvasStrings;
-//             _ = Inheritance.call(self.logUtil.?, "put", .{ commonStrings.?.EXCEPTION, self, canvasStrings.?.PAINT, e });
+//             _ = Inheritance.call(self.logUtil.?, "put", .{ Inheritance.fieldPointer(commonStrings.?, "EXCEPTION").*, self, Inheritance.fieldPointer(canvasStrings.?, "PAINT").*, e });
     }
 };
 

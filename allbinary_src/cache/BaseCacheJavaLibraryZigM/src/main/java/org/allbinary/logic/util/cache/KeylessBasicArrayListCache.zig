@@ -23,6 +23,7 @@ const StringMaker = @import("org/allbinary/logic/string/StringMaker.zig").String
 const BasicArrayList = @import("org/allbinary/util/BasicArrayList.zig").BasicArrayList;
 const BasicArrayListUtil = @import("org/allbinary/util/BasicArrayListUtil.zig").BasicArrayListUtil;
 const IndexedBasicArrayListCache = @import("org/allbinary/logic/util/cache/IndexedBasicArrayListCache.zig").IndexedBasicArrayListCache;
+const Exception = @import("java/lang/Exception.zig").Exception;
 
 pub const KeylessBasicArrayListCache = struct {
     const Self = @This();
@@ -49,25 +50,25 @@ pub const KeylessBasicArrayListCache = struct {
 
     pub fn get(self: *Self) ?*BasicArrayList {
         { // try
-            if (Inheritance.fieldPointer(self, "index").* >= Inheritance.fieldPointer(self, "list").*.?.size()) {
+            if (Inheritance.arithmetic(.greater_equal, Inheritance.fieldPointer(self, "index").*, Inheritance.fieldPointer(self, "list").*.?.size())) {
                 _ = Inheritance.receiver(self, "addDefault").addDefault();
             }
             const list: ?*BasicArrayList = Inheritance.cast(?*BasicArrayList, Inheritance.call(self, "getAt", .{ value_N65950: { const value_N65950_value = Inheritance.fieldPointer(self, "index").*; Inheritance.fieldPointer(self, "index").* += 1; break :value_N65950 value_N65950_value; } }));
             return list;
         }
         // catch (Exception e):
-//             _ = Inheritance.call(self.logUtil.?, "put", .{ Inheritance.fieldPointer(self, "commonStrings").*.?.EXCEPTION, self, Inheritance.fieldPointer(self, "commonStrings").*.?.GET, e });
+//             _ = Inheritance.call(self.logUtil.?, "put", .{ Inheritance.fieldPointer(Inheritance.fieldPointer(self, "commonStrings").*.?, "EXCEPTION").*, self, Inheritance.fieldPointer(Inheritance.fieldPointer(self, "commonStrings").*.?, "GET").*, e });
 //             return Inheritance.upcast(?*BasicArrayList, self.basicArrayListUtil.?.getImmutableInstance());
     }
     
 
     pub fn clear(self: *Self) void {
-        _ = self.base.clear();
+        _ = Inheritance.receiver(&self.base, "clear").clear();
         var basicArrayList: ?*BasicArrayList = null;
         {
             var index: i32 = Inheritance.fieldPointer(self, "list").*.?.size() - 1;
             while (index >= 0) : (index -= 1) {
-            basicArrayList = Inheritance.upcast(@TypeOf(basicArrayList), (Inheritance.cast(?*BasicArrayList, Inheritance.fieldPointer(self, "list").*.?.objectArray[@intCast(index)])));
+            basicArrayList = Inheritance.upcast(@TypeOf(basicArrayList), (Inheritance.cast(?*BasicArrayList, Inheritance.fieldPointer(Inheritance.fieldPointer(self, "list").*.?, "objectArray").*[@intCast(index)])));
             _ = basicArrayList.?.clear();
             }
         }
@@ -84,7 +85,7 @@ pub const KeylessBasicArrayListCache = struct {
             var index: i32 = Inheritance.fieldPointer(self, "list").*.?.size() - 1;
             while (index >= 0) : (index -= 1) {
             _ = Inheritance.call(stringBuffer.?, "append", .{ S_LABEL });
-            basicArrayList = Inheritance.upcast(@TypeOf(basicArrayList), (Inheritance.cast(?*BasicArrayList, Inheritance.fieldPointer(self, "list").*.?.objectArray[@intCast(index)])));
+            basicArrayList = Inheritance.upcast(@TypeOf(basicArrayList), (Inheritance.cast(?*BasicArrayList, Inheritance.fieldPointer(Inheritance.fieldPointer(self, "list").*.?, "objectArray").*[@intCast(index)])));
             _ = Inheritance.call(stringBuffer.?, "appendint", .{ basicArrayList.?.size() });
             }
         }

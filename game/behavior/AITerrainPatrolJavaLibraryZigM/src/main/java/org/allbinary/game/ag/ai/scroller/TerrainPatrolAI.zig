@@ -30,6 +30,7 @@ const AngleFactory = @import("org/allbinary/math/AngleFactory.zig").AngleFactory
 const ABHashtable = @import("org/allbinary/util/ABHashtable.zig").ABHashtable;
 const BasicArrayList = @import("org/allbinary/util/BasicArrayList.zig").BasicArrayList;
 const PacePatrolAI = @import("org/allbinary/game/ag/ai/scroller/PacePatrolAI.zig").PacePatrolAI;
+const Exception = @import("java/lang/Exception.zig").Exception;
 
 pub const TerrainPatrolAI = struct {
     const Self = @This();
@@ -59,7 +60,7 @@ pub const TerrainPatrolAI = struct {
     
 
     pub fn update(self: *Self) void {
-        _ = self.base.update();
+        _ = Inheritance.receiver(&self.base, "update").update();
         _ = self.changeDirectionIfCliffReached();
     }
     

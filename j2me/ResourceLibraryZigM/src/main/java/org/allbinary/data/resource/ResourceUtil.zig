@@ -18,7 +18,7 @@ const allocator = std.heap.page_allocator;
 const String = @import("java/lang/String.zig").String;
 const Object = @import("java/lang/Object.zig").Object;
 const Inheritance = @import("zig/Inheritance.zig");
-// const InputStream = @import("java/io/InputStream.zig").InputStream;
+const InputStream = @import("java/io/InputStream.zig").InputStream;
 const NullUtil = @import("org/allbinary/logic/NullUtil.zig").NullUtil;
 const LogUtil = @import("org/allbinary/logic/communication/log/LogUtil.zig").LogUtil;
 const StringMaker = @import("org/allbinary/logic/string/StringMaker.zig").StringMaker;
@@ -26,6 +26,8 @@ const CommonSeps = @import("org/allbinary/string/CommonSeps.zig").CommonSeps;
 const CommonStrings = @import("org/allbinary/string/CommonStrings.zig").CommonStrings;
 const Integer = @import("java/lang/Integer.zig").Integer;
 const Thread = @import("java/lang/Thread.zig").Thread;
+const Exception = @import("java/lang/Exception.zig").Exception;
+const ClassLoader = @import("java/lang/ClassLoader.zig").ClassLoader;
 
 //J2SE - J2ME
 pub const ResourceUtil = struct {
@@ -37,7 +39,7 @@ pub const ResourceUtil = struct {
 
     // Static fields with runtime initializers: call staticInit once at startup
     pub fn staticInit() void {
-        classLoader = Inheritance.upcast(?Object, NullUtil.getInstance().?.NULL_OBJECT);
+        classLoader = Inheritance.upcast(?Object, Inheritance.fieldPointer(NullUtil.getInstance().?, "NULL_OBJECT").*);
         instance = ResourceUtil.create();
     }
 
@@ -62,7 +64,7 @@ pub const ResourceUtil = struct {
     pub fn setLoadingPaths(self: *Self, path: ?*String, ext: ?*String) void {
         _ = path;
         _ = ext;
-        _ = Inheritance.call(self.logUtil.?, "putF", .{ CommonStrings.getInstance().?.NOT_IMPLEMENTED, self, String.literal("setLoadingPaths") });
+        _ = Inheritance.call(self.logUtil.?, "putF", .{ Inheritance.fieldPointer(CommonStrings.getInstance().?, "NOT_IMPLEMENTED").*, self, String.literal("setLoadingPaths") });
     }
     
 
@@ -75,9 +77,9 @@ pub const ResourceUtil = struct {
     // throws Exception
     pub fn getResourceAsStream(self: *Self, resource: ?*String) ?*InputStream {
         var inputStream: ?*InputStream = Inheritance.upcast(?*InputStream, Inheritance.call(self, "getResourceAsStreamAtStart", .{ resource, 2 }));
-        if (inputStream == null) {
+        if (Object.isNull(inputStream)) {
             inputStream = Inheritance.upcast(@TypeOf(inputStream), Inheritance.call(self, "getResourceAsStreamAtStart", .{ resource, 1 }));
-            if (inputStream == null) {
+            if (Object.isNull(inputStream)) {
                 std.debug.panic("{any}", .{exception: { _ = Object.toString(Object.of(Inheritance.call(Inheritance.call(StringMaker.create(), "append", .{ String.literal("Unable to obtain: ") }).?, "append", .{ resource }))); break :exception error.Exception; }});
             }
         }
@@ -89,19 +91,19 @@ pub const ResourceUtil = struct {
     pub fn getResourceAsStreamAtStart(self: *Self, resource: ?*String, startIndex: i32) ?*InputStream {
         _ = self;
         const commonSeps: ?*CommonSeps = Inheritance.upcast(?*CommonSeps, CommonSeps.getInstance());
-        const index: i32 = Inheritance.call(resource.?, "indexOf", .{ commonSeps.?.COLON });
+        const index: i32 = Inheritance.call(resource.?, "indexOf", .{ Inheritance.fieldPointer(commonSeps.?, "COLON").* });
         const resourcePath: ?*String = Inheritance.upcast(?*String, Inheritance.call(resource.?, "substring", .{ index + startIndex }));
-        var inputStream: ?*InputStream = Inheritance.upcast(?*InputStream, Inheritance.call(@as(?*anyopaque, @ptrCast(@constCast(Object.of(resource).?.class))).?, "getResourceAsStream", .{ resourcePath }));
-        if (inputStream != null) {
+        var inputStream: ?*InputStream = Inheritance.upcast(?*InputStream, @import("java/lang/ClassLoader.zig").ClassLoader.of(@as(?*anyopaque, @ptrCast(@constCast(Object.of(resource).?.class)))).?.getResourceAsStream(resourcePath));
+        if (!Object.isNull(inputStream)) {
             return inputStream;
         }
         const classLoader_: ?*ClassLoader = Inheritance.cast(?*ClassLoader, ResourceUtil.classLoader);
         inputStream = Inheritance.upcast(@TypeOf(inputStream), Inheritance.call(classLoader_.?, "getResourceAsStream", .{ resourcePath }));
-        if (inputStream != null) {
+        if (!Object.isNull(inputStream)) {
             return inputStream;
         }
         inputStream = Inheritance.upcast(@TypeOf(inputStream), Inheritance.call(Inheritance.receiverOf(Thread.currentThread().?, "getContextClassLoader").getContextClassLoader().?, "getResourceAsStream", .{ resourcePath }));
-        if (inputStream != null) {
+        if (!Object.isNull(inputStream)) {
             return inputStream;
         }
         return inputStream;

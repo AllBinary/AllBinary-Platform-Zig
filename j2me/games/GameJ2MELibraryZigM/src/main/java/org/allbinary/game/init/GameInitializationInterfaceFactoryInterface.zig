@@ -27,7 +27,7 @@ pub const GameInitializationInterfaceFactoryInterface = struct {
     pointer: *anyopaque,
     object: Object,
     toStringFn: *const fn (pointer: *anyopaque) ?*String,
-    getInstanceFn: *const fn (pointer: *anyopaque) ?*GameInitializationInterface,
+    getInstanceFn: *const fn (interface_pointer: *anyopaque) ?*GameInitializationInterface,
 
     pub fn getInstance(self: *Self) ?*GameInitializationInterface {
         return self.getInstanceFn(self.pointer);
@@ -39,14 +39,14 @@ pub const GameInitializationInterfaceFactoryInterface = struct {
 
     // The interface value of an object with the methods. Like a Java class a method can be declared by the object or a superclass.
     pub fn of(object: anytype) ?*Self {
-        const Implementation = @TypeOf(object);
+        const ImplementationType = @TypeOf(object);
         const Methods = struct {
             fn toString(pointer: *anyopaque) ?*String {
-                const implementation: Implementation = @ptrCast(@alignCast(pointer));
+                const implementation: ImplementationType = @ptrCast(@alignCast(pointer));
                 return String.valueOf(implementation);
             }
-            fn getInstance(pointer: *anyopaque) ?*GameInitializationInterface {
-                const implementation: Implementation = @ptrCast(@alignCast(pointer));
+            fn getInstance(interface_pointer: *anyopaque) ?*GameInitializationInterface {
+                const implementation: ImplementationType = @ptrCast(@alignCast(interface_pointer));
                 return Inheritance.upcast(?*GameInitializationInterface, Inheritance.receiver(implementation, "getInstance").getInstance());
             }
         };

@@ -18,7 +18,7 @@ const allocator = std.heap.page_allocator;
 const String = @import("java/lang/String.zig").String;
 const Object = @import("java/lang/Object.zig").Object;
 const Inheritance = @import("zig/Inheritance.zig");
-// const Image = @import("javax/microedition/lcdui/Image.zig").Image;
+const Image = @import("javax/microedition/lcdui/Image.zig").Image;
 const Animation = @import("org/allbinary/animation/Animation.zig").Animation;
 const AnimationBehaviorFactory = @import("org/allbinary/animation/AnimationBehaviorFactory.zig").AnimationBehaviorFactory;
 const OpenGLUtil = @import("org/allbinary/graphics/opengles/OpenGLUtil.zig").OpenGLUtil;
@@ -26,6 +26,7 @@ const PrimitiveIntUtil = @import("org/allbinary/logic/math/PrimitiveIntUtil.zig"
 const AdjustedImageAnimation = @import("org/allbinary/animation/image/AdjustedImageAnimation.zig").AdjustedImageAnimation;
 const BaseImageAnimationFactory = @import("org/allbinary/animation/image/BaseImageAnimationFactory.zig").BaseImageAnimationFactory;
 const ImageAnimation = @import("org/allbinary/animation/image/ImageAnimation.zig").ImageAnimation;
+const Exception = @import("java/lang/Exception.zig").Exception;
 
 pub const ImageAnimationFactory = struct {
     const Self = @This();
@@ -51,12 +52,12 @@ pub const ImageAnimationFactory = struct {
     // throws Exception
     pub fn getInstance(self: *Self, instanceId: i32) ?*Animation {
         _ = instanceId;
-        var scaledImage: ?*Image = Inheritance.upcast(?*Image, Inheritance.call(Inheritance.fieldPointer(self, "animationFactoryImageScaleUtil").*.?, "createImage", .{ Inheritance.receiver(self, "getImage").getImage(), Inheritance.fieldPointer(self, "animationFactoryInitializationVisitor").*.?.width, Inheritance.fieldPointer(self, "animationFactoryInitializationVisitor").*.?.height, Inheritance.fieldPointer(self, "scaleProperties").*.?.scaleWidth, Inheritance.fieldPointer(self, "scaleProperties").*.?.scaleHeight }));
+        var scaledImage: ?*Image = Inheritance.upcast(?*Image, Inheritance.call(Inheritance.fieldPointer(self, "animationFactoryImageScaleUtil").*.?, "createImage", .{ Inheritance.receiver(self, "getImage").getImage(), Inheritance.fieldPointer(Inheritance.fieldPointer(self, "animationFactoryInitializationVisitor").*.?, "width").*, Inheritance.fieldPointer(Inheritance.fieldPointer(self, "animationFactoryInitializationVisitor").*.?, "height").*, Inheritance.fieldPointer(Inheritance.fieldPointer(self, "scaleProperties").*.?, "scaleWidth").*, Inheritance.fieldPointer(Inheritance.fieldPointer(self, "scaleProperties").*.?, "scaleHeight").* }));
         const openGLUtil: ?*OpenGLUtil = Inheritance.upcast(?*OpenGLUtil, OpenGLUtil.getInstance());
         scaledImage = Inheritance.upcast(@TypeOf(scaledImage), Inheritance.call(openGLUtil.?, "addImage", .{ scaledImage }));
-        if (Inheritance.fieldPointer(self, "animationFactoryInitializationVisitor").*.?.dx != 0 or Inheritance.fieldPointer(self, "animationFactoryInitializationVisitor").*.?.dy != 0) {
+        if (Inheritance.fieldPointer(Inheritance.fieldPointer(self, "animationFactoryInitializationVisitor").*.?, "dx").* != 0 or Inheritance.fieldPointer(Inheritance.fieldPointer(self, "animationFactoryInitializationVisitor").*.?, "dy").* != 0) {
             _ = Inheritance.call(Inheritance.fieldPointer(self, "animationFactoryImageScaleUtil").*.?, "processAdjust", .{ self });
-            return Inheritance.upcast(?*Animation, Inheritance.callStatic(AdjustedImageAnimation, "create4", .{ scaledImage, Inheritance.fieldPointer(self, "animationFactoryInitializationVisitor").*.?.dx, Inheritance.fieldPointer(self, "animationFactoryInitializationVisitor").*.?.dy, Inheritance.fieldPointer(self, "animationBehaviorFactory").*.?.getOrCreateInstance() }));
+            return Inheritance.upcast(?*Animation, Inheritance.callStatic(AdjustedImageAnimation, "create4", .{ scaledImage, Inheritance.fieldPointer(Inheritance.fieldPointer(self, "animationFactoryInitializationVisitor").*.?, "dx").*, Inheritance.fieldPointer(Inheritance.fieldPointer(self, "animationFactoryInitializationVisitor").*.?, "dy").*, Inheritance.fieldPointer(self, "animationBehaviorFactory").*.?.getOrCreateInstance() }));
         } else {
             return Inheritance.upcast(?*Animation, Inheritance.callStatic(ImageAnimation, "create2", .{ scaledImage, Inheritance.fieldPointer(self, "animationBehaviorFactory").*.?.getOrCreateInstance() }));
         }

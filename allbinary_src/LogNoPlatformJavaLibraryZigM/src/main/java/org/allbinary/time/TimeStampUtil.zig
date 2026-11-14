@@ -20,6 +20,7 @@ const Object = @import("java/lang/Object.zig").Object;
 const Inheritance = @import("zig/Inheritance.zig");
 const Calendar = @import("java/util/Calendar.zig").Calendar;
 const Date = @import("java/util/Date.zig").Date;
+const RuntimeException = @import("java/lang/RuntimeException.zig").RuntimeException;
 
 //NoPlatform
 pub const TimeStampUtil = struct {

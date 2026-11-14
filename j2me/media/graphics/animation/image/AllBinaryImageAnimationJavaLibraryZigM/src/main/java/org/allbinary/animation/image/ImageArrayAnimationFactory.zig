@@ -18,7 +18,7 @@ const allocator = std.heap.page_allocator;
 const String = @import("java/lang/String.zig").String;
 const Object = @import("java/lang/Object.zig").Object;
 const Inheritance = @import("zig/Inheritance.zig");
-// const Image = @import("javax/microedition/lcdui/Image.zig").Image;
+const Image = @import("javax/microedition/lcdui/Image.zig").Image;
 const Animation = @import("org/allbinary/animation/Animation.zig").Animation;
 const AnimationBehavior = @import("org/allbinary/animation/AnimationBehavior.zig").AnimationBehavior;
 const AnimationBehaviorFactory = @import("org/allbinary/animation/AnimationBehaviorFactory.zig").AnimationBehaviorFactory;
@@ -27,6 +27,7 @@ const ForcedLogUtil = @import("org/allbinary/logic/communication/log/ForcedLogUt
 const ScaleProperties = @import("org/allbinary/media/ScaleProperties.zig").ScaleProperties;
 const AdjustedImageArrayAnimation = @import("org/allbinary/animation/image/AdjustedImageArrayAnimation.zig").AdjustedImageArrayAnimation;
 const ImageArrayAnimation = @import("org/allbinary/animation/image/ImageArrayAnimation.zig").ImageArrayAnimation;
+const Exception = @import("java/lang/Exception.zig").Exception;
 
 pub const ImageArrayAnimationFactory = struct {
     const Self = @This();

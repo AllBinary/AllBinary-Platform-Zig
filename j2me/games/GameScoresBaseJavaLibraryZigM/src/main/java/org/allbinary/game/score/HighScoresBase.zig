@@ -23,6 +23,7 @@ const CommonStrings = @import("org/allbinary/string/CommonStrings.zig").CommonSt
 const HighScoresFactoryInterface = @import("org/allbinary/game/score/HighScoresFactoryInterface.zig").HighScoresFactoryInterface;
 const HighScoresHelperBaseInterface = @import("org/allbinary/game/score/HighScoresHelperBaseInterface.zig").HighScoresHelperBaseInterface;
 const HighScoresResultsListener = @import("org/allbinary/game/score/HighScoresResultsListener.zig").HighScoresResultsListener;
+const RuntimeException = @import("java/lang/RuntimeException.zig").RuntimeException;
 
 pub const HighScoresBase = struct {
     const Self = @This();

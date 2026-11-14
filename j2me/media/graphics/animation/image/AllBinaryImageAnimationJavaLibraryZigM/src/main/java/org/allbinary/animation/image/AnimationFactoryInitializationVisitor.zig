@@ -59,12 +59,12 @@ pub const AnimationFactoryInitializationVisitor = struct {
         const commonSeps: ?*CommonSeps = Inheritance.upcast(?*CommonSeps, CommonSeps.getInstance());
         const commonLabels: ?*CommonLabels = Inheritance.upcast(?*CommonLabels, CommonLabels.getInstance());
         const stringBuffer: ?*StringMaker = StringMaker.create();
-        _ = Inheritance.call(Inheritance.call(stringBuffer.?, "append", .{ PositionStrings.getInstance().?.DX_LABEL }).?, "appendfloat", .{ @as(f32, @floatFromInt(self.dx)) });
-        _ = Inheritance.call(Inheritance.call(stringBuffer.?, "append", .{ PositionStrings.getInstance().?.DY_LABEL }).?, "appendfloat", .{ @as(f32, @floatFromInt(self.dy)) });
-        _ = Inheritance.call(stringBuffer.?, "append", .{ commonLabels.?.WIDTH_LABEL });
+        _ = Inheritance.call(Inheritance.call(stringBuffer.?, "append", .{ Inheritance.fieldPointer(PositionStrings.getInstance().?, "DX_LABEL").* }).?, "appendfloat", .{ @as(f32, @floatFromInt(self.dx)) });
+        _ = Inheritance.call(Inheritance.call(stringBuffer.?, "append", .{ Inheritance.fieldPointer(PositionStrings.getInstance().?, "DY_LABEL").* }).?, "appendfloat", .{ @as(f32, @floatFromInt(self.dy)) });
+        _ = Inheritance.call(stringBuffer.?, "append", .{ Inheritance.fieldPointer(commonLabels.?, "WIDTH_LABEL").* });
         _ = Inheritance.call(stringBuffer.?, "appendint", .{ self.width });
-        _ = Inheritance.call(stringBuffer.?, "append", .{ commonSeps.?.SPACE });
-        _ = Inheritance.call(stringBuffer.?, "append", .{ commonLabels.?.HEIGHT_LABEL });
+        _ = Inheritance.call(stringBuffer.?, "append", .{ Inheritance.fieldPointer(commonSeps.?, "SPACE").* });
+        _ = Inheritance.call(stringBuffer.?, "append", .{ Inheritance.fieldPointer(commonLabels.?, "HEIGHT_LABEL").* });
         _ = Inheritance.call(stringBuffer.?, "appendint", .{ self.height });
         return Inheritance.upcast(?*String, Object.toString(Object.of(stringBuffer)));
     }

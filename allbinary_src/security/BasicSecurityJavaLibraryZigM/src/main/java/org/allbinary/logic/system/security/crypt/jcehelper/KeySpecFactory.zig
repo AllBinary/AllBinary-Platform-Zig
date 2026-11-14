@@ -18,12 +18,14 @@ const allocator = std.heap.page_allocator;
 const String = @import("java/lang/String.zig").String;
 const Object = @import("java/lang/Object.zig").Object;
 const Inheritance = @import("zig/Inheritance.zig");
-// const KeySpec = @import("java/security/spec/KeySpec.zig").KeySpec;
-// const DESKeySpec = @import("javax/crypto/spec/DESKeySpec.zig").DESKeySpec;
-// const DESedeKeySpec = @import("javax/crypto/spec/DESedeKeySpec.zig").DESedeKeySpec;
+const KeySpec = @import("java/security/spec/KeySpec.zig").KeySpec;
+const DESKeySpec = @import("javax/crypto/spec/DESKeySpec.zig").DESKeySpec;
+const DESedeKeySpec = @import("javax/crypto/spec/DESedeKeySpec.zig").DESedeKeySpec;
 const TsUtil = @import("org/allbinary/TsUtil.zig").TsUtil;
 const PreLogUtil = @import("org/allbinary/logic/communication/log/PreLogUtil.zig").PreLogUtil;
 const CommonStrings = @import("org/allbinary/string/CommonStrings.zig").CommonStrings;
+const Exception = @import("java/lang/Exception.zig").Exception;
+const RuntimeException = @import("java/lang/RuntimeException.zig").RuntimeException;
 
 pub const KeySpecFactory = struct {
     const Self = @This();
@@ -71,7 +73,7 @@ pub const KeySpecFactory = struct {
         }
         // catch (Exception e):
 //             const commonStrings: ?*CommonStrings = Inheritance.upcast(?*CommonStrings, CommonStrings.getInstance()); _ = commonStrings;
-//             _ = Inheritance.callStatic(PreLogUtil, "putOE", .{ commonStrings.?.EXCEPTION, self, commonStrings.?.GET_INSTANCE, e });
+//             _ = Inheritance.callStatic(PreLogUtil, "putOE", .{ Inheritance.fieldPointer(commonStrings.?, "EXCEPTION").*, self, Inheritance.fieldPointer(commonStrings.?, "GET_INSTANCE").*, e });
 //             std.debug.panic("{any}", .{error.RuntimeException});
     }
 };

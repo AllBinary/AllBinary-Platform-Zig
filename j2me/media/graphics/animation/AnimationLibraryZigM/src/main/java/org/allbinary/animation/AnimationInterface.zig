@@ -18,8 +18,9 @@ const allocator = std.heap.page_allocator;
 const String = @import("java/lang/String.zig").String;
 const Object = @import("java/lang/Object.zig").Object;
 const Inheritance = @import("zig/Inheritance.zig");
-// const Graphics = @import("javax/microedition/lcdui/Graphics.zig").Graphics;
+const Graphics = @import("javax/microedition/lcdui/Graphics.zig").Graphics;
 const LocationPaintableInterface = @import("org/allbinary/graphics/paint/LocationPaintableInterface.zig").LocationPaintableInterface;
+const Exception = @import("java/lang/Exception.zig").Exception;
 
 // Java interface: an implementation is a pointer and a table of functions
 pub const AnimationInterface = struct {
@@ -29,8 +30,8 @@ pub const AnimationInterface = struct {
     object: Object,
     base: LocationPaintableInterface,
     toStringFn: *const fn (pointer: *anyopaque) ?*String,
-    nextFrameFn: *const fn (pointer: *anyopaque) void,
-    paintThreedXYZFn: *const fn (pointer: *anyopaque, graphics: ?*Graphics, x: i32, y: i32, z: i32) void,
+    nextFrameFn: *const fn (interface_pointer: *anyopaque) void,
+    paintThreedXYZFn: *const fn (interface_pointer: *anyopaque, graphics: ?*Graphics, x: i32, y: i32, z: i32) void,
 
     pub fn nextFrame(self: *Self) void {
         return self.nextFrameFn(self.pointer);
@@ -46,19 +47,19 @@ pub const AnimationInterface = struct {
 
     // The interface value of an object with the methods. Like a Java class a method can be declared by the object or a superclass.
     pub fn of(object: anytype) ?*Self {
-        const Implementation = @TypeOf(object);
+        const ImplementationType = @TypeOf(object);
         const Methods = struct {
             fn toString(pointer: *anyopaque) ?*String {
-                const implementation: Implementation = @ptrCast(@alignCast(pointer));
+                const implementation: ImplementationType = @ptrCast(@alignCast(pointer));
                 return String.valueOf(implementation);
             }
-            fn nextFrame(pointer: *anyopaque) void {
-                const implementation: Implementation = @ptrCast(@alignCast(pointer));
+            fn nextFrame(interface_pointer: *anyopaque) void {
+                const implementation: ImplementationType = @ptrCast(@alignCast(interface_pointer));
                 return Inheritance.receiver(implementation, "nextFrame").nextFrame();
             }
-            fn paintThreedXYZ(pointer: *anyopaque, graphics: ?*Graphics, x: i32, y: i32, z: i32) void {
-                const implementation: Implementation = @ptrCast(@alignCast(pointer));
-                return Inheritance.receiver(implementation, "paintThreedXYZ").paintThreedXYZ(graphics, x, y, z);
+            fn paintThreedXYZ(interface_pointer: *anyopaque, graphics: ?*Graphics, x: i32, y: i32, z: i32) void {
+                const implementation: ImplementationType = @ptrCast(@alignCast(interface_pointer));
+                return Inheritance.call(implementation, "paintThreedXYZ", .{ graphics, x, y, z });
             }
         };
         const this = allocator.create(Self) catch unreachable;

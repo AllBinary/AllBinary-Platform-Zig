@@ -28,7 +28,7 @@ pub const AnimationListener = struct {
     object: Object,
     base: EventListenerInterface,
     toStringFn: *const fn (pointer: *anyopaque) ?*String,
-    onEndFn: *const fn (pointer: *anyopaque) void,
+    onEndFn: *const fn (interface_pointer: *anyopaque) void,
 
     pub fn onEnd(self: *Self) void {
         return self.onEndFn(self.pointer);
@@ -40,14 +40,14 @@ pub const AnimationListener = struct {
 
     // The interface value of an object with the methods. Like a Java class a method can be declared by the object or a superclass.
     pub fn of(object: anytype) ?*Self {
-        const Implementation = @TypeOf(object);
+        const ImplementationType = @TypeOf(object);
         const Methods = struct {
             fn toString(pointer: *anyopaque) ?*String {
-                const implementation: Implementation = @ptrCast(@alignCast(pointer));
+                const implementation: ImplementationType = @ptrCast(@alignCast(pointer));
                 return String.valueOf(implementation);
             }
-            fn onEnd(pointer: *anyopaque) void {
-                const implementation: Implementation = @ptrCast(@alignCast(pointer));
+            fn onEnd(interface_pointer: *anyopaque) void {
+                const implementation: ImplementationType = @ptrCast(@alignCast(interface_pointer));
                 return Inheritance.receiver(implementation, "onEnd").onEnd();
             }
         };

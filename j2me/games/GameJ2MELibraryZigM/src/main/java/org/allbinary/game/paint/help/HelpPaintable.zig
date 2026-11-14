@@ -18,8 +18,8 @@ const allocator = std.heap.page_allocator;
 const String = @import("java/lang/String.zig").String;
 const Object = @import("java/lang/Object.zig").Object;
 const Inheritance = @import("zig/Inheritance.zig");
-// const Font = @import("javax/microedition/lcdui/Font.zig").Font;
-// const Graphics = @import("javax/microedition/lcdui/Graphics.zig").Graphics;
+const Font = @import("javax/microedition/lcdui/Font.zig").Font;
+const Graphics = @import("javax/microedition/lcdui/Graphics.zig").Graphics;
 const Anchor = @import("org/allbinary/graphics/Anchor.zig").Anchor;
 const BasicColor = @import("org/allbinary/graphics/color/BasicColor.zig").BasicColor;
 const DisplayInfoSingleton = @import("org/allbinary/graphics/displayable/DisplayInfoSingleton.zig").DisplayInfoSingleton;
@@ -55,7 +55,7 @@ pub const HelpPaintable = struct {
         this.inputInfo = Inheritance.receiverOf(StringUtil.getInstance().?, "getArrayInstance").getArrayInstance();
         
         this.titleBeginWidth = 0;
-        this.beginWidthArray = NullUtil.getInstance().?.NULL_INT_ARRAY;
+        this.beginWidthArray = Inheritance.fieldPointer(NullUtil.getInstance().?, "NULL_INT_ARRAY").*;
         this.charHeight = 0;
     }
     

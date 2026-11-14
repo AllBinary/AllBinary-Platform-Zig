@@ -63,7 +63,7 @@ pub const GameStatisticsFactory = struct {
     
 
     pub fn toString(self: *Self) ?*String {
-        return Inheritance.upcast(?*String, Object.toString(Object.of(Inheritance.call(Inheritance.call(StringMaker.create(), "append", .{ self.base.toString() }).?, "append", .{ Object.toString(Object.of(self.stringBuffer)) }))));
+        return Inheritance.upcast(?*String, Object.toString(Object.of(Inheritance.call(Inheritance.call(StringMaker.create(), "append", .{ String.valueOf(&self.base) }).?, "append", .{ Object.toString(Object.of(self.stringBuffer)) }))));
     }
 };
 

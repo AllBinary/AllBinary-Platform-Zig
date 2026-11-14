@@ -21,6 +21,7 @@ const Inheritance = @import("zig/Inheritance.zig");
 const AllBinaryMediaManager = @import("org/allbinary/media/audio/AllBinaryMediaManager.zig").AllBinaryMediaManager;
 const PlayerComposite = @import("org/allbinary/media/audio/PlayerComposite.zig").PlayerComposite;
 const Sound = @import("org/allbinary/media/audio/Sound.zig").Sound;
+const Exception = @import("java/lang/Exception.zig").Exception;
 
 pub const CompositeSound = struct {
     const Self = @This();

@@ -18,7 +18,7 @@ const allocator = std.heap.page_allocator;
 const String = @import("java/lang/String.zig").String;
 const Object = @import("java/lang/Object.zig").Object;
 const Inheritance = @import("zig/Inheritance.zig");
-// const Graphics = @import("javax/microedition/lcdui/Graphics.zig").Graphics;
+const Graphics = @import("javax/microedition/lcdui/Graphics.zig").Graphics;
 const BasicGroupFactory = @import("org/allbinary/game/identification/BasicGroupFactory.zig").BasicGroupFactory;
 const Group = @import("org/allbinary/game/identification/Group.zig").Group;
 const GPoint = @import("org/allbinary/graphics/GPoint.zig").GPoint;
@@ -36,6 +36,7 @@ const ViewPositionEvent = @import("org/allbinary/view/event/ViewPositionEvent.zi
 const Layer = @import("org/allbinary/layer/Layer.zig").Layer;
 const LayerInterface = @import("org/allbinary/layer/LayerInterface.zig").LayerInterface;
 const Integer = @import("java/lang/Integer.zig").Integer;
+const Exception = @import("java/lang/Exception.zig").Exception;
 
 pub const AllBinaryLayer = struct {
     const Self = @This();
@@ -53,7 +54,7 @@ pub const AllBinaryLayer = struct {
 
     // Static fields with runtime initializers: call staticInit once at startup
     pub fn staticInit() void {
-        NULL_ALLBINARY_LAYER = Inheritance.callStatic(AllBinaryLayer, "create3", .{ StringUtil.getInstance().?.EMPTY_STRING, RectangleFactory.SINGLETON, ViewPositionBase.NULL_VIEW_POSITION });
+        NULL_ALLBINARY_LAYER = Inheritance.callStatic(AllBinaryLayer, "create3", .{ Inheritance.fieldPointer(StringUtil.getInstance().?, "EMPTY_STRING").*, RectangleFactory.SINGLETON, ViewPositionBase.NULL_VIEW_POSITION });
     }
 
     fn initFields(this: *Self) void {
@@ -68,23 +69,69 @@ pub const AllBinaryLayer = struct {
     pub fn create3(name: ?*String, rectangle: ?*Rectangle, viewPosition: ?*ViewPositionBase) *Self {
         const this = allocator.create(Self) catch unreachable;
         this.* = .{};
-        this.base = Inheritance.callStatic(Layer, "create2", .{ rectangle.?.getWidth(), rectangle.?.getHeight() }).*;
+        this.base = Inheritance.callStatic(Layer, "create2", .{ Inheritance.receiver(rectangle.?, "getWidth").getWidth(), Inheritance.receiver(rectangle.?, "getHeight").getHeight() }).*;
         this.initFields();
         var localName: ?*String = null;
-        if (name == null) {
-            localName = Inheritance.upcast(@TypeOf(localName), String.fromBytes(@as(*const Object.Class, @ptrCast(@alignCast(@as(?*anyopaque, @ptrCast(@constCast(Object.of(this).?.class))).?))).name));
-        } else {
-            localName = Inheritance.upcast(@TypeOf(localName), Object.toString(Object.of(Inheritance.call(Inheritance.call(Inheritance.call(StringMaker.create(), "append", .{ name }).?, "append", .{ CommonSeps.getInstance().?.COLON }).?, "append", .{ String.fromBytes(std.fmt.allocPrint(allocator, "{x}", .{@as(u32, @bitCast(@as(i32, Inheritance.call(TsUtil.getInstance().?, "hashCode", .{ this }))))}) catch unreachable) }))));
-        }
+        localName = Inheritance.upcast(@TypeOf(localName), Object.toString(Object.of(Inheritance.call(Inheritance.call(Inheritance.call(StringMaker.create(), "append", .{ name }).?, "append", .{ Inheritance.fieldPointer(CommonSeps.getInstance().?, "COLON").* }).?, "append", .{ String.fromBytes(std.fmt.allocPrint(allocator, "{x}", .{@as(u32, @bitCast(@as(i32, Inheritance.call(TsUtil.getInstance().?, "hashCode", .{ this }))))}) catch unreachable) }))));
         this.name = localName;
-        const point: ?*GPoint = Inheritance.upcast(?*GPoint, rectangle.?.getPoint());
+        const point: ?*GPoint = Inheritance.upcast(?*GPoint, Inheritance.receiver(rectangle.?, "getPoint").getPoint());
         _ = Inheritance.call(this, "setPosition", .{ point.?.getX(), point.?.getY(), point.?.getZ() });
-        _ = Inheritance.call(this, "setHalfWidth", .{ (Inheritance.receiver(this, "getWidth").getWidth() >> @intCast(1)) });
-        _ = Inheritance.call(this, "setHalfHeight", .{ (Inheritance.receiver(this, "getHeight").getHeight() >> @intCast(1)) });
+        _ = Inheritance.call(this, "setHalfWidth", .{ (this.getWidth() >> @intCast(1)) });
+        _ = Inheritance.call(this, "setHalfHeight", .{ (this.getHeight() >> @intCast(1)) });
         this.viewPosition = viewPosition;
         _ = Inheritance.call(this.viewPosition.?, "setAllbinaryLayer", .{ this });
         Inheritance.bindOverrides(this);
         return this;
+    }
+    
+
+    pub fn setPosition(self: *Self, x: i32, y: i32, z: i32) void {
+        _ = Inheritance.call(&self.base, "setPosition", .{ x, y, z });
+    }
+    
+
+    pub fn moveDXYZ(self: *Self, dx: i32, dy: i32, dz: i32) void {
+        _ = Inheritance.call(&self.base, "moveDXYZ", .{ dx, dy, dz });
+    }
+    
+
+    pub fn getXP(self: *Self) i32 {
+        return Inheritance.receiver(&self.base, "getXP").getXP();
+    }
+    
+
+    pub fn getYP(self: *Self) i32 {
+        return Inheritance.receiver(&self.base, "getYP").getYP();
+    }
+    
+
+    pub fn getZP(self: *Self) i32 {
+        return Inheritance.receiver(&self.base, "getZP").getZP();
+    }
+    
+
+    pub fn getWidth(self: *Self) i32 {
+        return Inheritance.receiver(&self.base, "getWidth").getWidth();
+    }
+    
+
+    pub fn getHeight(self: *Self) i32 {
+        return Inheritance.receiver(&self.base, "getHeight").getHeight();
+    }
+    
+
+    pub fn setVisible(self: *Self, visible: bool) void {
+        _ = Inheritance.call(&self.base, "setVisible", .{ visible });
+    }
+    
+
+    pub fn isVisible(self: *Self) bool {
+        return Inheritance.receiver(&self.base, "isVisible").isVisible();
+    }
+    
+
+    pub fn paint(self: *Self, graphics: ?*Graphics) void {
+        _ = Inheritance.call(&self.base, "paint", .{ graphics });
     }
     
 
@@ -102,17 +149,17 @@ pub const AllBinaryLayer = struct {
     
 
     pub fn getX2(self: *Self) i32 {
-        return Inheritance.receiver(self, "getXP").getXP() + Inheritance.receiver(self, "getWidth").getWidth();
+        return self.getXP() + self.getWidth();
     }
     
 
     pub fn getY2(self: *Self) i32 {
-        return Inheritance.receiver(self, "getYP").getYP() + Inheritance.receiver(self, "getHeight").getHeight();
+        return self.getYP() + self.getHeight();
     }
     
 
     pub fn getZ2(self: *Self) i32 {
-        return @as(i32, @intCast((Inheritance.receiver(self, "getZP").getZP() + Inheritance.receiver(self, "getDepth").getDepth())));
+        return Inheritance.number(i32, (self.getZP() + Inheritance.receiver(self, "getDepth").getDepth()));
     }
     
 
@@ -142,7 +189,7 @@ pub const AllBinaryLayer = struct {
     
 
     pub fn getHalfDepth(self: *Self) i32 {
-        return @divTrunc(@as(i32, @intCast(Inheritance.receiver(self, "getDepth").getDepth())), 2);
+        return @divTrunc(Inheritance.number(i32, Inheritance.receiver(self, "getDepth").getDepth()), 2);
     }
     
 
@@ -158,7 +205,7 @@ pub const AllBinaryLayer = struct {
 
     pub fn getGroupInterface(self: *Self) []?*Group {
         _ = self;
-        return BasicGroupFactory.getInstance().?.NONE_ARRAY;
+        return Inheritance.fieldPointer(BasicGroupFactory.getInstance().?, "NONE_ARRAY").*;
     }
     
 
@@ -209,24 +256,24 @@ pub const AllBinaryLayer = struct {
         const positionStrings: ?*PositionStrings = Inheritance.upcast(?*PositionStrings, PositionStrings.getInstance());
         const commonLabels: ?*CommonLabels = Inheritance.upcast(?*CommonLabels, CommonLabels.getInstance());
         _ = Inheritance.call(stringBuffer.?, "append", .{ self.getName() });
-        _ = Inheritance.call(stringBuffer.?, "append", .{ commonSeps.?.COLON });
+        _ = Inheritance.call(stringBuffer.?, "append", .{ Inheritance.fieldPointer(commonSeps.?, "COLON").* });
         _ = Inheritance.call(stringBuffer.?, "append", .{ AllBinaryLayer.TYPE });
         _ = Inheritance.call(stringBuffer.?, "appendint", .{ self.getType() });
-        _ = Inheritance.call(stringBuffer.?, "append", .{ commonSeps.?.SPACE });
-        _ = Inheritance.call(stringBuffer.?, "append", .{ positionStrings.?.X_LABEL });
-        _ = Inheritance.call(stringBuffer.?, "appendint", .{ @as(i32, @intCast(Inheritance.receiver(self, "getXP").getXP())) });
-        _ = Inheritance.call(stringBuffer.?, "append", .{ commonSeps.?.SPACE });
-        _ = Inheritance.call(stringBuffer.?, "append", .{ positionStrings.?.Y_LABEL });
-        _ = Inheritance.call(stringBuffer.?, "appendint", .{ @as(i32, @intCast(Inheritance.receiver(self, "getYP").getYP())) });
-        _ = Inheritance.call(stringBuffer.?, "append", .{ commonSeps.?.SPACE });
-        _ = Inheritance.call(stringBuffer.?, "append", .{ positionStrings.?.Z_LABEL });
-        _ = Inheritance.call(stringBuffer.?, "appendint", .{ @as(i32, @intCast(Inheritance.receiver(self, "getZP").getZP())) });
-        _ = Inheritance.call(stringBuffer.?, "append", .{ commonSeps.?.SPACE });
-        _ = Inheritance.call(stringBuffer.?, "append", .{ commonLabels.?.WIDTH_LABEL });
-        _ = Inheritance.call(stringBuffer.?, "appendint", .{ @as(i32, @intCast(Inheritance.receiver(self, "getWidth").getWidth())) });
-        _ = Inheritance.call(stringBuffer.?, "append", .{ commonSeps.?.SPACE });
-        _ = Inheritance.call(stringBuffer.?, "append", .{ commonLabels.?.HEIGHT_LABEL });
-        _ = Inheritance.call(stringBuffer.?, "appendint", .{ @as(i32, @intCast(Inheritance.receiver(self, "getHeight").getHeight())) });
+        _ = Inheritance.call(stringBuffer.?, "append", .{ Inheritance.fieldPointer(commonSeps.?, "SPACE").* });
+        _ = Inheritance.call(stringBuffer.?, "append", .{ Inheritance.fieldPointer(positionStrings.?, "X_LABEL").* });
+        _ = Inheritance.call(stringBuffer.?, "appendint", .{ self.getXP() });
+        _ = Inheritance.call(stringBuffer.?, "append", .{ Inheritance.fieldPointer(commonSeps.?, "SPACE").* });
+        _ = Inheritance.call(stringBuffer.?, "append", .{ Inheritance.fieldPointer(positionStrings.?, "Y_LABEL").* });
+        _ = Inheritance.call(stringBuffer.?, "appendint", .{ self.getYP() });
+        _ = Inheritance.call(stringBuffer.?, "append", .{ Inheritance.fieldPointer(commonSeps.?, "SPACE").* });
+        _ = Inheritance.call(stringBuffer.?, "append", .{ Inheritance.fieldPointer(positionStrings.?, "Z_LABEL").* });
+        _ = Inheritance.call(stringBuffer.?, "appendint", .{ self.getZP() });
+        _ = Inheritance.call(stringBuffer.?, "append", .{ Inheritance.fieldPointer(commonSeps.?, "SPACE").* });
+        _ = Inheritance.call(stringBuffer.?, "append", .{ Inheritance.fieldPointer(commonLabels.?, "WIDTH_LABEL").* });
+        _ = Inheritance.call(stringBuffer.?, "appendint", .{ self.getWidth() });
+        _ = Inheritance.call(stringBuffer.?, "append", .{ Inheritance.fieldPointer(commonSeps.?, "SPACE").* });
+        _ = Inheritance.call(stringBuffer.?, "append", .{ Inheritance.fieldPointer(commonLabels.?, "HEIGHT_LABEL").* });
+        _ = Inheritance.call(stringBuffer.?, "appendint", .{ self.getHeight() });
     }
     
 

@@ -22,6 +22,7 @@ const GameKeyEvent = @import("org/allbinary/game/input/event/GameKeyEvent.zig").
 const AllBinaryLayerManager = @import("org/allbinary/layer/AllBinaryLayerManager.zig").AllBinaryLayerManager;
 const CollidableDestroyableDamageableLayer = @import("org/allbinary/game/layer/special/CollidableDestroyableDamageableLayer.zig").CollidableDestroyableDamageableLayer;
 const SpecialGameInputProcessor = @import("org/allbinary/game/layer/special/SpecialGameInputProcessor.zig").SpecialGameInputProcessor;
+const Exception = @import("java/lang/Exception.zig").Exception;
 
 pub const Special1GameInputProcessor = struct {
     const Self = @This();

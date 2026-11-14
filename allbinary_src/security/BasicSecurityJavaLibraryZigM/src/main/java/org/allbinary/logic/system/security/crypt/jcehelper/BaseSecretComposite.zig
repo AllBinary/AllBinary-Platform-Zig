@@ -19,6 +19,7 @@ const String = @import("java/lang/String.zig").String;
 const Object = @import("java/lang/Object.zig").Object;
 const Inheritance = @import("zig/Inheritance.zig");
 const NullUtil = @import("org/allbinary/logic/NullUtil.zig").NullUtil;
+const Exception = @import("java/lang/Exception.zig").Exception;
 
 pub const BaseSecretComposite = struct {
     const Self = @This();
@@ -41,7 +42,7 @@ pub const BaseSecretComposite = struct {
     pub fn encrypt(self: *Self, array: []i8) []i8 {
         _ = array;
         _ = self;
-        return NullUtil.getInstance().?.NULL_BYTE_ARRAY;
+        return Inheritance.fieldPointer(NullUtil.getInstance().?, "NULL_BYTE_ARRAY").*;
     }
     
 
@@ -49,7 +50,7 @@ pub const BaseSecretComposite = struct {
     pub fn decrypt(self: *Self, array: []i8) []i8 {
         _ = array;
         _ = self;
-        return NullUtil.getInstance().?.NULL_BYTE_ARRAY;
+        return Inheritance.fieldPointer(NullUtil.getInstance().?, "NULL_BYTE_ARRAY").*;
     }
 };
 

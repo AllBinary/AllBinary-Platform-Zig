@@ -35,7 +35,7 @@ pub const OrientationMotionGestureFactory = struct {
 
     // Static fields with runtime initializers: call staticInit once at startup
     pub fn staticInit() void {
-        instance = Inheritance.upcast(?Object, NullUtil.getInstance().?.NULL_OBJECT);
+        instance = Inheritance.upcast(?Object, Inheritance.fieldPointer(NullUtil.getInstance().?, "NULL_OBJECT").*);
     }
 
     fn initFields(this: *Self) void {
@@ -50,7 +50,7 @@ pub const OrientationMotionGestureFactory = struct {
     
 
     pub fn getInstance() ?*OrientationMotionGestureFactory {
-        if (Object.same(OrientationMotionGestureFactory.instance, NullUtil.getInstance().?.NULL_OBJECT)) {
+        if (Object.same(OrientationMotionGestureFactory.instance, Inheritance.fieldPointer(NullUtil.getInstance().?, "NULL_OBJECT").*)) {
             OrientationMotionGestureFactory.instance = Inheritance.upcast(@TypeOf(OrientationMotionGestureFactory.instance), OrientationMotionGestureFactory.create());
         }
         return Inheritance.cast(?*OrientationMotionGestureFactory, OrientationMotionGestureFactory.instance);
@@ -61,7 +61,7 @@ pub const OrientationMotionGestureFactory = struct {
         const this = allocator.create(Self) catch unreachable;
         this.* = .{};
         this.initFields();
-        const MAX: i32 = InputFactory.getInstance().?.MAX;
+        const MAX: i32 = Inheritance.fieldPointer(InputFactory.getInstance().?, "MAX").*;
         this.LEFT = Inheritance.callStatic(MotionGestureInput, "create2", .{ MAX - 20, String.literal("Left Orient") });
         this.RIGHT = Inheritance.callStatic(MotionGestureInput, "create2", .{ MAX - 21, String.literal("Right Orient") });
         this.UP = Inheritance.callStatic(MotionGestureInput, "create2", .{ MAX - 22, String.literal("Up Orient") });

@@ -31,7 +31,7 @@ pub const CurrentlyPressedTouchButtonSingletonDebug = struct {
     base: CurrentlyPressedTouchButtonSingleton = undefined,
     string: ?*String = null,
     listString: ?*String = null,
-    append: ?*String = null,
+    appendText: ?*String = null,
     PRESSED_AND_FIRED: ?*String = null,
     PRESSED_AND_NOT_FIRED: ?*String = null,
     ASSOCIATED_RELEASED_AND_FIRED: ?*String = null,
@@ -46,9 +46,9 @@ pub const CurrentlyPressedTouchButtonSingletonDebug = struct {
     }
 
     fn initFields(this: *Self) void {
-        this.string = Inheritance.upcast(?*String, StringUtil.getInstance().?.EMPTY_STRING);
-        this.listString = Inheritance.upcast(?*String, StringUtil.getInstance().?.EMPTY_STRING);
-        this.append = Inheritance.upcast(?*String, StringUtil.getInstance().?.EMPTY_STRING);
+        this.string = Inheritance.upcast(?*String, Inheritance.fieldPointer(StringUtil.getInstance().?, "EMPTY_STRING").*);
+        this.listString = Inheritance.upcast(?*String, Inheritance.fieldPointer(StringUtil.getInstance().?, "EMPTY_STRING").*);
+        this.appendText = Inheritance.upcast(?*String, Inheritance.fieldPointer(StringUtil.getInstance().?, "EMPTY_STRING").*);
         this.PRESSED_AND_FIRED = String.literal("pressed & fired");
         this.PRESSED_AND_NOT_FIRED = String.literal("pressed in button but not fired");
         this.ASSOCIATED_RELEASED_AND_FIRED = String.literal("assoc. rel & fired");
@@ -75,22 +75,22 @@ pub const CurrentlyPressedTouchButtonSingletonDebug = struct {
     pub fn appendTouchButtonInput(self: *Self, append_: ?*String, touchButtonInput: ?*TouchButtonInput) void {
         const stringBuffer: ?*StringMaker = StringMaker.create();
         _ = Inheritance.call(stringBuffer.?, "append", .{ Object.toString(Object.of(touchButtonInput)) });
-        _ = Inheritance.call(stringBuffer.?, "append", .{ CommonSeps.getInstance().?.SPACE });
+        _ = Inheritance.call(stringBuffer.?, "append", .{ Inheritance.fieldPointer(CommonSeps.getInstance().?, "SPACE").* });
         _ = Inheritance.call(stringBuffer.?, "append", .{ append_ });
-        self.append = Inheritance.upcast(@TypeOf(self.append), Object.toString(Object.of(stringBuffer)));
-        self.string = Inheritance.upcast(@TypeOf(self.string), Object.toString(Object.of(Inheritance.call(Inheritance.call(StringMaker.create(), "append", .{ self.listString }).?, "append", .{ self.append }))));
+        self.appendText = Inheritance.upcast(@TypeOf(self.appendText), Object.toString(Object.of(stringBuffer)));
+        self.string = Inheritance.upcast(@TypeOf(self.string), Object.toString(Object.of(Inheritance.call(Inheritance.call(StringMaker.create(), "append", .{ self.listString }).?, "append", .{ self.appendText }))));
     }
     
 
     pub fn append(self: *Self, append_: ?*String) void {
-        self.append = Inheritance.upcast(@TypeOf(self.append), Object.toString(Object.of(Inheritance.call(Inheritance.call(StringMaker.create(), "append", .{ self.append }).?, "append", .{ append_ }))));
-        self.string = Inheritance.upcast(@TypeOf(self.string), Object.toString(Object.of(Inheritance.call(Inheritance.call(StringMaker.create(), "append", .{ self.listString }).?, "append", .{ self.append }))));
+        self.appendText = Inheritance.upcast(@TypeOf(self.appendText), Object.toString(Object.of(Inheritance.call(Inheritance.call(StringMaker.create(), "append", .{ self.appendText }).?, "append", .{ append_ }))));
+        self.string = Inheritance.upcast(@TypeOf(self.string), Object.toString(Object.of(Inheritance.call(Inheritance.call(StringMaker.create(), "append", .{ self.listString }).?, "append", .{ self.appendText }))));
     }
     
 
     pub fn clearLog(self: *Self, x: i32, y: i32) void {
-        self.append = Inheritance.upcast(@TypeOf(self.append), Object.toString(Object.of(Inheritance.call(Inheritance.call(StringMaker.create(), "append", .{ Inheritance.callStatic(GPoint, "toStringStatic", .{ x, y, 0 }) }).?, "append", .{ CommonSeps.getInstance().?.SPACE }))));
-        self.string = Inheritance.upcast(@TypeOf(self.string), Object.toString(Object.of(Inheritance.call(Inheritance.call(StringMaker.create(), "append", .{ self.listString }).?, "append", .{ self.append }))));
+        self.appendText = Inheritance.upcast(@TypeOf(self.appendText), Object.toString(Object.of(Inheritance.call(Inheritance.call(StringMaker.create(), "append", .{ Inheritance.callStatic(GPoint, "toStringStatic", .{ x, y, 0 }) }).?, "append", .{ Inheritance.fieldPointer(CommonSeps.getInstance().?, "SPACE").* }))));
+        self.string = Inheritance.upcast(@TypeOf(self.string), Object.toString(Object.of(Inheritance.call(Inheritance.call(StringMaker.create(), "append", .{ self.listString }).?, "append", .{ self.appendText }))));
     }
     
 
@@ -127,7 +127,7 @@ pub const CurrentlyPressedTouchButtonSingletonDebug = struct {
     pub fn removeAt(self: *Self, index: i32) ?*TouchButtonInput {
         const touchButtonInput: ?*TouchButtonInput = Inheritance.upcast(?*TouchButtonInput, Inheritance.call(&self.base, "removeAt", .{ index }));
         self.listString = Inheritance.upcast(@TypeOf(self.listString), Object.toString(Object.of(Inheritance.fieldPointer(self, "list").*)));
-        self.string = Inheritance.upcast(@TypeOf(self.string), Object.toString(Object.of(Inheritance.call(Inheritance.call(StringMaker.create(), "append", .{ self.listString }).?, "append", .{ self.append }))));
+        self.string = Inheritance.upcast(@TypeOf(self.string), Object.toString(Object.of(Inheritance.call(Inheritance.call(StringMaker.create(), "append", .{ self.listString }).?, "append", .{ self.appendText }))));
         return touchButtonInput;
     }
     
@@ -135,7 +135,7 @@ pub const CurrentlyPressedTouchButtonSingletonDebug = struct {
     pub fn remove(self: *Self, touchButtonInput: ?*TouchButtonInput) bool {
         const isRemoved: bool = Inheritance.call(&self.base, "remove", .{ touchButtonInput });
         self.listString = Inheritance.upcast(@TypeOf(self.listString), Object.toString(Object.of(Inheritance.fieldPointer(self, "list").*)));
-        self.string = Inheritance.upcast(@TypeOf(self.string), Object.toString(Object.of(Inheritance.call(Inheritance.call(StringMaker.create(), "append", .{ self.listString }).?, "append", .{ self.append }))));
+        self.string = Inheritance.upcast(@TypeOf(self.string), Object.toString(Object.of(Inheritance.call(Inheritance.call(StringMaker.create(), "append", .{ self.listString }).?, "append", .{ self.appendText }))));
         return isRemoved;
     }
     
@@ -143,7 +143,7 @@ pub const CurrentlyPressedTouchButtonSingletonDebug = struct {
     pub fn add(self: *Self, touchButtonInput: ?*TouchButtonInput) void {
         _ = Inheritance.call(&self.base, "add", .{ touchButtonInput });
         self.listString = Inheritance.upcast(@TypeOf(self.listString), Object.toString(Object.of(Inheritance.fieldPointer(self, "list").*)));
-        self.string = Inheritance.upcast(@TypeOf(self.string), Object.toString(Object.of(Inheritance.call(Inheritance.call(StringMaker.create(), "append", .{ self.listString }).?, "append", .{ self.append }))));
+        self.string = Inheritance.upcast(@TypeOf(self.string), Object.toString(Object.of(Inheritance.call(Inheritance.call(StringMaker.create(), "append", .{ self.listString }).?, "append", .{ self.appendText }))));
     }
     
 

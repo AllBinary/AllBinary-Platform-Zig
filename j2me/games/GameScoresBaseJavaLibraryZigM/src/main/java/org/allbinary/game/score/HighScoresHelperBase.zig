@@ -25,6 +25,7 @@ const HighScores = @import("org/allbinary/game/score/HighScores.zig").HighScores
 const HighScoresHelperBaseInterface = @import("org/allbinary/game/score/HighScoresHelperBaseInterface.zig").HighScoresHelperBaseInterface;
 const LastFetchHighScoresFactory = @import("org/allbinary/game/score/LastFetchHighScoresFactory.zig").LastFetchHighScoresFactory;
 const NullHighScoresSingletonFactory = @import("org/allbinary/game/score/NullHighScoresSingletonFactory.zig").NullHighScoresSingletonFactory;
+const RuntimeException = @import("java/lang/RuntimeException.zig").RuntimeException;
 
 pub const HighScoresHelperBase = struct {
     const Self = @This();
@@ -36,7 +37,7 @@ pub const HighScoresHelperBase = struct {
 
     fn initFields(this: *Self) void {
         this.logUtil = Inheritance.upcast(?*LogUtil, LogUtil.getInstance());
-        this.highScoresArrayP = LastFetchHighScoresFactory.getInstance().?.highScoresArray;
+        this.highScoresArrayP = Inheritance.fieldPointer(LastFetchHighScoresFactory.getInstance().?, "highScoresArray").*;
     }
 
     pub fn create() *Self {
@@ -48,12 +49,12 @@ pub const HighScoresHelperBase = struct {
     
 
     pub fn setHighScoresArray(self: *Self, highScoresArrayP: []?*HighScores) void {
-        if (highScoresArrayP != null) {
+        if (!Object.isNull(highScoresArrayP)) {
             const commonStrings: ?*CommonStrings = Inheritance.upcast(?*CommonStrings, CommonStrings.getInstance());
-            _ = Inheritance.call(self.logUtil.?, "putF", .{ Object.toString(Object.of(Inheritance.call(Inheritance.call(StringMaker.create(), "append", .{ commonStrings.?.START }).?, "appendint", .{ @as(i32, @intCast(highScoresArrayP.len)) }))), self, String.literal("setHighScoresArray") });
+            _ = Inheritance.call(self.logUtil.?, "putF", .{ Object.toString(Object.of(Inheritance.call(Inheritance.call(StringMaker.create(), "append", .{ Inheritance.fieldPointer(commonStrings.?, "START").* }).?, "appendint", .{ @as(i32, @intCast(highScoresArrayP.len)) }))), self, String.literal("setHighScoresArray") });
         } else {
             const commonStrings: ?*CommonStrings = Inheritance.upcast(?*CommonStrings, CommonStrings.getInstance());
-            _ = Inheritance.call(self.logUtil.?, "putF", .{ commonStrings.?.START, self, String.literal("setHighScoresArray") });
+            _ = Inheritance.call(self.logUtil.?, "putF", .{ Inheritance.fieldPointer(commonStrings.?, "START").*, self, String.literal("setHighScoresArray") });
         }
         self.highScoresArrayP = highScoresArrayP;
     }

@@ -41,7 +41,7 @@ pub const GameConfigurationPersistanceSingleton = struct {
     pub fn create() *Self {
         const this = allocator.create(Self) catch unreachable;
         this.* = .{};
-        this.base = Inheritance.callStatic(KeyValuePersistance, "create1", .{ GamePersistanceStrings.getInstance().?.SAVED_GAME_CONFIGURATION_RECORD_ID }).*;
+        this.base = Inheritance.callStatic(KeyValuePersistance, "create1", .{ Inheritance.fieldPointer(GamePersistanceStrings.getInstance().?, "SAVED_GAME_CONFIGURATION_RECORD_ID").* }).*;
         Inheritance.bindOverrides(this);
         return this;
     }

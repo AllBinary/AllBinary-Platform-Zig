@@ -25,6 +25,7 @@ const IndexedAnimation = @import("org/allbinary/animation/IndexedAnimation.zig")
 const ForcedLogUtil = @import("org/allbinary/logic/communication/log/ForcedLogUtil.zig").ForcedLogUtil;
 const ScaleProperties = @import("org/allbinary/media/ScaleProperties.zig").ScaleProperties;
 const SimultaneousCompoundIndexAnimation = @import("org/allbinary/animation/compound/SimultaneousCompoundIndexAnimation.zig").SimultaneousCompoundIndexAnimation;
+const Exception = @import("java/lang/Exception.zig").Exception;
 
 pub const SimultaneousCompoundIndexAnimationInterfaceFactory = struct {
     const Self = @This();

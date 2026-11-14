@@ -25,6 +25,7 @@ const VelocityInterfaceCompositeInterface = @import("org/allbinary/game/physics/
 const AllBinaryLayer = @import("org/allbinary/layer/AllBinaryLayer.zig").AllBinaryLayer;
 const AllBinaryLayerManager = @import("org/allbinary/layer/AllBinaryLayerManager.zig").AllBinaryLayerManager;
 const BasicDecimal = @import("org/allbinary/logic/math/BasicDecimal.zig").BasicDecimal;
+const Exception = @import("java/lang/Exception.zig").Exception;
 
 pub const UpDownVectorAI = struct {
     const Self = @This();
@@ -54,7 +55,7 @@ pub const UpDownVectorAI = struct {
 
     // throws Exception
     pub fn processAI(self: *Self, allBinaryLayerManager: ?*AllBinaryLayerManager) void {
-        const y: i32 = Inheritance.receiverOf(Inheritance.receiver(self, "getOwnerLayerInterface").getOwnerLayerInterface().?, "getHeight").getHeight() * 270;
+        const y: i32 = Inheritance.arithmetic(.multiply, Inheritance.receiverOf(Inheritance.receiver(self, "getOwnerLayerInterface").getOwnerLayerInterface().?, "getHeight").getHeight(), 270);
         if (self.index < 5) {
             const basicDecimal: ?*BasicDecimal = Inheritance.upcast(?*BasicDecimal, self.velocityInterface.?.getVelocityYBasicDecimalP());
             _ = Inheritance.call(basicDecimal.?, "setint", .{ 0 });

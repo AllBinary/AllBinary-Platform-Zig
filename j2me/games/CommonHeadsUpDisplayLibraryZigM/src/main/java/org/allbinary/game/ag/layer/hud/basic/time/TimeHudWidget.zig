@@ -18,13 +18,14 @@ const allocator = std.heap.page_allocator;
 const String = @import("java/lang/String.zig").String;
 const Object = @import("java/lang/Object.zig").Object;
 const Inheritance = @import("zig/Inheritance.zig");
-// const Font = @import("javax/microedition/lcdui/Font.zig").Font;
-// const Graphics = @import("javax/microedition/lcdui/Graphics.zig").Graphics;
+const Font = @import("javax/microedition/lcdui/Font.zig").Font;
+const Graphics = @import("javax/microedition/lcdui/Graphics.zig").Graphics;
 const BasicHud = @import("org/allbinary/game/graphics/hud/BasicHud.zig").BasicHud;
 const BasicColor = @import("org/allbinary/graphics/color/BasicColor.zig").BasicColor;
 const MyFontProcessor = @import("org/allbinary/graphics/font/MyFontProcessor.zig").MyFontProcessor;
 const PrimitiveLongSingleton = @import("org/allbinary/logic/math/PrimitiveLongSingleton.zig").PrimitiveLongSingleton;
-const Timer = @import("org/allbinary/game/ag/layer/hud/basic/time/Timer.zig").Timer;
+const HudTimer = @import("org/allbinary/game/ag/layer/hud/basic/time/HudTimer.zig").HudTimer;
+const Exception = @import("java/lang/Exception.zig").Exception;
 
 pub const TimeHudWidget = struct {
     const Self = @This();
@@ -35,25 +36,25 @@ pub const TimeHudWidget = struct {
     offset: i32 = 0,
     string: []u16 = &.{},
     totalDigits: i32 = 0,
-    timer: ?*Timer = null,
+    timer: ?*HudTimer = null,
 
     fn initFields(this: *Self) void {
         this.TIME_STRING = String.literal("Time ");
         this.TIME_CHAR_ARRAY = @constCast(&[_]u16{ 'T', 'i', 'm', 'e', ' ' })[0..];
         this.offset = 0;
-        this.string = PrimitiveLongSingleton.getInstance().?.ZERO;
+        this.string = Inheritance.fieldPointer(PrimitiveLongSingleton.getInstance().?, "ZERO").*;
         this.totalDigits = 1;
         
     }
     
 
     // throws Exception
-    pub fn getInstance(location: i32, direction: i32, basicColor: ?*BasicColor, timer: ?*Timer) ?*TimeHudWidget {
+    pub fn getInstance(location: i32, direction: i32, basicColor: ?*BasicColor, timer: ?*HudTimer) ?*TimeHudWidget {
         return Inheritance.callStatic(TimeHudWidget, "create5", .{ location, direction, 2, basicColor, timer });
     }
     
 
-    pub fn create5(location: i32, direction: i32, bufferZone: i32, basicColor: ?*BasicColor, timer: ?*Timer) *Self {
+    pub fn create5(location: i32, direction: i32, bufferZone: i32, basicColor: ?*BasicColor, timer: ?*HudTimer) *Self {
         const this = allocator.create(Self) catch unreachable;
         this.* = .{};
         this.base = Inheritance.callStatic(BasicHud, "create4", .{ location, direction, bufferZone, basicColor }).*;
@@ -68,8 +69,8 @@ pub const TimeHudWidget = struct {
 
     pub fn updateMeasurement(self: *Self, graphics: ?*Graphics) void {
         const font: ?*Font = Inheritance.upcast(?*Font, graphics.?.getFont());
-        Inheritance.fieldPointer(self, "updateMaxWidth").* = Inheritance.upcast(@TypeOf(Inheritance.fieldPointer(self, "updateMaxWidth").*), font.?.getSize() * 5);
-        self.offset = Inheritance.call(font.?, "stringWidth", .{ self.TIME_STRING }) + Inheritance.callStatic(MyFontProcessor, "defaultStringWidth", .{ font, 3 });
+        Inheritance.fieldPointer(self, "updateMaxWidth").* = Inheritance.upcast(@TypeOf(Inheritance.fieldPointer(self, "updateMaxWidth").*), Inheritance.arithmetic(.multiply, font.?.getSize(), 5));
+        self.offset = Inheritance.plus(Inheritance.call(font.?, "stringWidth", .{ self.TIME_STRING }), Inheritance.callStatic(MyFontProcessor, "defaultStringWidth", .{ font, 3 }));
         _ = Inheritance.call(&self.base, "updateMeasurement", .{ graphics });
     }
     
@@ -86,7 +87,7 @@ pub const TimeHudWidget = struct {
     }
     
 
-    pub fn getTimer(self: *Self) ?*Timer {
+    pub fn getTimer(self: *Self) ?*HudTimer {
         return self.timer;
     }
     

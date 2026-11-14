@@ -18,10 +18,11 @@ const allocator = std.heap.page_allocator;
 const String = @import("java/lang/String.zig").String;
 const Object = @import("java/lang/Object.zig").Object;
 const Inheritance = @import("zig/Inheritance.zig");
-// const BufferedReader = @import("java/io/BufferedReader.zig").BufferedReader;
-// const FileReader = @import("java/io/FileReader.zig").FileReader;
+const BufferedReader = @import("java/io/BufferedReader.zig").BufferedReader;
+const FileReader = @import("java/io/FileReader.zig").FileReader;
 const AbFile = @import("org/allbinary/logic/io/file/AbFile.zig").AbFile;
 const AbFileNativeUtil = @import("org/allbinary/logic/io/file/AbFileNativeUtil.zig").AbFileNativeUtil;
+const Exception = @import("java/lang/Exception.zig").Exception;
 
 pub const BufferedLineReader = struct {
     const Self = @This();
@@ -52,6 +53,12 @@ pub const BufferedLineReader = struct {
     // throws Exception
     pub fn readLine(self: *Self) ?*String {
         return Inheritance.upcast(?*String, self.tmpIn.?.readLine());
+    }
+    
+
+    // throws Exception
+    pub fn ready(self: *Self) bool {
+        return self.tmpIn.?.ready();
     }
     
 

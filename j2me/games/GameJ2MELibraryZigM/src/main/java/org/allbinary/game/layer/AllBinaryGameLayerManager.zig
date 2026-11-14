@@ -44,7 +44,7 @@ pub const AllBinaryGameLayerManager = struct {
 
     // Static fields with runtime initializers: call staticInit once at startup
     pub fn staticInit() void {
-        NULL_ALLBINARY_LAYER_MANAGER = Inheritance.upcast(?Object, NullUtil.getInstance().?.NULL_OBJECT);
+        NULL_ALLBINARY_LAYER_MANAGER = Inheritance.upcast(?Object, Inheritance.fieldPointer(NullUtil.getInstance().?, "NULL_OBJECT").*);
         ID = Inheritance.upcast(?*Integer, Inheritance.call(SmallIntegerSingletonFactory.getInstance().?, "getAt", .{ 22 }));
     }
 
@@ -57,8 +57,8 @@ pub const AllBinaryGameLayerManager = struct {
     
 
     pub fn getNullInstance() ?*AllBinaryGameLayerManager {
-        if (Object.same(AllBinaryGameLayerManager.NULL_ALLBINARY_LAYER_MANAGER, NullUtil.getInstance().?.NULL_OBJECT)) {
-            AllBinaryGameLayerManager.NULL_ALLBINARY_LAYER_MANAGER = Inheritance.upcast(@TypeOf(AllBinaryGameLayerManager.NULL_ALLBINARY_LAYER_MANAGER), Inheritance.callStatic(AllBinaryGameLayerManager, "create3", .{ BasicColorFactory.getInstance().?.BLACK, BasicColorFactory.getInstance().?.WHITE, GameInfo.NONE }));
+        if (Object.same(AllBinaryGameLayerManager.NULL_ALLBINARY_LAYER_MANAGER, Inheritance.fieldPointer(NullUtil.getInstance().?, "NULL_OBJECT").*)) {
+            AllBinaryGameLayerManager.NULL_ALLBINARY_LAYER_MANAGER = Inheritance.upcast(@TypeOf(AllBinaryGameLayerManager.NULL_ALLBINARY_LAYER_MANAGER), Inheritance.callStatic(AllBinaryGameLayerManager, "create3", .{ Inheritance.fieldPointer(BasicColorFactory.getInstance().?, "BLACK").*, Inheritance.fieldPointer(BasicColorFactory.getInstance().?, "WHITE").*, GameInfo.NONE }));
         }
         return Inheritance.cast(?*AllBinaryGameLayerManager, AllBinaryGameLayerManager.NULL_ALLBINARY_LAYER_MANAGER);
     }
@@ -72,8 +72,8 @@ pub const AllBinaryGameLayerManager = struct {
         this.backgroundBasicColor = backgroundBasicColor;
         this.foregroundBasicColor = foregroundBasicColor;
         const itemColorFactory: ?*ItemColorFactory = Inheritance.upcast(?*ItemColorFactory, ItemColorFactory.getInstance());
-        itemColorFactory.?.INVERT_PAINT = Inheritance.upcast(@TypeOf(itemColorFactory.?.INVERT_PAINT), this.backgroundBasicColor.?.intValue());
-        itemColorFactory.?.PAINT = Inheritance.upcast(@TypeOf(itemColorFactory.?.PAINT), this.foregroundBasicColor.?.intValue());
+        Inheritance.fieldPointer(itemColorFactory.?, "INVERT_PAINT").* = Inheritance.upcast(@TypeOf(Inheritance.fieldPointer(itemColorFactory.?, "INVERT_PAINT").*), this.backgroundBasicColor.?.intValue());
+        Inheritance.fieldPointer(itemColorFactory.?, "PAINT").* = Inheritance.upcast(@TypeOf(Inheritance.fieldPointer(itemColorFactory.?, "PAINT").*), this.foregroundBasicColor.?.intValue());
         this.gameInfo = gameInfo;
         Inheritance.bindOverrides(this);
         return this;
@@ -97,7 +97,7 @@ pub const AllBinaryGameLayerManager = struct {
 
     pub fn setBackgroundBasicColor(self: *Self, backgroundBasicColor: ?*BasicColor) void {
         self.backgroundBasicColor = backgroundBasicColor;
-        ItemColorFactory.getInstance().?.INVERT_PAINT = Inheritance.upcast(@TypeOf(ItemColorFactory.getInstance().?.INVERT_PAINT), self.backgroundBasicColor.?.intValue());
+        Inheritance.fieldPointer(ItemColorFactory.getInstance().?, "INVERT_PAINT").* = Inheritance.upcast(@TypeOf(Inheritance.fieldPointer(ItemColorFactory.getInstance().?, "INVERT_PAINT").*), self.backgroundBasicColor.?.intValue());
     }
     
 
@@ -108,7 +108,7 @@ pub const AllBinaryGameLayerManager = struct {
 
     pub fn setForegroundBasicColor(self: *Self, foregroundBasicColor: ?*BasicColor) void {
         self.foregroundBasicColor = foregroundBasicColor;
-        ItemColorFactory.getInstance().?.PAINT = Inheritance.upcast(@TypeOf(ItemColorFactory.getInstance().?.PAINT), self.foregroundBasicColor.?.intValue());
+        Inheritance.fieldPointer(ItemColorFactory.getInstance().?, "PAINT").* = Inheritance.upcast(@TypeOf(Inheritance.fieldPointer(ItemColorFactory.getInstance().?, "PAINT").*), self.foregroundBasicColor.?.intValue());
     }
     
 
@@ -128,7 +128,7 @@ pub const AllBinaryGameLayerManager = struct {
         {
             var index: i32 = 0;
             while (index < size) : (index += 1) {
-            layerProcessorInterfaceArray[@intCast(index)] = Inheritance.cast(?*LayerProcessor, list.?.objectArray[@intCast(index)]);
+            layerProcessorInterfaceArray[@intCast(index)] = Inheritance.cast(?*LayerProcessor, Inheritance.fieldPointer(list.?, "objectArray").*[@intCast(index)]);
             }
         }
         _ = Inheritance.call(self, "setLayerProcessorArray", .{ layerProcessorInterfaceArray });

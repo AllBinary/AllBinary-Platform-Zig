@@ -32,7 +32,7 @@ pub const AllBinaryEventObject = struct {
 
     // Static fields with runtime initializers: call staticInit once at startup
     pub fn staticInit() void {
-        NULL_EVENT = Inheritance.callStatic(AllBinaryEventObject, "create1", .{ NullUtil.getInstance().?.NULL_OBJECT });
+        NULL_EVENT = Inheritance.callStatic(AllBinaryEventObject, "create1", .{ Inheritance.fieldPointer(NullUtil.getInstance().?, "NULL_OBJECT").* });
     }
 
     fn initFields(this: *Self) void {

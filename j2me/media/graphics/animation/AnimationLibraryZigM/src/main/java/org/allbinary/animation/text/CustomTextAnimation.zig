@@ -18,13 +18,15 @@ const allocator = std.heap.page_allocator;
 const String = @import("java/lang/String.zig").String;
 const Object = @import("java/lang/Object.zig").Object;
 const Inheritance = @import("zig/Inheritance.zig");
-// const Font = @import("javax/microedition/lcdui/Font.zig").Font;
-// const Graphics = @import("javax/microedition/lcdui/Graphics.zig").Graphics;
+const Font = @import("javax/microedition/lcdui/Font.zig").Font;
+const Graphics = @import("javax/microedition/lcdui/Graphics.zig").Graphics;
 const AnimationBehavior = @import("org/allbinary/animation/AnimationBehavior.zig").AnimationBehavior;
 const FontDebugFactory = @import("org/allbinary/graphics/font/FontDebugFactory.zig").FontDebugFactory;
 const StringUtil = @import("org/allbinary/logic/string/StringUtil.zig").StringUtil;
 const TextAnimation = @import("org/allbinary/animation/text/TextAnimation.zig").TextAnimation;
+const TextChangeListener = @import("org/allbinary/animation/text/TextChangeListener.zig").TextChangeListener;
 const TextInterface = @import("org/allbinary/animation/text/TextInterface.zig").TextInterface;
+const RuntimeException = @import("java/lang/RuntimeException.zig").RuntimeException;
 
 pub const CustomTextAnimation = struct {
     const Self = @This();
@@ -43,7 +45,7 @@ pub const CustomTextAnimation = struct {
         this.fontDebugFactory = Inheritance.upcast(?*FontDebugFactory, FontDebugFactory.getInstance());
         
         
-        this.lastText = Inheritance.upcast(?*String, StringUtil.getInstance().?.INIT_STRING);
+        this.lastText = Inheritance.upcast(?*String, Inheritance.fieldPointer(StringUtil.getInstance().?, "INIT_STRING").*);
         this.hasChanged = true;
         this.textWidth = 0;
     }
@@ -76,6 +78,11 @@ pub const CustomTextAnimation = struct {
         }
         self.hasChanged = true;
         self.font = Inheritance.upcast(@TypeOf(self.font), Inheritance.callStatic(Font, "getFont", .{ Font.FACE_SYSTEM, Font.STYLE_PLAIN, @as(i32, @intFromFloat((@as(f32, @floatFromInt(self.fontSize)) * scaleX))) }));
+    }
+    
+
+    pub fn setTextWithOnMeasure(self: *Self, text: ?*String, textChangeListener: ?*TextChangeListener) void {
+        _ = Inheritance.call(&self.base, "setTextWithOnMeasure", .{ text, textChangeListener });
     }
     
 

@@ -29,7 +29,7 @@ pub const RectangleFactory = struct {
 
     // Static fields with runtime initializers: call staticInit once at startup
     pub fn staticInit() void {
-        SINGLETON = Inheritance.callStatic(Rectangle, "create3", .{ PointFactory.getInstance().?.ZERO_ZERO, 0, 0 });
+        SINGLETON = Inheritance.callStatic(Rectangle, "create3", .{ Inheritance.fieldPointer(PointFactory.getInstance().?, "ZERO_ZERO").*, 0, 0 });
         ARRAY_OF_ARRAYS = array_N65683: { const array_N65683_array = allocator.alloc([]?*Rectangle, @intCast(0)) catch unreachable; for (array_N65683_array) |*array_N65683_row| { array_N65683_row.* = allocator.alloc(?*Rectangle, @intCast(0)) catch unreachable; @memset(array_N65683_row.*, null); } break :array_N65683 array_N65683_array; };
     }
 

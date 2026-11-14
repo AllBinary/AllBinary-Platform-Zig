@@ -16,6 +16,7 @@ const CommonStrings = @import("org/allbinary/string/CommonStrings.zig").CommonSt
 const ThreadObjectUtil = @import("org/allbinary/thread/ThreadObjectUtil.zig").ThreadObjectUtil;
 const TimeDelayHelper = @import("org/allbinary/time/TimeDelayHelper.zig").TimeDelayHelper;
 const Boolean = @import("java/lang/Boolean.zig").Boolean;
+const Exception = @import("java/lang/Exception.zig").Exception;
 
 pub const StupidTimer = struct {
     const Self = @This();
@@ -41,7 +42,7 @@ pub const StupidTimer = struct {
     
 
     pub fn visitBool(self: *Self, visitorInterface: ?*Visitor) bool {
-        const result: ?*Boolean = Inheritance.cast(?*Boolean, Inheritance.call(visitorInterface.?, "visit", .{ self.nullUtil.?.NULL_OBJECT }));
+        const result: ?*Boolean = Inheritance.cast(?*Boolean, Inheritance.call(visitorInterface.?, "visit", .{ Inheritance.fieldPointer(self.nullUtil.?, "NULL_OBJECT").* }));
         const result2: bool = result.?.booleanValue();
         return result2;
     }
@@ -51,11 +52,11 @@ pub const StupidTimer = struct {
     pub fn visit(self: *Self, visitorInterface: ?*Visitor, timeDelayHelper: ?*TimeDelayHelper) void {
         var tookTooLong: bool = false;
         const WAITING_FOR: ?*String = String.literal("Waiting for: ");
-        _ = Inheritance.callStatic(PreLogUtil, "put", .{ Object.toString(Object.of(Inheritance.call(Inheritance.call(StringMaker.create(), "append", .{ WAITING_FOR }).?, "append", .{ Inheritance.call(StringUtil.getInstance().?, "toString", .{ visitorInterface }) }))), self, self.commonStrings.?.VISIT });
+        _ = Inheritance.callStatic(PreLogUtil, "put", .{ Object.toString(Object.of(Inheritance.call(Inheritance.call(StringMaker.create(), "append", .{ WAITING_FOR }).?, "append", .{ Inheritance.call(StringUtil.getInstance().?, "toString", .{ visitorInterface }) }))), self, Inheritance.fieldPointer(self.commonStrings.?, "VISIT").* });
         var index: i32 = 0;
         while (Inheritance.call(self, "visitBool", .{ visitorInterface })) {
             if (@rem(index, 10) == 0) {
-                _ = Inheritance.callStatic(PreLogUtil, "put", .{ Object.toString(Object.of(Inheritance.call(Inheritance.call(StringMaker.create(), "append", .{ WAITING_FOR }).?, "appendint", .{ index }))), self, self.commonStrings.?.VISIT });
+                _ = Inheritance.callStatic(PreLogUtil, "put", .{ Object.toString(Object.of(Inheritance.call(Inheritance.call(StringMaker.create(), "append", .{ WAITING_FOR }).?, "appendint", .{ index }))), self, Inheritance.fieldPointer(self.commonStrings.?, "VISIT").* });
             }
             index += 1;
             {
@@ -69,9 +70,9 @@ pub const StupidTimer = struct {
             }
         }
         if (tookTooLong) {
-            _ = Inheritance.call(self.logUtil.?, "put", .{ self.commonStrings.?.EXCEPTION, self, self.commonStrings.?.VISIT, exception: { _ = Object.toString(Object.of(Inheritance.call(Inheritance.call(StringMaker.create(), "append", .{ String.literal("Took Too Long: ") }).?, "append", .{ Inheritance.call(StringUtil.getInstance().?, "toString", .{ visitorInterface }) }))); break :exception error.Exception; } });
+            _ = Inheritance.call(self.logUtil.?, "put", .{ Inheritance.fieldPointer(self.commonStrings.?, "EXCEPTION").*, self, Inheritance.fieldPointer(self.commonStrings.?, "VISIT").*, exception: { _ = Object.toString(Object.of(Inheritance.call(Inheritance.call(StringMaker.create(), "append", .{ String.literal("Took Too Long: ") }).?, "append", .{ Inheritance.call(StringUtil.getInstance().?, "toString", .{ visitorInterface }) }))); break :exception error.Exception; } });
         } else {
-            _ = Inheritance.callStatic(PreLogUtil, "put", .{ Object.toString(Object.of(timeDelayHelper)), self, self.commonStrings.?.VISIT });
+            _ = Inheritance.callStatic(PreLogUtil, "put", .{ Object.toString(Object.of(timeDelayHelper)), self, Inheritance.fieldPointer(self.commonStrings.?, "VISIT").* });
         }
     }
     

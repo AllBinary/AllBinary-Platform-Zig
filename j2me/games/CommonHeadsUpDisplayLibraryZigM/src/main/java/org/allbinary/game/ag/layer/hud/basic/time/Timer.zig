@@ -41,7 +41,7 @@ pub const Timer = struct {
         this.hundredthTime = 0;
         
         this.modifier = 0;
-        this.hundrethsString = PrimitiveLongSingleton.getInstance().?.ZERO;
+        this.hundrethsString = Inheritance.fieldPointer(PrimitiveLongSingleton.getInstance().?, "ZERO").*;
         this.totalDigits = 1;
         
         this.MAX = @constCast(&[_]u16{ 'L', 'O', 'L' })[0..];
@@ -72,7 +72,7 @@ pub const Timer = struct {
 
     pub fn update(self: *Self) void {
         const lastLowerTime: i64 = self.hundredthTime;
-        var currentTime: i64 = ((self.modifier + self.gameTickTimeDelayHelper.?.startTime) - self.startTime);
+        var currentTime: i64 = (Inheritance.arithmetic(.subtract, (self.modifier + self.gameTickTimeDelayHelper.?.startTime), self.startTime));
         if (currentTime < 0) {
             currentTime = 0;
         }

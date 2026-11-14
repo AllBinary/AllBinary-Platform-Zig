@@ -40,9 +40,9 @@ pub const TextItemVisitor = struct {
         _ = self;
         const value: ?*String = Inheritance.cast(?*String, anyType);
         if (value.?.length() < 2) {
-            return Inheritance.upcast(?Object, BooleanFactory.getInstance().?.TRUE);
+            return Inheritance.upcast(?Object, Inheritance.fieldPointer(BooleanFactory.getInstance().?, "TRUE").*);
         } else {
-            return Inheritance.upcast(?Object, BooleanFactory.getInstance().?.FALSE);
+            return Inheritance.upcast(?Object, Inheritance.fieldPointer(BooleanFactory.getInstance().?, "FALSE").*);
         }
     }
 };

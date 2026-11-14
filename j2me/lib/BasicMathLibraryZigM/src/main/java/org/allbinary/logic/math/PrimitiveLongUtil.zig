@@ -23,6 +23,7 @@ const LogUtil = @import("org/allbinary/logic/communication/log/LogUtil.zig").Log
 const CommonStrings = @import("org/allbinary/string/CommonStrings.zig").CommonStrings;
 const MathUtil = @import("org/allbinary/logic/math/MathUtil.zig").MathUtil;
 const PrimitiveLongSingleton = @import("org/allbinary/logic/math/PrimitiveLongSingleton.zig").PrimitiveLongSingleton;
+const Exception = @import("java/lang/Exception.zig").Exception;
 
 pub const PrimitiveLongUtil = struct {
     const Self = @This();
@@ -47,11 +48,11 @@ pub const PrimitiveLongUtil = struct {
     
 
     pub fn createPowerOfTen(powerOfTen: i32) ?*PrimitiveLongUtil {
-        const primitiveLongUtil: ?*PrimitiveLongUtil = Inheritance.callStatic(PrimitiveLongUtil, "create2", .{ powerOfTen, NullUtil.getInstance().?.NULL_OBJECT });
+        const primitiveLongUtil: ?*PrimitiveLongUtil = Inheritance.callStatic(PrimitiveLongUtil, "create2", .{ powerOfTen, Inheritance.fieldPointer(NullUtil.getInstance().?, "NULL_OBJECT").* });
         if (@rem(powerOfTen, 10) != 0) {
             const logUtil: ?*LogUtil = Inheritance.upcast(?*LogUtil, LogUtil.getInstance());
             const commonStrings: ?*CommonStrings = Inheritance.upcast(?*CommonStrings, CommonStrings.getInstance());
-            _ = Inheritance.call(logUtil.?, "put", .{ commonStrings.?.EXCEPTION, primitiveLongUtil, commonStrings.?.CONSTRUCTOR, exception: { _ = String.literal("Max must be power of 10"); break :exception error.Exception; } });
+            _ = Inheritance.call(logUtil.?, "put", .{ Inheritance.fieldPointer(commonStrings.?, "EXCEPTION").*, primitiveLongUtil, Inheritance.fieldPointer(commonStrings.?, "CONSTRUCTOR").*, exception: { _ = String.literal("Max must be power of 10"); break :exception error.Exception; } });
         }
         return primitiveLongUtil;
     }
@@ -73,11 +74,11 @@ pub const PrimitiveLongUtil = struct {
     pub fn getCharArray(self: *Self, value: i32) []u16 {
         if (value < 10) {
             _ = Inheritance.call(self, "setCurrentTotalDigits", .{ 1 });
-            return self.primitiveLongSingleton.?.NUMBER_CHAR_ARRAYS[@intCast(value)];
+            return Inheritance.fieldPointer(self.primitiveLongSingleton.?, "NUMBER_CHAR_ARRAYS").*[@intCast(value)];
         }
         if (value > self.maxValue) {
             _ = Inheritance.call(self, "setCurrentTotalDigits", .{ 3 });
-            return self.primitiveLongSingleton.?.UNK;
+            return Inheritance.fieldPointer(self.primitiveLongSingleton.?, "UNK").*;
         }
         var index: i32 = 0;
         var div: i32 = self.powerOfTen;
@@ -87,7 +88,7 @@ pub const PrimitiveLongUtil = struct {
             if (digit >= 0 and digit < 10) {
                 if (digit == 0 and index == 0) {
                 } else {
-                    self.charArray[@intCast(value_N66941: { const value_N66941_value = index; index += 1; break :value_N66941 value_N66941_value; })] = self.primitiveLongSingleton.?.NUMBER_CHAR_ARRAY[@intCast(digit)];
+                    self.charArray[@intCast(value_N66941: { const value_N66941_value = index; index += 1; break :value_N66941 value_N66941_value; })] = Inheritance.fieldPointer(self.primitiveLongSingleton.?, "NUMBER_CHAR_ARRAY").*[@intCast(digit)];
                 }
                 lastValue += digit * div;
             }

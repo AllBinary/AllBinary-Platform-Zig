@@ -39,13 +39,13 @@ pub const PreLogUtil = struct {
     
 
     pub fn put(specialMessage: ?*String, anyType: ?Object, functionName: ?*String) void {
-        _ = Inheritance.callStatic(PreLogUtil, "putOE", .{ specialMessage, anyType, functionName, NullUtil.getInstance().?.NULL_OBJECT });
+        _ = Inheritance.callStatic(PreLogUtil, "putOE", .{ specialMessage, anyType, functionName, Inheritance.fieldPointer(NullUtil.getInstance().?, "NULL_OBJECT").* });
     }
     
 
     pub fn putOE(specialMessage: ?*String, anyType: ?Object, functionName: ?*String, exception: ?Object) void {
-        var className: ?*String = Inheritance.upcast(?*String, CommonStrings.getInstance().?.EMPTY);
-        if (String.fromBytes(@as(*const Object.Class, @ptrCast(@alignCast(@as(?*anyopaque, @ptrCast(@constCast(Object.of(anyType).?.class))).?))).name) != null) {
+        var className: ?*String = Inheritance.upcast(?*String, Inheritance.fieldPointer(CommonStrings.getInstance().?, "EMPTY").*);
+        if (!Object.isNull(String.fromBytes(@as(*const Object.Class, @ptrCast(@alignCast(@as(?*anyopaque, @ptrCast(@constCast(Object.of(anyType).?.class))).?))).name))) {
             className = Inheritance.callStatic(String, "create1", .{ String.fromBytes(@as(*const Object.Class, @ptrCast(@alignCast(@as(?*anyopaque, @ptrCast(@constCast(Object.of(anyType).?.class))).?))).name) });
         }
         const message: ?*String = Inheritance.upcast(?*String, Inheritance.call(LogFormatUtil.getInstance().?, "get", .{ className, functionName, specialMessage, exception }));
@@ -55,7 +55,7 @@ pub const PreLogUtil = struct {
     
 
     pub fn putS(specialMessage: ?*String, className: ?*String, functionName: ?*String) void {
-        _ = Inheritance.callStatic(PreLogUtil, "putSE", .{ specialMessage, className, functionName, NullUtil.getInstance().?.NULL_OBJECT });
+        _ = Inheritance.callStatic(PreLogUtil, "putSE", .{ specialMessage, className, functionName, Inheritance.fieldPointer(NullUtil.getInstance().?, "NULL_OBJECT").* });
     }
     
 

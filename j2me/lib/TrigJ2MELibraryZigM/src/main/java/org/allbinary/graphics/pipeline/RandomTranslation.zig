@@ -21,6 +21,7 @@ const Inheritance = @import("zig/Inheritance.zig");
 const MyRandomFactory = @import("org/allbinary/game/rand/MyRandomFactory.zig").MyRandomFactory;
 const BasicArrayList = @import("org/allbinary/util/BasicArrayList.zig").BasicArrayList;
 const BasicGraphicsPipeline = @import("org/allbinary/graphics/pipeline/BasicGraphicsPipeline.zig").BasicGraphicsPipeline;
+const Exception = @import("java/lang/Exception.zig").Exception;
 
 pub const RandomTranslation = struct {
     const Self = @This();

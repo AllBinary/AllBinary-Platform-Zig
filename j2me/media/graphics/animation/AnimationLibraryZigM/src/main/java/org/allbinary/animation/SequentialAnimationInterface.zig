@@ -28,9 +28,10 @@ pub const SequentialAnimationInterface = struct {
     pointer: *anyopaque,
     object: Object,
     base: AnimationInterface,
+    base2: SequenceInterface,
     toStringFn: *const fn (pointer: *anyopaque) ?*String,
-    getSizeFn: *const fn (pointer: *anyopaque) i32,
-    previousFrameFn: *const fn (pointer: *anyopaque) void,
+    getSizeFn: *const fn (interface_pointer: *anyopaque) i32,
+    previousFrameFn: *const fn (interface_pointer: *anyopaque) void,
 
     pub fn getSize(self: *Self) i32 {
         return self.getSizeFn(self.pointer);
@@ -46,23 +47,23 @@ pub const SequentialAnimationInterface = struct {
 
     // The interface value of an object with the methods. Like a Java class a method can be declared by the object or a superclass.
     pub fn of(object: anytype) ?*Self {
-        const Implementation = @TypeOf(object);
+        const ImplementationType = @TypeOf(object);
         const Methods = struct {
             fn toString(pointer: *anyopaque) ?*String {
-                const implementation: Implementation = @ptrCast(@alignCast(pointer));
+                const implementation: ImplementationType = @ptrCast(@alignCast(pointer));
                 return String.valueOf(implementation);
             }
-            fn getSize(pointer: *anyopaque) i32 {
-                const implementation: Implementation = @ptrCast(@alignCast(pointer));
+            fn getSize(interface_pointer: *anyopaque) i32 {
+                const implementation: ImplementationType = @ptrCast(@alignCast(interface_pointer));
                 return Inheritance.receiver(implementation, "getSize").getSize();
             }
-            fn previousFrame(pointer: *anyopaque) void {
-                const implementation: Implementation = @ptrCast(@alignCast(pointer));
+            fn previousFrame(interface_pointer: *anyopaque) void {
+                const implementation: ImplementationType = @ptrCast(@alignCast(interface_pointer));
                 return Inheritance.receiver(implementation, "previousFrame").previousFrame();
             }
         };
         const this = allocator.create(Self) catch unreachable;
-        this.* = .{ .pointer = object, .object = Object.of(object).?, .base = AnimationInterface.of(object).?.*, .toStringFn = Methods.toString, .getSizeFn = Methods.getSize, .previousFrameFn = Methods.previousFrame };
+        this.* = .{ .pointer = object, .object = Object.of(object).?, .base = AnimationInterface.of(object).?.*, .base2 = SequenceInterface.of(object).?.*, .toStringFn = Methods.toString, .getSizeFn = Methods.getSize, .previousFrameFn = Methods.previousFrame };
         return this;
     }
 };

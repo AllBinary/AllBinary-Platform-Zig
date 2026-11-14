@@ -18,8 +18,8 @@ const allocator = std.heap.page_allocator;
 const String = @import("java/lang/String.zig").String;
 const Object = @import("java/lang/Object.zig").Object;
 const Inheritance = @import("zig/Inheritance.zig");
-// const Image = @import("javax/microedition/lcdui/Image.zig").Image;
-// const Sprite = @import("javax/microedition/lcdui/game/Sprite.zig").Sprite;
+const Image = @import("javax/microedition/lcdui/Image.zig").Image;
+const Sprite = @import("javax/microedition/lcdui/game/Sprite.zig").Sprite;
 
 // Java interface: an implementation is a pointer and a table of functions
 pub const SpriteFactoryInterface = struct {
@@ -28,7 +28,7 @@ pub const SpriteFactoryInterface = struct {
     pointer: *anyopaque,
     object: Object,
     toStringFn: *const fn (pointer: *anyopaque) ?*String,
-    createSpriteFn: *const fn (pointer: *anyopaque, image: ?*Image, frameWidth: i32, frameHeight: i32) ?*Sprite,
+    createSpriteFn: *const fn (interface_pointer: *anyopaque, image: ?*Image, frameWidth: i32, frameHeight: i32) ?*Sprite,
 
     pub fn createSprite(self: *Self, image: ?*Image, frameWidth: i32, frameHeight: i32) ?*Sprite {
         return self.createSpriteFn(self.pointer, image, frameWidth, frameHeight);
@@ -40,15 +40,15 @@ pub const SpriteFactoryInterface = struct {
 
     // The interface value of an object with the methods. Like a Java class a method can be declared by the object or a superclass.
     pub fn of(object: anytype) ?*Self {
-        const Implementation = @TypeOf(object);
+        const ImplementationType = @TypeOf(object);
         const Methods = struct {
             fn toString(pointer: *anyopaque) ?*String {
-                const implementation: Implementation = @ptrCast(@alignCast(pointer));
+                const implementation: ImplementationType = @ptrCast(@alignCast(pointer));
                 return String.valueOf(implementation);
             }
-            fn createSprite(pointer: *anyopaque, image: ?*Image, frameWidth: i32, frameHeight: i32) ?*Sprite {
-                const implementation: Implementation = @ptrCast(@alignCast(pointer));
-                return Inheritance.upcast(?*Sprite, Inheritance.receiver(implementation, "createSprite").createSprite(image, frameWidth, frameHeight));
+            fn createSprite(interface_pointer: *anyopaque, image: ?*Image, frameWidth: i32, frameHeight: i32) ?*Sprite {
+                const implementation: ImplementationType = @ptrCast(@alignCast(interface_pointer));
+                return Inheritance.upcast(?*Sprite, Inheritance.call(implementation, "createSprite", .{ image, frameWidth, frameHeight }));
             }
         };
         const this = allocator.create(Self) catch unreachable;

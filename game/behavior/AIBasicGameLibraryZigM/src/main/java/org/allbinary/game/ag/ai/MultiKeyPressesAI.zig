@@ -27,6 +27,7 @@ const TimeDelayHelper = @import("org/allbinary/time/TimeDelayHelper.zig").TimeDe
 const ABHashtable = @import("org/allbinary/util/ABHashtable.zig").ABHashtable;
 const KeyPressesAI = @import("org/allbinary/game/ag/ai/KeyPressesAI.zig").KeyPressesAI;
 const Integer = @import("java/lang/Integer.zig").Integer;
+const Exception = @import("java/lang/Exception.zig").Exception;
 
 pub const MultiKeyPressesAI = struct {
     const Self = @This();
@@ -90,8 +91,8 @@ pub const MultiKeyPressesAI = struct {
 
     // throws Exception
     pub fn toggle(self: *Self) void {
-        if (Inheritance.call(self.toggleTimeHelper.?, "isTime", .{ self.gameTickTimeDelayHelper.?.startTime })) {
-            _ = self.base.toggle();
+        if (Inheritance.call(self.toggleTimeHelper.?, "isTime", .{ Inheritance.fieldPointer(self.gameTickTimeDelayHelper.?, "startTime").* })) {
+            _ = Inheritance.receiver(&self.base, "toggle").toggle();
             _ = self.update();
         }
     }
@@ -99,8 +100,8 @@ pub const MultiKeyPressesAI = struct {
 
     // throws Exception
     pub fn disable(self: *Self) void {
-        if (Inheritance.call(self.toggleTimeHelper.?, "isTime", .{ self.gameTickTimeDelayHelper.?.startTime })) {
-            _ = self.base.disable();
+        if (Inheritance.call(self.toggleTimeHelper.?, "isTime", .{ Inheritance.fieldPointer(self.gameTickTimeDelayHelper.?, "startTime").* })) {
+            _ = Inheritance.receiver(&self.base, "disable").disable();
             _ = self.update();
         }
     }
@@ -108,8 +109,8 @@ pub const MultiKeyPressesAI = struct {
 
     // throws Exception
     pub fn enable(self: *Self) void {
-        if (Inheritance.call(self.toggleTimeHelper.?, "isTime", .{ self.gameTickTimeDelayHelper.?.startTime })) {
-            _ = self.base.enable();
+        if (Inheritance.call(self.toggleTimeHelper.?, "isTime", .{ Inheritance.fieldPointer(self.gameTickTimeDelayHelper.?, "startTime").* })) {
+            _ = Inheritance.receiver(&self.base, "enable").enable();
             _ = self.update();
         }
     }

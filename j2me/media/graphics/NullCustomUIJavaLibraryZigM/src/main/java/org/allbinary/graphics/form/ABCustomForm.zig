@@ -6,13 +6,14 @@ const allocator = std.heap.page_allocator;
 const String = @import("java/lang/String.zig").String;
 const Object = @import("java/lang/Object.zig").Object;
 const Inheritance = @import("zig/Inheritance.zig");
-// const Graphics = @import("javax/microedition/lcdui/Graphics.zig").Graphics;
+const Graphics = @import("javax/microedition/lcdui/Graphics.zig").Graphics;
 const BasicColor = @import("org/allbinary/graphics/color/BasicColor.zig").BasicColor;
 const ABCustomItem = @import("org/allbinary/graphics/form/item/ABCustomItem.zig").ABCustomItem;
 const LogUtil = @import("org/allbinary/logic/communication/log/LogUtil.zig").LogUtil;
 const StringUtil = @import("org/allbinary/logic/string/StringUtil.zig").StringUtil;
 const CommonStrings = @import("org/allbinary/string/CommonStrings.zig").CommonStrings;
 const CustomScreen = @import("org/allbinary/graphics/form/CustomScreen.zig").CustomScreen;
+const RuntimeException = @import("java/lang/RuntimeException.zig").RuntimeException;
 
 pub const ABCustomForm = struct {
     const Self = @This();
@@ -118,7 +119,7 @@ pub const ABCustomForm = struct {
 
     pub fn getTitle(self: *Self) ?*String {
         _ = self;
-        return Inheritance.upcast(?*String, StringUtil.getInstance().?.EMPTY_STRING);
+        return Inheritance.upcast(?*String, Inheritance.fieldPointer(StringUtil.getInstance().?, "EMPTY_STRING").*);
     }
 };
 

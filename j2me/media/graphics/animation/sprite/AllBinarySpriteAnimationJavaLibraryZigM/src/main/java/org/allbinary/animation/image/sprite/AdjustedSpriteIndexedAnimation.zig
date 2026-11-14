@@ -18,13 +18,14 @@ const allocator = std.heap.page_allocator;
 const String = @import("java/lang/String.zig").String;
 const Object = @import("java/lang/Object.zig").Object;
 const Inheritance = @import("zig/Inheritance.zig");
-// const Graphics = @import("javax/microedition/lcdui/Graphics.zig").Graphics;
-// const Image = @import("javax/microedition/lcdui/Image.zig").Image;
-// const Sprite = @import("javax/microedition/lcdui/game/Sprite.zig").Sprite;
+const Graphics = @import("javax/microedition/lcdui/Graphics.zig").Graphics;
+const Image = @import("javax/microedition/lcdui/Image.zig").Image;
+const Sprite = @import("javax/microedition/lcdui/game/Sprite.zig").Sprite;
 const AnimationBehavior = @import("org/allbinary/animation/AnimationBehavior.zig").AnimationBehavior;
 const BasicColor = @import("org/allbinary/graphics/color/BasicColor.zig").BasicColor;
 const BasicColorUtil = @import("org/allbinary/graphics/color/BasicColorUtil.zig").BasicColorUtil;
 const SpriteIndexedAnimation = @import("org/allbinary/animation/image/sprite/SpriteIndexedAnimation.zig").SpriteIndexedAnimation;
+const Exception = @import("java/lang/Exception.zig").Exception;
 
 pub const AdjustedSpriteIndexedAnimation = struct {
     const Self = @This();

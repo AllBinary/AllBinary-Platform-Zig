@@ -23,6 +23,7 @@ const AllBinaryLayer = @import("org/allbinary/layer/AllBinaryLayer.zig").AllBina
 const AllBinaryLayerCircularPool = @import("org/allbinary/layer/AllBinaryLayerCircularPool.zig").AllBinaryLayerCircularPool;
 const AllBinaryLayerFactoryInterface = @import("org/allbinary/layer/AllBinaryLayerFactoryInterface.zig").AllBinaryLayerFactoryInterface;
 const PointsLayer = @import("org/allbinary/game/ag/layer/pickup/points/PointsLayer.zig").PointsLayer;
+const Exception = @import("java/lang/Exception.zig").Exception;
 
 pub const PointsLayerCircularStaticPool = struct {
     const Self = @This();

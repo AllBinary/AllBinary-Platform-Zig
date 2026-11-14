@@ -16,13 +16,13 @@ pub const ABStringComponent = struct {
 
     // Static fields with runtime initializers: call staticInit once at startup
     pub fn staticInit() void {
-        NULL_STRING_COMPONENT = Inheritance.callStatic(ABStringComponent, "create2", .{ BasicColorFactory.getInstance().?.BLACK, BasicColorFactory.getInstance().?.WHITE });
+        NULL_STRING_COMPONENT = Inheritance.callStatic(ABStringComponent, "create2", .{ Inheritance.fieldPointer(BasicColorFactory.getInstance().?, "BLACK").*, Inheritance.fieldPointer(BasicColorFactory.getInstance().?, "WHITE").* });
     }
     
 
     pub fn getBackgroundBasicColor(self: *Self) ?*BasicColor {
         _ = self;
-        return Inheritance.upcast(?*BasicColor, BasicColorFactory.getInstance().?.WHITE);
+        return Inheritance.upcast(?*BasicColor, Inheritance.fieldPointer(BasicColorFactory.getInstance().?, "WHITE").*);
     }
     
 
@@ -37,7 +37,7 @@ pub const ABStringComponent = struct {
 
     pub fn getForegroundBasicColor(self: *Self) ?*BasicColor {
         _ = self;
-        return Inheritance.upcast(?*BasicColor, BasicColorFactory.getInstance().?.WHITE);
+        return Inheritance.upcast(?*BasicColor, Inheritance.fieldPointer(BasicColorFactory.getInstance().?, "WHITE").*);
     }
     
 

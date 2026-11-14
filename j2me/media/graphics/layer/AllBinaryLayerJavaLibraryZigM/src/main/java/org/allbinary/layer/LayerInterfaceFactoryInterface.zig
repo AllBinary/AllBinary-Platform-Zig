@@ -20,6 +20,7 @@ const Object = @import("java/lang/Object.zig").Object;
 const Inheritance = @import("zig/Inheritance.zig");
 const ABHashtable = @import("org/allbinary/util/ABHashtable.zig").ABHashtable;
 const AllBinaryLayer = @import("org/allbinary/layer/AllBinaryLayer.zig").AllBinaryLayer;
+const Exception = @import("java/lang/Exception.zig").Exception;
 
 // Java interface: an implementation is a pointer and a table of functions
 pub const LayerInterfaceFactoryInterface = struct {
@@ -28,7 +29,7 @@ pub const LayerInterfaceFactoryInterface = struct {
     pointer: *anyopaque,
     object: Object,
     toStringFn: *const fn (pointer: *anyopaque) ?*String,
-    getNextInstanceFn: *const fn (pointer: *anyopaque, hashtable: ?*ABHashtable, x: i32, y: i32, z: i32) ?*AllBinaryLayer,
+    getNextInstanceFn: *const fn (interface_pointer: *anyopaque, hashtable: ?*ABHashtable, x: i32, y: i32, z: i32) ?*AllBinaryLayer,
 
     pub fn getNextInstance(self: *Self, hashtable: ?*ABHashtable, x: i32, y: i32, z: i32) ?*AllBinaryLayer {
         return self.getNextInstanceFn(self.pointer, hashtable, x, y, z);
@@ -40,15 +41,15 @@ pub const LayerInterfaceFactoryInterface = struct {
 
     // The interface value of an object with the methods. Like a Java class a method can be declared by the object or a superclass.
     pub fn of(object: anytype) ?*Self {
-        const Implementation = @TypeOf(object);
+        const ImplementationType = @TypeOf(object);
         const Methods = struct {
             fn toString(pointer: *anyopaque) ?*String {
-                const implementation: Implementation = @ptrCast(@alignCast(pointer));
+                const implementation: ImplementationType = @ptrCast(@alignCast(pointer));
                 return String.valueOf(implementation);
             }
-            fn getNextInstance(pointer: *anyopaque, hashtable: ?*ABHashtable, x: i32, y: i32, z: i32) ?*AllBinaryLayer {
-                const implementation: Implementation = @ptrCast(@alignCast(pointer));
-                return Inheritance.upcast(?*AllBinaryLayer, Inheritance.receiver(implementation, "getNextInstance").getNextInstance(hashtable, x, y, z));
+            fn getNextInstance(interface_pointer: *anyopaque, hashtable: ?*ABHashtable, x: i32, y: i32, z: i32) ?*AllBinaryLayer {
+                const implementation: ImplementationType = @ptrCast(@alignCast(interface_pointer));
+                return Inheritance.upcast(?*AllBinaryLayer, Inheritance.call(implementation, "getNextInstance", .{ hashtable, x, y, z }));
             }
         };
         const this = allocator.create(Self) catch unreachable;

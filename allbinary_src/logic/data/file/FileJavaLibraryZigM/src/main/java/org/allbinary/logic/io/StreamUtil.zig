@@ -19,11 +19,12 @@ const String = @import("java/lang/String.zig").String;
 const Object = @import("java/lang/Object.zig").Object;
 const Inheritance = @import("zig/Inheritance.zig");
 const ByteArrayOutputStream = @import("java/io/ByteArrayOutputStream.zig").ByteArrayOutputStream;
-// const Closeable = @import("java/io/Closeable.zig").Closeable;
-// const InputStream = @import("java/io/InputStream.zig").InputStream;
-// const OutputStream = @import("java/io/OutputStream.zig").OutputStream;
+const Closeable = @import("java/io/Closeable.zig").Closeable;
+const InputStream = @import("java/io/InputStream.zig").InputStream;
+const OutputStream = @import("java/io/OutputStream.zig").OutputStream;
 const LogUtil = @import("org/allbinary/logic/communication/log/LogUtil.zig").LogUtil;
 const CommonStrings = @import("org/allbinary/string/CommonStrings.zig").CommonStrings;
+const Exception = @import("java/lang/Exception.zig").Exception;
 
 pub const StreamUtil = struct {
     const Self = @This();
@@ -88,14 +89,14 @@ pub const StreamUtil = struct {
     pub fn close(self: *Self, closeable: ?*Closeable) bool {
         _ = self;
         { // try
-            if (closeable != null) {
+            if (!Object.isNull(closeable)) {
                 _ = closeable.?.close();
             }
             return true;
         }
         // catch (Exception e):
 //             const commonStrings: ?*CommonStrings = Inheritance.upcast(?*CommonStrings, CommonStrings.getInstance()); _ = commonStrings;
-//             _ = Inheritance.call(self.logUtil.?, "put", .{ commonStrings.?.EXCEPTION, self, commonStrings.?.CLOSE, e });
+//             _ = Inheritance.call(self.logUtil.?, "put", .{ Inheritance.fieldPointer(commonStrings.?, "EXCEPTION").*, self, Inheritance.fieldPointer(commonStrings.?, "CLOSE").*, e });
 //             return false;
     }
 };

@@ -18,7 +18,7 @@ const allocator = std.heap.page_allocator;
 const String = @import("java/lang/String.zig").String;
 const Object = @import("java/lang/Object.zig").Object;
 const Inheritance = @import("zig/Inheritance.zig");
-// const Graphics = @import("javax/microedition/lcdui/Graphics.zig").Graphics;
+const Graphics = @import("javax/microedition/lcdui/Graphics.zig").Graphics;
 const Animation = @import("org/allbinary/animation/Animation.zig").Animation;
 const FeaturedAnimationInterfaceFactoryInterfaceFactory = @import("org/allbinary/animation/FeaturedAnimationInterfaceFactoryInterfaceFactory.zig").FeaturedAnimationInterfaceFactoryInterfaceFactory;
 const CellPosition = @import("org/allbinary/graphics/CellPosition.zig").CellPosition;
@@ -33,6 +33,7 @@ const StringUtil = @import("org/allbinary/logic/string/StringUtil.zig").StringUt
 const CommonStrings = @import("org/allbinary/string/CommonStrings.zig").CommonStrings;
 const TouchButtonInput = @import("org/allbinary/input/motion/button/TouchButtonInput.zig").TouchButtonInput;
 const TouchButtonResource = @import("org/allbinary/input/motion/button/TouchButtonResource.zig").TouchButtonResource;
+const Exception = @import("java/lang/Exception.zig").Exception;
 
 pub const TouchButton = struct {
     const Self = @This();
@@ -71,7 +72,7 @@ pub const TouchButton = struct {
 
     // throws Exception
     pub fn createButton(touchButtonInput: ?*TouchButtonInput, touchButtonResource: ?*TouchButtonResource, rawRectangle: ?*Rectangle, cellPosition: ?*CellPosition, xBorder: i32, yBorder: i32) ?*TouchButton {
-        return Inheritance.callStatic(TouchButton, "create7", .{ touchButtonInput, Inheritance.call(Inheritance.call(FeaturedAnimationInterfaceFactoryInterfaceFactory.getInstance().?, "get", .{ touchButtonResource.?.RESOURCE }).?, "getInstance", .{ 0 }), Inheritance.call(Inheritance.call(FeaturedAnimationInterfaceFactoryInterfaceFactory.getInstance().?, "get", .{ touchButtonResource.?.HINT }).?, "getInstance", .{ 0 }), rawRectangle, cellPosition, xBorder, yBorder });
+        return Inheritance.callStatic(TouchButton, "create7", .{ touchButtonInput, Inheritance.call(Inheritance.call(FeaturedAnimationInterfaceFactoryInterfaceFactory.getInstance().?, "get", .{ Inheritance.fieldPointer(touchButtonResource.?, "RESOURCE").* }).?, "getInstance", .{ 0 }), Inheritance.call(Inheritance.call(FeaturedAnimationInterfaceFactoryInterfaceFactory.getInstance().?, "get", .{ Inheritance.fieldPointer(touchButtonResource.?, "HINT").* }).?, "getInstance", .{ 0 }), rawRectangle, cellPosition, xBorder, yBorder });
     }
     
 
@@ -88,7 +89,7 @@ pub const TouchButton = struct {
         this.xBorder = xBorder;
         this.yBorder = yBorder;
         _ = this.updateRectangle();
-        _ = Inheritance.call(this.logUtil.?, "putF", .{ Object.toString(Object.of(Inheritance.call(Inheritance.call(StringMaker.create(), "append", .{ String.literal("Created: ") }).?, "append", .{ Object.toString(Object.of(this)) }))), this, this.commonStrings.?.CONSTRUCTOR });
+        _ = Inheritance.call(this.logUtil.?, "putF", .{ Object.toString(Object.of(Inheritance.call(Inheritance.call(StringMaker.create(), "append", .{ String.literal("Created: ") }).?, "append", .{ Object.toString(Object.of(this)) }))), this, Inheritance.fieldPointer(this.commonStrings.?, "CONSTRUCTOR").* });
         Inheritance.bindOverrides(this);
         return this;
     }
@@ -107,16 +108,16 @@ pub const TouchButton = struct {
     pub fn updateRectangle(self: *Self) void {
         { // try
             const pointFactory: ?*PointFactory = Inheritance.upcast(?*PointFactory, PointFactory.getInstance());
-            const x: i32 = self.rawRectangle.?.getWidth() * Inheritance.receiver(self.cellPositionP.?, "getColumn").getColumn();
-            const y: i32 = self.rawRectangle.?.getHeight() * Inheritance.receiver(self.cellPositionP.?, "getRow").getRow();
-            self.rectangleP = Inheritance.callStatic(Rectangle, "create3", .{ Inheritance.call(pointFactory.?, "createXY", .{ x + self.xBorder, y + self.yBorder }), self.rawRectangle.?.getWidth(), self.rawRectangle.?.getHeight() });
-            const point: ?*GPoint = Inheritance.upcast(?*GPoint, self.rectangleP.?.getPoint());
+            const x: i32 = Inheritance.arithmetic(.multiply, Inheritance.receiver(self.rawRectangle.?, "getWidth").getWidth(), Inheritance.receiver(self.cellPositionP.?, "getColumn").getColumn());
+            const y: i32 = Inheritance.arithmetic(.multiply, Inheritance.receiver(self.rawRectangle.?, "getHeight").getHeight(), Inheritance.receiver(self.cellPositionP.?, "getRow").getRow());
+            self.rectangleP = Inheritance.callStatic(Rectangle, "create3", .{ Inheritance.call(pointFactory.?, "createXY", .{ x + self.xBorder, y + self.yBorder }), Inheritance.receiver(self.rawRectangle.?, "getWidth").getWidth(), Inheritance.receiver(self.rawRectangle.?, "getHeight").getHeight() });
+            const point: ?*GPoint = Inheritance.upcast(?*GPoint, Inheritance.receiver(self.rectangleP.?, "getPoint").getPoint());
             self.animationX = point.?.getX();
             self.animationY = point.?.getY();
             self.hintAnimationY = self.animationY - 32;
         }
         // catch (Exception e):
-//             _ = Inheritance.call(self.logUtil.?, "put", .{ self.commonStrings.?.EXCEPTION, self, String.literal("updateRectangle"), e });
+//             _ = Inheritance.call(self.logUtil.?, "put", .{ Inheritance.fieldPointer(self.commonStrings.?, "EXCEPTION").*, self, String.literal("updateRectangle"), e });
     }
     
 

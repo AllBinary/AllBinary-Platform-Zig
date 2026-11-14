@@ -38,8 +38,8 @@ pub const BasicDecimal = struct {
     fn initFields(this: *Self) void {
         
         this.scaled = 0;
-        this.factor = ScaleFactorFactory.getInstance().?.DEFAULT_SCALE_FACTOR;
-        this.factorValue = ScaleFactorFactory.getInstance().?.DEFAULT_SCALE_VALUE;
+        this.factor = Inheritance.fieldPointer(ScaleFactorFactory.getInstance().?, "DEFAULT_SCALE_FACTOR").*;
+        this.factorValue = Inheritance.fieldPointer(ScaleFactorFactory.getInstance().?, "DEFAULT_SCALE_VALUE").*;
     }
     
 
@@ -107,7 +107,7 @@ pub const BasicDecimal = struct {
     
 
     pub fn subtract(self: *Self, bigDecimal: ?*BasicDecimal) void {
-        self.units = self.units - bigDecimal.?.getUnscaled();
+        self.units = Inheritance.arithmetic(.subtract, self.units, bigDecimal.?.getUnscaled());
         _ = self.updateScaled();
     }
     
@@ -125,7 +125,7 @@ pub const BasicDecimal = struct {
     
 
     pub fn multiply(self: *Self, bigDecimal: ?*BasicDecimal) void {
-        self.units = self.units * bigDecimal.?.getUnscaled();
+        self.units = Inheritance.arithmetic(.multiply, self.units, bigDecimal.?.getUnscaled());
         _ = self.updateScaled();
     }
     

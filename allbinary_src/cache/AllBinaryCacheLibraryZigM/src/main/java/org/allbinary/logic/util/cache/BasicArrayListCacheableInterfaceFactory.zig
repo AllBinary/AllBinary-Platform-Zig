@@ -21,6 +21,7 @@ const Inheritance = @import("zig/Inheritance.zig");
 const BasicArrayListCacheable = @import("org/allbinary/logic/util/cache/BasicArrayListCacheable.zig").BasicArrayListCacheable;
 const CacheableInterface = @import("org/allbinary/logic/util/cache/CacheableInterface.zig").CacheableInterface;
 const CacheableInterfaceFactoryInterface = @import("org/allbinary/logic/util/cache/CacheableInterfaceFactoryInterface.zig").CacheableInterfaceFactoryInterface;
+const Exception = @import("java/lang/Exception.zig").Exception;
 
 pub const BasicArrayListCacheableInterfaceFactory = struct {
     const Self = @This();

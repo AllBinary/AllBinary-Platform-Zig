@@ -18,7 +18,7 @@ const allocator = std.heap.page_allocator;
 const String = @import("java/lang/String.zig").String;
 const Object = @import("java/lang/Object.zig").Object;
 const Inheritance = @import("zig/Inheritance.zig");
-// const Displayable = @import("javax/microedition/lcdui/Displayable.zig").Displayable;
+const Displayable = @import("javax/microedition/lcdui/Displayable.zig").Displayable;
 const AndroidUtil = @import("org/allbinary/AndroidUtil.zig").AndroidUtil;
 const Features = @import("org/allbinary/game/configuration/feature/Features.zig").Features;
 const DisplayChangeEvent = @import("org/allbinary/graphics/displayable/event/DisplayChangeEvent.zig").DisplayChangeEvent;
@@ -38,6 +38,7 @@ const BasicArrayList = @import("org/allbinary/util/BasicArrayList.zig").BasicArr
 const BasicArrayListD = @import("org/allbinary/util/BasicArrayListD.zig").BasicArrayListD;
 const BaseScalable = @import("org/allbinary/graphics/displayable/BaseScalable.zig").BaseScalable;
 const ScalableListener = @import("org/allbinary/graphics/displayable/ScalableListener.zig").ScalableListener;
+const Exception = @import("java/lang/Exception.zig").Exception;
 
 pub const DisplayInfoSingleton = struct {
     const Self = @This();
@@ -192,15 +193,15 @@ pub const DisplayInfoSingleton = struct {
         var aLastWidth = aLastWidthParameter;
         var aLastHeight = aLastHeightParameter;
         const stringMaker: ?*StringMaker = StringMaker.create();
-        _ = Inheritance.call(self.logUtil.?, "putF", .{ Object.toString(Object.of(Inheritance.call(Inheritance.call(stringMaker.?, "append", .{ CommonLabels.getInstance().?.START_LABEL }).?, "append", .{ reason }))), self, self.SET_LAST_SIZE_METHOD_NAME });
+        _ = Inheritance.call(self.logUtil.?, "putF", .{ Object.toString(Object.of(Inheritance.call(Inheritance.call(stringMaker.?, "append", .{ Inheritance.fieldPointer(CommonLabels.getInstance().?, "START_LABEL").* }).?, "append", .{ reason }))), self, self.SET_LAST_SIZE_METHOD_NAME });
         const aFullWidth: i32 = aLastWidth;
         const aFullHeight: i32 = aLastHeight;
         _ = Inheritance.call(stringMaker.?, "delete", .{ 0, stringMaker.?.length() });
         _ = Inheritance.call(self.logUtil.?, "putF", .{ Object.toString(Object.of(Inheritance.call(Inheritance.call(Inheritance.call(Inheritance.call(Inheritance.call(stringMaker.?, "append", .{ self.FULL_WIDTH }).?, "appendint", .{ aFullWidth }).?, "append", .{ self.FULL_HEIGHT }).?, "appendint", .{ aFullHeight }).?, "append", .{ Object.toString(Object.of(self)) }))), self, self.SET_LAST_SIZE_METHOD_NAME });
         const operatingSystemInterface: ?*GenericOperatingSystem = Inheritance.upcast(?*GenericOperatingSystem, Inheritance.receiverOf(OperatingSystemFactory.getInstance().?, "getOperatingSystemInstance").getOperatingSystemInstance());
         if (operatingSystemInterface.?.isOverScan()) {
-            aLastWidth = (divide_N68731: { const left_N68731 = aLastWidth * operatingSystemInterface.?.getOverScanXPercent(); const right_N68731 = 100; break :divide_N68731 if (comptime @typeInfo(@TypeOf(left_N68731)) == .int or @TypeOf(left_N68731) == comptime_int) @divTrunc(left_N68731, right_N68731) else left_N68731 / right_N68731; });
-            aLastHeight = (divide_N68786: { const left_N68786 = aLastHeight * operatingSystemInterface.?.getOverScanYPercent(); const right_N68786 = 100; break :divide_N68786 if (comptime @typeInfo(@TypeOf(left_N68786)) == .int or @TypeOf(left_N68786) == comptime_int) @divTrunc(left_N68786, right_N68786) else left_N68786 / right_N68786; });
+            aLastWidth = (divide_N68731: { const left_N68731 = Inheritance.arithmetic(.multiply, aLastWidth, operatingSystemInterface.?.getOverScanXPercent()); const right_N68731 = 100; break :divide_N68731 if (comptime @typeInfo(@TypeOf(left_N68731)) == .int or @TypeOf(left_N68731) == comptime_int) @divTrunc(left_N68731, right_N68731) else left_N68731 / right_N68731; });
+            aLastHeight = (divide_N68786: { const left_N68786 = Inheritance.arithmetic(.multiply, aLastHeight, operatingSystemInterface.?.getOverScanYPercent()); const right_N68786 = 100; break :divide_N68786 if (comptime @typeInfo(@TypeOf(left_N68786)) == .int or @TypeOf(left_N68786) == comptime_int) @divTrunc(left_N68786, right_N68786) else left_N68786 / right_N68786; });
         }
         if (operatingSystemInterface.?.isScalable()) {
             if (Inheritance.call(self, "isPortraitWH", .{ aLastWidth, aLastHeight })) {
@@ -280,7 +281,7 @@ pub const DisplayInfoSingleton = struct {
             _ = self.list.?.clear();
         }
         // catch (Exception e):
-//             _ = Inheritance.callStatic(PreLogUtil, "putOE", .{ self.commonStrings.?.EXCEPTION, self, self.FIRE_METHOD_NAME, e });
+//             _ = Inheritance.callStatic(PreLogUtil, "putOE", .{ Inheritance.fieldPointer(self.commonStrings.?, "EXCEPTION").*, self, self.FIRE_METHOD_NAME, e });
     }
     
 
@@ -293,7 +294,7 @@ pub const DisplayInfoSingleton = struct {
             _ = swtJOGLProcessor.?.onSurfaceChanged();
         }
         // catch (Exception e):
-//             _ = Inheritance.callStatic(PreLogUtil, "putOE", .{ self.commonStrings.?.EXCEPTION, self, self.FIRE_METHOD_NAME, e });
+//             _ = Inheritance.callStatic(PreLogUtil, "putOE", .{ Inheritance.fieldPointer(self.commonStrings.?, "EXCEPTION").*, self, self.FIRE_METHOD_NAME, e });
     }
     
 
@@ -303,17 +304,17 @@ pub const DisplayInfoSingleton = struct {
         const aFullWidth: i32 = aLastWidth;
         const aFullHeight: i32 = aLastHeight;
         const stringMaker: ?*StringMaker = StringMaker.create();
-        _ = Inheritance.call(self.logUtil.?, "putF", .{ Object.toString(Object.of(Inheritance.call(Inheritance.call(Inheritance.call(Inheritance.call(Inheritance.call(Inheritance.call(Inheritance.call(Inheritance.call(stringMaker.?, "append", .{ CommonLabels.getInstance().?.START_LABEL }).?, "append", .{ reason }).?, "append", .{ self.LAST_WIDTH }).?, "appendint", .{ aLastWidth }).?, "append", .{ self.LAST_HEIGHT }).?, "appendint", .{ aLastHeight }).?, "append", .{ self.commonSeps.?.SPACE }).?, "append", .{ Object.toString(Object.of(self)) }))), self, self.commonStrings.?.UPDATE });
+        _ = Inheritance.call(self.logUtil.?, "putF", .{ Object.toString(Object.of(Inheritance.call(Inheritance.call(Inheritance.call(Inheritance.call(Inheritance.call(Inheritance.call(Inheritance.call(Inheritance.call(stringMaker.?, "append", .{ Inheritance.fieldPointer(CommonLabels.getInstance().?, "START_LABEL").* }).?, "append", .{ reason }).?, "append", .{ self.LAST_WIDTH }).?, "appendint", .{ aLastWidth }).?, "append", .{ self.LAST_HEIGHT }).?, "appendint", .{ aLastHeight }).?, "append", .{ Inheritance.fieldPointer(self.commonSeps.?, "SPACE").* }).?, "append", .{ Object.toString(Object.of(self)) }))), self, Inheritance.fieldPointer(self.commonStrings.?, "UPDATE").* });
         if (aLastWidth > 0 and aLastHeight > 0) {
             const features: ?*Features = Inheritance.upcast(?*Features, Features.getInstance());
             const openGLFeatureFactory: ?*OpenGLFeatureFactory = Inheritance.upcast(?*OpenGLFeatureFactory, OpenGLFeatureFactory.getInstance());
-            if (!Inheritance.call(features.?, "isDefault", .{ openGLFeatureFactory.?.OPENGL }) or self.last[@intCast(self.WIDTH)] != aLastWidth or self.last[@intCast(self.HEIGHT)] != aLastHeight) {
+            if (!Inheritance.call(features.?, "isDefault", .{ Inheritance.fieldPointer(openGLFeatureFactory.?, "OPENGL").* }) or self.last[@intCast(self.WIDTH)] != aLastWidth or self.last[@intCast(self.HEIGHT)] != aLastHeight) {
                 _ = Inheritance.call(stringMaker.?, "delete", .{ 0, stringMaker.?.length() });
-                _ = Inheritance.call(self.logUtil.?, "putF", .{ Object.toString(Object.of(Inheritance.call(stringMaker.?, "append", .{ self.UPDATE_FROM_ORIENTATION_CHANGE }))), self, self.commonStrings.?.UPDATE });
+                _ = Inheritance.call(self.logUtil.?, "putF", .{ Object.toString(Object.of(Inheritance.call(stringMaker.?, "append", .{ self.UPDATE_FROM_ORIENTATION_CHANGE }))), self, Inheritance.fieldPointer(self.commonStrings.?, "UPDATE").* });
                 const operatingSystemInterface: ?*GenericOperatingSystem = Inheritance.upcast(?*GenericOperatingSystem, Inheritance.receiverOf(OperatingSystemFactory.getInstance().?, "getOperatingSystemInstance").getOperatingSystemInstance());
                 if (operatingSystemInterface.?.isOverScan()) {
-                    aLastWidth = (divide_N73004: { const left_N73004 = aLastWidth * operatingSystemInterface.?.getOverScanXPercent(); const right_N73004 = 100; break :divide_N73004 if (comptime @typeInfo(@TypeOf(left_N73004)) == .int or @TypeOf(left_N73004) == comptime_int) @divTrunc(left_N73004, right_N73004) else left_N73004 / right_N73004; });
-                    aLastHeight = (divide_N73059: { const left_N73059 = aLastHeight * operatingSystemInterface.?.getOverScanYPercent(); const right_N73059 = 100; break :divide_N73059 if (comptime @typeInfo(@TypeOf(left_N73059)) == .int or @TypeOf(left_N73059) == comptime_int) @divTrunc(left_N73059, right_N73059) else left_N73059 / right_N73059; });
+                    aLastWidth = (divide_N73004: { const left_N73004 = Inheritance.arithmetic(.multiply, aLastWidth, operatingSystemInterface.?.getOverScanXPercent()); const right_N73004 = 100; break :divide_N73004 if (comptime @typeInfo(@TypeOf(left_N73004)) == .int or @TypeOf(left_N73004) == comptime_int) @divTrunc(left_N73004, right_N73004) else left_N73004 / right_N73004; });
+                    aLastHeight = (divide_N73059: { const left_N73059 = Inheritance.arithmetic(.multiply, aLastHeight, operatingSystemInterface.?.getOverScanYPercent()); const right_N73059 = 100; break :divide_N73059 if (comptime @typeInfo(@TypeOf(left_N73059)) == .int or @TypeOf(left_N73059) == comptime_int) @divTrunc(left_N73059, right_N73059) else left_N73059 / right_N73059; });
                 }
                 if (operatingSystemInterface.?.isScalable()) {
                     if (Inheritance.call(self, "isPortraitWH", .{ aLastWidth, aLastHeight })) {
@@ -321,7 +322,7 @@ pub const DisplayInfoSingleton = struct {
                             self.displayRatio = self.scaleLargestTo / @as(f32, @floatFromInt(aLastHeight));
                             self.ratio = @divTrunc(@as(f32, @floatFromInt(aLastHeight)), self.scaleLargestTo);
                             _ = Inheritance.call(stringMaker.?, "delete", .{ 0, stringMaker.?.length() });
-                            _ = Inheritance.call(self.logUtil.?, "putF", .{ Object.toString(Object.of(Inheritance.call(Inheritance.call(stringMaker.?, "append", .{ self.ADJUSTING_FOR_SCALING_IN_PORTRAIT }).?, "appendfloat", .{ self.displayRatio }))), self, self.commonStrings.?.UPDATE });
+                            _ = Inheritance.call(self.logUtil.?, "putF", .{ Object.toString(Object.of(Inheritance.call(Inheritance.call(stringMaker.?, "append", .{ self.ADJUSTING_FOR_SCALING_IN_PORTRAIT }).?, "appendfloat", .{ self.displayRatio }))), self, Inheritance.fieldPointer(self.commonStrings.?, "UPDATE").* });
                             aLastWidth = @as(i32, @intFromFloat((@as(f32, @floatFromInt(aLastWidth)) * self.displayRatio)));
                             aLastHeight = @as(i32, @intFromFloat((@as(f32, @floatFromInt(aLastHeight)) * self.displayRatio)));
                             _ = Inheritance.call(self.scalableListener.?, "scale", .{ self.ratio });
@@ -334,7 +335,7 @@ pub const DisplayInfoSingleton = struct {
                             self.displayRatio = self.scaleLargestTo / @as(f32, @floatFromInt(aLastWidth));
                             self.ratio = @divTrunc(@as(f32, @floatFromInt(aLastWidth)), self.scaleLargestTo);
                             _ = Inheritance.call(stringMaker.?, "delete", .{ 0, stringMaker.?.length() });
-                            _ = Inheritance.call(self.logUtil.?, "putF", .{ Object.toString(Object.of(Inheritance.call(Inheritance.call(stringMaker.?, "append", .{ self.ADJUSTING_FOR_SCALING_IN_LANDSCAPE }).?, "appendfloat", .{ self.displayRatio }))), self, self.commonStrings.?.UPDATE });
+                            _ = Inheritance.call(self.logUtil.?, "putF", .{ Object.toString(Object.of(Inheritance.call(Inheritance.call(stringMaker.?, "append", .{ self.ADJUSTING_FOR_SCALING_IN_LANDSCAPE }).?, "appendfloat", .{ self.displayRatio }))), self, Inheritance.fieldPointer(self.commonStrings.?, "UPDATE").* });
                             aLastWidth = @as(i32, @intFromFloat((@as(f32, @floatFromInt(aLastWidth)) * self.displayRatio)));
                             aLastHeight = @as(i32, @intFromFloat((@as(f32, @floatFromInt(aLastHeight)) * self.displayRatio)));
                             _ = Inheritance.call(self.scalableListener.?, "scale", .{ self.ratio });
@@ -345,7 +346,7 @@ pub const DisplayInfoSingleton = struct {
                     }
                 }
                 _ = Inheritance.call(stringMaker.?, "delete", .{ 0, stringMaker.?.length() });
-                _ = Inheritance.call(self.logUtil.?, "putF", .{ Object.toString(Object.of(Inheritance.call(Inheritance.call(Inheritance.call(Inheritance.call(Inheritance.call(stringMaker.?, "append", .{ self.UPDATE_FROM_ORIENTATION_CHANGE }).?, "append", .{ self.LAST_WIDTH }).?, "appendint", .{ aLastWidth }).?, "append", .{ self.LAST_HEIGHT }).?, "appendint", .{ aLastHeight }))), self, self.commonStrings.?.UPDATE });
+                _ = Inheritance.call(self.logUtil.?, "putF", .{ Object.toString(Object.of(Inheritance.call(Inheritance.call(Inheritance.call(Inheritance.call(Inheritance.call(stringMaker.?, "append", .{ self.UPDATE_FROM_ORIENTATION_CHANGE }).?, "append", .{ self.LAST_WIDTH }).?, "appendint", .{ aLastWidth }).?, "append", .{ self.LAST_HEIGHT }).?, "appendint", .{ aLastHeight }))), self, Inheritance.fieldPointer(self.commonStrings.?, "UPDATE").* });
                 self.xOffset = aFullWidth - aLastWidth;
                 self.yOffset = aFullHeight - aLastHeight;
                 self.left = Inheritance.call(self.scalableListener.?, "getLeft", .{ self.xOffset });
@@ -357,7 +358,7 @@ pub const DisplayInfoSingleton = struct {
                 self.last[@intCast(self.HEIGHT)] = aLastHeight;
                 self.lastHalf[@intCast(self.HEIGHT)] = (self.last[@intCast(self.HEIGHT)] >> @intCast(1));
                 _ = Inheritance.call(SWTJOGLProcessor.getInstance().?, "setCustom", .{ aLastWidth, aLastHeight, self.ratio });
-                _ = Inheritance.call(self, "add", .{ self.commonStrings.?.UPDATE });
+                _ = Inheritance.call(self, "add", .{ Inheritance.fieldPointer(self.commonStrings.?, "UPDATE").* });
             }
         }
     }
@@ -372,29 +373,29 @@ pub const DisplayInfoSingleton = struct {
     pub fn toStringAppend(self: *Self, stringBuffer: ?*StringMaker) ?*String {
         _ = Inheritance.call(stringBuffer.?, "append", .{ self.DISPLAY_INFO });
         _ = Inheritance.call(stringBuffer.?, "append", .{ self.FULL });
-        _ = Inheritance.call(stringBuffer.?, "append", .{ self.commonLabels.?.WIDTH_LABEL });
+        _ = Inheritance.call(stringBuffer.?, "append", .{ Inheritance.fieldPointer(self.commonLabels.?, "WIDTH_LABEL").* });
         _ = Inheritance.call(stringBuffer.?, "appendint", .{ self.full[@intCast(self.WIDTH)] });
-        _ = Inheritance.call(stringBuffer.?, "append", .{ self.commonSeps.?.SPACE });
+        _ = Inheritance.call(stringBuffer.?, "append", .{ Inheritance.fieldPointer(self.commonSeps.?, "SPACE").* });
         _ = Inheritance.call(stringBuffer.?, "append", .{ self.FULL });
-        _ = Inheritance.call(stringBuffer.?, "append", .{ self.commonLabels.?.HEIGHT_LABEL });
+        _ = Inheritance.call(stringBuffer.?, "append", .{ Inheritance.fieldPointer(self.commonLabels.?, "HEIGHT_LABEL").* });
         _ = Inheritance.call(stringBuffer.?, "appendint", .{ self.full[@intCast(self.HEIGHT)] });
-        _ = Inheritance.call(stringBuffer.?, "append", .{ self.commonSeps.?.SPACE });
+        _ = Inheritance.call(stringBuffer.?, "append", .{ Inheritance.fieldPointer(self.commonSeps.?, "SPACE").* });
         _ = Inheritance.call(stringBuffer.?, "append", .{ self.LAST });
-        _ = Inheritance.call(stringBuffer.?, "append", .{ self.commonLabels.?.WIDTH_LABEL });
+        _ = Inheritance.call(stringBuffer.?, "append", .{ Inheritance.fieldPointer(self.commonLabels.?, "WIDTH_LABEL").* });
         _ = Inheritance.call(stringBuffer.?, "appendint", .{ self.last[@intCast(self.WIDTH)] });
-        _ = Inheritance.call(stringBuffer.?, "append", .{ self.commonSeps.?.SPACE });
+        _ = Inheritance.call(stringBuffer.?, "append", .{ Inheritance.fieldPointer(self.commonSeps.?, "SPACE").* });
         _ = Inheritance.call(stringBuffer.?, "append", .{ self.LAST });
-        _ = Inheritance.call(stringBuffer.?, "append", .{ self.commonLabels.?.HEIGHT_LABEL });
+        _ = Inheritance.call(stringBuffer.?, "append", .{ Inheritance.fieldPointer(self.commonLabels.?, "HEIGHT_LABEL").* });
         _ = Inheritance.call(stringBuffer.?, "appendint", .{ self.last[@intCast(self.HEIGHT)] });
-        _ = Inheritance.call(stringBuffer.?, "append", .{ self.commonSeps.?.SPACE });
+        _ = Inheritance.call(stringBuffer.?, "append", .{ Inheritance.fieldPointer(self.commonSeps.?, "SPACE").* });
         _ = Inheritance.call(stringBuffer.?, "append", .{ self.LAST_HALF });
-        _ = Inheritance.call(stringBuffer.?, "append", .{ self.commonLabels.?.WIDTH_LABEL });
+        _ = Inheritance.call(stringBuffer.?, "append", .{ Inheritance.fieldPointer(self.commonLabels.?, "WIDTH_LABEL").* });
         _ = Inheritance.call(stringBuffer.?, "appendint", .{ self.lastHalf[@intCast(self.WIDTH)] });
-        _ = Inheritance.call(stringBuffer.?, "append", .{ self.commonSeps.?.SPACE });
+        _ = Inheritance.call(stringBuffer.?, "append", .{ Inheritance.fieldPointer(self.commonSeps.?, "SPACE").* });
         _ = Inheritance.call(stringBuffer.?, "append", .{ self.LAST_HALF });
-        _ = Inheritance.call(stringBuffer.?, "append", .{ self.commonLabels.?.HEIGHT_LABEL });
+        _ = Inheritance.call(stringBuffer.?, "append", .{ Inheritance.fieldPointer(self.commonLabels.?, "HEIGHT_LABEL").* });
         _ = Inheritance.call(stringBuffer.?, "appendint", .{ self.lastHalf[@intCast(self.HEIGHT)] });
-        _ = Inheritance.call(stringBuffer.?, "append", .{ self.commonSeps.?.SPACE });
+        _ = Inheritance.call(stringBuffer.?, "append", .{ Inheritance.fieldPointer(self.commonSeps.?, "SPACE").* });
         _ = Inheritance.call(stringBuffer.?, "append", .{ (if (self.isPortrait()) self.PORTRAIT else self.LANDSCAPE) });
         return Inheritance.upcast(?*String, Object.toString(Object.of(stringBuffer)));
     }

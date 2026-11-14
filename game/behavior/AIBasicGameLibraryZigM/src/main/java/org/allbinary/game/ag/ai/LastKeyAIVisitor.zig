@@ -24,6 +24,7 @@ const BooleanFactory = @import("org/allbinary/logic/java/bool/BooleanFactory.zig
 const Visitor = @import("org/allbinary/logic/util/visitor/Visitor.zig").Visitor;
 const CommonStrings = @import("org/allbinary/string/CommonStrings.zig").CommonStrings;
 const Boolean = @import("java/lang/Boolean.zig").Boolean;
+const Exception = @import("java/lang/Exception.zig").Exception;
 
 pub const LastKeyAIVisitor = struct {
     const Self = @This();
@@ -58,7 +59,7 @@ pub const LastKeyAIVisitor = struct {
         }
         // catch (Exception e):
 //             const commonStrings: ?*CommonStrings = Inheritance.upcast(?*CommonStrings, CommonStrings.getInstance()); _ = commonStrings;
-//             _ = Inheritance.call(self.logUtil.?, "put", .{ commonStrings.?.EXCEPTION, self, commonStrings.?.VISIT, e });
+//             _ = Inheritance.call(self.logUtil.?, "put", .{ Inheritance.fieldPointer(commonStrings.?, "EXCEPTION").*, self, Inheritance.fieldPointer(commonStrings.?, "VISIT").*, e });
         return Inheritance.upcast(?Object, self.TRUE);
     }
 };

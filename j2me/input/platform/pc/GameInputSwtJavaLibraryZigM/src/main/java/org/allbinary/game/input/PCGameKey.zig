@@ -19,6 +19,8 @@ const String = @import("java/lang/String.zig").String;
 const Object = @import("java/lang/Object.zig").Object;
 const Inheritance = @import("zig/Inheritance.zig");
 const StringUtil = @import("org/allbinary/logic/string/StringUtil.zig").StringUtil;
+const Input = @import("org/allbinary/game/input/Input.zig").Input;
+const InputFactory = @import("org/allbinary/game/input/InputFactory.zig").InputFactory;
 
 pub const PCGameKey = struct {
     const Self = @This();
@@ -40,16 +42,16 @@ pub const PCGameKey = struct {
     
 
     pub fn toString(self: *Self) ?*String {
-        return Inheritance.upcast(?*String, String.plus(String.literal("PCGameKey: "), self.base.toString()));
+        return Inheritance.upcast(?*String, String.plus(String.literal("PCGameKey: "), String.valueOf(&self.base)));
     }
     
 
     pub fn getString(keyCode: i32) ?*String {
         const input: ?*Input = Inheritance.upcast(?*Input, Inheritance.call(InputFactory.getInstance().?, "getInstanceById", .{ keyCode }));
-        if (input != null) {
+        if (!Object.isNull(input)) {
             return Inheritance.upcast(?*String, input.?.getName());
         } else {
-            return Inheritance.upcast(?*String, StringUtil.getInstance().?.EMPTY_STRING);
+            return Inheritance.upcast(?*String, Inheritance.fieldPointer(StringUtil.getInstance().?, "EMPTY_STRING").*);
         }
     }
 };

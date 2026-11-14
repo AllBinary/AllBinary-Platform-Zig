@@ -6,7 +6,7 @@ const allocator = std.heap.page_allocator;
 const String = @import("java/lang/String.zig").String;
 const Object = @import("java/lang/Object.zig").Object;
 const Inheritance = @import("zig/Inheritance.zig");
-// const GL10 = @import("javax/microedition/khronos/opengles/GL10.zig").GL10;
+const GL10 = @import("javax/microedition/khronos/opengles/GL10.zig").GL10;
 const LogUtil = @import("org/allbinary/logic/communication/log/LogUtil.zig").LogUtil;
 const CommonStrings = @import("org/allbinary/string/CommonStrings.zig").CommonStrings;
 

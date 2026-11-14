@@ -75,7 +75,7 @@ pub const SmallBasicColorCacheFactory = struct {
             }
         }
         const ALPHA_MASK: i32 = @as(i32, @bitCast(@as(u32, 0xFF000000)));
-        basicColor = Inheritance.upcast(@TypeOf(basicColor), Inheritance.call(BasicColorFactory.getInstance().?, "createInstanceAN", .{ colorAsInt & ALPHA_MASK, colorAsInt & 0x00FFFFFF, StringUtil.getInstance().?.EMPTY_STRING }));
+        basicColor = Inheritance.upcast(@TypeOf(basicColor), Inheritance.call(BasicColorFactory.getInstance().?, "createInstanceAN", .{ colorAsInt & ALPHA_MASK, colorAsInt & 0x00FFFFFF, Inheritance.fieldPointer(StringUtil.getInstance().?, "EMPTY_STRING").* }));
         _ = Inheritance.call(self, "add", .{ basicColor });
         return basicColor;
     }

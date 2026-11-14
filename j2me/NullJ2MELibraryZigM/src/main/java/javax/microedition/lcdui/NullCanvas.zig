@@ -7,6 +7,12 @@ const String = @import("java/lang/String.zig").String;
 const Object = @import("java/lang/Object.zig").Object;
 const Inheritance = @import("zig/Inheritance.zig");
 const Stack = @import("java/util/Stack.zig").Stack;
+const Canvas = @import("javax/microedition/lcdui/Canvas.zig").Canvas;
+const Command = @import("javax/microedition/lcdui/Command.zig").Command;
+const CommandListener = @import("javax/microedition/lcdui/CommandListener.zig").CommandListener;
+const Graphics = @import("javax/microedition/lcdui/Graphics.zig").Graphics;
+const Exception = @import("java/lang/Exception.zig").Exception;
+const RuntimeException = @import("java/lang/RuntimeException.zig").RuntimeException;
 
 pub const NullCanvas = struct {
     const Self = @This();

@@ -18,8 +18,8 @@ const allocator = std.heap.page_allocator;
 const String = @import("java/lang/String.zig").String;
 const Object = @import("java/lang/Object.zig").Object;
 const Inheritance = @import("zig/Inheritance.zig");
-// const Font = @import("javax/microedition/lcdui/Font.zig").Font;
-// const Graphics = @import("javax/microedition/lcdui/Graphics.zig").Graphics;
+const Font = @import("javax/microedition/lcdui/Font.zig").Font;
+const Graphics = @import("javax/microedition/lcdui/Graphics.zig").Graphics;
 const Anchor = @import("org/allbinary/graphics/Anchor.zig").Anchor;
 const BasicColor = @import("org/allbinary/graphics/color/BasicColor.zig").BasicColor;
 const BasicColorFactory = @import("org/allbinary/graphics/color/BasicColorFactory.zig").BasicColorFactory;
@@ -51,7 +51,7 @@ pub const OwnershipPaintable = struct {
         this.displayInfo = Inheritance.upcast(?*DisplayInfoSingleton, DisplayInfoSingleton.getInstance());
         this.myFontProcessor = Inheritance.upcast(?*MyFontProcessor, Inheritance.callStatic(UpdateMyFontProcessor, "create1", .{ this }));
         this.COPYRIGHT = String.literal("AllBinary Copyright (c) 2011");
-        this.basicColor = Inheritance.upcast(?*BasicColor, BasicColorFactory.getInstance().?.WHITE);
+        this.basicColor = Inheritance.upcast(?*BasicColor, Inheritance.fieldPointer(BasicColorFactory.getInstance().?, "WHITE").*);
         this.color = this.basicColor.?.intValue();
         this.anchor = Anchor.TOP_LEFT;
         this.COPYRIGHT_Y = 0;
@@ -76,7 +76,7 @@ pub const OwnershipPaintable = struct {
 
     pub fn updateMeasurement(self: *Self, graphics: ?*Graphics) void {
         const font: ?*Font = Inheritance.upcast(?*Font, graphics.?.getFont());
-        self.COPYRIGHT_Y = 2 * font.?.getHeight();
+        self.COPYRIGHT_Y = Inheritance.arithmetic(.multiply, 2, font.?.getHeight());
         self.beginWidth = (Inheritance.call(font.?, "stringWidth", .{ self.COPYRIGHT }) >> @intCast(1));
         self.myFontProcessor = Inheritance.upcast(@TypeOf(self.myFontProcessor), MyFontProcessor.getInstance());
     }

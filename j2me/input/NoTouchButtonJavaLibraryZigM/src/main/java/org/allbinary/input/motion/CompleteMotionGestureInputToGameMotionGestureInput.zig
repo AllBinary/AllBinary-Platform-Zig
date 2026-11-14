@@ -50,7 +50,7 @@ pub const CompleteMotionGestureInputToGameMotionGestureInput = struct {
     
 
     pub fn init(self: *Self) void {
-        _ = Inheritance.callStatic(PreLogUtil, "put", .{ String.literal("No Touch Button = No Compound Motion Gestures"), self, self.commonStrings.?.INIT });
+        _ = Inheritance.callStatic(PreLogUtil, "put", .{ String.literal("No Touch Button = No Compound Motion Gestures"), self, Inheritance.fieldPointer(self.commonStrings.?, "INIT").* });
     }
 };
 

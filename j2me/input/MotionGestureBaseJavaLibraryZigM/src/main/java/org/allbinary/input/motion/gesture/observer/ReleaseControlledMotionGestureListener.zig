@@ -31,6 +31,7 @@ const BasicArrayListD = @import("org/allbinary/util/BasicArrayListD.zig").BasicA
 const CompleteMotionGestureListenerInterface = @import("org/allbinary/input/motion/gesture/observer/CompleteMotionGestureListenerInterface.zig").CompleteMotionGestureListenerInterface;
 const MotionGestureEvent = @import("org/allbinary/input/motion/gesture/observer/MotionGestureEvent.zig").MotionGestureEvent;
 const MotionGestureEventListener = @import("org/allbinary/input/motion/gesture/observer/MotionGestureEventListener.zig").MotionGestureEventListener;
+const Exception = @import("java/lang/Exception.zig").Exception;
 
 pub const ReleaseControlledMotionGestureListener = struct {
     const Self = @This();
@@ -47,7 +48,7 @@ pub const ReleaseControlledMotionGestureListener = struct {
     fn initFields(this: *Self) void {
         this.logUtil = Inheritance.upcast(?*LogUtil, LogUtil.getInstance());
         this.commonStrings = Inheritance.upcast(?*CommonStrings, CommonStrings.getInstance());
-        this.currentMotionGesture = Inheritance.upcast(?*MotionGestureInput, TouchMotionGestureFactory.getInstance().?.NO_MOTION);
+        this.currentMotionGesture = Inheritance.upcast(?*MotionGestureInput, Inheritance.fieldPointer(TouchMotionGestureFactory.getInstance().?, "NO_MOTION").*);
         this.isMouseGestureOccurring = false;
         this.motionGestureCollection = Inheritance.upcast(?*BasicArrayList, BasicArrayListD.create());
         
@@ -58,7 +59,7 @@ pub const ReleaseControlledMotionGestureListener = struct {
         const this = allocator.create(Self) catch unreachable;
         this.* = .{};
         this.initFields();
-        _ = Inheritance.call(this.logUtil.?, "putF", .{ this.commonStrings.?.START, this, this.commonStrings.?.CONSTRUCTOR });
+        _ = Inheritance.call(this.logUtil.?, "putF", .{ Inheritance.fieldPointer(this.commonStrings.?, "START").*, this, Inheritance.fieldPointer(this.commonStrings.?, "CONSTRUCTOR").* });
         this.signed = signed;
         return this;
     }
@@ -66,7 +67,7 @@ pub const ReleaseControlledMotionGestureListener = struct {
 
     pub fn onEvent(self: *Self, eventObject: ?*AllBinaryEventObject) void {
         _ = eventObject;
-        _ = Inheritance.callStatic(ForcedLogUtil, "log", .{ self.commonStrings.?.NOT_IMPLEMENTED, self });
+        _ = Inheritance.callStatic(ForcedLogUtil, "log", .{ Inheritance.fieldPointer(self.commonStrings.?, "NOT_IMPLEMENTED").*, self });
     }
     
 
@@ -112,7 +113,7 @@ pub const ReleaseControlledMotionGestureListener = struct {
 
     pub fn onPressedMotionGestureEvent(self: *Self, ev: ?*MotionGestureEvent) void {
         self.isMouseGestureOccurring = true;
-        self.currentMotionGesture = Inheritance.upcast(@TypeOf(self.currentMotionGesture), TouchMotionGestureFactory.getInstance().?.NO_MOTION);
+        self.currentMotionGesture = Inheritance.upcast(@TypeOf(self.currentMotionGesture), Inheritance.fieldPointer(TouchMotionGestureFactory.getInstance().?, "NO_MOTION").*);
         _ = Inheritance.call(self, "onMotionGestureEvent", .{ ev });
     }
     
@@ -134,7 +135,7 @@ pub const ReleaseControlledMotionGestureListener = struct {
             _ = self.motionGestureCollection.?.clear();
         }
         // catch (Exception e):
-//             _ = Inheritance.call(self.logUtil.?, "put", .{ Object.toString(Object.of(Inheritance.call(Inheritance.call(StringMaker.create(), "append", .{ self.commonStrings.?.EXCEPTION_LABEL }).?, "append", .{ Inheritance.call(StringUtil.getInstance().?, "toString", .{ Inheritance.receiver(ev.?, "getMotionGesture").getMotionGesture() }) }))), self, String.literal("release"), e });
+//             _ = Inheritance.call(self.logUtil.?, "put", .{ Object.toString(Object.of(Inheritance.call(Inheritance.call(StringMaker.create(), "append", .{ Inheritance.fieldPointer(self.commonStrings.?, "EXCEPTION_LABEL").* }).?, "append", .{ Inheritance.call(StringUtil.getInstance().?, "toString", .{ Inheritance.receiver(ev.?, "getMotionGesture").getMotionGesture() }) }))), self, String.literal("release"), e });
     }
     
 
@@ -143,9 +144,9 @@ pub const ReleaseControlledMotionGestureListener = struct {
             return;
         }
         const motionGestureInput: ?*MotionGestureInput = Inheritance.upcast(?*MotionGestureInput, Inheritance.receiver(ev.?, "getMotionGesture").getMotionGesture());
-        if (Object.same(motionGestureInput, TouchMotionGestureFactory.getInstance().?.PRESSED)) {
+        if (Object.same(motionGestureInput, Inheritance.fieldPointer(TouchMotionGestureFactory.getInstance().?, "PRESSED").*)) {
             _ = Inheritance.call(self, "onPressedMotionGestureEvent", .{ ev });
-        } else if (Object.same(motionGestureInput, TouchMotionGestureFactory.getInstance().?.RELEASED)) {
+        } else if (Object.same(motionGestureInput, Inheritance.fieldPointer(TouchMotionGestureFactory.getInstance().?, "RELEASED").*)) {
             _ = Inheritance.call(self, "released", .{ ev });
         } else {
             if (!Object.same(self.currentMotionGesture, motionGestureInput)) {

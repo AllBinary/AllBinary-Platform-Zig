@@ -20,6 +20,7 @@ const Object = @import("java/lang/Object.zig").Object;
 const Inheritance = @import("zig/Inheritance.zig");
 const AllBinaryGameLayer = @import("org/allbinary/game/layer/AllBinaryGameLayer.zig").AllBinaryGameLayer;
 const BasicDecimal = @import("org/allbinary/logic/math/BasicDecimal.zig").BasicDecimal;
+const Exception = @import("java/lang/Exception.zig").Exception;
 
 // Java interface: an implementation is a pointer and a table of functions
 pub const MovementInterface = struct {
@@ -28,9 +29,9 @@ pub const MovementInterface = struct {
     pointer: *anyopaque,
     object: Object,
     toStringFn: *const fn (pointer: *anyopaque) ?*String,
-    initFn: *const fn (pointer: *anyopaque, speedBasicDecimal: ?*BasicDecimal, angle: i32, otherAngle: i32) void,
-    processFn: *const fn (pointer: *anyopaque, layer: ?*AllBinaryGameLayer) void,
-    stopFn: *const fn (pointer: *anyopaque) void,
+    initFn: *const fn (interface_pointer: *anyopaque, speedBasicDecimal: ?*BasicDecimal, angle: i32, otherAngle: i32) void,
+    processFn: *const fn (interface_pointer: *anyopaque, layer: ?*AllBinaryGameLayer) void,
+    stopFn: *const fn (interface_pointer: *anyopaque) void,
 
     pub fn init(self: *Self, speedBasicDecimal: ?*BasicDecimal, angle: i32, otherAngle: i32) void {
         return self.initFn(self.pointer, speedBasicDecimal, angle, otherAngle);
@@ -50,22 +51,22 @@ pub const MovementInterface = struct {
 
     // The interface value of an object with the methods. Like a Java class a method can be declared by the object or a superclass.
     pub fn of(object: anytype) ?*Self {
-        const Implementation = @TypeOf(object);
+        const ImplementationType = @TypeOf(object);
         const Methods = struct {
             fn toString(pointer: *anyopaque) ?*String {
-                const implementation: Implementation = @ptrCast(@alignCast(pointer));
+                const implementation: ImplementationType = @ptrCast(@alignCast(pointer));
                 return String.valueOf(implementation);
             }
-            fn init(pointer: *anyopaque, speedBasicDecimal: ?*BasicDecimal, angle: i32, otherAngle: i32) void {
-                const implementation: Implementation = @ptrCast(@alignCast(pointer));
-                return Inheritance.receiver(implementation, "init").init(speedBasicDecimal, angle, otherAngle);
+            fn init(interface_pointer: *anyopaque, speedBasicDecimal: ?*BasicDecimal, angle: i32, otherAngle: i32) void {
+                const implementation: ImplementationType = @ptrCast(@alignCast(interface_pointer));
+                return Inheritance.call(implementation, "init", .{ speedBasicDecimal, angle, otherAngle });
             }
-            fn process(pointer: *anyopaque, layer: ?*AllBinaryGameLayer) void {
-                const implementation: Implementation = @ptrCast(@alignCast(pointer));
-                return Inheritance.receiver(implementation, "process").process(layer);
+            fn process(interface_pointer: *anyopaque, layer: ?*AllBinaryGameLayer) void {
+                const implementation: ImplementationType = @ptrCast(@alignCast(interface_pointer));
+                return Inheritance.call(implementation, "process", .{ layer });
             }
-            fn stop(pointer: *anyopaque) void {
-                const implementation: Implementation = @ptrCast(@alignCast(pointer));
+            fn stop(interface_pointer: *anyopaque) void {
+                const implementation: ImplementationType = @ptrCast(@alignCast(interface_pointer));
                 return Inheritance.receiver(implementation, "stop").stop();
             }
         };

@@ -62,7 +62,7 @@ pub const WeaponProperties = struct {
         if (speed < this.MAX and speed != 0 and !WeaponProperties.messageSent) {
             const MESSAGE: ?*String = String.literal("Danger Danger Danger: Speed probably to slow if using 1 degree calculations as velocity for a single axis could be below 1024: ");
             const commonStrings: ?*CommonStrings = Inheritance.upcast(?*CommonStrings, CommonStrings.getInstance());
-            _ = Inheritance.callStatic(PreLogUtil, "put", .{ Object.toString(Object.of(Inheritance.call(Inheritance.call(StringMaker.create(), "append", .{ MESSAGE }).?, "appendlong", .{ speed }))), this, commonStrings.?.CONSTRUCTOR });
+            _ = Inheritance.callStatic(PreLogUtil, "put", .{ Object.toString(Object.of(Inheritance.call(Inheritance.call(StringMaker.create(), "append", .{ MESSAGE }).?, "appendlong", .{ speed }))), this, Inheritance.fieldPointer(commonStrings.?, "CONSTRUCTOR").* });
             WeaponProperties.messageSent = true;
         }
         _ = Inheritance.call(this, "setReloadTime", .{ reloadTime });
@@ -71,8 +71,8 @@ pub const WeaponProperties = struct {
         _ = Inheritance.call(this, "setDissipation", .{ dissipation });
         _ = Inheritance.call(this, "setSpeed", .{ Inheritance.callStatic(BasicDecimal, "create1", .{ speed }) });
         if (dissipation != this.ZERO) {
-            const unscaledDamage: i64 = this.speed.?.getUnscaled() * damage;
-            const scaledDissipation: i32 = dissipation * this.speed.?.getScaledFactorValue();
+            const unscaledDamage: i64 = Inheritance.arithmetic(.multiply, this.speed.?.getUnscaled(), damage);
+            const scaledDissipation: i32 = Inheritance.arithmetic(.multiply, dissipation, this.speed.?.getScaledFactorValue());
             const value: i64 = (@divTrunc(unscaledDamage, @as(i64, @intCast(scaledDissipation))));
             _ = Inheritance.call(this, "setRange", .{ @divTrunc(@as(i32, @intCast((value * 9))), 10) });
         }
@@ -112,7 +112,7 @@ pub const WeaponProperties = struct {
     
 
     pub fn getDamageI(self: *Self, range: i32) i32 {
-        return Inheritance.receiver(self, "getDamage").getDamage() - ((divide_N67217: { const left_N67217 = (Inheritance.receiver(self, "getDissipation").getDissipation() * range); const right_N67217 = self.speed.?.getScaled(); break :divide_N67217 if (comptime @typeInfo(@TypeOf(left_N67217)) == .int or @TypeOf(left_N67217) == comptime_int) @divTrunc(left_N67217, right_N67217) else left_N67217 / right_N67217; }));
+        return Inheritance.arithmetic(.subtract, Inheritance.receiver(self, "getDamage").getDamage(), ((divide_N67217: { const left_N67217 = (Inheritance.arithmetic(.multiply, Inheritance.receiver(self, "getDissipation").getDissipation(), range)); const right_N67217 = self.speed.?.getScaled(); break :divide_N67217 if (comptime @typeInfo(@TypeOf(left_N67217)) == .int or @TypeOf(left_N67217) == comptime_int) @divTrunc(left_N67217, right_N67217) else left_N67217 / right_N67217; })));
     }
     
 
@@ -120,9 +120,9 @@ pub const WeaponProperties = struct {
         var index: i32 = 0;
         const stringArray: []?*String = array_N67485: { const array_N67485_array = allocator.alloc(?*String, @intCast(3)) catch unreachable; @memset(array_N67485_array, null); break :array_N67485 array_N67485_array; };
         const stringBuffer: ?*StringMaker = StringMaker.create();
-        stringArray[@intCast(value_N67585: { const value_N67585_value = index; index += 1; break :value_N67585 value_N67585_value; })] = Inheritance.upcast(@TypeOf(stringArray[@intCast(value_N67585: { const value_N67585_value = index; index += 1; break :value_N67585 value_N67585_value; })]), Object.toString(Object.of(Inheritance.call(Inheritance.call(stringBuffer.?, "append", .{ WeaponProperties.DAMAGE }).?, "appendint", .{ @as(i32, @intCast(Inheritance.receiver(self, "getDamage").getDamage())) }))));
+        stringArray[@intCast(value_N67585: { const value_N67585_value = index; index += 1; break :value_N67585 value_N67585_value; })] = Inheritance.upcast(@TypeOf(stringArray[@intCast(value_N67585: { const value_N67585_value = index; index += 1; break :value_N67585 value_N67585_value; })]), Object.toString(Object.of(Inheritance.call(Inheritance.call(stringBuffer.?, "append", .{ WeaponProperties.DAMAGE }).?, "appendint", .{ Inheritance.number(i32, Inheritance.receiver(self, "getDamage").getDamage()) }))));
         _ = Inheritance.call(stringBuffer.?, "delete", .{ 0, stringBuffer.?.length() });
-        stringArray[@intCast(value_N67727: { const value_N67727_value = index; index += 1; break :value_N67727 value_N67727_value; })] = Inheritance.upcast(@TypeOf(stringArray[@intCast(value_N67727: { const value_N67727_value = index; index += 1; break :value_N67727 value_N67727_value; })]), Object.toString(Object.of(Inheritance.call(Inheritance.call(stringBuffer.?, "append", .{ WeaponProperties.RANGE }).?, "appendint", .{ @as(i32, @intCast(Inheritance.receiver(self, "getRange").getRange())) }))));
+        stringArray[@intCast(value_N67727: { const value_N67727_value = index; index += 1; break :value_N67727 value_N67727_value; })] = Inheritance.upcast(@TypeOf(stringArray[@intCast(value_N67727: { const value_N67727_value = index; index += 1; break :value_N67727 value_N67727_value; })]), Object.toString(Object.of(Inheritance.call(Inheritance.call(stringBuffer.?, "append", .{ WeaponProperties.RANGE }).?, "appendint", .{ Inheritance.number(i32, Inheritance.receiver(self, "getRange").getRange()) }))));
         _ = Inheritance.call(stringBuffer.?, "delete", .{ 0, stringBuffer.?.length() });
         stringArray[@intCast(value_N67873: { const value_N67873_value = index; index += 1; break :value_N67873 value_N67873_value; })] = Inheritance.upcast(@TypeOf(stringArray[@intCast(value_N67873: { const value_N67873_value = index; index += 1; break :value_N67873 value_N67873_value; })]), Object.toString(Object.of(Inheritance.call(Inheritance.call(stringBuffer.?, "append", .{ WeaponProperties.RELOAD }).?, "appendlong", .{ self.getReloadTime() }))));
         return stringArray;
@@ -131,10 +131,10 @@ pub const WeaponProperties = struct {
 
     pub fn toString(self: *Self) ?*String {
         const stringBuffer: ?*StringMaker = StringMaker.create();
-        _ = Inheritance.call(Inheritance.call(stringBuffer.?, "append", .{ WeaponProperties.DAMAGE }).?, "appendint", .{ @as(i32, @intCast(Inheritance.receiver(self, "getDamage").getDamage())) });
-        _ = Inheritance.call(stringBuffer.?, "append", .{ CommonSeps.getInstance().?.SPACE });
-        _ = Inheritance.call(Inheritance.call(stringBuffer.?, "append", .{ WeaponProperties.RANGE }).?, "appendint", .{ @as(i32, @intCast(Inheritance.receiver(self, "getRange").getRange())) });
-        _ = Inheritance.call(stringBuffer.?, "append", .{ CommonSeps.getInstance().?.SPACE });
+        _ = Inheritance.call(Inheritance.call(stringBuffer.?, "append", .{ WeaponProperties.DAMAGE }).?, "appendint", .{ Inheritance.number(i32, Inheritance.receiver(self, "getDamage").getDamage()) });
+        _ = Inheritance.call(stringBuffer.?, "append", .{ Inheritance.fieldPointer(CommonSeps.getInstance().?, "SPACE").* });
+        _ = Inheritance.call(Inheritance.call(stringBuffer.?, "append", .{ WeaponProperties.RANGE }).?, "appendint", .{ Inheritance.number(i32, Inheritance.receiver(self, "getRange").getRange()) });
+        _ = Inheritance.call(stringBuffer.?, "append", .{ Inheritance.fieldPointer(CommonSeps.getInstance().?, "SPACE").* });
         _ = Inheritance.call(Inheritance.call(stringBuffer.?, "append", .{ WeaponProperties.RELOAD }).?, "appendlong", .{ self.getReloadTime() });
         return Inheritance.upcast(?*String, Object.toString(Object.of(stringBuffer)));
     }

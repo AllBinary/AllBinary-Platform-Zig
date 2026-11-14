@@ -40,7 +40,7 @@ pub const IntPermutationVisitor = struct {
         _ = anyType;
         _ = Inheritance.call(self.stringBuilder.?, "delete", .{ 0, self.stringBuilder.?.length() });
         _ = Inheritance.call(self, "print", .{ self.data, self.stringBuilder });
-        return Inheritance.upcast(?Object, NullUtil.getInstance().?.NULL_OBJECT);
+        return Inheritance.upcast(?Object, Inheritance.fieldPointer(NullUtil.getInstance().?, "NULL_OBJECT").*);
     }
     
 
@@ -51,13 +51,14 @@ pub const IntPermutationVisitor = struct {
     
 
     pub fn print2(self: *Self, data: []i32, stringBuilder: ?*StringMaker) void {
+        _ = self;
         const commonSeps: ?*CommonSeps = Inheritance.upcast(?*CommonSeps, CommonSeps.getInstance());
         const size: i32 = @as(i32, @intCast(data.len));
         {
             var i: i32 = 0;
             while (i < size) : (i += 1) {
             _ = Inheritance.call(stringBuilder.?, "appendint", .{ data[@intCast(i)] });
-            _ = Inheritance.call(stringBuilder.?, "append", .{ commonSeps.?.SPACE });
+            _ = Inheritance.call(stringBuilder.?, "append", .{ Inheritance.fieldPointer(commonSeps.?, "SPACE").* });
             }
         }
         _ = std.debug.print("{s}\n", .{String.text(Object.toString(Object.of(stringBuilder)))});

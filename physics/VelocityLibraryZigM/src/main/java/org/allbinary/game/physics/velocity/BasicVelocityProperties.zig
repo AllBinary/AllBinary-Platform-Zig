@@ -126,12 +126,12 @@ pub const BasicVelocityProperties = struct {
     
 
     pub fn setVelocity(self: *Self, magnitude: i64, angle: ?*Angle, otherAngle: ?*Angle) void {
-        _ = Inheritance.call(self, "setVelocityi", .{ magnitude, @as(i32, @intCast(angle.?.getValue())), @as(i32, @intCast(otherAngle.?.getValue())) });
+        _ = Inheritance.call(self, "setVelocityi", .{ magnitude, Inheritance.number(i32, angle.?.getValue()), Inheritance.number(i32, otherAngle.?.getValue()) });
     }
     
 
     pub fn addVelocity(self: *Self, magnitude: i64, angle: ?*Angle, otherAngle: ?*Angle) void {
-        _ = Inheritance.call(self, "addVelocityi", .{ magnitude, @as(i32, @intCast(angle.?.getValue())), @as(i32, @intCast(otherAngle.?.getValue())) });
+        _ = Inheritance.call(self, "addVelocityi", .{ magnitude, Inheritance.number(i32, angle.?.getValue()), Inheritance.number(i32, otherAngle.?.getValue()) });
     }
     
 
@@ -161,13 +161,13 @@ pub const BasicVelocityProperties = struct {
         const stringBuffer: ?*StringMaker = StringMaker.create();
         const stringUtil: ?*StringUtil = Inheritance.upcast(?*StringUtil, StringUtil.getInstance());
         _ = Inheritance.call(stringBuffer.?, "append", .{ String.literal("Velocity ") });
-        _ = Inheritance.call(stringBuffer.?, "append", .{ positionStrings.?.X_LABEL });
+        _ = Inheritance.call(stringBuffer.?, "append", .{ Inheritance.fieldPointer(positionStrings.?, "X_LABEL").* });
         _ = Inheritance.call(stringBuffer.?, "append", .{ Inheritance.call(stringUtil.?, "toString", .{ self.velocityXBasicDecimal }) });
-        _ = Inheritance.call(stringBuffer.?, "append", .{ commonSeps.?.SPACE });
-        _ = Inheritance.call(stringBuffer.?, "append", .{ positionStrings.?.Y_LABEL });
+        _ = Inheritance.call(stringBuffer.?, "append", .{ Inheritance.fieldPointer(commonSeps.?, "SPACE").* });
+        _ = Inheritance.call(stringBuffer.?, "append", .{ Inheritance.fieldPointer(positionStrings.?, "Y_LABEL").* });
         _ = Inheritance.call(stringBuffer.?, "append", .{ Inheritance.call(stringUtil.?, "toString", .{ self.velocityYBasicDecimal }) });
-        _ = Inheritance.call(stringBuffer.?, "append", .{ commonSeps.?.SPACE });
-        _ = Inheritance.call(stringBuffer.?, "append", .{ positionStrings.?.Z_LABEL });
+        _ = Inheritance.call(stringBuffer.?, "append", .{ Inheritance.fieldPointer(commonSeps.?, "SPACE").* });
+        _ = Inheritance.call(stringBuffer.?, "append", .{ Inheritance.fieldPointer(positionStrings.?, "Z_LABEL").* });
         _ = Inheritance.call(stringBuffer.?, "append", .{ Inheritance.call(stringUtil.?, "toString", .{ self.velocityZBasicDecimal }) });
         return Inheritance.upcast(?*String, Object.toString(Object.of(stringBuffer)));
     }

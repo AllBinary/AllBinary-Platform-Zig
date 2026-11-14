@@ -18,10 +18,10 @@ const allocator = std.heap.page_allocator;
 const String = @import("java/lang/String.zig").String;
 const Object = @import("java/lang/Object.zig").Object;
 const Inheritance = @import("zig/Inheritance.zig");
-// const GL10 = @import("javax/microedition/khronos/opengles/GL10.zig").GL10;
-// const Buffer = @import("java/nio/Buffer.zig").Buffer;
-// const FloatBuffer = @import("java/nio/FloatBuffer.zig").FloatBuffer;
-// const IntBuffer = @import("java/nio/IntBuffer.zig").IntBuffer;
+const GL10 = @import("javax/microedition/khronos/opengles/GL10.zig").GL10;
+const Buffer = @import("java/nio/Buffer.zig").Buffer;
+const FloatBuffer = @import("java/nio/FloatBuffer.zig").FloatBuffer;
+const IntBuffer = @import("java/nio/IntBuffer.zig").IntBuffer;
 const StringUtil = @import("org/allbinary/logic/string/StringUtil.zig").StringUtil;
 
 pub const NullGL10 = struct {
@@ -390,7 +390,7 @@ pub const NullGL10 = struct {
     pub fn glGetString(self: *Self, name: i32) ?*String {
         _ = name;
         _ = self;
-        return Inheritance.upcast(?*String, StringUtil.getInstance().?.EMPTY_STRING);
+        return Inheritance.upcast(?*String, Inheritance.fieldPointer(StringUtil.getInstance().?, "EMPTY_STRING").*);
     }
     
 
@@ -854,9 +854,9 @@ pub const NullGL10 = struct {
     }
     
 
-    pub fn glPolygonMode(self: *Self, i: i32, i1: i32) void {
+    pub fn glPolygonMode(self: *Self, i: i32, i1_: i32) void {
         _ = i;
-        _ = i1;
+        _ = i1_;
         _ = self;
         return;
     }

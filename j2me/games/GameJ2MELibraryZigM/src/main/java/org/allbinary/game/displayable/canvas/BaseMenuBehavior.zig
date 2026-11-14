@@ -21,6 +21,7 @@ const Inheritance = @import("zig/Inheritance.zig");
 const DisplayChangeEvent = @import("org/allbinary/graphics/displayable/event/DisplayChangeEvent.zig").DisplayChangeEvent;
 const NullPaintable = @import("org/allbinary/graphics/paint/NullPaintable.zig").NullPaintable;
 const AllBinaryGameCanvas = @import("org/allbinary/game/displayable/canvas/AllBinaryGameCanvas.zig").AllBinaryGameCanvas;
+const Exception = @import("java/lang/Exception.zig").Exception;
 
 pub const BaseMenuBehavior = struct {
     const Self = @This();

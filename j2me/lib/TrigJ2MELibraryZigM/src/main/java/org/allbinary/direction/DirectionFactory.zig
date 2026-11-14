@@ -76,13 +76,13 @@ pub const DirectionFactory = struct {
         this.initFields();
         const stringBuffer: ?*StringMaker = StringMaker.create();
         const commonSeps: ?*CommonSeps = Inheritance.upcast(?*CommonSeps, CommonSeps.getInstance());
-        this.UP_LEFT = Inheritance.callStatic(Direction, "create4", .{ String.literal("UP LEFT"), Object.toString(Object.of(Inheritance.call(Inheritance.call(Inheritance.call(stringBuffer.?, "append", .{ this.UP.?.getOtherName() }).?, "append", .{ commonSeps.?.SPACE }).?, "append", .{ this.LEFT.?.getOtherName() }))), 4, 0 });
+        this.UP_LEFT = Inheritance.callStatic(Direction, "create4", .{ String.literal("UP LEFT"), Object.toString(Object.of(Inheritance.call(Inheritance.call(Inheritance.call(stringBuffer.?, "append", .{ this.UP.?.getOtherName() }).?, "append", .{ Inheritance.fieldPointer(commonSeps.?, "SPACE").* }).?, "append", .{ this.LEFT.?.getOtherName() }))), 4, 0 });
         _ = Inheritance.call(stringBuffer.?, "delete", .{ 0, stringBuffer.?.length() });
-        this.UP_RIGHT = Inheritance.callStatic(Direction, "create4", .{ String.literal("UP RIGHT"), Object.toString(Object.of(Inheritance.call(Inheritance.call(Inheritance.call(stringBuffer.?, "append", .{ this.UP.?.getOtherName() }).?, "append", .{ commonSeps.?.SPACE }).?, "append", .{ this.RIGHT.?.getOtherName() }))), 5, 0 });
+        this.UP_RIGHT = Inheritance.callStatic(Direction, "create4", .{ String.literal("UP RIGHT"), Object.toString(Object.of(Inheritance.call(Inheritance.call(Inheritance.call(stringBuffer.?, "append", .{ this.UP.?.getOtherName() }).?, "append", .{ Inheritance.fieldPointer(commonSeps.?, "SPACE").* }).?, "append", .{ this.RIGHT.?.getOtherName() }))), 5, 0 });
         _ = Inheritance.call(stringBuffer.?, "delete", .{ 0, stringBuffer.?.length() });
-        this.DOWN_LEFT = Inheritance.callStatic(Direction, "create4", .{ String.literal("DOWN LEFT"), Object.toString(Object.of(Inheritance.call(Inheritance.call(Inheritance.call(stringBuffer.?, "append", .{ this.DOWN.?.getOtherName() }).?, "append", .{ commonSeps.?.SPACE }).?, "append", .{ this.LEFT.?.getOtherName() }))), 6, 0 });
+        this.DOWN_LEFT = Inheritance.callStatic(Direction, "create4", .{ String.literal("DOWN LEFT"), Object.toString(Object.of(Inheritance.call(Inheritance.call(Inheritance.call(stringBuffer.?, "append", .{ this.DOWN.?.getOtherName() }).?, "append", .{ Inheritance.fieldPointer(commonSeps.?, "SPACE").* }).?, "append", .{ this.LEFT.?.getOtherName() }))), 6, 0 });
         _ = Inheritance.call(stringBuffer.?, "delete", .{ 0, stringBuffer.?.length() });
-        this.DOWN_RIGHT = Inheritance.callStatic(Direction, "create4", .{ String.literal("DOWN RIGHT"), Object.toString(Object.of(Inheritance.call(Inheritance.call(Inheritance.call(stringBuffer.?, "append", .{ this.DOWN.?.getOtherName() }).?, "append", .{ commonSeps.?.SPACE }).?, "append", .{ this.RIGHT.?.getOtherName() }))), 7, 0 });
+        this.DOWN_RIGHT = Inheritance.callStatic(Direction, "create4", .{ String.literal("DOWN RIGHT"), Object.toString(Object.of(Inheritance.call(Inheritance.call(Inheritance.call(stringBuffer.?, "append", .{ this.DOWN.?.getOtherName() }).?, "append", .{ Inheritance.fieldPointer(commonSeps.?, "SPACE").* }).?, "append", .{ this.RIGHT.?.getOtherName() }))), 7, 0 });
         return this;
     }
 };

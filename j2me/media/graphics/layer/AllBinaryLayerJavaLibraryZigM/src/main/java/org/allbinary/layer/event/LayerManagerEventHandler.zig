@@ -27,6 +27,7 @@ const BasicArrayListD = @import("org/allbinary/util/BasicArrayListD.zig").BasicA
 const LayerManagerEvent = @import("org/allbinary/layer/event/LayerManagerEvent.zig").LayerManagerEvent;
 const LayerManagerEventListener = @import("org/allbinary/layer/event/LayerManagerEventListener.zig").LayerManagerEventListener;
 const LayerManagerEventListenerInterface = @import("org/allbinary/layer/event/LayerManagerEventListenerInterface.zig").LayerManagerEventListenerInterface;
+const Exception = @import("java/lang/Exception.zig").Exception;
 
 pub const LayerManagerEventHandler = struct {
     const Self = @This();
@@ -73,7 +74,7 @@ pub const LayerManagerEventHandler = struct {
 
     pub fn removeAllListeners(self: *Self) void {
         _ = self.list.?.clear();
-        _ = self.base.removeAllListeners();
+        _ = Inheritance.receiver(&self.base, "removeAllListeners").removeAllListeners();
     }
     
 
@@ -89,11 +90,11 @@ pub const LayerManagerEventHandler = struct {
             var index: i32 = self.list.?.size();
             while (value_N66546: { index -= 1; break :value_N66546 index; } >= 0) {
             { // try
-                const layerManagerEventListener: ?*LayerManagerEventListener = Inheritance.cast(?*LayerManagerEventListener, self.list.?.objectArray[@intCast(index)]);
+                const layerManagerEventListener: ?*LayerManagerEventListener = Inheritance.cast(?*LayerManagerEventListener, Inheritance.fieldPointer(self.list.?, "objectArray").*[@intCast(index)]);
                 _ = Inheritance.call(layerManagerEventListener.?, "onCreateLayerManagerEvent", .{ Inheritance.cast(?*LayerManagerEvent, eventObject) });
             }
             // catch (Exception e):
-//                 _ = Inheritance.call(Inheritance.fieldPointer(self, "logUtil").*.?, "put", .{ Inheritance.fieldPointer(self, "commonStrings").*.?.EXCEPTION, self, EventStrings.getInstance().?.FIRE_EVENT, e });
+//                 _ = Inheritance.call(Inheritance.fieldPointer(self, "logUtil").*.?, "put", .{ Inheritance.fieldPointer(Inheritance.fieldPointer(self, "commonStrings").*.?, "EXCEPTION").*, self, Inheritance.fieldPointer(EventStrings.getInstance().?, "FIRE_EVENT").*, e });
             }
         }
         _ = Inheritance.call(&self.base, "fireEvent", .{ eventObject });
@@ -109,26 +110,26 @@ pub const LayerManagerEventHandler = struct {
             var index: i32 = self.list.?.size();
             while (value_N67038: { index -= 1; break :value_N67038 index; } >= 0) {
             { // try
-                const layerManagerEventListener: ?*LayerManagerEventListener = Inheritance.cast(?*LayerManagerEventListener, self.list.?.objectArray[@intCast(index)]);
+                const layerManagerEventListener: ?*LayerManagerEventListener = Inheritance.cast(?*LayerManagerEventListener, Inheritance.fieldPointer(self.list.?, "objectArray").*[@intCast(index)]);
                 _ = Inheritance.call(layerManagerEventListener.?, "onDeleteLayerManagerEvent", .{ Inheritance.cast(?*LayerManagerEvent, eventObject) });
             }
             // catch (Exception e):
-//                 _ = Inheritance.call(Inheritance.fieldPointer(self, "logUtil").*.?, "put", .{ Inheritance.fieldPointer(self, "commonStrings").*.?.EXCEPTION, self, EventStrings.getInstance().?.FIRE_EVENT, e });
+//                 _ = Inheritance.call(Inheritance.fieldPointer(self, "logUtil").*.?, "put", .{ Inheritance.fieldPointer(Inheritance.fieldPointer(self, "commonStrings").*.?, "EXCEPTION").*, self, Inheritance.fieldPointer(EventStrings.getInstance().?, "FIRE_EVENT").*, e });
             }
         }
         const eventListenerInterfaceList: ?*BasicArrayList = Inheritance.fieldPointer(self, "eventListenerInterfaceList").*;
         var eventListenerInterface: ?*EventListenerInterface = null;
         var layerManagerEventListenerInterface: ?*LayerManagerEventListenerInterface = null;
-        var index: i32 = 0;
-        while (index < eventListenerInterfaceList.?.size()) {
+        var listenerIndex: i32 = 0;
+        while (listenerIndex < eventListenerInterfaceList.?.size()) {
             { // try
-                eventListenerInterface = Inheritance.cast(?*EventListenerInterface, eventListenerInterfaceList.?.objectArray[@intCast(index)]);
+                eventListenerInterface = Inheritance.cast(?*EventListenerInterface, Inheritance.fieldPointer(eventListenerInterfaceList.?, "objectArray").*[@intCast(listenerIndex)]);
                 layerManagerEventListenerInterface = Inheritance.upcast(@TypeOf(layerManagerEventListenerInterface), (Inheritance.cast(?*LayerManagerEventListenerInterface, eventListenerInterface)));
                 _ = Inheritance.call(layerManagerEventListenerInterface.?, "onDeleteLayerManagerEvent", .{ Inheritance.cast(?*LayerManagerEvent, eventObject) });
             }
             // catch (Exception e):
-//                 _ = Inheritance.call(Inheritance.fieldPointer(self, "logUtil").*.?, "put", .{ Inheritance.fieldPointer(self, "commonStrings").*.?.EXCEPTION, self, EventStrings.getInstance().?.FIRE_EVENT, e });
-            index += 1;
+//                 _ = Inheritance.call(Inheritance.fieldPointer(self, "logUtil").*.?, "put", .{ Inheritance.fieldPointer(Inheritance.fieldPointer(self, "commonStrings").*.?, "EXCEPTION").*, self, Inheritance.fieldPointer(EventStrings.getInstance().?, "FIRE_EVENT").*, e });
+            listenerIndex += 1;
         }
     }
     

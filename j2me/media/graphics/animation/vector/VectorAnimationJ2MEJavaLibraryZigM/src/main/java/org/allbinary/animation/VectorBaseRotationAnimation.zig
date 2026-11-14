@@ -18,7 +18,7 @@ const allocator = std.heap.page_allocator;
 const String = @import("java/lang/String.zig").String;
 const Object = @import("java/lang/Object.zig").Object;
 const Inheritance = @import("zig/Inheritance.zig");
-// const Graphics = @import("javax/microedition/lcdui/Graphics.zig").Graphics;
+const Graphics = @import("javax/microedition/lcdui/Graphics.zig").Graphics;
 const BasicColor = @import("org/allbinary/graphics/color/BasicColor.zig").BasicColor;
 const NullUtil = @import("org/allbinary/logic/NullUtil.zig").NullUtil;
 const PrimitiveIntUtil = @import("org/allbinary/logic/math/PrimitiveIntUtil.zig").PrimitiveIntUtil;
@@ -27,6 +27,7 @@ const CircularIndexUtil = @import("org/allbinary/util/CircularIndexUtil.zig").Ci
 const AnimationBehavior = @import("org/allbinary/animation/AnimationBehavior.zig").AnimationBehavior;
 const RotationAnimation = @import("org/allbinary/animation/RotationAnimation.zig").RotationAnimation;
 const VectorAnimationInterface = @import("org/allbinary/animation/VectorAnimationInterface.zig").VectorAnimationInterface;
+const Exception = @import("java/lang/Exception.zig").Exception;
 
 pub const VectorBaseRotationAnimation = struct {
     const Self = @This();
@@ -37,7 +38,7 @@ pub const VectorBaseRotationAnimation = struct {
     // Implements VectorAnimationInterface
 
     fn initFields(this: *Self) void {
-        this.currentPoints = NullUtil.getInstance().?.NULL_INT_ARRAY_ARRAY_ARRAY;
+        this.currentPoints = Inheritance.fieldPointer(NullUtil.getInstance().?, "NULL_INT_ARRAY_ARRAY_ARRAY").*;
     }
     
 
@@ -119,7 +120,7 @@ pub const VectorBaseRotationAnimation = struct {
             }
         }
         // catch (Exception e):
-//             _ = Inheritance.call(Inheritance.fieldPointer(self, "logUtil").*.?, "put", .{ Inheritance.fieldPointer(self, "commonStrings").*.?.EXCEPTION, self, String.literal("paintVectors"), e });
+//             _ = Inheritance.call(Inheritance.fieldPointer(self, "logUtil").*.?, "put", .{ Inheritance.fieldPointer(Inheritance.fieldPointer(self, "commonStrings").*.?, "EXCEPTION").*, self, String.literal("paintVectors"), e });
     }
     
 
@@ -131,6 +132,16 @@ pub const VectorBaseRotationAnimation = struct {
     pub fn setPoints(self: *Self, currentPoints: [][][]i32) void {
         self.currentPoints = currentPoints;
         Inheritance.fieldPointer(self, "circularIndexUtil").* = Inheritance.upcast(@TypeOf(Inheritance.fieldPointer(self, "circularIndexUtil").*), Inheritance.callStatic(CircularIndexUtil, "createInstance", .{ @as(i32, @intCast(self.currentPoints.len)) }));
+    }
+    
+
+    pub fn getBasicColorP(self: *Self) ?*BasicColor {
+        return Inheritance.upcast(?*BasicColor, Inheritance.receiver(&self.base, "getBasicColorP").getBasicColorP());
+    }
+    
+
+    pub fn setBasicColorP(self: *Self, basicColor: ?*BasicColor) void {
+        _ = Inheritance.call(&self.base, "setBasicColorP", .{ basicColor });
     }
 };
 

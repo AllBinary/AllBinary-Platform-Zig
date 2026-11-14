@@ -71,7 +71,7 @@ pub const NoHardware = struct {
     pub fn difference(self: *Self, hardwareInterface: ?*HardwareInterface) ?*ABHashtable {
         _ = hardwareInterface;
         _ = self;
-        return Inheritance.upcast(?*ABHashtable, StdUtil.getInstance().?.NULL_TABLE);
+        return Inheritance.upcast(?*ABHashtable, Inheritance.fieldPointer(StdUtil.getInstance().?, "NULL_TABLE").*);
     }
 };
 

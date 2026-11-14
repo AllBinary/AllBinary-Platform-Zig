@@ -36,9 +36,9 @@ pub const AbPathData = struct {
     }
 
     fn initFields(this: *Self) void {
-        this.EXTENSION_SEP = Inheritance.upcast(?*String, CommonSeps.getInstance().?.PERIOD);
+        this.EXTENSION_SEP = Inheritance.upcast(?*String, Inheritance.fieldPointer(CommonSeps.getInstance().?, "PERIOD").*);
         this.SEPARATORCHAR = '/';
-        this.SEPARATOR = Inheritance.upcast(?*String, CommonSeps.getInstance().?.FORWARD_SLASH);
+        this.SEPARATOR = Inheritance.upcast(?*String, Inheritance.fieldPointer(CommonSeps.getInstance().?, "FORWARD_SLASH").*);
     }
     
 

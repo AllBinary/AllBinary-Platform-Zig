@@ -27,7 +27,7 @@ pub const GameMidletStateFactory = struct {
 
     fn initFields(this: *Self) void {
         this.logUtil = Inheritance.upcast(?*LogUtil, LogUtil.getInstance());
-        this.currentGameState = Inheritance.upcast(?*GameState, GameStateFactory.getInstance().?.NO_GAME_STATE);
+        this.currentGameState = Inheritance.upcast(?*GameState, Inheritance.fieldPointer(GameStateFactory.getInstance().?, "NO_GAME_STATE").*);
     }
     
 
@@ -50,7 +50,7 @@ pub const GameMidletStateFactory = struct {
     
 
     pub fn setCurrentGameState(self: *Self, currentGameState: ?*GameState) void {
-        _ = Inheritance.call(self.logUtil.?, "putF", .{ Object.toString(Object.of(Inheritance.call(Inheritance.call(Inheritance.call(StringMaker.create(), "append", .{ CommonLabels.getInstance().?.CURRENT }).?, "append", .{ String.literal(" GameState: ") }).?, "append", .{ Inheritance.call(StringUtil.getInstance().?, "toString", .{ currentGameState }) }))), self, String.literal("setCurrentGameState") });
+        _ = Inheritance.call(self.logUtil.?, "putF", .{ Object.toString(Object.of(Inheritance.call(Inheritance.call(Inheritance.call(StringMaker.create(), "append", .{ Inheritance.fieldPointer(CommonLabels.getInstance().?, "CURRENT").* }).?, "append", .{ String.literal(" GameState: ") }).?, "append", .{ Inheritance.call(StringUtil.getInstance().?, "toString", .{ currentGameState }) }))), self, String.literal("setCurrentGameState") });
         self.currentGameState = currentGameState;
     }
 };

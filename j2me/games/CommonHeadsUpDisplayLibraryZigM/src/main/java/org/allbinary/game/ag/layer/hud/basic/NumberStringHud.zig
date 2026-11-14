@@ -18,8 +18,8 @@ const allocator = std.heap.page_allocator;
 const String = @import("java/lang/String.zig").String;
 const Object = @import("java/lang/Object.zig").Object;
 const Inheritance = @import("zig/Inheritance.zig");
-// const Font = @import("javax/microedition/lcdui/Font.zig").Font;
-// const Graphics = @import("javax/microedition/lcdui/Graphics.zig").Graphics;
+const Font = @import("javax/microedition/lcdui/Font.zig").Font;
+const Graphics = @import("javax/microedition/lcdui/Graphics.zig").Graphics;
 const BasicHud = @import("org/allbinary/game/graphics/hud/BasicHud.zig").BasicHud;
 const BasicHudFactory = @import("org/allbinary/game/graphics/hud/BasicHudFactory.zig").BasicHudFactory;
 const BasicColor = @import("org/allbinary/graphics/color/BasicColor.zig").BasicColor;
@@ -27,6 +27,7 @@ const MyFontProcessor = @import("org/allbinary/graphics/font/MyFontProcessor.zig
 const PaintableInterface = @import("org/allbinary/graphics/paint/PaintableInterface.zig").PaintableInterface;
 const PrimitiveLongSingleton = @import("org/allbinary/logic/math/PrimitiveLongSingleton.zig").PrimitiveLongSingleton;
 const PrimitiveLongUtil = @import("org/allbinary/logic/math/PrimitiveLongUtil.zig").PrimitiveLongUtil;
+const RuntimeException = @import("java/lang/RuntimeException.zig").RuntimeException;
 
 pub const NumberStringHud = struct {
     const Self = @This();
@@ -61,12 +62,12 @@ pub const NumberStringHud = struct {
         this.initFields();
         this.prependString = prependString;
         this.PREPEND_STRING = Inheritance.upcast(@TypeOf(this.PREPEND_STRING), prependString.?.toCharArray());
-        this.valueString = Inheritance.upcast(@TypeOf(this.valueString), PrimitiveLongSingleton.getInstance().?.NUMBER_CHAR_ARRAYS[@intCast(0)]);
+        this.valueString = Inheritance.upcast(@TypeOf(this.valueString), Inheritance.fieldPointer(PrimitiveLongSingleton.getInstance().?, "NUMBER_CHAR_ARRAYS").*[@intCast(0)]);
         this.primitiveLongUtil = Inheritance.upcast(@TypeOf(this.primitiveLongUtil), Inheritance.callStatic(PrimitiveLongUtil, "createPowerOfTen", .{ max + 1 }));
         this.max = max;
         this.value = 0;
         if (direction == 0) {
-            std.debug.panic("{any}", .{exception: { _ = BasicHudFactory.getInstance().?.DIRECTION_EXCEPTION; break :exception error.RuntimeException; }});
+            std.debug.panic("{any}", .{exception: { _ = Inheritance.fieldPointer(BasicHudFactory.getInstance().?, "DIRECTION_EXCEPTION").*; break :exception error.RuntimeException; }});
         }
         Inheritance.bindOverrides(this);
         return this;
@@ -75,7 +76,7 @@ pub const NumberStringHud = struct {
 
     pub fn updateMeasurement(self: *Self, graphics: ?*Graphics) void {
         const font: ?*Font = Inheritance.upcast(?*Font, graphics.?.getFont());
-        self.offset = Inheritance.call(font.?, "stringWidth", .{ self.prependString }) + Inheritance.callStatic(MyFontProcessor, "defaultCharWidth", .{ font });
+        self.offset = Inheritance.plus(Inheritance.call(font.?, "stringWidth", .{ self.prependString }), Inheritance.callStatic(MyFontProcessor, "defaultCharWidth", .{ font }));
         _ = Inheritance.call(&self.base, "updateMeasurement", .{ graphics });
     }
     

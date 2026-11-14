@@ -18,7 +18,7 @@ const allocator = std.heap.page_allocator;
 const String = @import("java/lang/String.zig").String;
 const Object = @import("java/lang/Object.zig").Object;
 const Inheritance = @import("zig/Inheritance.zig");
-// const Graphics = @import("javax/microedition/lcdui/Graphics.zig").Graphics;
+const Graphics = @import("javax/microedition/lcdui/Graphics.zig").Graphics;
 const CellPositionFactory = @import("org/allbinary/graphics/CellPositionFactory.zig").CellPositionFactory;
 const BasicColor = @import("org/allbinary/graphics/color/BasicColor.zig").BasicColor;
 const Paintable = @import("org/allbinary/graphics/paint/Paintable.zig").Paintable;
@@ -29,6 +29,7 @@ const CommonButtons = @import("org/allbinary/input/motion/button/CommonButtons.z
 const TouchButton = @import("org/allbinary/input/motion/button/TouchButton.zig").TouchButton;
 const TouchButtonBlankResource = @import("org/allbinary/input/motion/button/TouchButtonBlankResource.zig").TouchButtonBlankResource;
 const TouchButtonLocationHelper = @import("org/allbinary/input/motion/button/TouchButtonLocationHelper.zig").TouchButtonLocationHelper;
+const Exception = @import("java/lang/Exception.zig").Exception;
 
 pub const TouchButtonsMappingPaintable = struct {
     const Self = @This();
@@ -65,7 +66,7 @@ pub const TouchButtonsMappingPaintable = struct {
         }
         // catch (Exception e):
 //             const commonStrings: ?*CommonStrings = Inheritance.upcast(?*CommonStrings, CommonStrings.getInstance()); _ = commonStrings;
-//             _ = Inheritance.call(self.logUtil.?, "put", .{ commonStrings.?.EXCEPTION, self, String.literal("updateRectangle"), e });
+//             _ = Inheritance.call(self.logUtil.?, "put", .{ Inheritance.fieldPointer(commonStrings.?, "EXCEPTION").*, self, String.literal("updateRectangle"), e });
     }
     
 
@@ -82,7 +83,7 @@ pub const TouchButtonsMappingPaintable = struct {
             {
                 var rowIndex: i32 = totalRows - 1;
                 while (rowIndex >= 0) : (rowIndex -= 1) {
-                self.paintableTable[@intCast(index)][@intCast(rowIndex)] = Inheritance.upcast(@TypeOf(self.paintableTable[@intCast(index)][@intCast(rowIndex)]), Inheritance.callStatic(TouchButton, "createButton", .{ BasicTouchInputFactory.getInstance().?.NONE, TouchButtonBlankResource.getInstance(), commonButtons.?.NORMAL_BUTTON, Inheritance.call(cellPositionFactory.?, "getInstanceColRow", .{ index, rowIndex }), self.touchButtonLocationHelper.?.getColumnsRemainderHalf(), self.touchButtonLocationHelper.?.getRowsRemainderHalf() }));
+                self.paintableTable[@intCast(index)][@intCast(rowIndex)] = Inheritance.upcast(@TypeOf(self.paintableTable[@intCast(index)][@intCast(rowIndex)]), Inheritance.callStatic(TouchButton, "createButton", .{ Inheritance.fieldPointer(BasicTouchInputFactory.getInstance().?, "NONE").*, TouchButtonBlankResource.getInstance(), Inheritance.fieldPointer(commonButtons.?, "NORMAL_BUTTON").*, Inheritance.call(cellPositionFactory.?, "getInstanceColRow", .{ index, rowIndex }), self.touchButtonLocationHelper.?.getColumnsRemainderHalf(), self.touchButtonLocationHelper.?.getRowsRemainderHalf() }));
                 }
             }
             }

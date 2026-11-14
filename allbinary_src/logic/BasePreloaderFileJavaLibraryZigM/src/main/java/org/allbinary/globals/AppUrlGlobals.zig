@@ -20,6 +20,7 @@ const Object = @import("java/lang/Object.zig").Object;
 const Inheritance = @import("zig/Inheritance.zig");
 const StringUtil = @import("org/allbinary/logic/string/StringUtil.zig").StringUtil;
 const UrlGlobalsInterface = @import("org/allbinary/globals/UrlGlobalsInterface.zig").UrlGlobalsInterface;
+const Exception = @import("java/lang/Exception.zig").Exception;
 
 //implements
 pub const AppUrlGlobals = struct {
@@ -35,7 +36,7 @@ pub const AppUrlGlobals = struct {
     }
 
     fn initFields(this: *Self) void {
-        this.path = Inheritance.upcast(?*String, StringUtil.getInstance().?.EMPTY_STRING);
+        this.path = Inheritance.upcast(?*String, Inheritance.fieldPointer(StringUtil.getInstance().?, "EMPTY_STRING").*);
     }
 
     pub fn create() *Self {
@@ -72,7 +73,7 @@ pub const AppUrlGlobals = struct {
 
     pub fn getTestHtmlPath(self: *Self) ?*String {
         _ = self;
-        return Inheritance.upcast(?*String, StringUtil.getInstance().?.EMPTY_STRING);
+        return Inheritance.upcast(?*String, Inheritance.fieldPointer(StringUtil.getInstance().?, "EMPTY_STRING").*);
     }
     
 

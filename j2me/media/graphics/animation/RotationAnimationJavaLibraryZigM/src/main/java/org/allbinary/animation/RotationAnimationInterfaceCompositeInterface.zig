@@ -29,8 +29,8 @@ pub const RotationAnimationInterfaceCompositeInterface = struct {
     object: Object,
     base: IndexedAnimationInterfaceCompositeInterface,
     toStringFn: *const fn (pointer: *anyopaque) ?*String,
-    getRotationAnimationInterfaceFn: *const fn (pointer: *anyopaque) ?*RotationAnimation,
-    setFrameFn: *const fn (pointer: *anyopaque, index: i32) void,
+    getRotationAnimationInterfaceFn: *const fn (interface_pointer: *anyopaque) ?*RotationAnimation,
+    setFrameFn: *const fn (interface_pointer: *anyopaque, index: i32) void,
 
     pub fn getRotationAnimationInterface(self: *Self) ?*RotationAnimation {
         return self.getRotationAnimationInterfaceFn(self.pointer);
@@ -46,19 +46,19 @@ pub const RotationAnimationInterfaceCompositeInterface = struct {
 
     // The interface value of an object with the methods. Like a Java class a method can be declared by the object or a superclass.
     pub fn of(object: anytype) ?*Self {
-        const Implementation = @TypeOf(object);
+        const ImplementationType = @TypeOf(object);
         const Methods = struct {
             fn toString(pointer: *anyopaque) ?*String {
-                const implementation: Implementation = @ptrCast(@alignCast(pointer));
+                const implementation: ImplementationType = @ptrCast(@alignCast(pointer));
                 return String.valueOf(implementation);
             }
-            fn getRotationAnimationInterface(pointer: *anyopaque) ?*RotationAnimation {
-                const implementation: Implementation = @ptrCast(@alignCast(pointer));
+            fn getRotationAnimationInterface(interface_pointer: *anyopaque) ?*RotationAnimation {
+                const implementation: ImplementationType = @ptrCast(@alignCast(interface_pointer));
                 return Inheritance.upcast(?*RotationAnimation, Inheritance.receiver(implementation, "getRotationAnimationInterface").getRotationAnimationInterface());
             }
-            fn setFrame(pointer: *anyopaque, index: i32) void {
-                const implementation: Implementation = @ptrCast(@alignCast(pointer));
-                return Inheritance.receiver(implementation, "setFrame").setFrame(index);
+            fn setFrame(interface_pointer: *anyopaque, index: i32) void {
+                const implementation: ImplementationType = @ptrCast(@alignCast(interface_pointer));
+                return Inheritance.call(implementation, "setFrame", .{ index });
             }
         };
         const this = allocator.create(Self) catch unreachable;

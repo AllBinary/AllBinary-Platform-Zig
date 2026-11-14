@@ -18,9 +18,9 @@ const allocator = std.heap.page_allocator;
 const String = @import("java/lang/String.zig").String;
 const Object = @import("java/lang/Object.zig").Object;
 const Inheritance = @import("zig/Inheritance.zig");
-// const Image = @import("javax/microedition/lcdui/Image.zig").Image;
-// const Sprite = @import("javax/microedition/lcdui/game/Sprite.zig").Sprite;
-// const Player = @import("javax/microedition/media/Player.zig").Player;
+const Image = @import("javax/microedition/lcdui/Image.zig").Image;
+const Sprite = @import("javax/microedition/lcdui/game/Sprite.zig").Sprite;
+const Player = @import("javax/microedition/media/Player.zig").Player;
 const Animation = @import("org/allbinary/animation/Animation.zig").Animation;
 const AnimationBehaviorFactory = @import("org/allbinary/animation/AnimationBehaviorFactory.zig").AnimationBehaviorFactory;
 const AnimationInterfaceFactoryInterface = @import("org/allbinary/animation/AnimationInterfaceFactoryInterface.zig").AnimationInterfaceFactoryInterface;
@@ -34,6 +34,7 @@ const ForcedLogUtil = @import("org/allbinary/logic/communication/log/ForcedLogUt
 const ScaleProperties = @import("org/allbinary/media/ScaleProperties.zig").ScaleProperties;
 const Sound = @import("org/allbinary/media/audio/Sound.zig").Sound;
 const SpriteIndexedAnimation = @import("org/allbinary/animation/image/sprite/SpriteIndexedAnimation.zig").SpriteIndexedAnimation;
+const Exception = @import("java/lang/Exception.zig").Exception;
 
 pub const ImageCaptionIndexedAnimationFactory = struct {
     const Self = @This();
@@ -97,12 +98,12 @@ pub const ImageCaptionIndexedAnimationFactory = struct {
     // throws Exception
     pub fn getInstance(self: *Self, instanceId: i32) ?*Animation {
         _ = instanceId;
-        const scaledImage: ?*Image = Inheritance.upcast(?*Image, Inheritance.call(self.animationFactoryImageScaleUtil.?, "createImage", .{ self.captionImage, self.captionImage.?.getWidth(), self.captionImage.?.getHeight(), self.scaleProperties.?.scaleWidth, self.scaleProperties.?.scaleHeight }));
+        const scaledImage: ?*Image = Inheritance.upcast(?*Image, Inheritance.call(self.animationFactoryImageScaleUtil.?, "createImage", .{ self.captionImage, self.captionImage.?.getWidth(), self.captionImage.?.getHeight(), Inheritance.fieldPointer(self.scaleProperties.?, "scaleWidth").*, Inheritance.fieldPointer(self.scaleProperties.?, "scaleHeight").* }));
         const animationInterface: ?*Animation = Inheritance.upcast(?*Animation, Inheritance.callStatic(ImageAnimation, "create2", .{ scaledImage, self.animationBehaviorFactory.?.getOrCreateInstance() }));
-        const sprite: ?*Sprite = Inheritance.upcast(?*Sprite, Inheritance.call(self.animationFactorySpriteScaleUtil.?, "createImage", .{ self.spriteMovieImage, self.frameWidth, self.frameHeight, self.scaleProperties.?.scaleWidth, self.scaleProperties.?.scaleHeight }));
-        const movieIndexedAnimationInterface: ?*IndexedAnimation = Inheritance.upcast(?*IndexedAnimation, Inheritance.callStatic(SpriteIndexedAnimation, "create4", .{ sprite, self.spriteMovieImage, BasicColorUtil.getInstance().?.ZERO_ARRAY, self.animationBehaviorFactory.?.getOrCreateInstance() }));
+        const sprite: ?*Sprite = Inheritance.upcast(?*Sprite, Inheritance.call(self.animationFactorySpriteScaleUtil.?, "createImage", .{ self.spriteMovieImage, self.frameWidth, self.frameHeight, Inheritance.fieldPointer(self.scaleProperties.?, "scaleWidth").*, Inheritance.fieldPointer(self.scaleProperties.?, "scaleHeight").* }));
+        const movieIndexedAnimationInterface: ?*IndexedAnimation = Inheritance.upcast(?*IndexedAnimation, Inheritance.callStatic(SpriteIndexedAnimation, "create4", .{ sprite, self.spriteMovieImage, Inheritance.fieldPointer(BasicColorUtil.getInstance().?, "ZERO_ARRAY").*, self.animationBehaviorFactory.?.getOrCreateInstance() }));
         const player: ?*Player = Inheritance.upcast(?*Player, self.soundInterface.?.getPlayerP());
-        if (player == null) {
+        if (Object.isNull(player)) {
             std.debug.panic("{any}", .{exception: { _ = String.literal("Sound Was not Initialized"); break :exception error.Exception; }});
         }
         return Inheritance.upcast(?*Animation, Inheritance.callStatic(CaptionIndexedAnimation, "create9", .{ animationInterface, movieIndexedAnimationInterface, player, self.captionDx, self.captionDy, self.dx, self.dy, self.time, self.animationBehaviorFactory.?.getOrCreateInstance() }));

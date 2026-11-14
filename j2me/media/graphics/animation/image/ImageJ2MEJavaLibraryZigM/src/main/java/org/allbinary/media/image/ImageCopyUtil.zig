@@ -18,14 +18,15 @@ const allocator = std.heap.page_allocator;
 const String = @import("java/lang/String.zig").String;
 const Object = @import("java/lang/Object.zig").Object;
 const Inheritance = @import("zig/Inheritance.zig");
-// const Graphics = @import("javax/microedition/lcdui/Graphics.zig").Graphics;
-// const Image = @import("javax/microedition/lcdui/Image.zig").Image;
+const Graphics = @import("javax/microedition/lcdui/Graphics.zig").Graphics;
+const Image = @import("javax/microedition/lcdui/Image.zig").Image;
 const Features = @import("org/allbinary/game/configuration/feature/Features.zig").Features;
 const GameFeatureFactory = @import("org/allbinary/game/configuration/feature/GameFeatureFactory.zig").GameFeatureFactory;
 const Anchor = @import("org/allbinary/graphics/Anchor.zig").Anchor;
 const LogUtil = @import("org/allbinary/logic/communication/log/LogUtil.zig").LogUtil;
 const CommonStrings = @import("org/allbinary/string/CommonStrings.zig").CommonStrings;
 const ImageCreationUtil = @import("org/allbinary/media/image/ImageCreationUtil.zig").ImageCreationUtil;
+const Exception = @import("java/lang/Exception.zig").Exception;
 
 pub const ImageCopyUtil = struct {
     const Self = @This();
@@ -76,8 +77,8 @@ pub const ImageCopyUtil = struct {
 
     // throws Exception
     pub fn createImage(self: *Self, originalImage: ?*Image) ?*Image {
-        if (!Inheritance.call(self.features.?, "isFeature", .{ self.gameFeatureFactory.?.POST_IMAGE_LOADING_MODIFICATION })) {
-            _ = Inheritance.call(self.logUtil.?, "put", .{ self.NO_COPY, self, self.commonStrings.?.CONSTRUCTOR, error.Exception });
+        if (!Inheritance.call(self.features.?, "isFeature", .{ Inheritance.fieldPointer(self.gameFeatureFactory.?, "POST_IMAGE_LOADING_MODIFICATION").* })) {
+            _ = Inheritance.call(self.logUtil.?, "put", .{ self.NO_COPY, self, Inheritance.fieldPointer(self.commonStrings.?, "CONSTRUCTOR").*, error.Exception });
             return originalImage;
         }
         const image: ?*Image = Inheritance.upcast(?*Image, Inheritance.call(self.imageCreationUtil.?, "createImageWH", .{ originalImage.?.getWidth(), originalImage.?.getHeight() }));
@@ -92,12 +93,12 @@ pub const ImageCopyUtil = struct {
 
     // throws Exception
     pub fn createImageScale(self: *Self, originalImage: ?*Image, canvasScale: f32, resize: bool) ?*Image {
-        if (!Inheritance.call(self.features.?, "isFeature", .{ self.gameFeatureFactory.?.POST_IMAGE_LOADING_MODIFICATION })) {
-            _ = Inheritance.call(self.logUtil.?, "put", .{ self.NO_COPY, self, self.commonStrings.?.CONSTRUCTOR, error.Exception });
+        if (!Inheritance.call(self.features.?, "isFeature", .{ Inheritance.fieldPointer(self.gameFeatureFactory.?, "POST_IMAGE_LOADING_MODIFICATION").* })) {
+            _ = Inheritance.call(self.logUtil.?, "put", .{ self.NO_COPY, self, Inheritance.fieldPointer(self.commonStrings.?, "CONSTRUCTOR").*, error.Exception });
             return originalImage;
         }
-        var newWidth: i32 = @as(i32, @intCast((originalImage.?.getWidth() * canvasScale)));
-        var newHeight: i32 = @as(i32, @intCast((originalImage.?.getHeight() * canvasScale)));
+        var newWidth: i32 = Inheritance.number(i32, (Inheritance.number(f32, originalImage.?.getWidth()) * canvasScale));
+        var newHeight: i32 = Inheritance.number(i32, (Inheritance.number(f32, originalImage.?.getHeight()) * canvasScale));
         if (resize) {
             if (newWidth < newHeight) {
                 newWidth = newHeight;
@@ -108,8 +109,8 @@ pub const ImageCopyUtil = struct {
         }
         const image: ?*Image = Inheritance.upcast(?*Image, Inheritance.call(self.imageCreationUtil.?, "createImageWH", .{ newWidth, newHeight }));
         if (image.?.isMutable()) {
-            const halfWidthDelta: i32 = (divide_N67326: { const left_N67326 = (newWidth - originalImage.?.getWidth()); const right_N67326 = 2; break :divide_N67326 if (comptime @typeInfo(@TypeOf(left_N67326)) == .int or @TypeOf(left_N67326) == comptime_int) @divTrunc(left_N67326, right_N67326) else left_N67326 / right_N67326; });
-            const halfHeightDelta: i32 = (divide_N67398: { const left_N67398 = (newHeight - originalImage.?.getHeight()); const right_N67398 = 2; break :divide_N67398 if (comptime @typeInfo(@TypeOf(left_N67398)) == .int or @TypeOf(left_N67398) == comptime_int) @divTrunc(left_N67398, right_N67398) else left_N67398 / right_N67398; });
+            const halfWidthDelta: i32 = (divide_N67326: { const left_N67326 = (Inheritance.arithmetic(.subtract, newWidth, originalImage.?.getWidth())); const right_N67326 = 2; break :divide_N67326 if (comptime @typeInfo(@TypeOf(left_N67326)) == .int or @TypeOf(left_N67326) == comptime_int) @divTrunc(left_N67326, right_N67326) else left_N67326 / right_N67326; });
+            const halfHeightDelta: i32 = (divide_N67398: { const left_N67398 = (Inheritance.arithmetic(.subtract, newHeight, originalImage.?.getHeight())); const right_N67398 = 2; break :divide_N67398 if (comptime @typeInfo(@TypeOf(left_N67398)) == .int or @TypeOf(left_N67398) == comptime_int) @divTrunc(left_N67398, right_N67398) else left_N67398 / right_N67398; });
             const graphics: ?*Graphics = Inheritance.upcast(?*Graphics, image.?.getGraphics());
             _ = Inheritance.call(graphics.?, "drawImage", .{ originalImage, halfWidthDelta, halfHeightDelta, self.anchor });
             return image;

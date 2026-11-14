@@ -33,6 +33,7 @@ const DatabaseEncoder = @import("org/allbinary/logic/system/security/crypt/Datab
 const WeakCrypt = @import("org/allbinary/logic/system/security/crypt/WeakCrypt.zig").WeakCrypt;
 const CommonLabels = @import("org/allbinary/string/CommonLabels.zig").CommonLabels;
 const LicenseInitInfo = @import("org/allbinary/business/init/LicenseInitInfo.zig").LicenseInitInfo;
+const Exception = @import("java/lang/Exception.zig").Exception;
 
 pub const LicenseInitInfoUtil = struct {
     const Self = @This();
@@ -56,7 +57,7 @@ pub const LicenseInitInfoUtil = struct {
         this.INITFILENAME = String.literal("licenseinitdata.dat");
         this.ABOUT = String.literal("about");
         this.PRIVACY_POLICY = String.literal("privacy_policy");
-        this.filePath = Inheritance.upcast(?*String, this.stringUtil.?.EMPTY_STRING);
+        this.filePath = Inheritance.upcast(?*String, Inheritance.fieldPointer(this.stringUtil.?, "EMPTY_STRING").*);
     }
 
     pub fn create() *Self {
@@ -85,8 +86,8 @@ pub const LicenseInitInfoUtil = struct {
         // Java synchronized method
         const javaMonitor = Object.monitor(self).enter();
         defer javaMonitor.exit();
-        if (Object.same(self.filePath, self.stringUtil.?.EMPTY_STRING)) {
-            self.filePath = Inheritance.upcast(@TypeOf(self.filePath), URLGLOBALS.getMainPath() + PATH_GLOBALS.getInstance().?.INIT_PATH);
+        if (Object.same(self.filePath, Inheritance.fieldPointer(self.stringUtil.?, "EMPTY_STRING").*)) {
+            self.filePath = Inheritance.upcast(@TypeOf(self.filePath), Inheritance.plus(URLGLOBALS.getMainPath(), Inheritance.fieldPointer(PATH_GLOBALS.getInstance().?, "INIT_PATH").*));
         }
         { // try
             const tsUtil: ?*TsUtil = Inheritance.upcast(?*TsUtil, TsUtil.getInstance());
@@ -127,21 +128,21 @@ pub const LicenseInitInfoUtil = struct {
         const javaMonitor = Object.monitor(self).enter();
         defer javaMonitor.exit();
         const METHOD_NAME: ?*String = String.literal("readAgain");
-        if (Object.same(self.filePath, self.stringUtil.?.EMPTY_STRING)) {
-            self.filePath = Inheritance.upcast(@TypeOf(self.filePath), URLGLOBALS.getMainPath() + PATH_GLOBALS.getInstance().?.INIT_PATH);
+        if (Object.same(self.filePath, Inheritance.fieldPointer(self.stringUtil.?, "EMPTY_STRING").*)) {
+            self.filePath = Inheritance.upcast(@TypeOf(self.filePath), Inheritance.plus(URLGLOBALS.getMainPath(), Inheritance.fieldPointer(PATH_GLOBALS.getInstance().?, "INIT_PATH").*));
         }
         { // try
             _ = Inheritance.call(self.logUtil.?, "putF", .{ String.plus(String.literal("LicenseInitInfo File: "), self.INITFILENAME), self, METHOD_NAME });
             const fileStreamFactory: ?*FileStreamFactory = Inheritance.upcast(?*FileStreamFactory, FileStreamFactory.getInstance());
             const iFile: ?*AbFileInputStream = Inheritance.upcast(?*AbFileInputStream, Inheritance.call(fileStreamFactory.?, "getFileInputStreamInstance", .{ self.filePath, self.INITFILENAME }));
-            if (iFile != null) {
+            if (!Object.isNull(iFile)) {
                 const iData: ?*AbDataInputStream = Inheritance.callStatic(AbDataInputStream, "create1", .{ iFile });
                 const initInfo: ?*LicenseInitInfo = LicenseInitInfo.create();
                 var decodedByteArray: []i8 = Inheritance.callStatic(DatabaseEncoder, "decode", .{ Inheritance.receiver(iData.?, "readUTF").readUTF() });
                 const licenseIdDecoded: ?*String = Inheritance.callStatic(String, "create1", .{ decodedByteArray });
                 _ = Inheritance.call(initInfo.?, "setLicenseId", .{ Inheritance.call(Inheritance.callStatic(WeakCrypt, "create1", .{ 1 }), "decrypt", .{ licenseIdDecoded }) });
                 const numberOfLicenseServers: i32 = Inheritance.receiver(iData.?, "readInt").readInt();
-                const NEXT_FILE: ?*String = Inheritance.upcast(?*String, Object.toString(Object.of(Inheritance.call(Inheritance.call(StringMaker.create(), "append", .{ CommonLabels.getInstance().?.NEXT }).?, "append", .{ String.literal(" License Server From File: ") }))));
+                const NEXT_FILE: ?*String = Inheritance.upcast(?*String, Object.toString(Object.of(Inheritance.call(Inheritance.call(StringMaker.create(), "append", .{ Inheritance.fieldPointer(CommonLabels.getInstance().?, "NEXT").* }).?, "append", .{ String.literal(" License Server From File: ") }))));
                 var licenseServerDecoded: ?*String = null;
                 {
                     var index: i32 = 0;

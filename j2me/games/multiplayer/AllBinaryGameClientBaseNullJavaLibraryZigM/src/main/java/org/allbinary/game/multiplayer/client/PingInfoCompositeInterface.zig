@@ -26,7 +26,7 @@ pub const PingInfoCompositeInterface = struct {
     pointer: *anyopaque,
     object: Object,
     toStringFn: *const fn (pointer: *anyopaque) ?*String,
-    setPingInfoFn: *const fn (pointer: *anyopaque, show: bool) void,
+    setPingInfoFn: *const fn (interface_pointer: *anyopaque, show: bool) void,
 
     pub fn setPingInfo(self: *Self, show: bool) void {
         return self.setPingInfoFn(self.pointer, show);
@@ -38,15 +38,15 @@ pub const PingInfoCompositeInterface = struct {
 
     // The interface value of an object with the methods. Like a Java class a method can be declared by the object or a superclass.
     pub fn of(object: anytype) ?*Self {
-        const Implementation = @TypeOf(object);
+        const ImplementationType = @TypeOf(object);
         const Methods = struct {
             fn toString(pointer: *anyopaque) ?*String {
-                const implementation: Implementation = @ptrCast(@alignCast(pointer));
+                const implementation: ImplementationType = @ptrCast(@alignCast(pointer));
                 return String.valueOf(implementation);
             }
-            fn setPingInfo(pointer: *anyopaque, show: bool) void {
-                const implementation: Implementation = @ptrCast(@alignCast(pointer));
-                return Inheritance.receiver(implementation, "setPingInfo").setPingInfo(show);
+            fn setPingInfo(interface_pointer: *anyopaque, show: bool) void {
+                const implementation: ImplementationType = @ptrCast(@alignCast(interface_pointer));
+                return Inheritance.call(implementation, "setPingInfo", .{ show });
             }
         };
         const this = allocator.create(Self) catch unreachable;

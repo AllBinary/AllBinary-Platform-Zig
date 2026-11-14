@@ -25,6 +25,7 @@ const PoolInterface = @import("org/allbinary/logic/util/cache/PoolInterface.zig"
 const ImageArrayRotationAnimationCacheable = @import("org/allbinary/animation/image/ImageArrayRotationAnimationCacheable.zig").ImageArrayRotationAnimationCacheable;
 const ImageArrayRotationAnimationCacheableInterfaceFactory = @import("org/allbinary/animation/image/ImageArrayRotationAnimationCacheableInterfaceFactory.zig").ImageArrayRotationAnimationCacheableInterfaceFactory;
 const ImageArrayRotationAnimationInfo = @import("org/allbinary/animation/image/ImageArrayRotationAnimationInfo.zig").ImageArrayRotationAnimationInfo;
+const Exception = @import("java/lang/Exception.zig").Exception;
 
 pub const ImageArrayRotationAnimationPool = struct {
     const Self = @This();

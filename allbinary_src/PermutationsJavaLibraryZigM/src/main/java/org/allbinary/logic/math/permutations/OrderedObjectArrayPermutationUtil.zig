@@ -18,7 +18,7 @@ const allocator = std.heap.page_allocator;
 const String = @import("java/lang/String.zig").String;
 const Object = @import("java/lang/Object.zig").Object;
 const Inheritance = @import("zig/Inheritance.zig");
-// const Arrays = @import("java/util/Arrays.zig").Arrays;
+const Arrays = @import("java/util/Arrays.zig").Arrays;
 const TsUtil = @import("org/allbinary/TsUtil.zig").TsUtil;
 const Visitor = @import("org/allbinary/logic/util/visitor/Visitor.zig").Visitor;
 const ComparableObject = @import("org/allbinary/logic/math/permutations/ComparableObject.zig").ComparableObject;
@@ -60,11 +60,11 @@ pub const OrderedObjectArrayPermutationUtil = struct {
         const length: i32 = @as(i32, @intCast(data.len));
         var i: i32 = length - 1;
         const tsUtil: ?*TsUtil = Inheritance.upcast(?*TsUtil, TsUtil.getInstance());
-        while (Inheritance.call(tsUtil.?, "hashCode", .{ data[@intCast(i - 1)] }) >= Inheritance.call(tsUtil.?, "hashCode", .{ data[@intCast(i)] })) {
+        while (Inheritance.arithmetic(.greater_equal, Inheritance.call(tsUtil.?, "hashCode", .{ data[@intCast(i - 1)] }), Inheritance.call(tsUtil.?, "hashCode", .{ data[@intCast(i)] }))) {
             i = i - 1;
         }
         var j: i32 = length;
-        while (Inheritance.call(tsUtil.?, "hashCode", .{ data[@intCast(j - 1)] }) <= Inheritance.call(tsUtil.?, "hashCode", .{ data[@intCast(i - 1)] })) {
+        while (Inheritance.arithmetic(.less_equal, Inheritance.call(tsUtil.?, "hashCode", .{ data[@intCast(j - 1)] }), Inheritance.call(tsUtil.?, "hashCode", .{ data[@intCast(i - 1)] }))) {
             j = j - 1;
         }
         _ = Inheritance.call(self, "swap", .{ data, i - 1, j - 1 });

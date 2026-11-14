@@ -20,6 +20,7 @@ const Object = @import("java/lang/Object.zig").Object;
 const Inheritance = @import("zig/Inheritance.zig");
 const AllBinaryLayer = @import("org/allbinary/layer/AllBinaryLayer.zig").AllBinaryLayer;
 const LayerManager = @import("org/allbinary/layer/LayerManager.zig").LayerManager;
+const Exception = @import("java/lang/Exception.zig").Exception;
 
 pub const LayerManagerLoggingBase = struct {
     const Self = @This();

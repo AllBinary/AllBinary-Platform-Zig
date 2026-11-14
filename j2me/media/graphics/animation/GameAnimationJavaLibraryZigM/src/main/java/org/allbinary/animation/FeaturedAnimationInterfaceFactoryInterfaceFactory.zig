@@ -33,6 +33,7 @@ const AnimationInterfaceFactoryInterface = @import("org/allbinary/animation/Anim
 const BasicAnimationInterfaceFactoryInterface = @import("org/allbinary/animation/BasicAnimationInterfaceFactoryInterface.zig").BasicAnimationInterfaceFactoryInterface;
 const NullAnimationFactory = @import("org/allbinary/animation/NullAnimationFactory.zig").NullAnimationFactory;
 const ProceduralAnimationInterfaceFactoryInterface = @import("org/allbinary/animation/ProceduralAnimationInterfaceFactoryInterface.zig").ProceduralAnimationInterfaceFactoryInterface;
+const Exception = @import("java/lang/Exception.zig").Exception;
 
 pub const FeaturedAnimationInterfaceFactoryInterfaceFactory = struct {
     const Self = @This();
@@ -70,16 +71,16 @@ pub const FeaturedAnimationInterfaceFactoryInterfaceFactory = struct {
     pub fn getRectangleXY(self: *Self, resource: ?*String, x: i32, y: i32) ?*Rectangle {
         const pointFactory: ?*PointFactory = Inheritance.upcast(?*PointFactory, PointFactory.getInstance());
         const list: ?*BasicArrayList = Inheritance.upcast(?*BasicArrayList, Inheritance.receiver(self, "getList").getList());
-        const scale: i32 = Inheritance.receiverOf(Inheritance.receiverOf(GameConfigurationCentral.getInstance().?.SCALE.?, "getValue").getValue().?, "intValue").intValue();
+        const scale: i32 = Inheritance.receiverOf(Inheritance.receiverOf(Inheritance.fieldPointer(GameConfigurationCentral.getInstance().?, "SCALE").*.?, "getValue").getValue().?, "intValue").intValue();
         const size: i32 = Inheritance.receiverOf(Inheritance.receiver(self, "getList").getList().?, "size").size();
         {
             var index: i32 = 0;
             while (index < size) : (index += 1) {
-            const featureInterface: ?*FeatureResourceAnimationInterfaceFactoryInterface = Inheritance.cast(?*FeatureResourceAnimationInterfaceFactoryInterface, list.?.objectArray[@intCast(index)]);
+            const featureInterface: ?*FeatureResourceAnimationInterfaceFactoryInterface = Inheritance.cast(?*FeatureResourceAnimationInterfaceFactoryInterface, Inheritance.fieldPointer(list.?, "objectArray").*[@intCast(index)]);
             if (Inheritance.receiver(featureInterface.?, "isFeature").isFeature()) {
                 const rectangle: ?*Rectangle = Inheritance.upcast(?*Rectangle, Inheritance.call(featureInterface.?, "getRectangle", .{ resource }));
                 if (!Object.same(rectangle, RectangleFactory.SINGLETON)) {
-                    return Inheritance.callStatic(Rectangle, "create3", .{ Inheritance.call(pointFactory.?, "createXY", .{ x, y }), ((rectangle.?.getWidth() * scale) >> @intCast(1)), ((rectangle.?.getHeight() * scale) >> @intCast(1)) });
+                    return Inheritance.callStatic(Rectangle, "create3", .{ Inheritance.call(pointFactory.?, "createXY", .{ x, y }), ((Inheritance.arithmetic(.multiply, Inheritance.receiver(rectangle.?, "getWidth").getWidth(), scale)) >> @intCast(1)), ((Inheritance.arithmetic(.multiply, Inheritance.receiver(rectangle.?, "getHeight").getHeight(), scale)) >> @intCast(1)) });
                 }
             }
             }
@@ -110,7 +111,7 @@ pub const FeaturedAnimationInterfaceFactoryInterfaceFactory = struct {
         {
             var index: i32 = 0;
             while (index < size) : (index += 1) {
-            featureInterface = Inheritance.cast(?*FeatureResourceAnimationInterfaceFactoryInterface, list.?.objectArray[@intCast(index)]);
+            featureInterface = Inheritance.cast(?*FeatureResourceAnimationInterfaceFactoryInterface, Inheritance.fieldPointer(list.?, "objectArray").*[@intCast(index)]);
             if (Inheritance.receiver(featureInterface.?, "isFeature").isFeature()) {
                 _ = Inheritance.call(resourceTypeAvailableList.?, "add", .{ featureInterface });
                 animationInterfaceFactoryInterface = Inheritance.upcast(@TypeOf(animationInterfaceFactoryInterface), Inheritance.call(featureInterface.?, "getBasicAnimationInterfaceFactoryInstance", .{ resource }));
@@ -129,7 +130,7 @@ pub const FeaturedAnimationInterfaceFactoryInterfaceFactory = struct {
             const stringBuffer: ?*StringMaker = StringMaker.create();
             _ = Inheritance.call(stringBuffer.?, "append", .{ NO_ANIMATION_AVAILABLE_FROM });
             _ = Inheritance.call(stringBuffer.?, "appendint", .{ resourceTypeAvailableList.?.size() });
-            _ = Inheritance.call(stringBuffer.?, "append", .{ CommonSeps.getInstance().?.FORWARD_SLASH });
+            _ = Inheritance.call(stringBuffer.?, "append", .{ Inheritance.fieldPointer(CommonSeps.getInstance().?, "FORWARD_SLASH").* });
             _ = Inheritance.call(stringBuffer.?, "appendint", .{ size });
             _ = Inheritance.call(stringBuffer.?, "append", .{ FOR_FACTORIES });
             const size2: i32 = resourceTypeAvailableList.?.size();
@@ -137,7 +138,7 @@ pub const FeaturedAnimationInterfaceFactoryInterfaceFactory = struct {
                 var index: i32 = 0;
                 while (index < size2) : (index += 1) {
                 _ = Inheritance.call(stringBuffer.?, "append", .{ Object.toString(Object.of(Inheritance.call(resourceTypeAvailableList.?, "get", .{ index }))) });
-                _ = Inheritance.call(stringBuffer.?, "append", .{ CommonSeps.getInstance().?.COMMA_SEP });
+                _ = Inheritance.call(stringBuffer.?, "append", .{ Inheritance.fieldPointer(CommonSeps.getInstance().?, "COMMA_SEP").* });
                 }
             }
             _ = Inheritance.call(stringBuffer.?, "append", .{ FOR_RESOURCE });
@@ -145,8 +146,8 @@ pub const FeaturedAnimationInterfaceFactoryInterfaceFactory = struct {
             {
                 var index: i32 = 0;
                 while (index < size) : (index += 1) {
-                _ = Inheritance.call(stringBuffer.?, "append", .{ CommonSeps.getInstance().?.NEW_LINE });
-                featureInterface = Inheritance.cast(?*FeatureResourceAnimationInterfaceFactoryInterface, list.?.objectArray[@intCast(index)]);
+                _ = Inheritance.call(stringBuffer.?, "append", .{ Inheritance.fieldPointer(CommonSeps.getInstance().?, "NEW_LINE").* });
+                featureInterface = Inheritance.cast(?*FeatureResourceAnimationInterfaceFactoryInterface, Inheritance.fieldPointer(list.?, "objectArray").*[@intCast(index)]);
                 if (Inheritance.receiver(featureInterface.?, "isFeature").isFeature()) {
                     _ = Inheritance.call(stringBuffer.?, "append", .{ Inheritance.call(StringUtil.getInstance().?, "toString", .{ featureInterface }) });
                     _ = Inheritance.call(stringBuffer.?, "append", .{ HAS_KEY });
@@ -161,9 +162,9 @@ pub const FeaturedAnimationInterfaceFactoryInterfaceFactory = struct {
             {
                 var index: i32 = 0;
                 while (index < size) : (index += 1) {
-                featureInterface = Inheritance.cast(?*FeatureResourceAnimationInterfaceFactoryInterface, list.?.objectArray[@intCast(index)]);
+                featureInterface = Inheritance.cast(?*FeatureResourceAnimationInterfaceFactoryInterface, Inheritance.fieldPointer(list.?, "objectArray").*[@intCast(index)]);
                 _ = Inheritance.call(stringBuffer.?, "append", .{ Object.toString(Object.of(featureInterface)) });
-                _ = Inheritance.call(stringBuffer.?, "append", .{ CommonSeps.getInstance().?.SPACE });
+                _ = Inheritance.call(stringBuffer.?, "append", .{ Inheritance.fieldPointer(CommonSeps.getInstance().?, "SPACE").* });
                 }
             }
             const result: ?*String = Inheritance.upcast(?*String, Object.toString(Object.of(stringBuffer)));

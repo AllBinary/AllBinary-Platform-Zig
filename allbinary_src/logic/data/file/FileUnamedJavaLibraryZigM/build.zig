@@ -132,14 +132,27 @@ fn addSources(b: *std.Build, sources: *std.ArrayList(SourceFile), names: *std.St
         if (entry.kind != .file or !std.mem.endsWith(u8, entry.path, ".zig")) continue;
         const name = b.allocator.dupe(u8, entry.path) catch @panic("OOM");
         std.mem.replaceScalar(u8, name, '\\', '/');
+        const path = b.pathJoin(&.{ dir_path, entry.path });
         // A file already added from the project or a nearer dependency, or the project sources listed again as a dependency
         const name_entry = names.getOrPut(b.allocator, name) catch @panic("OOM");
-        if (name_entry.found_existing) continue;
+        if (name_entry.found_existing) {
+            // Platform variants of a class (the TsUtil placeholder of TempBase and the full TsUtil of NoneOnly) are in several dependencies.
+            // Like the Go builds the variant with the most methods is used, and the dependency order only decides between variants with as many.
+            const existing = &sources.items[name_entry.value_ptr.*];
+            if (!existing.library and methodCount(b, path) > methodCount(b, existing.path)) existing.path = path;
+            continue;
+        }
         name_entry.value_ptr.* = sources.items.len;
         sources.append(b.allocator, .{
             .name = name,
-            .path = b.pathJoin(&.{ dir_path, entry.path }),
+            .path = path,
             .library = library,
         }) catch @panic("OOM");
     }
+}
+
+// The number of pub fn declarations in the file
+fn methodCount(b: *std.Build, path: []const u8) usize {
+    const text = std.Io.Dir.cwd().readFileAlloc(b.graph.io, path, b.allocator, .unlimited) catch return 0;
+    return std.mem.count(u8, text, "pub fn ");
 }

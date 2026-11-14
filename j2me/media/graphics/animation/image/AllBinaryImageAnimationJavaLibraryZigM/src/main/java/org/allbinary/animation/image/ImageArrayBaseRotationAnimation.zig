@@ -18,9 +18,9 @@ const allocator = std.heap.page_allocator;
 const String = @import("java/lang/String.zig").String;
 const Object = @import("java/lang/Object.zig").Object;
 const Inheritance = @import("zig/Inheritance.zig");
-// const Graphics = @import("javax/microedition/lcdui/Graphics.zig").Graphics;
-// const Image = @import("javax/microedition/lcdui/Image.zig").Image;
-// const NullImage = @import("javax/microedition/lcdui/NullImage.zig").NullImage;
+const Graphics = @import("javax/microedition/lcdui/Graphics.zig").Graphics;
+const Image = @import("javax/microedition/lcdui/Image.zig").Image;
+const NullImage = @import("javax/microedition/lcdui/NullImage.zig").NullImage;
 const DisposalUtil = @import("org/allbinary/DisposalUtil.zig").DisposalUtil;
 const AnimationBehavior = @import("org/allbinary/animation/AnimationBehavior.zig").AnimationBehavior;
 const RotationAnimation = @import("org/allbinary/animation/RotationAnimation.zig").RotationAnimation;
@@ -29,6 +29,8 @@ const PrimitiveIntUtil = @import("org/allbinary/logic/math/PrimitiveIntUtil.zig"
 const AngleInfo = @import("org/allbinary/math/AngleInfo.zig").AngleInfo;
 const ImageModifierUtil = @import("org/allbinary/media/image/ImageModifierUtil.zig").ImageModifierUtil;
 const CircularIndexUtil = @import("org/allbinary/util/CircularIndexUtil.zig").CircularIndexUtil;
+const Throwable = @import("java/lang/Throwable.zig").Throwable;
+const Exception = @import("java/lang/Exception.zig").Exception;
 
 pub const ImageArrayBaseRotationAnimation = struct {
     const Self = @This();
@@ -81,7 +83,7 @@ pub const ImageArrayBaseRotationAnimation = struct {
     
 
     pub fn nextRotation(self: *Self) void {
-        _ = self.base.nextRotation();
+        _ = Inheritance.receiver(&self.base, "nextRotation").nextRotation();
         const index: i32 = Inheritance.receiverOf(Inheritance.fieldPointer(self, "circularIndexUtil").*.?, "getIndex").getIndex();
         _ = Inheritance.call(self.imageModifierUtil.?, "setAlpha", .{ self.originalImageArray[@intCast(index)], self.imageArray[@intCast(index)], index, Inheritance.fieldPointer(self, "alphaP").* });
         self.currentImage = Inheritance.upcast(@TypeOf(self.currentImage), self.imageArray[@intCast(index)]);
@@ -89,7 +91,7 @@ pub const ImageArrayBaseRotationAnimation = struct {
     
 
     pub fn previousRotation(self: *Self) void {
-        _ = self.base.previousRotation();
+        _ = Inheritance.receiver(&self.base, "previousRotation").previousRotation();
         const index: i32 = Inheritance.receiverOf(Inheritance.fieldPointer(self, "circularIndexUtil").*.?, "getIndex").getIndex();
         _ = Inheritance.call(self.imageModifierUtil.?, "setAlpha", .{ self.originalImageArray[@intCast(index)], self.imageArray[@intCast(index)], index, Inheritance.fieldPointer(self, "alphaP").* });
         self.currentImage = Inheritance.upcast(@TypeOf(self.currentImage), self.imageArray[@intCast(index)]);

@@ -24,10 +24,10 @@ pub const CacheTypeFactory = struct {
     }
 
     fn initFields(this: *Self) void {
-        this.NO_CACHE = Inheritance.callStatic(CacheType, "create2", .{ StringUtil.getInstance().?.EMPTY_STRING, StringUtil.getInstance().?.EMPTY_STRING });
-        this.CACHE = Inheritance.callStatic(CacheType, "create2", .{ StringUtil.getInstance().?.EMPTY_STRING, StringUtil.getInstance().?.EMPTY_STRING });
-        this.SET = Inheritance.callStatic(CacheType, "create2", .{ StringUtil.getInstance().?.EMPTY_STRING, String.literal("Set") });
-        this.CACHE_VECTOR = Inheritance.callStatic(CacheType, "create2", .{ StringUtil.getInstance().?.EMPTY_STRING, StringUtil.getInstance().?.EMPTY_STRING });
+        this.NO_CACHE = Inheritance.callStatic(CacheType, "create2", .{ Inheritance.fieldPointer(StringUtil.getInstance().?, "EMPTY_STRING").*, Inheritance.fieldPointer(StringUtil.getInstance().?, "EMPTY_STRING").* });
+        this.CACHE = Inheritance.callStatic(CacheType, "create2", .{ Inheritance.fieldPointer(StringUtil.getInstance().?, "EMPTY_STRING").*, Inheritance.fieldPointer(StringUtil.getInstance().?, "EMPTY_STRING").* });
+        this.SET = Inheritance.callStatic(CacheType, "create2", .{ Inheritance.fieldPointer(StringUtil.getInstance().?, "EMPTY_STRING").*, String.literal("Set") });
+        this.CACHE_VECTOR = Inheritance.callStatic(CacheType, "create2", .{ Inheritance.fieldPointer(StringUtil.getInstance().?, "EMPTY_STRING").*, Inheritance.fieldPointer(StringUtil.getInstance().?, "EMPTY_STRING").* });
     }
 
     pub fn create() *Self {

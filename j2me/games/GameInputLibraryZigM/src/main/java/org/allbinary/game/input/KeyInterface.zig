@@ -26,10 +26,10 @@ pub const KeyInterface = struct {
     pointer: *anyopaque,
     object: Object,
     toStringFn: *const fn (pointer: *anyopaque) ?*String,
-    keyPressedFn: *const fn (pointer: *anyopaque, keyCode: i32) void,
-    keyReleasedFn: *const fn (pointer: *anyopaque, keyCode: i32) void,
-    keyPressedByDeviceFn: *const fn (pointer: *anyopaque, keyCode: i32, deviceId: i32) void,
-    keyReleasedByDeviceFn: *const fn (pointer: *anyopaque, keyCode: i32, deviceId: i32) void,
+    keyPressedFn: *const fn (interface_pointer: *anyopaque, keyCode: i32) void,
+    keyReleasedFn: *const fn (interface_pointer: *anyopaque, keyCode: i32) void,
+    keyPressedByDeviceFn: *const fn (interface_pointer: *anyopaque, keyCode: i32, deviceId: i32) void,
+    keyReleasedByDeviceFn: *const fn (interface_pointer: *anyopaque, keyCode: i32, deviceId: i32) void,
 
     pub fn keyPressed(self: *Self, keyCode: i32) void {
         return self.keyPressedFn(self.pointer, keyCode);
@@ -53,27 +53,27 @@ pub const KeyInterface = struct {
 
     // The interface value of an object with the methods. Like a Java class a method can be declared by the object or a superclass.
     pub fn of(object: anytype) ?*Self {
-        const Implementation = @TypeOf(object);
+        const ImplementationType = @TypeOf(object);
         const Methods = struct {
             fn toString(pointer: *anyopaque) ?*String {
-                const implementation: Implementation = @ptrCast(@alignCast(pointer));
+                const implementation: ImplementationType = @ptrCast(@alignCast(pointer));
                 return String.valueOf(implementation);
             }
-            fn keyPressed(pointer: *anyopaque, keyCode: i32) void {
-                const implementation: Implementation = @ptrCast(@alignCast(pointer));
-                return Inheritance.receiver(implementation, "keyPressed").keyPressed(keyCode);
+            fn keyPressed(interface_pointer: *anyopaque, keyCode: i32) void {
+                const implementation: ImplementationType = @ptrCast(@alignCast(interface_pointer));
+                return Inheritance.call(implementation, "keyPressed", .{ keyCode });
             }
-            fn keyReleased(pointer: *anyopaque, keyCode: i32) void {
-                const implementation: Implementation = @ptrCast(@alignCast(pointer));
-                return Inheritance.receiver(implementation, "keyReleased").keyReleased(keyCode);
+            fn keyReleased(interface_pointer: *anyopaque, keyCode: i32) void {
+                const implementation: ImplementationType = @ptrCast(@alignCast(interface_pointer));
+                return Inheritance.call(implementation, "keyReleased", .{ keyCode });
             }
-            fn keyPressedByDevice(pointer: *anyopaque, keyCode: i32, deviceId: i32) void {
-                const implementation: Implementation = @ptrCast(@alignCast(pointer));
-                return Inheritance.receiver(implementation, "keyPressedByDevice").keyPressedByDevice(keyCode, deviceId);
+            fn keyPressedByDevice(interface_pointer: *anyopaque, keyCode: i32, deviceId: i32) void {
+                const implementation: ImplementationType = @ptrCast(@alignCast(interface_pointer));
+                return Inheritance.call(implementation, "keyPressedByDevice", .{ keyCode, deviceId });
             }
-            fn keyReleasedByDevice(pointer: *anyopaque, keyCode: i32, deviceId: i32) void {
-                const implementation: Implementation = @ptrCast(@alignCast(pointer));
-                return Inheritance.receiver(implementation, "keyReleasedByDevice").keyReleasedByDevice(keyCode, deviceId);
+            fn keyReleasedByDevice(interface_pointer: *anyopaque, keyCode: i32, deviceId: i32) void {
+                const implementation: ImplementationType = @ptrCast(@alignCast(interface_pointer));
+                return Inheritance.call(implementation, "keyReleasedByDevice", .{ keyCode, deviceId });
             }
         };
         const this = allocator.create(Self) catch unreachable;

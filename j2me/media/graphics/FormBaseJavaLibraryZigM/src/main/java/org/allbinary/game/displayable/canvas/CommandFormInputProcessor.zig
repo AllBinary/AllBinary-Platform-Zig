@@ -18,8 +18,8 @@ const allocator = std.heap.page_allocator;
 const String = @import("java/lang/String.zig").String;
 const Object = @import("java/lang/Object.zig").Object;
 const Inheritance = @import("zig/Inheritance.zig");
-// const Canvas = @import("javax/microedition/lcdui/Canvas.zig").Canvas;
-// const Command = @import("javax/microedition/lcdui/Command.zig").Command;
+const Canvas = @import("javax/microedition/lcdui/Canvas.zig").Canvas;
+const Command = @import("javax/microedition/lcdui/Command.zig").Command;
 const GameCommandsFactory = @import("org/allbinary/game/commands/GameCommandsFactory.zig").GameCommandsFactory;
 const Features = @import("org/allbinary/game/configuration/feature/Features.zig").Features;
 const InputFeatureFactory = @import("org/allbinary/game/configuration/feature/InputFeatureFactory.zig").InputFeatureFactory;
@@ -42,6 +42,7 @@ const TimeDelayHelper = @import("org/allbinary/time/TimeDelayHelper.zig").TimeDe
 const BasicArrayList = @import("org/allbinary/util/BasicArrayList.zig").BasicArrayList;
 const BasicMenuInputProcessor = @import("org/allbinary/game/displayable/canvas/BasicMenuInputProcessor.zig").BasicMenuInputProcessor;
 const CommandRunnable = @import("org/allbinary/game/displayable/canvas/CommandRunnable.zig").CommandRunnable;
+const Exception = @import("java/lang/Exception.zig").Exception;
 
 //In general allow scrolling of the menu and selection the center item
 pub const CommandFormInputProcessor = struct {
@@ -104,12 +105,12 @@ pub const CommandFormInputProcessor = struct {
         _ = Inheritance.call(Inheritance.fieldPointer(self, "logUtil").*.?, "putF", .{ Object.toString(Object.of(command)), self, self.PROCESS_COMMAND });
         const features: ?*Features = Inheritance.upcast(?*Features, Features.getInstance());
         const openGLFeatureFactory: ?*OpenGLFeatureFactory = Inheritance.upcast(?*OpenGLFeatureFactory, OpenGLFeatureFactory.getInstance());
-        if (SWTUtil.isSWT and Inheritance.call(features.?, "isFeature", .{ openGLFeatureFactory.?.OPENGL }) and !Object.same(command, GameCommandsFactory.getInstance().?.EXIT_COMMAND)) {
+        if (SWTUtil.isSWT and Inheritance.call(features.?, "isFeature", .{ Inheritance.fieldPointer(openGLFeatureFactory.?, "OPENGL").* }) and !Object.same(command, Inheritance.fieldPointer(GameCommandsFactory.getInstance().?, "EXIT_COMMAND").*)) {
             _ = Inheritance.callStatic(CommandRunnable, "create2", .{ self, command }).run();
         } else {
             _ = Inheritance.call(PrimaryThreadPool.getInstance().?, "runTask", .{ Inheritance.callStatic(CommandRunnable, "create2", .{ self, command }) });
         }
-        if (Object.same(command, GameCommandsFactory.getInstance().?.QUIT_COMMAND)) {
+        if (Object.same(command, Inheritance.fieldPointer(GameCommandsFactory.getInstance().?, "QUIT_COMMAND").*)) {
             return -1;
         } else {
             return 1;
@@ -128,7 +129,7 @@ pub const CommandFormInputProcessor = struct {
             {
                 var index: i32 = 0;
                 while (index < size) : (index += 1) {
-                gameKeyEvent = Inheritance.cast(?*GameKeyEvent, list.?.objectArray[@intCast(index)]);
+                gameKeyEvent = Inheritance.cast(?*GameKeyEvent, Inheritance.fieldPointer(list.?, "objectArray").*[@intCast(index)]);
                 key = Inheritance.receiver(gameKeyEvent.?, "getKey").getKey();
                 if (Inheritance.receiver(gameKeyEvent.?, "getSourceId").getSourceId() != self.MOTION_GESTURE_SOURCE_ID) {
                     if (Inheritance.call(self, "processInput", .{ key }) == 1) {
@@ -145,7 +146,7 @@ pub const CommandFormInputProcessor = struct {
             }
         }
         // catch (Exception e):
-//             _ = Inheritance.call(Inheritance.fieldPointer(self, "logUtil").*.?, "put", .{ Inheritance.fieldPointer(self, "commonStrings").*.?.EXCEPTION, self, Inheritance.fieldPointer(self, "gameInputStrings").*.?.PROCESS_INPUT, e });
+//             _ = Inheritance.call(Inheritance.fieldPointer(self, "logUtil").*.?, "put", .{ Inheritance.fieldPointer(Inheritance.fieldPointer(self, "commonStrings").*.?, "EXCEPTION").*, self, Inheritance.fieldPointer(Inheritance.fieldPointer(self, "gameInputStrings").*.?, "PROCESS_INPUT").*, e });
 //             return -1;
     }
     
@@ -154,7 +155,7 @@ pub const CommandFormInputProcessor = struct {
     pub fn processMotionInputs(self: *Self) i32 {
         const lastIndex: i32 = Inheritance.receiverOf(Inheritance.fieldPointer(self, "motionGestureEventList").*.?, "size").size() - 1;
         if (lastIndex >= 0) {
-            const motionGestureEvent: ?*MotionGestureEvent = Inheritance.cast(?*MotionGestureEvent, Inheritance.fieldPointer(self, "motionGestureEventList").*.?.objectArray[@intCast(lastIndex)]);
+            const motionGestureEvent: ?*MotionGestureEvent = Inheritance.cast(?*MotionGestureEvent, Inheritance.fieldPointer(Inheritance.fieldPointer(self, "motionGestureEventList").*.?, "objectArray").*[@intCast(lastIndex)]);
             _ = Inheritance.call(self, "processMotionInput", .{ motionGestureEvent });
         }
         _ = Inheritance.receiverOf(Inheritance.fieldPointer(self, "motionGestureEventList").*.?, "clear").clear();
@@ -165,9 +166,9 @@ pub const CommandFormInputProcessor = struct {
     // throws Exception
     pub fn processMotionInput(self: *Self, motionGestureEvent: ?*MotionGestureEvent) void {
         const touchMotionGestureFactory: ?*TouchMotionGestureFactory = Inheritance.upcast(?*TouchMotionGestureFactory, TouchMotionGestureFactory.getInstance());
-        const motionGestureInput: ?*MotionGestureInput = Inheritance.upcast(?*MotionGestureInput, motionGestureEvent.?.getMotionGesture());
-        if (Object.same(motionGestureInput, touchMotionGestureFactory.?.RELEASED)) {
-            const point: ?*GPoint = Inheritance.upcast(?*GPoint, motionGestureEvent.?.getCurrentPoint());
+        const motionGestureInput: ?*MotionGestureInput = Inheritance.upcast(?*MotionGestureInput, Inheritance.receiver(motionGestureEvent.?, "getMotionGesture").getMotionGesture());
+        if (Object.same(motionGestureInput, Inheritance.fieldPointer(touchMotionGestureFactory.?, "RELEASED").*)) {
+            const point: ?*GPoint = Inheritance.upcast(?*GPoint, Inheritance.receiver(motionGestureEvent.?, "getCurrentPoint").getCurrentPoint());
             if (Inheritance.call(self.form.?, "isInForm", .{ point })) {
                 const index: i32 = Inheritance.call(self.form.?, "getSelectedIndexForPoint", .{ point });
                 if (index != -1) {
@@ -184,22 +185,22 @@ pub const CommandFormInputProcessor = struct {
             }
             if (self.hasPressed) {
                 if (!self.doubleClickTimeHelper.?.isTimeTNT()) {
-                    _ = Inheritance.call(Inheritance.fieldPointer(self, "logUtil").*.?, "putF", .{ String.literal("Double Press"), self, Inheritance.fieldPointer(self, "gameInputStrings").*.?.PROCESS_MOTION_INPUT });
+                    _ = Inheritance.call(Inheritance.fieldPointer(self, "logUtil").*.?, "putF", .{ String.literal("Double Press"), self, Inheritance.fieldPointer(Inheritance.fieldPointer(self, "gameInputStrings").*.?, "PROCESS_MOTION_INPUT").* });
                     _ = self.processCommand();
                 }
-                self.doubleClickTimeHelper.?.delay = Inheritance.upcast(@TypeOf(self.doubleClickTimeHelper.?.delay), self.DOUBLE_CLICK_DELAY);
+                Inheritance.fieldPointer(self.doubleClickTimeHelper.?, "delay").* = Inheritance.upcast(@TypeOf(Inheritance.fieldPointer(self.doubleClickTimeHelper.?, "delay").*), self.DOUBLE_CLICK_DELAY);
                 _ = self.doubleClickTimeHelper.?.setStartTimeTNT();
             }
             self.hasPressed = false;
-        } else if (Object.same(motionGestureInput, touchMotionGestureFactory.?.PRESSED)) {
-            self.doubleClickTimeHelper.?.delay = 0;
+        } else if (Object.same(motionGestureInput, Inheritance.fieldPointer(touchMotionGestureFactory.?, "PRESSED").*)) {
+            Inheritance.fieldPointer(self.doubleClickTimeHelper.?, "delay").* = 0;
             self.hasPressed = true;
         }
     }
     
 
     pub fn toString(self: *Self) ?*String {
-        return Inheritance.upcast(?*String, Object.toString(Object.of(Inheritance.call(Inheritance.call(Inheritance.call(StringMaker.create(), "append", .{ self.base.toString() }).?, "append", .{ self.NAME_LABEL }).?, "append", .{ Object.toString(Object.of(self.form)) }))));
+        return Inheritance.upcast(?*String, Object.toString(Object.of(Inheritance.call(Inheritance.call(Inheritance.call(StringMaker.create(), "append", .{ String.valueOf(&self.base) }).?, "append", .{ self.NAME_LABEL }).?, "append", .{ Object.toString(Object.of(self.form)) }))));
     }
 };
 

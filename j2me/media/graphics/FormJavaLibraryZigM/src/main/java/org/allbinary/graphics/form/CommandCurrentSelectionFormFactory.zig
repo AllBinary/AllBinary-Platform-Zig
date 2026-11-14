@@ -27,6 +27,7 @@ const CommandCurrentSelectionForm = @import("org/allbinary/graphics/form/Command
 const FormType = @import("org/allbinary/graphics/form/FormType.zig").FormType;
 const ScrollSelectionForm = @import("org/allbinary/graphics/form/ScrollSelectionForm.zig").ScrollSelectionForm;
 const ScrollSelectionFormNoneFactory = @import("org/allbinary/graphics/form/ScrollSelectionFormNoneFactory.zig").ScrollSelectionFormNoneFactory;
+const Exception = @import("java/lang/Exception.zig").Exception;
 
 pub const CommandCurrentSelectionFormFactory = struct {
     const Self = @This();
@@ -41,7 +42,7 @@ pub const CommandCurrentSelectionFormFactory = struct {
 
     // throws Exception
     pub fn getInstance(title: ?*String, items: []?*ABCustomItem, rectangle: ?*Rectangle, formType: ?*FormType, border: i32, moveForSmallScreen: bool, backgroundBasicColor: ?*BasicColor, foregroundBasicColor: ?*BasicColor) ?*ScrollSelectionForm {
-        if (Inheritance.call(Features.getInstance().?, "isFeature", .{ TouchFeatureFactory.getInstance().?.TOUCH_ENABLED })) {
+        if (Inheritance.call(Features.getInstance().?, "isFeature", .{ Inheritance.fieldPointer(TouchFeatureFactory.getInstance().?, "TOUCH_ENABLED").* })) {
             const scrollSelectionForm: ?*ScrollSelectionForm = Inheritance.upcast(?*ScrollSelectionForm, Inheritance.callStatic(CommandCurrentSelectionForm, "create6", .{ title, items, border, moveForSmallScreen, backgroundBasicColor, foregroundBasicColor }));
             _ = Inheritance.call(scrollSelectionForm.?, "init", .{ rectangle, formType });
             return scrollSelectionForm;

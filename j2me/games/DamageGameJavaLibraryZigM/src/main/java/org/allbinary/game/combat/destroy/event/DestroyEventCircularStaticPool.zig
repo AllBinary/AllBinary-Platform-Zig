@@ -23,6 +23,7 @@ const AllBinaryLayer = @import("org/allbinary/layer/AllBinaryLayer.zig").AllBina
 const AllBinaryEventCircularPool = @import("org/allbinary/logic/util/event/AllBinaryEventCircularPool.zig").AllBinaryEventCircularPool;
 const DestroyEventFactory = @import("org/allbinary/game/combat/destroy/event/DestroyEventFactory.zig").DestroyEventFactory;
 const DestroyedEvent = @import("org/allbinary/game/combat/destroy/event/DestroyedEvent.zig").DestroyedEvent;
+const Exception = @import("java/lang/Exception.zig").Exception;
 
 pub const DestroyEventCircularStaticPool = struct {
     const Self = @This();

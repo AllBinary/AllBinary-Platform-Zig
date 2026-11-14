@@ -18,11 +18,12 @@ const allocator = std.heap.page_allocator;
 const String = @import("java/lang/String.zig").String;
 const Object = @import("java/lang/Object.zig").Object;
 const Inheritance = @import("zig/Inheritance.zig");
-// const GL10 = @import("javax/microedition/khronos/opengles/GL10.zig").GL10;
-// const Image = @import("javax/microedition/lcdui/Image.zig").Image;
+const GL10 = @import("javax/microedition/khronos/opengles/GL10.zig").GL10;
+const Image = @import("javax/microedition/lcdui/Image.zig").Image;
 const OpenGLESImage = @import("org/allbinary/image/opengles/OpenGLESImage.zig").OpenGLESImage;
 const BasicArrayList = @import("org/allbinary/util/BasicArrayList.zig").BasicArrayList;
 const BasicArrayListD = @import("org/allbinary/util/BasicArrayListD.zig").BasicArrayListD;
+const Exception = @import("java/lang/Exception.zig").Exception;
 
 pub const AllBinaryRendererBase3 = struct {
     const Self = @This();
@@ -45,7 +46,7 @@ pub const AllBinaryRendererBase3 = struct {
     pub fn update(self: *Self, gl: ?*GL10) void {
         while (self.list.?.size() > 0) {
             const openGLESImage: ?*OpenGLESImage = Inheritance.cast(?*OpenGLESImage, Inheritance.call(self.list.?, "removeAt", .{ 0 }));
-            if (openGLESImage != null) {
+            if (!Object.isNull(openGLESImage)) {
                 _ = Inheritance.call(openGLESImage.?, "set", .{ gl });
             }
         }

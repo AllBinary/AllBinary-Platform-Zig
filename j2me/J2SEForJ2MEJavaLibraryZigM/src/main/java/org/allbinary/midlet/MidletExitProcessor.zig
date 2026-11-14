@@ -18,9 +18,10 @@ const allocator = std.heap.page_allocator;
 const String = @import("java/lang/String.zig").String;
 const Object = @import("java/lang/Object.zig").Object;
 const Inheritance = @import("zig/Inheritance.zig");
-// const MIDlet = @import("javax/microedition/midlet/MIDlet.zig").MIDlet;
+const MIDlet = @import("javax/microedition/midlet/MIDlet.zig").MIDlet;
 const Processor = @import("org/allbinary/canvas/Processor.zig").Processor;
 const System = @import("java/lang/System.zig").System;
+const Exception = @import("java/lang/Exception.zig").Exception;
 
 pub const MidletExitProcessor = struct {
     const Self = @This();

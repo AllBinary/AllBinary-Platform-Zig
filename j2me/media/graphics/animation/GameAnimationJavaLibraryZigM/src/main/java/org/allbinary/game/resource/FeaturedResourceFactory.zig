@@ -30,6 +30,7 @@ const CommonStrings = @import("org/allbinary/string/CommonStrings.zig").CommonSt
 const BasicArrayList = @import("org/allbinary/util/BasicArrayList.zig").BasicArrayList;
 const BasicArrayListD = @import("org/allbinary/util/BasicArrayListD.zig").BasicArrayListD;
 const ResourceLoadingLevelFactory = @import("org/allbinary/game/resource/ResourceLoadingLevelFactory.zig").ResourceLoadingLevelFactory;
+const Exception = @import("java/lang/Exception.zig").Exception;
 
 pub const FeaturedResourceFactory = struct {
     const Self = @This();
@@ -77,10 +78,10 @@ pub const FeaturedResourceFactory = struct {
         {
             var index: i32 = 0;
             while (index < size) : (index += 1) {
-            const featureInterface: ?*GameFeatureControlledInterface = Inheritance.cast(?*GameFeatureControlledInterface, self.list.?.objectArray[@intCast(index)]);
+            const featureInterface: ?*GameFeatureControlledInterface = Inheritance.cast(?*GameFeatureControlledInterface, Inheritance.fieldPointer(self.list.?, "objectArray").*[@intCast(index)]);
             const isLoadingLevel: bool = Inheritance.call(featureInterface.?, "isLoadingLevel", .{ level });
             const isFeature: bool = featureInterface.?.isFeature();
-            _ = Inheritance.call(self.logUtil.?, "putF", .{ Object.toString(Object.of(Inheritance.call(Inheritance.call(Inheritance.call(Inheritance.call(Inheritance.call(Inheritance.call(Inheritance.call(Inheritance.call(StringMaker.create(), "append", .{ self.GAME_FEATURE_CONTROLLED }).?, "append", .{ Object.toString(Object.of(featureInterface)) }).?, "append", .{ self.IS_LOADING_LEVEL_LABEL }).?, "append", .{ Inheritance.call(ResourceLoadingLevelFactory.getInstance().?, "getLevelString", .{ level }) }).?, "append", .{ CommonSeps.getInstance().?.COLON_SEP }).?, "appendboolean", .{ isLoadingLevel }).?, "append", .{ self.IS_FEATURE }).?, "appendboolean", .{ isFeature }))), self, self.commonStrings.?.INIT });
+            _ = Inheritance.call(self.logUtil.?, "putF", .{ Object.toString(Object.of(Inheritance.call(Inheritance.call(Inheritance.call(Inheritance.call(Inheritance.call(Inheritance.call(Inheritance.call(Inheritance.call(StringMaker.create(), "append", .{ self.GAME_FEATURE_CONTROLLED }).?, "append", .{ Object.toString(Object.of(featureInterface)) }).?, "append", .{ self.IS_LOADING_LEVEL_LABEL }).?, "append", .{ Inheritance.call(ResourceLoadingLevelFactory.getInstance().?, "getLevelString", .{ level }) }).?, "append", .{ Inheritance.fieldPointer(CommonSeps.getInstance().?, "COLON_SEP").* }).?, "appendboolean", .{ isLoadingLevel }).?, "append", .{ self.IS_FEATURE }).?, "appendboolean", .{ isFeature }))), self, Inheritance.fieldPointer(self.commonStrings.?, "INIT").* });
             if (isLoadingLevel and isFeature) {
                 _ = Inheritance.call(featureInterface.?, "init", .{ level });
             }
@@ -90,21 +91,21 @@ pub const FeaturedResourceFactory = struct {
         const graphicsFeatureFactory: ?*GraphicsFeatureFactory = Inheritance.upcast(?*GraphicsFeatureFactory, GraphicsFeatureFactory.getInstance());
         const stringBuffer: ?*StringMaker = StringMaker.create();
         _ = Inheritance.call(stringBuffer.?, "append", .{ self.ANIMATION_FEATURES });
-        _ = Inheritance.call(stringBuffer.?, "appendboolean", .{ Inheritance.call(features.?, "isFeature", .{ graphicsFeatureFactory.?.VECTOR_GRAPHICS }) });
+        _ = Inheritance.call(stringBuffer.?, "appendboolean", .{ Inheritance.call(features.?, "isFeature", .{ Inheritance.fieldPointer(graphicsFeatureFactory.?, "VECTOR_GRAPHICS").* }) });
         _ = Inheritance.call(stringBuffer.?, "append", .{ self.IMAGE_LABEL });
-        _ = Inheritance.call(stringBuffer.?, "appendboolean", .{ Inheritance.call(features.?, "isFeature", .{ graphicsFeatureFactory.?.IMAGE_GRAPHICS }) });
-        _ = Inheritance.call(self.logUtil.?, "putF", .{ Object.toString(Object.of(stringBuffer)), self, self.commonStrings.?.INIT });
-        if (Inheritance.call(features.?, "isFeature", .{ graphicsFeatureFactory.?.IMAGE_GRAPHICS })) {
+        _ = Inheritance.call(stringBuffer.?, "appendboolean", .{ Inheritance.call(features.?, "isFeature", .{ Inheritance.fieldPointer(graphicsFeatureFactory.?, "IMAGE_GRAPHICS").* }) });
+        _ = Inheritance.call(self.logUtil.?, "putF", .{ Object.toString(Object.of(stringBuffer)), self, Inheritance.fieldPointer(self.commonStrings.?, "INIT").* });
+        if (Inheritance.call(features.?, "isFeature", .{ Inheritance.fieldPointer(graphicsFeatureFactory.?, "IMAGE_GRAPHICS").* })) {
             _ = Inheritance.call(stringBuffer.?, "delete", .{ 0, stringBuffer.?.length() });
             _ = Inheritance.call(stringBuffer.?, "append", .{ self.IMAGE_GRAPHICS_ARRAY });
-            _ = Inheritance.call(stringBuffer.?, "appendboolean", .{ Inheritance.call(features.?, "isFeature", .{ graphicsFeatureFactory.?.IMAGE_TO_ARRAY_GRAPHICS }) });
+            _ = Inheritance.call(stringBuffer.?, "appendboolean", .{ Inheritance.call(features.?, "isFeature", .{ Inheritance.fieldPointer(graphicsFeatureFactory.?, "IMAGE_TO_ARRAY_GRAPHICS").* }) });
             _ = Inheritance.call(stringBuffer.?, "append", .{ self.IMAGE_GRAPHICS_ROTATION });
-            _ = Inheritance.call(stringBuffer.?, "appendboolean", .{ Inheritance.call(features.?, "isFeature", .{ graphicsFeatureFactory.?.IMAGE_TO_ARRAY_GRAPHICS }) });
+            _ = Inheritance.call(stringBuffer.?, "appendboolean", .{ Inheritance.call(features.?, "isFeature", .{ Inheritance.fieldPointer(graphicsFeatureFactory.?, "IMAGE_TO_ARRAY_GRAPHICS").* }) });
             _ = Inheritance.call(stringBuffer.?, "append", .{ self.SPRITE_QUARTER });
-            _ = Inheritance.call(stringBuffer.?, "appendboolean", .{ Inheritance.call(features.?, "isFeature", .{ graphicsFeatureFactory.?.SPRITE_QUARTER_ROTATION_GRAPHICS }) });
+            _ = Inheritance.call(stringBuffer.?, "appendboolean", .{ Inheritance.call(features.?, "isFeature", .{ Inheritance.fieldPointer(graphicsFeatureFactory.?, "SPRITE_QUARTER_ROTATION_GRAPHICS").* }) });
             _ = Inheritance.call(stringBuffer.?, "append", .{ self.SPRITE_FULL });
-            _ = Inheritance.call(stringBuffer.?, "appendboolean", .{ Inheritance.call(features.?, "isFeature", .{ graphicsFeatureFactory.?.SPRITE_FULL_GRAPHICS }) });
-            _ = Inheritance.call(self.logUtil.?, "putF", .{ Object.toString(Object.of(stringBuffer)), self, self.commonStrings.?.INIT });
+            _ = Inheritance.call(stringBuffer.?, "appendboolean", .{ Inheritance.call(features.?, "isFeature", .{ Inheritance.fieldPointer(graphicsFeatureFactory.?, "SPRITE_FULL_GRAPHICS").* }) });
+            _ = Inheritance.call(self.logUtil.?, "putF", .{ Object.toString(Object.of(stringBuffer)), self, Inheritance.fieldPointer(self.commonStrings.?, "INIT").* });
         }
     }
     
@@ -115,7 +116,7 @@ pub const FeaturedResourceFactory = struct {
     
 
     pub fn add(self: *Self, featureInterface: ?*GameFeatureControlledInterface) void {
-        _ = Inheritance.call(self.logUtil.?, "putF", .{ Object.toString(Object.of(Inheritance.call(Inheritance.call(StringMaker.create(), "append", .{ CommonLabels.getInstance().?.START_LABEL }).?, "append", .{ Inheritance.call(StringUtil.getInstance().?, "toString", .{ featureInterface }) }))), self, self.commonStrings.?.ADD });
+        _ = Inheritance.call(self.logUtil.?, "putF", .{ Object.toString(Object.of(Inheritance.call(Inheritance.call(StringMaker.create(), "append", .{ Inheritance.fieldPointer(CommonLabels.getInstance().?, "START_LABEL").* }).?, "append", .{ Inheritance.call(StringUtil.getInstance().?, "toString", .{ featureInterface }) }))), self, Inheritance.fieldPointer(self.commonStrings.?, "ADD").* });
         _ = Inheritance.call(self.list.?, "add", .{ featureInterface });
     }
     

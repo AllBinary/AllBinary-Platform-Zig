@@ -36,7 +36,7 @@ pub const CollidableHelperFactory = struct {
     
 
     pub fn getInstance() ?*CollisionHelper {
-        if (Inheritance.call(Features.getInstance().?, "isFeature", .{ GameFeatureFactory.getInstance().?.COLLISIONS_WITH_SOURCE })) {
+        if (Inheritance.call(Features.getInstance().?, "isFeature", .{ Inheritance.fieldPointer(GameFeatureFactory.getInstance().?, "COLLISIONS_WITH_SOURCE").* })) {
             return Inheritance.callStatic(CollisionHelper, "create1", .{ AllBinaryLayer.NULL_ALLBINARY_LAYER });
         } else {
             return Inheritance.upcast(?*CollisionHelper, Inheritance.callStatic(SourceCollisionHelper, "create1", .{ AllBinaryLayer.NULL_ALLBINARY_LAYER }));

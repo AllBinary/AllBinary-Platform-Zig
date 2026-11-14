@@ -8,6 +8,7 @@ const Object = @import("java/lang/Object.zig").Object;
 const Inheritance = @import("zig/Inheritance.zig");
 const AnimationBehavior = @import("org/allbinary/animation/AnimationBehavior.zig").AnimationBehavior;
 const IndexedAnimation = @import("org/allbinary/animation/IndexedAnimation.zig").IndexedAnimation;
+const Exception = @import("java/lang/Exception.zig").Exception;
 
 pub const NullIndexedAnimation = struct {
     const Self = @This();

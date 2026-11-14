@@ -20,6 +20,7 @@ const Object = @import("java/lang/Object.zig").Object;
 const Inheritance = @import("zig/Inheritance.zig");
 const CacheInterface = @import("org/allbinary/logic/util/cache/CacheInterface.zig").CacheInterface;
 const CacheableInterface = @import("org/allbinary/logic/util/cache/CacheableInterface.zig").CacheableInterface;
+const Exception = @import("java/lang/Exception.zig").Exception;
 
 // Java interface: an implementation is a pointer and a table of functions
 pub const AutomaticCacheInterface = struct {
@@ -29,7 +30,7 @@ pub const AutomaticCacheInterface = struct {
     object: Object,
     base: CacheInterface,
     toStringFn: *const fn (pointer: *anyopaque) ?*String,
-    getFn: *const fn (pointer: *anyopaque, key: ?Object) ?*CacheableInterface,
+    getFn: *const fn (interface_pointer: *anyopaque, key: ?Object) ?*CacheableInterface,
 
     pub fn get(self: *Self, key: ?Object) ?*CacheableInterface {
         return self.getFn(self.pointer, key);
@@ -41,15 +42,15 @@ pub const AutomaticCacheInterface = struct {
 
     // The interface value of an object with the methods. Like a Java class a method can be declared by the object or a superclass.
     pub fn of(object: anytype) ?*Self {
-        const Implementation = @TypeOf(object);
+        const ImplementationType = @TypeOf(object);
         const Methods = struct {
             fn toString(pointer: *anyopaque) ?*String {
-                const implementation: Implementation = @ptrCast(@alignCast(pointer));
+                const implementation: ImplementationType = @ptrCast(@alignCast(pointer));
                 return String.valueOf(implementation);
             }
-            fn get(pointer: *anyopaque, key: ?Object) ?*CacheableInterface {
-                const implementation: Implementation = @ptrCast(@alignCast(pointer));
-                return Inheritance.upcast(?*CacheableInterface, Inheritance.receiver(implementation, "get").get(key));
+            fn get(interface_pointer: *anyopaque, key: ?Object) ?*CacheableInterface {
+                const implementation: ImplementationType = @ptrCast(@alignCast(interface_pointer));
+                return Inheritance.upcast(?*CacheableInterface, Inheritance.call(implementation, "get", .{ key }));
             }
         };
         const this = allocator.create(Self) catch unreachable;

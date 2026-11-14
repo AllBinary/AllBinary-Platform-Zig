@@ -18,7 +18,7 @@ const allocator = std.heap.page_allocator;
 const String = @import("java/lang/String.zig").String;
 const Object = @import("java/lang/Object.zig").Object;
 const Inheritance = @import("zig/Inheritance.zig");
-// const Graphics = @import("javax/microedition/lcdui/Graphics.zig").Graphics;
+const Graphics = @import("javax/microedition/lcdui/Graphics.zig").Graphics;
 const BasicColor = @import("org/allbinary/graphics/color/BasicColor.zig").BasicColor;
 const BasicColorSetUtil = @import("org/allbinary/graphics/color/BasicColorSetUtil.zig").BasicColorSetUtil;
 const Paintable = @import("org/allbinary/graphics/paint/Paintable.zig").Paintable;
@@ -62,14 +62,14 @@ pub const TouchButtonsPaintable = struct {
         {
             var index: i32 = list.?.size();
             while (value_N66263: { index -= 1; break :value_N66263 index; } >= 0) {
-            touchButton = Inheritance.cast(?*TouchButton, list.?.objectArray[@intCast(index)]);
+            touchButton = Inheritance.cast(?*TouchButton, Inheritance.fieldPointer(list.?, "objectArray").*[@intCast(index)]);
             _ = Inheritance.call(touchButton.?, "paint", .{ graphics });
             }
         }
         {
             var index: i32 = list.?.size();
             while (value_N66422: { index -= 1; break :value_N66422 index; } >= 0) {
-            touchButton = Inheritance.cast(?*TouchButton, list.?.objectArray[@intCast(index)]);
+            touchButton = Inheritance.cast(?*TouchButton, Inheritance.fieldPointer(list.?, "objectArray").*[@intCast(index)]);
             _ = Inheritance.call(touchButton.?, "paintHint", .{ graphics });
             }
         }

@@ -18,10 +18,11 @@ const allocator = std.heap.page_allocator;
 const String = @import("java/lang/String.zig").String;
 const Object = @import("java/lang/Object.zig").Object;
 const Inheritance = @import("zig/Inheritance.zig");
-// const Graphics = @import("javax/microedition/lcdui/Graphics.zig").Graphics;
+const Graphics = @import("javax/microedition/lcdui/Graphics.zig").Graphics;
 const GameKeyEvent = @import("org/allbinary/game/input/event/GameKeyEvent.zig").GameKeyEvent;
 const AllBinaryLayerManager = @import("org/allbinary/layer/AllBinaryLayerManager.zig").AllBinaryLayerManager;
 const SpecialGameInputInterface = @import("org/allbinary/game/layer/special/SpecialGameInputInterface.zig").SpecialGameInputInterface;
+const Exception = @import("java/lang/Exception.zig").Exception;
 
 pub const SpecialGameInput = struct {
     const Self = @This();

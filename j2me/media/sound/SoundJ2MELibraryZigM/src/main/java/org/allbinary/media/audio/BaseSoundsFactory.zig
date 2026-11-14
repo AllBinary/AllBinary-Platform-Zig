@@ -20,6 +20,7 @@ const Object = @import("java/lang/Object.zig").Object;
 const Inheritance = @import("zig/Inheritance.zig");
 const Sound = @import("org/allbinary/media/audio/Sound.zig").Sound;
 const SoundsFactoryInterface = @import("org/allbinary/media/audio/SoundsFactoryInterface.zig").SoundsFactoryInterface;
+const Exception = @import("java/lang/Exception.zig").Exception;
 
 pub const BaseSoundsFactory = struct {
     const Self = @This();

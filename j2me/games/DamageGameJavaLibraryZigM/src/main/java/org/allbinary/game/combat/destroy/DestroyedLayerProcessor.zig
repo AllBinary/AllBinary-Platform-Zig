@@ -28,6 +28,7 @@ const StringMaker = @import("org/allbinary/logic/string/StringMaker.zig").String
 const StringUtil = @import("org/allbinary/logic/string/StringUtil.zig").StringUtil;
 const CommonStrings = @import("org/allbinary/string/CommonStrings.zig").CommonStrings;
 const BasicArrayList = @import("org/allbinary/util/BasicArrayList.zig").BasicArrayList;
+const Exception = @import("java/lang/Exception.zig").Exception;
 
 pub const DestroyedLayerProcessor = struct {
     const Self = @This();
@@ -71,8 +72,8 @@ pub const DestroyedLayerProcessor = struct {
         {
             var index: i32 = 0;
             while (index < size) : (index += 1) {
-            const layerInterfaceCanBeNull: ?Object = Inheritance.upcast(?Object, list.?.objectArray[@intCast(index)]);
-            if (layerInterfaceCanBeNull != null) {
+            const layerInterfaceCanBeNull: ?Object = Inheritance.upcast(?Object, Inheritance.fieldPointer(list.?, "objectArray").*[@intCast(index)]);
+            if (!Object.isNull(layerInterfaceCanBeNull)) {
                 layerInterface = Inheritance.cast(?*AllBinaryLayer, layerInterfaceCanBeNull);
                 _ = Inheritance.call(allBinaryLayerManager.?, "remove", .{ layerInterface });
                 destroyedEvent = Inheritance.upcast(@TypeOf(destroyedEvent), Inheritance.call(destroyEventCircularStaticPool.?, "getInstanceForLayer", .{ layerInterface }));

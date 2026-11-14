@@ -25,6 +25,7 @@ const Animation = @import("org/allbinary/animation/Animation.zig").Animation;
 const AnimationBehaviorFactory = @import("org/allbinary/animation/AnimationBehaviorFactory.zig").AnimationBehaviorFactory;
 const AnimationInterfaceFactoryInterface = @import("org/allbinary/animation/AnimationInterfaceFactoryInterface.zig").AnimationInterfaceFactoryInterface;
 const VectorAnimation = @import("org/allbinary/animation/VectorAnimation.zig").VectorAnimation;
+const Exception = @import("java/lang/Exception.zig").Exception;
 
 pub const VectorAnimationInterfaceFactory = struct {
     const Self = @This();
@@ -37,7 +38,7 @@ pub const VectorAnimationInterfaceFactory = struct {
 
     fn initFields(this: *Self) void {
         
-        this.basicColor = Inheritance.upcast(?*BasicColor, BasicColorFactory.getInstance().?.WHITE);
+        this.basicColor = Inheritance.upcast(?*BasicColor, Inheritance.fieldPointer(BasicColorFactory.getInstance().?, "WHITE").*);
         
     }
     

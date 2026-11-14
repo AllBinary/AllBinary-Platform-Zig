@@ -11,6 +11,7 @@ const SoftwareInformation = @import("org/allbinary/logic/system/SoftwareInformat
 const AppNameLicensingAdConfiguration = @import("org/allbinary/business/advertisement/AppNameLicensingAdConfiguration.zig").AppNameLicensingAdConfiguration;
 const GameAdStateBase = @import("org/allbinary/business/advertisement/GameAdStateBase.zig").GameAdStateBase;
 const GameAdStateFactoryInterface = @import("org/allbinary/business/advertisement/GameAdStateFactoryInterface.zig").GameAdStateFactoryInterface;
+const Exception = @import("java/lang/Exception.zig").Exception;
 
 pub const GameAdStateFactory = struct {
     const Self = @This();
@@ -27,7 +28,7 @@ pub const GameAdStateFactory = struct {
     }
 
     fn initFields(this: *Self) void {
-        this.gameAdStateArray = @constCast(&[_]?*GameAdState{ Inheritance.callStatic(GameAdState, "create1", .{ AppNameLicensingAdConfiguration.create() }) })[0..];
+        this.gameAdStateArray = @constCast(&[_]?*GameAdState{ Inheritance.upcast(?*GameAdState, Inheritance.callStatic(GameAdState, "create1", .{ AppNameLicensingAdConfiguration.create() })) })[0..];
         this.gameAdState = Inheritance.upcast(?*GameAdState, this.gameAdStateArray[@intCast(0)]);
     }
 

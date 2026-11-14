@@ -27,7 +27,7 @@
 
     <modules>
         
-        <module>../../ProgressLazyJ2MEJavaLibraryZigM</module>
+        <!--<module>../../ProgressLazyJ2MEJavaLibraryZigM</module>-->
         <!--
                 <module>../../games/GameScoresBaseHTMLLibraryZigM</module>
                 <module>../../games/GameScoresJ2MEJavaLibraryZigM</module>
@@ -36,7 +36,7 @@
                 <module>../../games/GameScoresRemoteAndLocalLibraryZigM</module>
         -->
 <!-- in GameJ2MELibraryPOM <module>../../media/graphics/ImageCacheJ2MEJavaLibraryZigM</module>-->
-        <module>../../media/graphics/ImageCacheLazyJ2MEJavaLibraryZigM</module>
+        <!--<module>../../media/graphics/ImageCacheLazyJ2MEJavaLibraryZigM</module>-->
         <!--        <module>../../media/graphics/ImageCacheOpenGLESJavaLibraryZigM</module>-->
         <module>../../media/graphics/LazyGameResourceNoneJavaLibraryZigM</module>
 
@@ -63,9 +63,9 @@
         <module>../../../../work/j2me/media/graphics/FormJSEJavaLibraryZigM</module>
         -->
 
-        <module>../../media/sound/J2SEMediaMIDPMinimalJavaLibraryZigM</module>
+        <!--<module>../../media/sound/J2SEMediaMIDPMinimalJavaLibraryZigM</module>-->
 <!--        <module>../../media/sound/NotDeviceSpecificMIDP2JavaLibraryZigM</module>-->
-        <module>../../media/sound/MediaMIDP2ForHTMLJavaLibraryZigM</module>
+        <!--<module>../../media/sound/MediaMIDP2ForHTMLJavaLibraryZigM</module>-->
 
         <!--
                 <module>../../../../work/j2me/ScreenCaptureAndroidJavaLibraryZigM</module>

@@ -18,11 +18,12 @@ const allocator = std.heap.page_allocator;
 const String = @import("java/lang/String.zig").String;
 const Object = @import("java/lang/Object.zig").Object;
 const Inheritance = @import("zig/Inheritance.zig");
-// const Image = @import("javax/microedition/lcdui/Image.zig").Image;
+const Image = @import("javax/microedition/lcdui/Image.zig").Image;
 const AnimationBehavior = @import("org/allbinary/animation/AnimationBehavior.zig").AnimationBehavior;
 const AngleInfo = @import("org/allbinary/math/AngleInfo.zig").AngleInfo;
 const ImageArrayBaseRotationAnimation = @import("org/allbinary/animation/image/ImageArrayBaseRotationAnimation.zig").ImageArrayBaseRotationAnimation;
 const ImageArrayRotationAnimationInfo = @import("org/allbinary/animation/image/ImageArrayRotationAnimationInfo.zig").ImageArrayRotationAnimationInfo;
+const Exception = @import("java/lang/Exception.zig").Exception;
 
 pub const ImageArrayRotationAnimation = struct {
     const Self = @This();

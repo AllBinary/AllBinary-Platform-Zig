@@ -26,8 +26,8 @@ pub const CryptInterface = struct {
     pointer: *anyopaque,
     object: Object,
     toStringFn: *const fn (pointer: *anyopaque) ?*String,
-    encryptFn: *const fn (pointer: *anyopaque, array: []i8) []i8,
-    decryptFn: *const fn (pointer: *anyopaque, array: []i8) []i8,
+    encryptFn: *const fn (interface_pointer: *anyopaque, array: []i8) []i8,
+    decryptFn: *const fn (interface_pointer: *anyopaque, array: []i8) []i8,
 
     pub fn encrypt(self: *Self, array: []i8) []i8 {
         return self.encryptFn(self.pointer, array);
@@ -43,19 +43,19 @@ pub const CryptInterface = struct {
 
     // The interface value of an object with the methods. Like a Java class a method can be declared by the object or a superclass.
     pub fn of(object: anytype) ?*Self {
-        const Implementation = @TypeOf(object);
+        const ImplementationType = @TypeOf(object);
         const Methods = struct {
             fn toString(pointer: *anyopaque) ?*String {
-                const implementation: Implementation = @ptrCast(@alignCast(pointer));
+                const implementation: ImplementationType = @ptrCast(@alignCast(pointer));
                 return String.valueOf(implementation);
             }
-            fn encrypt(pointer: *anyopaque, array: []i8) []i8 {
-                const implementation: Implementation = @ptrCast(@alignCast(pointer));
-                return Inheritance.receiver(implementation, "encrypt").encrypt(array);
+            fn encrypt(interface_pointer: *anyopaque, array: []i8) []i8 {
+                const implementation: ImplementationType = @ptrCast(@alignCast(interface_pointer));
+                return Inheritance.call(implementation, "encrypt", .{ array });
             }
-            fn decrypt(pointer: *anyopaque, array: []i8) []i8 {
-                const implementation: Implementation = @ptrCast(@alignCast(pointer));
-                return Inheritance.receiver(implementation, "decrypt").decrypt(array);
+            fn decrypt(interface_pointer: *anyopaque, array: []i8) []i8 {
+                const implementation: ImplementationType = @ptrCast(@alignCast(interface_pointer));
+                return Inheritance.call(implementation, "decrypt", .{ array });
             }
         };
         const this = allocator.create(Self) catch unreachable;

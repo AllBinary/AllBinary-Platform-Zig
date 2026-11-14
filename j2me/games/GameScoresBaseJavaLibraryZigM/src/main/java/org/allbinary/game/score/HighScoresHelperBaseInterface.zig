@@ -29,9 +29,9 @@ pub const HighScoresHelperBaseInterface = struct {
     object: Object,
     base: HighScoresResultsListener,
     toStringFn: *const fn (pointer: *anyopaque) ?*String,
-    setSelectedHighScoresFn: *const fn (pointer: *anyopaque, selectedHighScores: ?*HighScores) void,
-    getHighScoresArrayFn: *const fn (pointer: *anyopaque) []?*HighScores,
-    getSelectedHighScoresFn: *const fn (pointer: *anyopaque) ?*HighScores,
+    setSelectedHighScoresFn: *const fn (interface_pointer: *anyopaque, selectedHighScores: ?*HighScores) void,
+    getHighScoresArrayFn: *const fn (interface_pointer: *anyopaque) []?*HighScores,
+    getSelectedHighScoresFn: *const fn (interface_pointer: *anyopaque) ?*HighScores,
 
     pub fn setSelectedHighScores(self: *Self, selectedHighScores: ?*HighScores) void {
         return self.setSelectedHighScoresFn(self.pointer, selectedHighScores);
@@ -51,22 +51,22 @@ pub const HighScoresHelperBaseInterface = struct {
 
     // The interface value of an object with the methods. Like a Java class a method can be declared by the object or a superclass.
     pub fn of(object: anytype) ?*Self {
-        const Implementation = @TypeOf(object);
+        const ImplementationType = @TypeOf(object);
         const Methods = struct {
             fn toString(pointer: *anyopaque) ?*String {
-                const implementation: Implementation = @ptrCast(@alignCast(pointer));
+                const implementation: ImplementationType = @ptrCast(@alignCast(pointer));
                 return String.valueOf(implementation);
             }
-            fn setSelectedHighScores(pointer: *anyopaque, selectedHighScores: ?*HighScores) void {
-                const implementation: Implementation = @ptrCast(@alignCast(pointer));
-                return Inheritance.receiver(implementation, "setSelectedHighScores").setSelectedHighScores(selectedHighScores);
+            fn setSelectedHighScores(interface_pointer: *anyopaque, selectedHighScores: ?*HighScores) void {
+                const implementation: ImplementationType = @ptrCast(@alignCast(interface_pointer));
+                return Inheritance.call(implementation, "setSelectedHighScores", .{ selectedHighScores });
             }
-            fn getHighScoresArray(pointer: *anyopaque) []?*HighScores {
-                const implementation: Implementation = @ptrCast(@alignCast(pointer));
+            fn getHighScoresArray(interface_pointer: *anyopaque) []?*HighScores {
+                const implementation: ImplementationType = @ptrCast(@alignCast(interface_pointer));
                 return Inheritance.receiver(implementation, "getHighScoresArray").getHighScoresArray();
             }
-            fn getSelectedHighScores(pointer: *anyopaque) ?*HighScores {
-                const implementation: Implementation = @ptrCast(@alignCast(pointer));
+            fn getSelectedHighScores(interface_pointer: *anyopaque) ?*HighScores {
+                const implementation: ImplementationType = @ptrCast(@alignCast(interface_pointer));
                 return Inheritance.upcast(?*HighScores, Inheritance.receiver(implementation, "getSelectedHighScores").getSelectedHighScores());
             }
         };

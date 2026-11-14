@@ -21,6 +21,7 @@ const Inheritance = @import("zig/Inheritance.zig");
 const DisplayInfoSingleton = @import("org/allbinary/graphics/displayable/DisplayInfoSingleton.zig").DisplayInfoSingleton;
 const Thread = @import("java/lang/Thread.zig").Thread;
 const Runnable = @import("java/lang/Runnable.zig").Runnable;
+const Exception = @import("java/lang/Exception.zig").Exception;
 
 pub const GameRunnable = struct {
     const Self = @This();

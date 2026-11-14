@@ -23,6 +23,7 @@ const AllBinaryLayerManager = @import("org/allbinary/layer/AllBinaryLayerManager
 const LayerProcessor = @import("org/allbinary/layer/LayerProcessor.zig").LayerProcessor;
 const ArtificialIntelligenceCompositeInterface = @import("org/allbinary/ai/ArtificialIntelligenceCompositeInterface.zig").ArtificialIntelligenceCompositeInterface;
 const ArtificialIntelligenceLayerManager = @import("org/allbinary/ai/ArtificialIntelligenceLayerManager.zig").ArtificialIntelligenceLayerManager;
+const Exception = @import("java/lang/Exception.zig").Exception;
 
 pub const ArtificialIntelligenceLayerProcessor = struct {
     const Self = @This();

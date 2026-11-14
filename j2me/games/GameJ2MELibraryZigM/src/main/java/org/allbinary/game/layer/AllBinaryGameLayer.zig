@@ -18,8 +18,8 @@ const allocator = std.heap.page_allocator;
 const String = @import("java/lang/String.zig").String;
 const Object = @import("java/lang/Object.zig").Object;
 const Inheritance = @import("zig/Inheritance.zig");
-// const GL = @import("javax/microedition/khronos/opengles/GL.zig").GL;
-// const Graphics = @import("javax/microedition/lcdui/Graphics.zig").Graphics;
+const GL = @import("javax/microedition/khronos/opengles/GL.zig").GL;
+const Graphics = @import("javax/microedition/lcdui/Graphics.zig").Graphics;
 const Rectangle = @import("org/allbinary/graphics/Rectangle.zig").Rectangle;
 const BasicColor = @import("org/allbinary/graphics/color/BasicColor.zig").BasicColor;
 const BasicColorFactory = @import("org/allbinary/graphics/color/BasicColorFactory.zig").BasicColorFactory;
@@ -39,7 +39,9 @@ const ViewPositionBase = @import("org/allbinary/view/ViewPositionBase.zig").View
 const ViewPositionEvent = @import("org/allbinary/view/event/ViewPositionEvent.zig").ViewPositionEvent;
 const ViewPositionEventListenerInterface = @import("org/allbinary/view/event/ViewPositionEventListenerInterface.zig").ViewPositionEventListenerInterface;
 const GameLayerUtil = @import("org/allbinary/game/layer/GameLayerUtil.zig").GameLayerUtil;
+const SWTBlackPaintable = @import("org/allbinary/game/layer/SWTBlackPaintable.zig").SWTBlackPaintable;
 const SWTUtil = @import("org/allbinary/game/layer/SWTUtil.zig").SWTUtil;
+const Exception = @import("java/lang/Exception.zig").Exception;
 
 pub const AllBinaryGameLayer = struct {
     const Self = @This();
@@ -57,16 +59,16 @@ pub const AllBinaryGameLayer = struct {
         this.commonStrings = Inheritance.upcast(?*CommonStrings, CommonStrings.getInstance());
         this.basicSetColorUtil = Inheritance.upcast(?*BasicColorSetUtil, BasicColorSetUtil.getInstance());
         this.RED = Inheritance.upcast(?*BasicColor, BasicColorFactory.getInstance().?.RED);
-        this.paintable = Inheritance.upcast(?*Paintable, (if (SWTUtil.isSWT) Paintable.create() // Java anonymous class body: implement it as a named type
-//         this.basicSetColorUtil = Inheritance.upcast(?*BasicColorSetUtil, BasicColorSetUtil.getInstance());
-//         this.BLACK = Inheritance.upcast(?*BasicColor, BasicColorFactory.getInstance().?.BLACK);
-//         
-// 
-//         pub fn paint(self: *Self, graphics: ?*Graphics) void {
-//             _ = Inheritance.call(self.basicSetColorUtil.?, "setBasicColorP", .{ graphics, Inheritance.fieldPointer(self, "BLACK").* });
-//         }
- else NullPaintable.getInstance()));
+        this.paintable = Inheritance.upcast(?*Paintable, AllBinaryGameLayer.createPaintable());
         this.gameKeyEventList = Inheritance.upcast(?*BasicArrayList, BasicArrayListD.create());
+    }
+    
+
+    pub fn createPaintable() ?*Paintable {
+        if (SWTUtil.isSWT) {
+            return Inheritance.upcast(?*Paintable, SWTBlackPaintable.create());
+        }
+        return Inheritance.upcast(?*Paintable, NullPaintable.getInstance());
     }
     
 
@@ -83,7 +85,7 @@ pub const AllBinaryGameLayer = struct {
     // throws Exception
     pub fn set(self: *Self, gl: ?*GL) void {
         _ = gl;
-        std.debug.panic("{any}", .{exception: { _ = self.commonStrings.?.NOT_IMPLEMENTED; break :exception error.Exception; }});
+        std.debug.panic("{any}", .{exception: { _ = Inheritance.fieldPointer(self.commonStrings.?, "NOT_IMPLEMENTED").*; break :exception error.Exception; }});
     }
     
 
@@ -100,20 +102,20 @@ pub const AllBinaryGameLayer = struct {
     // throws Exception
     pub fn processInput(self: *Self, allBinaryLayerManager: ?*AllBinaryLayerManager) void {
         _ = allBinaryLayerManager;
-        std.debug.panic("{any}", .{exception: { _ = self.commonStrings.?.NOT_IMPLEMENTED; break :exception error.Exception; }});
+        std.debug.panic("{any}", .{exception: { _ = Inheritance.fieldPointer(self.commonStrings.?, "NOT_IMPLEMENTED").*; break :exception error.Exception; }});
     }
     
 
     // throws Exception
     pub fn processTick(self: *Self, allBinaryLayerManager: ?*AllBinaryLayerManager) void {
         _ = allBinaryLayerManager;
-        std.debug.panic("{any}", .{exception: { _ = self.commonStrings.?.NOT_IMPLEMENTED; break :exception error.Exception; }});
+        std.debug.panic("{any}", .{exception: { _ = Inheritance.fieldPointer(self.commonStrings.?, "NOT_IMPLEMENTED").*; break :exception error.Exception; }});
     }
     
 
     pub fn onEvent(self: *Self, eventObject: ?*AllBinaryEventObject) void {
         _ = eventObject;
-        _ = Inheritance.callStatic(ForcedLogUtil, "log", .{ EventStrings.getInstance().?.PERFORMANCE_MESSAGE, self });
+        _ = Inheritance.callStatic(ForcedLogUtil, "log", .{ Inheritance.fieldPointer(EventStrings.getInstance().?, "PERFORMANCE_MESSAGE").*, self });
     }
     
 

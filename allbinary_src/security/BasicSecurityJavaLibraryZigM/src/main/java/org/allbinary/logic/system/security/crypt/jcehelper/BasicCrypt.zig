@@ -24,6 +24,7 @@ const NullUtil = @import("org/allbinary/logic/NullUtil.zig").NullUtil;
 const PreLogUtil = @import("org/allbinary/logic/communication/log/PreLogUtil.zig").PreLogUtil;
 const ByteUtil = @import("org/allbinary/logic/java/byteutil/ByteUtil.zig").ByteUtil;
 const CommonStrings = @import("org/allbinary/string/CommonStrings.zig").CommonStrings;
+const Exception = @import("java/lang/Exception.zig").Exception;
 
 pub const BasicCrypt = struct {
     const Self = @This();
@@ -42,13 +43,13 @@ pub const BasicCrypt = struct {
         const this = allocator.create(Self) catch unreachable;
         this.* = .{};
         this.initFields();
-        var key: []i8 = NullUtil.getInstance().?.NULL_BYTE_ARRAY;
+        var key: []i8 = Inheritance.fieldPointer(NullUtil.getInstance().?, "NULL_BYTE_ARRAY").*;
         { // try
             key = Inheritance.upcast(@TypeOf(key), Inheritance.call(TsUtil.getInstance().?, "getByteArray", .{ keyAsString }));
         }
         // catch (Exception e):
 //             const commonStrings: ?*CommonStrings = Inheritance.upcast(?*CommonStrings, CommonStrings.getInstance()); _ = commonStrings;
-//             _ = Inheritance.callStatic(PreLogUtil, "putOE", .{ commonStrings.?.EXCEPTION, this, String.literal("AbCrypt(alg,key)"), e });
+//             _ = Inheritance.callStatic(PreLogUtil, "putOE", .{ Inheritance.fieldPointer(commonStrings.?, "EXCEPTION").*, this, String.literal("AbCrypt(alg,key)"), e });
         this.key = key;
         return this;
     }
@@ -60,7 +61,7 @@ pub const BasicCrypt = struct {
         }
         // catch (Exception e):
 //             _ = Inheritance.callStatic(PreLogUtil, "putOE", .{ String.literal("Encrypt Failed"), self, String.literal("encrypt"), e });
-//             return NullUtil.getInstance().?.NULL_BYTE_ARRAY;
+//             return Inheritance.fieldPointer(NullUtil.getInstance().?, "NULL_BYTE_ARRAY").*;
     }
     
 
@@ -70,7 +71,7 @@ pub const BasicCrypt = struct {
         }
         // catch (Exception e):
 //             _ = Inheritance.callStatic(PreLogUtil, "putOE", .{ String.literal("decrypt Failed"), self, String.literal("decrypt"), e });
-//             return NullUtil.getInstance().?.NULL_BYTE_ARRAY;
+//             return Inheritance.fieldPointer(NullUtil.getInstance().?, "NULL_BYTE_ARRAY").*;
     }
     
 

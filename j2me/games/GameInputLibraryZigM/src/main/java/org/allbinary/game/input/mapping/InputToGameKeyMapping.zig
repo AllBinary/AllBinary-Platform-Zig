@@ -18,7 +18,7 @@ const allocator = std.heap.page_allocator;
 const String = @import("java/lang/String.zig").String;
 const Object = @import("java/lang/Object.zig").Object;
 const Inheritance = @import("zig/Inheritance.zig");
-// const Canvas = @import("javax/microedition/lcdui/Canvas.zig").Canvas;
+const Canvas = @import("javax/microedition/lcdui/Canvas.zig").Canvas;
 const GameKey = @import("org/allbinary/game/input/GameKey.zig").GameKey;
 const GameKeyFactory = @import("org/allbinary/game/input/GameKeyFactory.zig").GameKeyFactory;
 const Input = @import("org/allbinary/game/input/Input.zig").Input;
@@ -32,6 +32,8 @@ const CommonSeps = @import("org/allbinary/string/CommonSeps.zig").CommonSeps;
 const BasicArrayList = @import("org/allbinary/util/BasicArrayList.zig").BasicArrayList;
 const BasicArrayListD = @import("org/allbinary/util/BasicArrayListD.zig").BasicArrayListD;
 const InputMapping = @import("org/allbinary/game/input/mapping/InputMapping.zig").InputMapping;
+const Throwable = @import("java/lang/Throwable.zig").Throwable;
+const Exception = @import("java/lang/Exception.zig").Exception;
 
 pub const InputToGameKeyMapping = struct {
     const Self = @This();
@@ -45,19 +47,19 @@ pub const InputToGameKeyMapping = struct {
 
     // Static fields with runtime initializers: call staticInit once at startup
     pub fn staticInit() void {
-        instance = Inheritance.upcast(?Object, NullUtil.getInstance().?.NULL_OBJECT);
+        instance = Inheritance.upcast(?Object, Inheritance.fieldPointer(NullUtil.getInstance().?, "NULL_OBJECT").*);
     }
 
     fn initFields(this: *Self) void {
         this.gameKeyFactory = Inheritance.upcast(?*GameKeyFactory, GameKeyFactory.getInstance());
-        this.mappedGameKeys = @constCast(&[_]?*GameKey{ this.gameKeyFactory.?.UP, this.gameKeyFactory.?.DOWN, this.gameKeyFactory.?.LEFT, this.gameKeyFactory.?.RIGHT })[0..];
-        this.platformToGameKeyMapping = array_N66372: { const array_N66372_array = allocator.alloc(?*GameKey, @intCast(InputFactory.getInstance().?.MAX)) catch unreachable; @memset(array_N66372_array, null); break :array_N66372 array_N66372_array; };
+        this.mappedGameKeys = @constCast(&[_]?*GameKey{ Inheritance.upcast(?*GameKey, Inheritance.fieldPointer(this.gameKeyFactory.?, "UP").*), Inheritance.upcast(?*GameKey, Inheritance.fieldPointer(this.gameKeyFactory.?, "DOWN").*), Inheritance.upcast(?*GameKey, Inheritance.fieldPointer(this.gameKeyFactory.?, "LEFT").*), Inheritance.upcast(?*GameKey, Inheritance.fieldPointer(this.gameKeyFactory.?, "RIGHT").*) })[0..];
+        this.platformToGameKeyMapping = array_N66372: { const array_N66372_array = allocator.alloc(?*GameKey, @intCast(Inheritance.fieldPointer(InputFactory.getInstance().?, "MAX").*)) catch unreachable; @memset(array_N66372_array, null); break :array_N66372 array_N66372_array; };
         this.negativePlatformToGameKeyMapping = array_N66454: { const array_N66454_array = allocator.alloc(?*GameKey, @intCast(0)) catch unreachable; @memset(array_N66454_array, null); break :array_N66454 array_N66454_array; };
     }
     
 
     pub fn getNullInstance() ?*InputToGameKeyMapping {
-        if (Object.same(InputToGameKeyMapping.instance, NullUtil.getInstance().?.NULL_OBJECT)) {
+        if (Object.same(InputToGameKeyMapping.instance, Inheritance.fieldPointer(NullUtil.getInstance().?, "NULL_OBJECT").*)) {
             InputToGameKeyMapping.instance = Inheritance.upcast(@TypeOf(InputToGameKeyMapping.instance), InputToGameKeyMapping.create());
         }
         return Inheritance.cast(?*InputToGameKeyMapping, InputToGameKeyMapping.instance);
@@ -69,7 +71,7 @@ pub const InputToGameKeyMapping = struct {
         this.* = .{};
         this.base = InputMapping.create().*;
         this.initFields();
-        _ = Inheritance.call(Inheritance.fieldPointer(this, "logUtil").*.?, "putF", .{ Inheritance.fieldPointer(this, "commonStrings").*.?.START, this, Inheritance.fieldPointer(this, "commonStrings").*.?.CONSTRUCTOR });
+        _ = Inheritance.call(Inheritance.fieldPointer(this, "logUtil").*.?, "putF", .{ Inheritance.fieldPointer(Inheritance.fieldPointer(this, "commonStrings").*.?, "START").*, this, Inheritance.fieldPointer(Inheritance.fieldPointer(this, "commonStrings").*.?, "CONSTRUCTOR").* });
         _ = this.clear();
         Inheritance.bindOverrides(this);
         return this;
@@ -80,24 +82,24 @@ pub const InputToGameKeyMapping = struct {
         {
             var index: i32 = @as(i32, @intCast(self.platformToGameKeyMapping.len)) - 1;
             while (index >= 0) : (index -= 1) {
-            self.platformToGameKeyMapping[@intCast(index)] = Inheritance.upcast(@TypeOf(self.platformToGameKeyMapping[@intCast(index)]), self.gameKeyFactory.?.NONE);
+            self.platformToGameKeyMapping[@intCast(index)] = Inheritance.upcast(@TypeOf(self.platformToGameKeyMapping[@intCast(index)]), Inheritance.fieldPointer(self.gameKeyFactory.?, "NONE").*);
             }
         }
     }
     
 
     pub fn removeAll(self: *Self) void {
-        _ = self.base.removeAll();
+        _ = Inheritance.receiver(&self.base, "removeAll").removeAll();
         _ = self.clear();
     }
     
 
     pub fn addMapping(self: *Self, inputToGameKeyMapping: ?*InputToGameKeyMapping) void {
         {
-            var index: i32 = Inheritance.receiver(inputToGameKeyMapping.?, "getMaxMappable").getMaxMappable() - 1;
+            var index: i32 = Inheritance.arithmetic(.subtract, Inheritance.receiver(inputToGameKeyMapping.?, "getMaxMappable").getMaxMappable(), 1);
             while (index >= 0) : (index -= 1) {
             const input: ?*Input = Inheritance.upcast(?*Input, Inheritance.call(inputToGameKeyMapping.?, "getInstance", .{ index }));
-            if (!Object.same(input, self.gameKeyFactory.?.NONE)) {
+            if (!Object.same(input, Inheritance.fieldPointer(self.gameKeyFactory.?, "NONE").*)) {
                 _ = Inheritance.call(self, "addAll", .{ input, Inheritance.call(inputToGameKeyMapping.?, "getMappedInput", .{ input }) });
             }
             }
@@ -109,7 +111,7 @@ pub const InputToGameKeyMapping = struct {
         {
             var index: i32 = list.?.size() - 1;
             while (index >= 0) : (index -= 1) {
-            const mappedToInput: ?*Input = Inheritance.cast(?*Input, list.?.objectArray[@intCast(index)]);
+            const mappedToInput: ?*Input = Inheritance.cast(?*Input, Inheritance.fieldPointer(list.?, "objectArray").*[@intCast(index)]);
             _ = Inheritance.call(self, "add", .{ input, mappedToInput });
             }
         }
@@ -123,9 +125,9 @@ pub const InputToGameKeyMapping = struct {
     
 
     pub fn remove(self: *Self, input: ?*Input, mappedToInput: ?*Input) void {
-        _ = Inheritance.call(Inheritance.fieldPointer(self, "logUtil").*.?, "putF", .{ Object.toString(Object.of(Inheritance.call(Inheritance.call(Inheritance.call(Inheritance.call(StringMaker.create(), "append", .{ CommonLabels.getInstance().?.START_LABEL }).?, "append", .{ Inheritance.call(StringUtil.getInstance().?, "toString", .{ input }) }).?, "append", .{ String.literal(" == ") }).?, "append", .{ Inheritance.call(StringUtil.getInstance().?, "toString", .{ mappedToInput }) }))), self, String.literal("InputToGameKeyMapping::remove") });
+        _ = Inheritance.call(Inheritance.fieldPointer(self, "logUtil").*.?, "putF", .{ Object.toString(Object.of(Inheritance.call(Inheritance.call(Inheritance.call(Inheritance.call(StringMaker.create(), "append", .{ Inheritance.fieldPointer(CommonLabels.getInstance().?, "START_LABEL").* }).?, "append", .{ Inheritance.call(StringUtil.getInstance().?, "toString", .{ input }) }).?, "append", .{ String.literal(" == ") }).?, "append", .{ Inheritance.call(StringUtil.getInstance().?, "toString", .{ mappedToInput }) }))), self, String.literal("InputToGameKeyMapping::remove") });
         _ = Inheritance.call(&self.base, "remove", .{ input, mappedToInput });
-        _ = Inheritance.call(self, "set", .{ input, self.gameKeyFactory.?.NONE });
+        _ = Inheritance.call(self, "set", .{ input, Inheritance.fieldPointer(self.gameKeyFactory.?, "NONE").* });
     }
     
 
@@ -150,7 +152,7 @@ pub const InputToGameKeyMapping = struct {
             while (index < @as(i32, @intCast(self.platformToGameKeyMapping.len))) : (index += 1) {
             if (Inheritance.receiver(self.platformToGameKeyMapping[@intCast(index)].?, "getId").getId() == id) {
                 const input: ?*Input = Inheritance.upcast(?*Input, Inheritance.call(inputFactory.?, "getInstanceById", .{ index }));
-                if (input != null) {
+                if (!Object.isNull(input)) {
                     _ = Inheritance.call(list.?, "add", .{ input });
                 }
             }
@@ -166,11 +168,11 @@ pub const InputToGameKeyMapping = struct {
         if (key < 0 and -key < @as(i32, @intCast(self.negativePlatformToGameKeyMapping.len))) {
             self.negativePlatformToGameKeyMapping[@intCast(-key)] = Inheritance.upcast(@TypeOf(self.negativePlatformToGameKeyMapping[@intCast(-key)]), gameKey);
         } else if (key > 0) {
-            if (Object.same(self.platformToGameKeyMapping[@intCast(key)], self.gameKeyFactory.?.NONE)) {
+            if (Object.same(self.platformToGameKeyMapping[@intCast(key)], Inheritance.fieldPointer(self.gameKeyFactory.?, "NONE").*)) {
                 self.platformToGameKeyMapping[@intCast(key)] = Inheritance.upcast(@TypeOf(self.platformToGameKeyMapping[@intCast(key)]), gameKey);
             }
         } else {
-            _ = Inheritance.callStatic(PreLogUtil, "putOE", .{ Object.toString(Object.of(Inheritance.call(Inheritance.call(Inheritance.call(StringMaker.create(), "append", .{ Object.toString(Object.of(gameKey)) }).?, "append", .{ CommonSeps.getInstance().?.COLON_SEP }).?, "appendint", .{ key }))), self, Inheritance.fieldPointer(self, "commonStrings").*.?.INIT, error.Exception });
+            _ = Inheritance.callStatic(PreLogUtil, "putOE", .{ Object.toString(Object.of(Inheritance.call(Inheritance.call(Inheritance.call(StringMaker.create(), "append", .{ Object.toString(Object.of(gameKey)) }).?, "append", .{ Inheritance.fieldPointer(CommonSeps.getInstance().?, "COLON_SEP").* }).?, "appendint", .{ key }))), self, Inheritance.fieldPointer(Inheritance.fieldPointer(self, "commonStrings").*.?, "INIT").*, error.Exception });
         }
     }
     
@@ -205,7 +207,7 @@ pub const InputToGameKeyMapping = struct {
                 {
                     var index: i32 = @as(i32, @intCast(negativePlatformToGameKeyMapping.len));
                     while (value_N69774: { index -= 1; break :value_N69774 index; } >= 0) {
-                    negativePlatformToGameKeyMapping[@intCast(index)] = Inheritance.upcast(@TypeOf(negativePlatformToGameKeyMapping[@intCast(index)]), self.gameKeyFactory.?.NONE);
+                    negativePlatformToGameKeyMapping[@intCast(index)] = Inheritance.upcast(@TypeOf(negativePlatformToGameKeyMapping[@intCast(index)]), Inheritance.fieldPointer(self.gameKeyFactory.?, "NONE").*);
                     }
                 }
                 self.negativePlatformToGameKeyMapping = negativePlatformToGameKeyMapping;
@@ -218,7 +220,7 @@ pub const InputToGameKeyMapping = struct {
             }
         }
         // catch (Throwable t):
-//             _ = Inheritance.call(Inheritance.fieldPointer(self, "logUtil").*.?, "put", .{ Inheritance.fieldPointer(self, "commonStrings").*.?.EXCEPTION, self, Inheritance.fieldPointer(self, "commonStrings").*.?.INIT, t });
+//             _ = Inheritance.call(Inheritance.fieldPointer(self, "logUtil").*.?, "put", .{ Inheritance.fieldPointer(Inheritance.fieldPointer(self, "commonStrings").*.?, "EXCEPTION").*, self, Inheritance.fieldPointer(Inheritance.fieldPointer(self, "commonStrings").*.?, "INIT").*, t });
     }
     
 
@@ -229,7 +231,7 @@ pub const InputToGameKeyMapping = struct {
         } else if (id < 0 and -id < @as(i32, @intCast(self.negativePlatformToGameKeyMapping.len))) {
             return Inheritance.upcast(?*GameKey, self.negativePlatformToGameKeyMapping[@intCast(-id)]);
         } else {
-            return Inheritance.upcast(?*GameKey, self.gameKeyFactory.?.NONE);
+            return Inheritance.upcast(?*GameKey, Inheritance.fieldPointer(self.gameKeyFactory.?, "NONE").*);
         }
     }
     
@@ -240,7 +242,7 @@ pub const InputToGameKeyMapping = struct {
         } else if (id < 0 and -id < @as(i32, @intCast(self.negativePlatformToGameKeyMapping.len))) {
             return Inheritance.upcast(?*GameKey, self.negativePlatformToGameKeyMapping[@intCast(-id)]);
         } else {
-            return Inheritance.upcast(?*GameKey, self.gameKeyFactory.?.NONE);
+            return Inheritance.upcast(?*GameKey, Inheritance.fieldPointer(self.gameKeyFactory.?, "NONE").*);
         }
     }
 };

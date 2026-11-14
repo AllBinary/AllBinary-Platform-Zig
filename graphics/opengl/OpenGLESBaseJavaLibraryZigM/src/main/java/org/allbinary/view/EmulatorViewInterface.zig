@@ -6,8 +6,8 @@ const allocator = std.heap.page_allocator;
 const String = @import("java/lang/String.zig").String;
 const Object = @import("java/lang/Object.zig").Object;
 const Inheritance = @import("zig/Inheritance.zig");
-// const Displayable = @import("javax/microedition/lcdui/Displayable.zig").Displayable;
-// const MIDlet = @import("javax/microedition/midlet/MIDlet.zig").MIDlet;
+const Displayable = @import("javax/microedition/lcdui/Displayable.zig").Displayable;
+const MIDlet = @import("javax/microedition/midlet/MIDlet.zig").MIDlet;
 
 // Java interface: an implementation is a pointer and a table of functions
 pub const EmulatorViewInterface = struct {
@@ -16,9 +16,9 @@ pub const EmulatorViewInterface = struct {
     pointer: *anyopaque,
     object: Object,
     toStringFn: *const fn (pointer: *anyopaque) ?*String,
-    setMidletFn: *const fn (pointer: *anyopaque, midlet: ?*MIDlet) void,
-    onEmulatorInitCompleteFn: *const fn (pointer: *anyopaque, midletActivity: ?Object) void,
-    onSetDisplayableFn: *const fn (pointer: *anyopaque, displayable: ?*Displayable) void,
+    setMidletFn: *const fn (interface_pointer: *anyopaque, midlet: ?*MIDlet) void,
+    onEmulatorInitCompleteFn: *const fn (interface_pointer: *anyopaque, midletActivity: ?Object) void,
+    onSetDisplayableFn: *const fn (interface_pointer: *anyopaque, displayable: ?*Displayable) void,
 
     pub fn setMidlet(self: *Self, midlet: ?*MIDlet) void {
         return self.setMidletFn(self.pointer, midlet);
@@ -38,23 +38,23 @@ pub const EmulatorViewInterface = struct {
 
     // The interface value of an object with the methods. Like a Java class a method can be declared by the object or a superclass.
     pub fn of(object: anytype) ?*Self {
-        const Implementation = @TypeOf(object);
+        const ImplementationType = @TypeOf(object);
         const Methods = struct {
             fn toString(pointer: *anyopaque) ?*String {
-                const implementation: Implementation = @ptrCast(@alignCast(pointer));
+                const implementation: ImplementationType = @ptrCast(@alignCast(pointer));
                 return String.valueOf(implementation);
             }
-            fn setMidlet(pointer: *anyopaque, midlet: ?*MIDlet) void {
-                const implementation: Implementation = @ptrCast(@alignCast(pointer));
-                return Inheritance.receiver(implementation, "setMidlet").setMidlet(midlet);
+            fn setMidlet(interface_pointer: *anyopaque, midlet: ?*MIDlet) void {
+                const implementation: ImplementationType = @ptrCast(@alignCast(interface_pointer));
+                return Inheritance.call(implementation, "setMidlet", .{ midlet });
             }
-            fn onEmulatorInitComplete(pointer: *anyopaque, midletActivity: ?Object) void {
-                const implementation: Implementation = @ptrCast(@alignCast(pointer));
-                return Inheritance.receiver(implementation, "onEmulatorInitComplete").onEmulatorInitComplete(midletActivity);
+            fn onEmulatorInitComplete(interface_pointer: *anyopaque, midletActivity: ?Object) void {
+                const implementation: ImplementationType = @ptrCast(@alignCast(interface_pointer));
+                return Inheritance.call(implementation, "onEmulatorInitComplete", .{ midletActivity });
             }
-            fn onSetDisplayable(pointer: *anyopaque, displayable: ?*Displayable) void {
-                const implementation: Implementation = @ptrCast(@alignCast(pointer));
-                return Inheritance.receiver(implementation, "onSetDisplayable").onSetDisplayable(displayable);
+            fn onSetDisplayable(interface_pointer: *anyopaque, displayable: ?*Displayable) void {
+                const implementation: ImplementationType = @ptrCast(@alignCast(interface_pointer));
+                return Inheritance.call(implementation, "onSetDisplayable", .{ displayable });
             }
         };
         const this = allocator.create(Self) catch unreachable;

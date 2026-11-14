@@ -20,6 +20,7 @@ const Object = @import("java/lang/Object.zig").Object;
 const Inheritance = @import("zig/Inheritance.zig");
 const AllBinaryLayerManager = @import("org/allbinary/layer/AllBinaryLayerManager.zig").AllBinaryLayerManager;
 const TickableInterface = @import("org/allbinary/game/tick/TickableInterface.zig").TickableInterface;
+const Exception = @import("java/lang/Exception.zig").Exception;
 
 pub const NullTickable = struct {
     const Self = @This();

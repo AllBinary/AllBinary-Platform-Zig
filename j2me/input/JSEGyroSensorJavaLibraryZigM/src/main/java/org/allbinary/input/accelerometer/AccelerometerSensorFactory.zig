@@ -22,6 +22,7 @@ const Features = @import("org/allbinary/game/configuration/feature/Features.zig"
 const SensorFeatureFactory = @import("org/allbinary/game/configuration/feature/SensorFeatureFactory.zig").SensorFeatureFactory;
 const AllBinaryOrientationSensor = @import("org/allbinary/input/gyro/AllBinaryOrientationSensor.zig").AllBinaryOrientationSensor;
 const NoAccelerometerSensor = @import("org/allbinary/input/accelerometer/NoAccelerometerSensor.zig").NoAccelerometerSensor;
+const Exception = @import("java/lang/Exception.zig").Exception;
 
 pub const AccelerometerSensorFactory = struct {
     const Self = @This();
@@ -39,11 +40,11 @@ pub const AccelerometerSensorFactory = struct {
     pub fn init() void {
         const features: ?*Features = Inheritance.upcast(?*Features, Features.getInstance());
         const sensorFeatureFactory: ?*SensorFeatureFactory = Inheritance.upcast(?*SensorFeatureFactory, SensorFeatureFactory.getInstance());
-        if (Inheritance.call(features.?, "isFeature", .{ sensorFeatureFactory.?.ORIENTATION_SENSORS })) {
+        if (Inheritance.call(features.?, "isFeature", .{ Inheritance.fieldPointer(sensorFeatureFactory.?, "ORIENTATION_SENSORS").* })) {
             std.debug.panic("{any}", .{exception: { _ = String.literal("No Orientation Sensors"); break :exception error.Exception; }});
-        } else if (Inheritance.call(features.?, "isFeature", .{ sensorFeatureFactory.?.SIMULATED_ORIENTATION_SENSORS })) {
+        } else if (Inheritance.call(features.?, "isFeature", .{ Inheritance.fieldPointer(sensorFeatureFactory.?, "SIMULATED_ORIENTATION_SENSORS").* })) {
             std.debug.panic("{any}", .{exception: { _ = String.literal("No Simulation Sensors"); break :exception error.Exception; }});
-        } else if (Inheritance.call(features.?, "isFeature", .{ sensorFeatureFactory.?.NO_ORIENTATION })) {
+        } else if (Inheritance.call(features.?, "isFeature", .{ Inheritance.fieldPointer(sensorFeatureFactory.?, "NO_ORIENTATION").* })) {
             AccelerometerSensorFactory.allBinaryAccelerometerSensor = Inheritance.upcast(@TypeOf(AccelerometerSensorFactory.allBinaryAccelerometerSensor), NoAccelerometerSensor.create());
         } else {
             std.debug.panic("{any}", .{exception: { _ = String.literal("Not Such SensorFeature"); break :exception error.Exception; }});

@@ -24,6 +24,7 @@ const InputFactory = @import("org/allbinary/game/input/InputFactory.zig").InputF
 const NullUtil = @import("org/allbinary/logic/NullUtil.zig").NullUtil;
 const LogUtil = @import("org/allbinary/logic/communication/log/LogUtil.zig").LogUtil;
 const GameKeyEvent = @import("org/allbinary/game/input/event/GameKeyEvent.zig").GameKeyEvent;
+const Exception = @import("java/lang/Exception.zig").Exception;
 
 pub const GameKeyEventFactory = struct {
     const Self = @This();
@@ -37,7 +38,7 @@ pub const GameKeyEventFactory = struct {
 
     // Static fields with runtime initializers: call staticInit once at startup
     pub fn staticInit() void {
-        instance = Inheritance.upcast(?Object, NullUtil.getInstance().?.NULL_OBJECT);
+        instance = Inheritance.upcast(?Object, Inheritance.fieldPointer(NullUtil.getInstance().?, "NULL_OBJECT").*);
     }
 
     fn initFields(this: *Self) void {
@@ -45,12 +46,12 @@ pub const GameKeyEventFactory = struct {
         this.TOUCH_BUTTON_SOURCE_ID = 2;
         this.MOTION_GESTURE_SOURCE_ID = 3;
         this.MAX_SOURCES = 4;
-        this.ARRAY = array_N66126: { const array_N66126_array = allocator.alloc([]?*GameKeyEvent, @intCast(this.MAX_SOURCES)) catch unreachable; for (array_N66126_array) |*array_N66126_row| { array_N66126_row.* = allocator.alloc(?*GameKeyEvent, @intCast(InputFactory.getInstance().?.MAX)) catch unreachable; @memset(array_N66126_row.*, null); } break :array_N66126 array_N66126_array; };
+        this.ARRAY = array_N66126: { const array_N66126_array = allocator.alloc([]?*GameKeyEvent, @intCast(this.MAX_SOURCES)) catch unreachable; for (array_N66126_array) |*array_N66126_row| { array_N66126_row.* = allocator.alloc(?*GameKeyEvent, @intCast(Inheritance.fieldPointer(InputFactory.getInstance().?, "MAX").*)) catch unreachable; @memset(array_N66126_row.*, null); } break :array_N66126 array_N66126_array; };
     }
     
 
     pub fn getInstance() ?*GameKeyEventFactory {
-        if (Object.same(GameKeyEventFactory.instance, NullUtil.getInstance().?.NULL_OBJECT)) {
+        if (Object.same(GameKeyEventFactory.instance, Inheritance.fieldPointer(NullUtil.getInstance().?, "NULL_OBJECT").*)) {
             GameKeyEventFactory.instance = Inheritance.upcast(@TypeOf(GameKeyEventFactory.instance), GameKeyEventFactory.create());
         }
         return Inheritance.cast(?*GameKeyEventFactory, GameKeyEventFactory.instance);
@@ -67,14 +68,14 @@ pub const GameKeyEventFactory = struct {
 
     pub fn init(self: *Self) void {
         const nullUtil: ?*NullUtil = Inheritance.upcast(?*NullUtil, NullUtil.getInstance());
-        const size: i32 = InputFactory.getInstance().?.MAX;
+        const size: i32 = Inheritance.fieldPointer(InputFactory.getInstance().?, "MAX").*;
         {
             var index: i32 = self.MAX_SOURCES;
             while (value_N66527: { index -= 1; break :value_N66527 index; } >= 0) {
             {
                 var index2: i32 = size;
                 while (value_N66472: { index2 -= 1; break :value_N66472 index2; } >= 0) {
-                self.ARRAY[@intCast(index)][@intCast(index2)] = Inheritance.upcast(@TypeOf(self.ARRAY[@intCast(index)][@intCast(index2)]), Inheritance.callStatic(GameKeyEvent, "createEvent", .{ nullUtil.?.NULL_OBJECT, index, index2 }));
+                self.ARRAY[@intCast(index)][@intCast(index2)] = Inheritance.upcast(@TypeOf(self.ARRAY[@intCast(index)][@intCast(index2)]), Inheritance.callStatic(GameKeyEvent, "createEvent", .{ Inheritance.fieldPointer(nullUtil.?, "NULL_OBJECT").*, index, index2 }));
                 }
             }
             }

@@ -44,8 +44,7 @@ pub const PointsUtil = struct {
     pub fn adjustXY(self: *Self, points: [][][]i32, x: i32, y: i32) [][][]i32 {
         _ = self;
         const size: i32 = @as(i32, @intCast(points.len));
-        const newPoints: [][][]i32 = undefined // Otherwise - newArray - 3
-;
+        const newPoints: [][][]i32 = array_N65759: { const array_N65759_array = allocator.alloc([][]i32, @intCast(size)) catch unreachable; for (array_N65759_array) |*array_N65759_row| { array_N65759_row.* = allocator.alloc([]i32, @intCast(0)) catch unreachable; for (array_N65759_row.*) |*array_N65759_cell| { array_N65759_cell.* = allocator.alloc(i32, @intCast(0)) catch unreachable; @memset(array_N65759_cell.*, 0); } } break :array_N65759 array_N65759_array; };
         {
             var index: i32 = 0;
             while (index < size) : (index += 1) {

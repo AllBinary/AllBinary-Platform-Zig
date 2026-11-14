@@ -20,6 +20,7 @@ const Object = @import("java/lang/Object.zig").Object;
 const Inheritance = @import("zig/Inheritance.zig");
 const BaseMotionGestureEventListener = @import("org/allbinary/input/motion/gesture/observer/BaseMotionGestureEventListener.zig").BaseMotionGestureEventListener;
 const MotionGestureEvent = @import("org/allbinary/input/motion/gesture/observer/MotionGestureEvent.zig").MotionGestureEvent;
+const Exception = @import("java/lang/Exception.zig").Exception;
 
 // Java interface: an implementation is a pointer and a table of functions
 pub const MotionGestureEventListener = struct {
@@ -29,16 +30,16 @@ pub const MotionGestureEventListener = struct {
     object: Object,
     base: BaseMotionGestureEventListener,
     toStringFn: *const fn (pointer: *anyopaque) ?*String,
-    onPressedMotionGestureEventFn: *const fn (pointer: *anyopaque, ev: ?*MotionGestureEvent) void,
-    onUpMotionGestureEventFn: *const fn (pointer: *anyopaque, ev: ?*MotionGestureEvent) void,
-    onDownMotionGestureEventFn: *const fn (pointer: *anyopaque, ev: ?*MotionGestureEvent) void,
-    onLeftMotionGestureEventFn: *const fn (pointer: *anyopaque, ev: ?*MotionGestureEvent) void,
-    onRightMotionGestureEventFn: *const fn (pointer: *anyopaque, ev: ?*MotionGestureEvent) void,
-    onDiagonalDownRightMotionGestureEventFn: *const fn (pointer: *anyopaque, ev: ?*MotionGestureEvent) void,
-    onDiagonalDownLeftMotionGestureEventFn: *const fn (pointer: *anyopaque, ev: ?*MotionGestureEvent) void,
-    onDiagonalUpRightMotionGestureEventFn: *const fn (pointer: *anyopaque, ev: ?*MotionGestureEvent) void,
-    onDiagonalUpLeftMotionGestureEventFn: *const fn (pointer: *anyopaque, ev: ?*MotionGestureEvent) void,
-    releasedFn: *const fn (pointer: *anyopaque, ev: ?*MotionGestureEvent) void,
+    onPressedMotionGestureEventFn: *const fn (interface_pointer: *anyopaque, ev: ?*MotionGestureEvent) void,
+    onUpMotionGestureEventFn: *const fn (interface_pointer: *anyopaque, ev: ?*MotionGestureEvent) void,
+    onDownMotionGestureEventFn: *const fn (interface_pointer: *anyopaque, ev: ?*MotionGestureEvent) void,
+    onLeftMotionGestureEventFn: *const fn (interface_pointer: *anyopaque, ev: ?*MotionGestureEvent) void,
+    onRightMotionGestureEventFn: *const fn (interface_pointer: *anyopaque, ev: ?*MotionGestureEvent) void,
+    onDiagonalDownRightMotionGestureEventFn: *const fn (interface_pointer: *anyopaque, ev: ?*MotionGestureEvent) void,
+    onDiagonalDownLeftMotionGestureEventFn: *const fn (interface_pointer: *anyopaque, ev: ?*MotionGestureEvent) void,
+    onDiagonalUpRightMotionGestureEventFn: *const fn (interface_pointer: *anyopaque, ev: ?*MotionGestureEvent) void,
+    onDiagonalUpLeftMotionGestureEventFn: *const fn (interface_pointer: *anyopaque, ev: ?*MotionGestureEvent) void,
+    releasedFn: *const fn (interface_pointer: *anyopaque, ev: ?*MotionGestureEvent) void,
 
     pub fn onPressedMotionGestureEvent(self: *Self, ev: ?*MotionGestureEvent) void {
         return self.onPressedMotionGestureEventFn(self.pointer, ev);
@@ -86,51 +87,51 @@ pub const MotionGestureEventListener = struct {
 
     // The interface value of an object with the methods. Like a Java class a method can be declared by the object or a superclass.
     pub fn of(object: anytype) ?*Self {
-        const Implementation = @TypeOf(object);
+        const ImplementationType = @TypeOf(object);
         const Methods = struct {
             fn toString(pointer: *anyopaque) ?*String {
-                const implementation: Implementation = @ptrCast(@alignCast(pointer));
+                const implementation: ImplementationType = @ptrCast(@alignCast(pointer));
                 return String.valueOf(implementation);
             }
-            fn onPressedMotionGestureEvent(pointer: *anyopaque, ev: ?*MotionGestureEvent) void {
-                const implementation: Implementation = @ptrCast(@alignCast(pointer));
-                return Inheritance.receiver(implementation, "onPressedMotionGestureEvent").onPressedMotionGestureEvent(ev);
+            fn onPressedMotionGestureEvent(interface_pointer: *anyopaque, ev: ?*MotionGestureEvent) void {
+                const implementation: ImplementationType = @ptrCast(@alignCast(interface_pointer));
+                return Inheritance.call(implementation, "onPressedMotionGestureEvent", .{ ev });
             }
-            fn onUpMotionGestureEvent(pointer: *anyopaque, ev: ?*MotionGestureEvent) void {
-                const implementation: Implementation = @ptrCast(@alignCast(pointer));
-                return Inheritance.receiver(implementation, "onUpMotionGestureEvent").onUpMotionGestureEvent(ev);
+            fn onUpMotionGestureEvent(interface_pointer: *anyopaque, ev: ?*MotionGestureEvent) void {
+                const implementation: ImplementationType = @ptrCast(@alignCast(interface_pointer));
+                return Inheritance.call(implementation, "onUpMotionGestureEvent", .{ ev });
             }
-            fn onDownMotionGestureEvent(pointer: *anyopaque, ev: ?*MotionGestureEvent) void {
-                const implementation: Implementation = @ptrCast(@alignCast(pointer));
-                return Inheritance.receiver(implementation, "onDownMotionGestureEvent").onDownMotionGestureEvent(ev);
+            fn onDownMotionGestureEvent(interface_pointer: *anyopaque, ev: ?*MotionGestureEvent) void {
+                const implementation: ImplementationType = @ptrCast(@alignCast(interface_pointer));
+                return Inheritance.call(implementation, "onDownMotionGestureEvent", .{ ev });
             }
-            fn onLeftMotionGestureEvent(pointer: *anyopaque, ev: ?*MotionGestureEvent) void {
-                const implementation: Implementation = @ptrCast(@alignCast(pointer));
-                return Inheritance.receiver(implementation, "onLeftMotionGestureEvent").onLeftMotionGestureEvent(ev);
+            fn onLeftMotionGestureEvent(interface_pointer: *anyopaque, ev: ?*MotionGestureEvent) void {
+                const implementation: ImplementationType = @ptrCast(@alignCast(interface_pointer));
+                return Inheritance.call(implementation, "onLeftMotionGestureEvent", .{ ev });
             }
-            fn onRightMotionGestureEvent(pointer: *anyopaque, ev: ?*MotionGestureEvent) void {
-                const implementation: Implementation = @ptrCast(@alignCast(pointer));
-                return Inheritance.receiver(implementation, "onRightMotionGestureEvent").onRightMotionGestureEvent(ev);
+            fn onRightMotionGestureEvent(interface_pointer: *anyopaque, ev: ?*MotionGestureEvent) void {
+                const implementation: ImplementationType = @ptrCast(@alignCast(interface_pointer));
+                return Inheritance.call(implementation, "onRightMotionGestureEvent", .{ ev });
             }
-            fn onDiagonalDownRightMotionGestureEvent(pointer: *anyopaque, ev: ?*MotionGestureEvent) void {
-                const implementation: Implementation = @ptrCast(@alignCast(pointer));
-                return Inheritance.receiver(implementation, "onDiagonalDownRightMotionGestureEvent").onDiagonalDownRightMotionGestureEvent(ev);
+            fn onDiagonalDownRightMotionGestureEvent(interface_pointer: *anyopaque, ev: ?*MotionGestureEvent) void {
+                const implementation: ImplementationType = @ptrCast(@alignCast(interface_pointer));
+                return Inheritance.call(implementation, "onDiagonalDownRightMotionGestureEvent", .{ ev });
             }
-            fn onDiagonalDownLeftMotionGestureEvent(pointer: *anyopaque, ev: ?*MotionGestureEvent) void {
-                const implementation: Implementation = @ptrCast(@alignCast(pointer));
-                return Inheritance.receiver(implementation, "onDiagonalDownLeftMotionGestureEvent").onDiagonalDownLeftMotionGestureEvent(ev);
+            fn onDiagonalDownLeftMotionGestureEvent(interface_pointer: *anyopaque, ev: ?*MotionGestureEvent) void {
+                const implementation: ImplementationType = @ptrCast(@alignCast(interface_pointer));
+                return Inheritance.call(implementation, "onDiagonalDownLeftMotionGestureEvent", .{ ev });
             }
-            fn onDiagonalUpRightMotionGestureEvent(pointer: *anyopaque, ev: ?*MotionGestureEvent) void {
-                const implementation: Implementation = @ptrCast(@alignCast(pointer));
-                return Inheritance.receiver(implementation, "onDiagonalUpRightMotionGestureEvent").onDiagonalUpRightMotionGestureEvent(ev);
+            fn onDiagonalUpRightMotionGestureEvent(interface_pointer: *anyopaque, ev: ?*MotionGestureEvent) void {
+                const implementation: ImplementationType = @ptrCast(@alignCast(interface_pointer));
+                return Inheritance.call(implementation, "onDiagonalUpRightMotionGestureEvent", .{ ev });
             }
-            fn onDiagonalUpLeftMotionGestureEvent(pointer: *anyopaque, ev: ?*MotionGestureEvent) void {
-                const implementation: Implementation = @ptrCast(@alignCast(pointer));
-                return Inheritance.receiver(implementation, "onDiagonalUpLeftMotionGestureEvent").onDiagonalUpLeftMotionGestureEvent(ev);
+            fn onDiagonalUpLeftMotionGestureEvent(interface_pointer: *anyopaque, ev: ?*MotionGestureEvent) void {
+                const implementation: ImplementationType = @ptrCast(@alignCast(interface_pointer));
+                return Inheritance.call(implementation, "onDiagonalUpLeftMotionGestureEvent", .{ ev });
             }
-            fn released(pointer: *anyopaque, ev: ?*MotionGestureEvent) void {
-                const implementation: Implementation = @ptrCast(@alignCast(pointer));
-                return Inheritance.receiver(implementation, "released").released(ev);
+            fn released(interface_pointer: *anyopaque, ev: ?*MotionGestureEvent) void {
+                const implementation: ImplementationType = @ptrCast(@alignCast(interface_pointer));
+                return Inheritance.call(implementation, "released", .{ ev });
             }
         };
         const this = allocator.create(Self) catch unreachable;

@@ -20,6 +20,7 @@ const Object = @import("java/lang/Object.zig").Object;
 const Inheritance = @import("zig/Inheritance.zig");
 const EventListenerInterface = @import("org/allbinary/logic/util/event/EventListenerInterface.zig").EventListenerInterface;
 const LayerManagerEvent = @import("org/allbinary/layer/event/LayerManagerEvent.zig").LayerManagerEvent;
+const Exception = @import("java/lang/Exception.zig").Exception;
 
 // Java interface: an implementation is a pointer and a table of functions
 pub const LayerManagerEventListenerInterface = struct {
@@ -29,8 +30,8 @@ pub const LayerManagerEventListenerInterface = struct {
     object: Object,
     base: EventListenerInterface,
     toStringFn: *const fn (pointer: *anyopaque) ?*String,
-    onCreateLayerManagerEventFn: *const fn (pointer: *anyopaque, layerManagerEvent: ?*LayerManagerEvent) void,
-    onDeleteLayerManagerEventFn: *const fn (pointer: *anyopaque, layerManagerEvent: ?*LayerManagerEvent) void,
+    onCreateLayerManagerEventFn: *const fn (interface_pointer: *anyopaque, layerManagerEvent: ?*LayerManagerEvent) void,
+    onDeleteLayerManagerEventFn: *const fn (interface_pointer: *anyopaque, layerManagerEvent: ?*LayerManagerEvent) void,
 
     pub fn onCreateLayerManagerEvent(self: *Self, layerManagerEvent: ?*LayerManagerEvent) void {
         return self.onCreateLayerManagerEventFn(self.pointer, layerManagerEvent);
@@ -46,19 +47,19 @@ pub const LayerManagerEventListenerInterface = struct {
 
     // The interface value of an object with the methods. Like a Java class a method can be declared by the object or a superclass.
     pub fn of(object: anytype) ?*Self {
-        const Implementation = @TypeOf(object);
+        const ImplementationType = @TypeOf(object);
         const Methods = struct {
             fn toString(pointer: *anyopaque) ?*String {
-                const implementation: Implementation = @ptrCast(@alignCast(pointer));
+                const implementation: ImplementationType = @ptrCast(@alignCast(pointer));
                 return String.valueOf(implementation);
             }
-            fn onCreateLayerManagerEvent(pointer: *anyopaque, layerManagerEvent: ?*LayerManagerEvent) void {
-                const implementation: Implementation = @ptrCast(@alignCast(pointer));
-                return Inheritance.receiver(implementation, "onCreateLayerManagerEvent").onCreateLayerManagerEvent(layerManagerEvent);
+            fn onCreateLayerManagerEvent(interface_pointer: *anyopaque, layerManagerEvent: ?*LayerManagerEvent) void {
+                const implementation: ImplementationType = @ptrCast(@alignCast(interface_pointer));
+                return Inheritance.call(implementation, "onCreateLayerManagerEvent", .{ layerManagerEvent });
             }
-            fn onDeleteLayerManagerEvent(pointer: *anyopaque, layerManagerEvent: ?*LayerManagerEvent) void {
-                const implementation: Implementation = @ptrCast(@alignCast(pointer));
-                return Inheritance.receiver(implementation, "onDeleteLayerManagerEvent").onDeleteLayerManagerEvent(layerManagerEvent);
+            fn onDeleteLayerManagerEvent(interface_pointer: *anyopaque, layerManagerEvent: ?*LayerManagerEvent) void {
+                const implementation: ImplementationType = @ptrCast(@alignCast(interface_pointer));
+                return Inheritance.call(implementation, "onDeleteLayerManagerEvent", .{ layerManagerEvent });
             }
         };
         const this = allocator.create(Self) catch unreachable;

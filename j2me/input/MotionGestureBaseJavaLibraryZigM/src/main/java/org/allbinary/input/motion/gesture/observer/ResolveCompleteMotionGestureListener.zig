@@ -28,6 +28,7 @@ const LogUtil = @import("org/allbinary/logic/communication/log/LogUtil.zig").Log
 const CommonStrings = @import("org/allbinary/string/CommonStrings.zig").CommonStrings;
 const BasicArrayList = @import("org/allbinary/util/BasicArrayList.zig").BasicArrayList;
 const CompleteMotionGestureListenerInterface = @import("org/allbinary/input/motion/gesture/observer/CompleteMotionGestureListenerInterface.zig").CompleteMotionGestureListenerInterface;
+const Exception = @import("java/lang/Exception.zig").Exception;
 
 pub const ResolveCompleteMotionGestureListener = struct {
     const Self = @This();
@@ -46,7 +47,7 @@ pub const ResolveCompleteMotionGestureListener = struct {
         this.* = .{};
         this.initFields();
         const commonStrings: ?*CommonStrings = Inheritance.upcast(?*CommonStrings, CommonStrings.getInstance());
-        _ = Inheritance.call(this.logUtil.?, "putF", .{ String.literal("MotionGesture to CompleteMotionGesture Reciever"), this, commonStrings.?.CONSTRUCTOR });
+        _ = Inheritance.call(this.logUtil.?, "putF", .{ String.literal("MotionGesture to CompleteMotionGesture Reciever"), this, Inheritance.fieldPointer(commonStrings.?, "CONSTRUCTOR").* });
         _ = Inheritance.call(CompleteMotionGestureInputEventHandler.getInstance().?, "addListener", .{ GameKeyFromMotionGestureEventListener.create() });
         return this;
     }
@@ -61,7 +62,7 @@ pub const ResolveCompleteMotionGestureListener = struct {
         {
             var index: i32 = size - 1;
             while (index >= 0) : (index -= 1) {
-            const association: ?*MotionGestureToMotionGestureActionAssociation = Inheritance.cast(?*MotionGestureToMotionGestureActionAssociation, commandActionsList.?.objectArray[@intCast(index)]);
+            const association: ?*MotionGestureToMotionGestureActionAssociation = Inheritance.cast(?*MotionGestureToMotionGestureActionAssociation, Inheritance.fieldPointer(commandActionsList.?, "objectArray").*[@intCast(index)]);
             if (Inheritance.call(association.?, "isMotionGestureArrayEquals", .{ list }) == true) {
                 const completeMotionGestureInputEvent: ?*GameKeyCompleteMotionGestureInputEvent = Inheritance.cast(?*GameKeyCompleteMotionGestureInputEvent, association.?.getCommandAction());
                 _ = Inheritance.call(CompleteMotionGestureInputEventHandler.getInstance().?, "fireEvent", .{ completeMotionGestureInputEvent });

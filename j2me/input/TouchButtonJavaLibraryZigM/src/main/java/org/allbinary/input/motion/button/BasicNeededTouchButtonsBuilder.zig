@@ -30,6 +30,7 @@ const BasicTouchInputFactory = @import("org/allbinary/input/motion/button/BasicT
 const CommonButtons = @import("org/allbinary/input/motion/button/CommonButtons.zig").CommonButtons;
 const TouchButton = @import("org/allbinary/input/motion/button/TouchButton.zig").TouchButton;
 const TouchButtonLocationHelper = @import("org/allbinary/input/motion/button/TouchButtonLocationHelper.zig").TouchButtonLocationHelper;
+const Exception = @import("java/lang/Exception.zig").Exception;
 
 pub const BasicNeededTouchButtonsBuilder = struct {
     const Self = @This();
@@ -53,16 +54,16 @@ pub const BasicNeededTouchButtonsBuilder = struct {
 
     pub fn getList(self: *Self) ?*BasicArrayList {
         { // try
-            _ = Inheritance.call(self.logUtil.?, "putF", .{ Inheritance.fieldPointer(self, "commonStrings").*.?.START, self, Inheritance.fieldPointer(self, "commonStrings").*.?.CONSTRUCTOR });
+            _ = Inheritance.call(self.logUtil.?, "putF", .{ Inheritance.fieldPointer(Inheritance.fieldPointer(self, "commonStrings").*.?, "START").*, self, Inheritance.fieldPointer(Inheritance.fieldPointer(self, "commonStrings").*.?, "CONSTRUCTOR").* });
             const list: ?*BasicArrayList = Inheritance.upcast(?*BasicArrayList, BasicArrayListD.create());
             const touchButtonLocationHelper: ?*TouchButtonLocationHelper = TouchButtonLocationHelper.create();
             const basicTouchButtonCellPositionFactory: ?*BasicTouchButtonCellPositionFactory = BasicTouchButtonCellPositionFactory.create();
             const commonButtons: ?*CommonButtons = Inheritance.upcast(?*CommonButtons, CommonButtons.getInstance());
             const animationInterface: ?*Animation = Inheritance.upcast(?*Animation, Inheritance.call(NullAnimationFactory.getFactoryInstance().?, "getInstance", .{ 0 }));
-            const UP: ?*TouchButton = Inheritance.callStatic(TouchButton, "create7", .{ BasicTouchInputFactory.getInstance().?.UP, animationInterface, animationInterface, commonButtons.?.NORMAL_BUTTON, basicTouchButtonCellPositionFactory.?.SECOND_FROM_BOTTOM_LEFT, touchButtonLocationHelper.?.getColumnsRemainderHalf(), touchButtonLocationHelper.?.getRowsRemainderHalf() });
-            const DOWN: ?*TouchButton = Inheritance.callStatic(TouchButton, "create7", .{ BasicTouchInputFactory.getInstance().?.DOWN, animationInterface, animationInterface, commonButtons.?.NORMAL_BUTTON, basicTouchButtonCellPositionFactory.?.BOTTOM_LEFT, touchButtonLocationHelper.?.getColumnsRemainderHalf(), touchButtonLocationHelper.?.getRowsRemainderHalf() });
-            const LEFT: ?*TouchButton = Inheritance.callStatic(TouchButton, "create7", .{ BasicTouchInputFactory.getInstance().?.LEFT, animationInterface, animationInterface, commonButtons.?.NORMAL_BUTTON, basicTouchButtonCellPositionFactory.?.BOTTOM_SECOND_FROM_RIGHT, touchButtonLocationHelper.?.getColumnsRemainderHalf(), touchButtonLocationHelper.?.getRowsRemainderHalf() });
-            const RIGHT: ?*TouchButton = Inheritance.callStatic(TouchButton, "create7", .{ BasicTouchInputFactory.getInstance().?.RIGHT, animationInterface, animationInterface, commonButtons.?.NORMAL_BUTTON, basicTouchButtonCellPositionFactory.?.BOTTOM_RIGHT, touchButtonLocationHelper.?.getColumnsRemainderHalf(), touchButtonLocationHelper.?.getRowsRemainderHalf() });
+            const UP: ?*TouchButton = Inheritance.callStatic(TouchButton, "create7", .{ Inheritance.fieldPointer(BasicTouchInputFactory.getInstance().?, "UP").*, animationInterface, animationInterface, Inheritance.fieldPointer(commonButtons.?, "NORMAL_BUTTON").*, Inheritance.fieldPointer(basicTouchButtonCellPositionFactory.?, "SECOND_FROM_BOTTOM_LEFT").*, touchButtonLocationHelper.?.getColumnsRemainderHalf(), touchButtonLocationHelper.?.getRowsRemainderHalf() });
+            const DOWN: ?*TouchButton = Inheritance.callStatic(TouchButton, "create7", .{ Inheritance.fieldPointer(BasicTouchInputFactory.getInstance().?, "DOWN").*, animationInterface, animationInterface, Inheritance.fieldPointer(commonButtons.?, "NORMAL_BUTTON").*, Inheritance.fieldPointer(basicTouchButtonCellPositionFactory.?, "BOTTOM_LEFT").*, touchButtonLocationHelper.?.getColumnsRemainderHalf(), touchButtonLocationHelper.?.getRowsRemainderHalf() });
+            const LEFT: ?*TouchButton = Inheritance.callStatic(TouchButton, "create7", .{ Inheritance.fieldPointer(BasicTouchInputFactory.getInstance().?, "LEFT").*, animationInterface, animationInterface, Inheritance.fieldPointer(commonButtons.?, "NORMAL_BUTTON").*, Inheritance.fieldPointer(basicTouchButtonCellPositionFactory.?, "BOTTOM_SECOND_FROM_RIGHT").*, touchButtonLocationHelper.?.getColumnsRemainderHalf(), touchButtonLocationHelper.?.getRowsRemainderHalf() });
+            const RIGHT: ?*TouchButton = Inheritance.callStatic(TouchButton, "create7", .{ Inheritance.fieldPointer(BasicTouchInputFactory.getInstance().?, "RIGHT").*, animationInterface, animationInterface, Inheritance.fieldPointer(commonButtons.?, "NORMAL_BUTTON").*, Inheritance.fieldPointer(basicTouchButtonCellPositionFactory.?, "BOTTOM_RIGHT").*, touchButtonLocationHelper.?.getColumnsRemainderHalf(), touchButtonLocationHelper.?.getRowsRemainderHalf() });
             _ = Inheritance.call(list.?, "add", .{ UP });
             _ = Inheritance.call(list.?, "add", .{ DOWN });
             _ = Inheritance.call(list.?, "add", .{ LEFT });
@@ -70,7 +71,7 @@ pub const BasicNeededTouchButtonsBuilder = struct {
             return list;
         }
         // catch (Exception e):
-//             _ = Inheritance.call(self.logUtil.?, "put", .{ Inheritance.fieldPointer(self, "commonStrings").*.?.EXCEPTION, self, Inheritance.fieldPointer(self, "commonStrings").*.?.GET_LIST, e });
+//             _ = Inheritance.call(self.logUtil.?, "put", .{ Inheritance.fieldPointer(Inheritance.fieldPointer(self, "commonStrings").*.?, "EXCEPTION").*, self, Inheritance.fieldPointer(Inheritance.fieldPointer(self, "commonStrings").*.?, "GET_LIST").*, e });
 //             return Inheritance.upcast(?*BasicArrayList, Inheritance.receiverOf(BasicArrayListUtil.getInstance().?, "getImmutableInstance").getImmutableInstance());
     }
 };

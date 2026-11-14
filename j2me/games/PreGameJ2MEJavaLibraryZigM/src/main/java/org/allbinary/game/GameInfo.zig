@@ -51,7 +51,7 @@ pub const GameInfo = struct {
 
     // Static fields with runtime initializers: call staticInit once at startup
     pub fn staticInit() void {
-        NONE = Inheritance.callStatic(GameInfo, "create5", .{ GameTypeFactory.getInstance().?.NONE, GameMode.NONE, PlayerTypesFactory.getInstance().?.PLAYER_TYPE_ONE, -1, -1 });
+        NONE = Inheritance.callStatic(GameInfo, "create5", .{ GameTypeFactory.getInstance().?.NONE, GameMode.NONE, Inheritance.fieldPointer(PlayerTypesFactory.getInstance().?, "PLAYER_TYPE_ONE").*, -1, -1 });
     }
 
     fn initFields(this: *Self) void {
@@ -121,7 +121,7 @@ pub const GameInfo = struct {
         if (self.getCurrentLevel() < self.getHighestLevel()) {
             self.currentLevel += 1;
         }
-        _ = Inheritance.call(self.logUtil.?, "putF", .{ Object.toString(Object.of(Inheritance.call(Inheritance.call(Inheritance.call(Inheritance.call(StringMaker.create(), "append", .{ CommonLabels.getInstance().?.NEXT }).?, "append", .{ CommonSeps.getInstance().?.SPACE }).?, "append", .{ self.NEW_LEVEL }).?, "appendint", .{ self.getCurrentLevel() }))), self, self.NEXT_GAME_LEVEL });
+        _ = Inheritance.call(self.logUtil.?, "putF", .{ Object.toString(Object.of(Inheritance.call(Inheritance.call(Inheritance.call(Inheritance.call(StringMaker.create(), "append", .{ Inheritance.fieldPointer(CommonLabels.getInstance().?, "NEXT").* }).?, "append", .{ Inheritance.fieldPointer(CommonSeps.getInstance().?, "SPACE").* }).?, "append", .{ self.NEW_LEVEL }).?, "appendint", .{ self.getCurrentLevel() }))), self, self.NEXT_GAME_LEVEL });
     }
     
 
@@ -143,11 +143,11 @@ pub const GameInfo = struct {
 
     pub fn toHashtable(self: *Self) ?*ABHashtable {
         const hashtable: ?*ABHashtable = Inheritance.upcast(?*ABHashtable, Inheritance.receiverOf(StdUtil.getInstance().?, "createHashtable").createHashtable());
-        _ = Inheritance.call(hashtable.?, "put", .{ self.gameInfoData.?.GAME_TYPE, Object.toString(Object.of(self.getGameType())) });
-        _ = Inheritance.call(hashtable.?, "put", .{ self.gameInfoData.?.GAME_MODE, Object.toString(Object.of(self.gameMode)) });
-        _ = Inheritance.call(hashtable.?, "put", .{ self.gameInfoData.?.PLAYER_TYPE, Object.toString(Object.of(self.playerType)) });
-        _ = Inheritance.call(hashtable.?, "put", .{ self.gameInfoData.?.HIGHEST_LEVEL, String.valueOf(self.getHighestLevel()) });
-        _ = Inheritance.call(hashtable.?, "put", .{ self.gameInfoData.?.CURRENT_LEVEL, String.valueOf(self.currentLevel) });
+        _ = Inheritance.call(hashtable.?, "put", .{ Inheritance.fieldPointer(self.gameInfoData.?, "GAME_TYPE").*, Object.toString(Object.of(self.getGameType())) });
+        _ = Inheritance.call(hashtable.?, "put", .{ Inheritance.fieldPointer(self.gameInfoData.?, "GAME_MODE").*, Object.toString(Object.of(self.gameMode)) });
+        _ = Inheritance.call(hashtable.?, "put", .{ Inheritance.fieldPointer(self.gameInfoData.?, "PLAYER_TYPE").*, Object.toString(Object.of(self.playerType)) });
+        _ = Inheritance.call(hashtable.?, "put", .{ Inheritance.fieldPointer(self.gameInfoData.?, "HIGHEST_LEVEL").*, String.valueOf(self.getHighestLevel()) });
+        _ = Inheritance.call(hashtable.?, "put", .{ Inheritance.fieldPointer(self.gameInfoData.?, "CURRENT_LEVEL").*, String.valueOf(self.currentLevel) });
         return hashtable;
     }
     
@@ -155,24 +155,24 @@ pub const GameInfo = struct {
     pub fn toString(self: *Self) ?*String {
         const stringBuffer: ?*StringMaker = StringMaker.create();
         const commonSeps: ?*CommonSeps = Inheritance.upcast(?*CommonSeps, CommonSeps.getInstance());
-        _ = Inheritance.call(stringBuffer.?, "append", .{ self.gameInfoData.?.GAME_TYPE });
-        _ = Inheritance.call(stringBuffer.?, "append", .{ commonSeps.?.EQUALS });
+        _ = Inheritance.call(stringBuffer.?, "append", .{ Inheritance.fieldPointer(self.gameInfoData.?, "GAME_TYPE").* });
+        _ = Inheritance.call(stringBuffer.?, "append", .{ Inheritance.fieldPointer(commonSeps.?, "EQUALS").* });
         _ = Inheritance.call(stringBuffer.?, "append", .{ Object.toString(Object.of(self.getGameType())) });
-        _ = Inheritance.call(stringBuffer.?, "append", .{ commonSeps.?.COMMA_SEP });
-        _ = Inheritance.call(stringBuffer.?, "append", .{ self.gameInfoData.?.GAME_MODE });
-        _ = Inheritance.call(stringBuffer.?, "append", .{ commonSeps.?.EQUALS });
+        _ = Inheritance.call(stringBuffer.?, "append", .{ Inheritance.fieldPointer(commonSeps.?, "COMMA_SEP").* });
+        _ = Inheritance.call(stringBuffer.?, "append", .{ Inheritance.fieldPointer(self.gameInfoData.?, "GAME_MODE").* });
+        _ = Inheritance.call(stringBuffer.?, "append", .{ Inheritance.fieldPointer(commonSeps.?, "EQUALS").* });
         _ = Inheritance.call(stringBuffer.?, "append", .{ Object.toString(Object.of(self.gameMode)) });
-        _ = Inheritance.call(stringBuffer.?, "append", .{ commonSeps.?.COMMA_SEP });
-        _ = Inheritance.call(stringBuffer.?, "append", .{ self.gameInfoData.?.PLAYER_TYPE });
-        _ = Inheritance.call(stringBuffer.?, "append", .{ commonSeps.?.EQUALS });
+        _ = Inheritance.call(stringBuffer.?, "append", .{ Inheritance.fieldPointer(commonSeps.?, "COMMA_SEP").* });
+        _ = Inheritance.call(stringBuffer.?, "append", .{ Inheritance.fieldPointer(self.gameInfoData.?, "PLAYER_TYPE").* });
+        _ = Inheritance.call(stringBuffer.?, "append", .{ Inheritance.fieldPointer(commonSeps.?, "EQUALS").* });
         _ = Inheritance.call(stringBuffer.?, "append", .{ Inheritance.call(StringUtil.getInstance().?, "toString", .{ self.playerType }) });
-        _ = Inheritance.call(stringBuffer.?, "append", .{ commonSeps.?.COMMA_SEP });
-        _ = Inheritance.call(stringBuffer.?, "append", .{ self.gameInfoData.?.HIGHEST_LEVEL });
-        _ = Inheritance.call(stringBuffer.?, "append", .{ commonSeps.?.EQUALS });
+        _ = Inheritance.call(stringBuffer.?, "append", .{ Inheritance.fieldPointer(commonSeps.?, "COMMA_SEP").* });
+        _ = Inheritance.call(stringBuffer.?, "append", .{ Inheritance.fieldPointer(self.gameInfoData.?, "HIGHEST_LEVEL").* });
+        _ = Inheritance.call(stringBuffer.?, "append", .{ Inheritance.fieldPointer(commonSeps.?, "EQUALS").* });
         _ = Inheritance.call(stringBuffer.?, "appendint", .{ self.getHighestLevel() });
-        _ = Inheritance.call(stringBuffer.?, "append", .{ commonSeps.?.COMMA_SEP });
-        _ = Inheritance.call(stringBuffer.?, "append", .{ self.gameInfoData.?.CURRENT_LEVEL });
-        _ = Inheritance.call(stringBuffer.?, "append", .{ commonSeps.?.EQUALS });
+        _ = Inheritance.call(stringBuffer.?, "append", .{ Inheritance.fieldPointer(commonSeps.?, "COMMA_SEP").* });
+        _ = Inheritance.call(stringBuffer.?, "append", .{ Inheritance.fieldPointer(self.gameInfoData.?, "CURRENT_LEVEL").* });
+        _ = Inheritance.call(stringBuffer.?, "append", .{ Inheritance.fieldPointer(commonSeps.?, "EQUALS").* });
         _ = Inheritance.call(stringBuffer.?, "appendint", .{ self.currentLevel });
         return Inheritance.upcast(?*String, Object.toString(Object.of(stringBuffer)));
     }

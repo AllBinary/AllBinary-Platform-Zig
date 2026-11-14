@@ -26,6 +26,7 @@ const OpenGLFeatureFactory = @import("org/allbinary/graphics/opengles/OpenGLFeat
 const AbeClientInformationInterface = @import("org/allbinary/logic/system/security/licensing/AbeClientInformationInterface.zig").AbeClientInformationInterface;
 const AllBinaryGameCanvas = @import("org/allbinary/game/displayable/canvas/AllBinaryGameCanvas.zig").AllBinaryGameCanvas;
 const DemoGameBehavior = @import("org/allbinary/game/displayable/canvas/DemoGameBehavior.zig").DemoGameBehavior;
+const Exception = @import("java/lang/Exception.zig").Exception;
 
 pub const BaseGameBehavior = struct {
     const Self = @This();
@@ -63,18 +64,18 @@ pub const BaseGameBehavior = struct {
     pub fn pause(self: *Self, allBinaryGameCanvas: ?*AllBinaryGameCanvas) void {
         _ = self;
         const features: ?*Features = Inheritance.upcast(?*Features, Features.getInstance());
-        if (Inheritance.call(features.?, "isDefault", .{ OpenGLFeatureFactory.getInstance().?.OPENGL_AS_GAME_THREAD })) {
+        if (Inheritance.call(features.?, "isDefault", .{ Inheritance.fieldPointer(OpenGLFeatureFactory.getInstance().?, "OPENGL_AS_GAME_THREAD").* })) {
             const currentDisplayableFactory: ?*CurrentDisplayableFactory = Inheritance.upcast(?*CurrentDisplayableFactory, CurrentDisplayableFactory.getInstance());
-            _ = Inheritance.call(currentDisplayableFactory.?, "setRunnable", .{ allBinaryGameCanvas.?.gamePauseRunnable });
+            _ = Inheritance.call(currentDisplayableFactory.?, "setRunnable", .{ Inheritance.fieldPointer(allBinaryGameCanvas.?, "gamePauseRunnable").* });
         }
     }
     
 
     pub fn unPause(self: *Self, allBinaryGameCanvas: ?*AllBinaryGameCanvas) void {
         _ = self;
-        if (Inheritance.call(Features.getInstance().?, "isDefault", .{ OpenGLFeatureFactory.getInstance().?.OPENGL_AS_GAME_THREAD })) {
+        if (Inheritance.call(Features.getInstance().?, "isDefault", .{ Inheritance.fieldPointer(OpenGLFeatureFactory.getInstance().?, "OPENGL_AS_GAME_THREAD").* })) {
             const currentDisplayableFactory: ?*CurrentDisplayableFactory = Inheritance.upcast(?*CurrentDisplayableFactory, CurrentDisplayableFactory.getInstance());
-            _ = Inheritance.call(currentDisplayableFactory.?, "setRunnable", .{ allBinaryGameCanvas.?.gameRunnable });
+            _ = Inheritance.call(currentDisplayableFactory.?, "setRunnable", .{ Inheritance.fieldPointer(allBinaryGameCanvas.?, "gameRunnable").* });
             _ = Inheritance.call(currentDisplayableFactory.?, "setDisplayable", .{ allBinaryGameCanvas });
         }
     }

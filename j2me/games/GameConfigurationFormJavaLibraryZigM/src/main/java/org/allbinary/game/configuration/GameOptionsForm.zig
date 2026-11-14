@@ -18,11 +18,11 @@ const allocator = std.heap.page_allocator;
 const String = @import("java/lang/String.zig").String;
 const Object = @import("java/lang/Object.zig").Object;
 const Inheritance = @import("zig/Inheritance.zig");
-// const Choice = @import("javax/microedition/lcdui/Choice.zig").Choice;
-// const Command = @import("javax/microedition/lcdui/Command.zig").Command;
-// const CommandListener = @import("javax/microedition/lcdui/CommandListener.zig").CommandListener;
-// const Item = @import("javax/microedition/lcdui/Item.zig").Item;
-// const TextField = @import("javax/microedition/lcdui/TextField.zig").TextField;
+const Choice = @import("javax/microedition/lcdui/Choice.zig").Choice;
+const Command = @import("javax/microedition/lcdui/Command.zig").Command;
+const CommandListener = @import("javax/microedition/lcdui/CommandListener.zig").CommandListener;
+const Item = @import("javax/microedition/lcdui/Item.zig").Item;
+const TextField = @import("javax/microedition/lcdui/TextField.zig").TextField;
 const GameCommandsFactory = @import("org/allbinary/game/commands/GameCommandsFactory.zig").GameCommandsFactory;
 const GameFeatureChoiceGroups = @import("org/allbinary/game/configuration/feature/GameFeatureChoiceGroups.zig").GameFeatureChoiceGroups;
 const GameFeatureFormUtil = @import("org/allbinary/game/configuration/feature/GameFeatureFormUtil.zig").GameFeatureFormUtil;
@@ -49,6 +49,7 @@ const GameConfigurationSingleton = @import("org/allbinary/game/configuration/Gam
 const GameConfigurationTextInput = @import("org/allbinary/game/configuration/GameConfigurationTextInput.zig").GameConfigurationTextInput;
 const GameConfigurationUtil = @import("org/allbinary/game/configuration/GameConfigurationUtil.zig").GameConfigurationUtil;
 const Integer = @import("java/lang/Integer.zig").Integer;
+const Exception = @import("java/lang/Exception.zig").Exception;
 
 pub const GameOptionsForm = struct {
     const Self = @This();
@@ -66,7 +67,7 @@ pub const GameOptionsForm = struct {
         this.* = .{};
         this.base = Inheritance.callStatic(CommandForm, "create4", .{ commandListener, title, backgrounBasicColor, foregroundBasicColor }).*;
         this.initFields();
-        _ = Inheritance.call(Inheritance.fieldPointer(this, "logUtil").*.?, "putF", .{ Inheritance.fieldPointer(this, "commonStrings").*.?.START, this, Inheritance.fieldPointer(this, "commonStrings").*.?.CONSTRUCTOR });
+        _ = Inheritance.call(Inheritance.fieldPointer(this, "logUtil").*.?, "putF", .{ Inheritance.fieldPointer(Inheritance.fieldPointer(this, "commonStrings").*.?, "START").*, this, Inheritance.fieldPointer(Inheritance.fieldPointer(this, "commonStrings").*.?, "CONSTRUCTOR").* });
         _ = this.addConfiguration();
         const gameFeatureFormUtil: ?*GameFeatureFormUtil = Inheritance.upcast(?*GameFeatureFormUtil, GameFeatureFormUtil.getInstance());
         _ = Inheritance.call(gameFeatureFormUtil.?, "addChoiceGroup", .{ this, Inheritance.receiverOf(GameFeatureChoiceGroups.getExclusiveInstance().?, "get").get(), Choice.EXCLUSIVE });
@@ -81,19 +82,19 @@ pub const GameOptionsForm = struct {
 
     // throws Exception
     pub fn closeClientInformation(self: *Self, abeClientInformation: ?*AbeClientInformationInterface) void {
-        _ = self.base.close();
+        _ = Inheritance.receiver(&self.base, "close").close();
         _ = Inheritance.call(self, "save", .{ abeClientInformation });
     }
     
 
     pub fn addTextFieldsIfSimulated(self: *Self) void {
-        const key: ?*String = Inheritance.upcast(?*String, OrientationData.getInstance().?.ORIENTATION_SENSOR_INPUT);
+        const key: ?*String = Inheritance.upcast(?*String, Inheritance.fieldPointer(OrientationData.getInstance().?, "ORIENTATION_SENSOR_INPUT").*);
         const hashtable: ?*ABHashtable = Inheritance.upcast(?*ABHashtable, Inheritance.receiverOf(GameFeatureChoiceGroups.getExclusiveInstance().?, "get").get());
-        if (hashtable != null) {
+        if (!Object.isNull(hashtable)) {
             const listCanBeNull: ?Object = Inheritance.upcast(?Object, Inheritance.call(hashtable.?, "get", .{ key }));
-            if (listCanBeNull != null) {
+            if (!Object.isNull(listCanBeNull)) {
                 const list: ?*BasicArrayList = Inheritance.cast(?*BasicArrayList, listCanBeNull);
-                if (Inheritance.call(list.?, "contains", .{ SensorFeatureFactory.getInstance().?.SIMULATED_ORIENTATION_SENSORS })) {
+                if (Inheritance.call(list.?, "contains", .{ Inheritance.fieldPointer(SensorFeatureFactory.getInstance().?, "SIMULATED_ORIENTATION_SENSORS").* })) {
                     _ = self.addTextFields();
                 }
             }
@@ -122,7 +123,7 @@ pub const GameOptionsForm = struct {
         const METHOD_NAME: ?*String = String.literal("addConfiguration");
         const NAME: ?*String = String.literal("Name: ");
         const list: ?*BasicArrayList = Inheritance.upcast(?*BasicArrayList, Inheritance.receiverOf(GameConfigurationSingleton.getInstance().?, "getOptionsBasicArrayList").getOptionsBasicArrayList());
-        const GAUGE_CHANGE: ?*Command = Inheritance.upcast(?*Command, MyCommandsFactory.getInstance().?.GAUGE_CHANGE);
+        const GAUGE_CHANGE: ?*Command = Inheritance.upcast(?*Command, Inheritance.fieldPointer(MyCommandsFactory.getInstance().?, "GAUGE_CHANGE").*);
         const stringMaker: ?*StringMaker = StringMaker.create();
         const size: i32 = list.?.size();
         var gameConfiguration: ?*GameConfiguration = null;
@@ -130,7 +131,7 @@ pub const GameOptionsForm = struct {
         {
             var index: i32 = 0;
             while (index < size) : (index += 1) {
-            gameConfiguration = Inheritance.cast(?*GameConfiguration, list.?.objectArray[@intCast(index)]);
+            gameConfiguration = Inheritance.cast(?*GameConfiguration, Inheritance.fieldPointer(list.?, "objectArray").*[@intCast(index)]);
             _ = Inheritance.call(stringMaker.?, "delete", .{ 0, stringMaker.?.length() });
             _ = Inheritance.call(Inheritance.fieldPointer(self, "logUtil").*.?, "putF", .{ Object.toString(Object.of(Inheritance.call(Inheritance.call(stringMaker.?, "append", .{ NAME }).?, "append", .{ Object.toString(Object.of(gameConfiguration)) }))), self, METHOD_NAME });
             gauge = Inheritance.callStatic(GameConfigurationGauge, "create1", .{ gameConfiguration });
@@ -145,8 +146,8 @@ pub const GameOptionsForm = struct {
     pub fn initCommands(self: *Self, cmdListener: ?*CommandListener) void {
         const gameCommandsFactory: ?*GameCommandsFactory = Inheritance.upcast(?*GameCommandsFactory, GameCommandsFactory.getInstance());
         _ = Inheritance.receiver(self, "removeAllCommands").removeAllCommands();
-        _ = Inheritance.call(self, "addCommand", .{ gameCommandsFactory.?.CLOSE_OPTIONS });
-        _ = Inheritance.call(self, "addCommand", .{ gameCommandsFactory.?.DEFAULT_OPTIONS });
+        _ = Inheritance.call(self, "addCommand", .{ Inheritance.fieldPointer(gameCommandsFactory.?, "CLOSE_OPTIONS").* });
+        _ = Inheritance.call(self, "addCommand", .{ Inheritance.fieldPointer(gameCommandsFactory.?, "DEFAULT_OPTIONS").* });
         _ = Inheritance.call(self, "setCommandListener", .{ cmdListener });
     }
     
@@ -168,8 +169,8 @@ pub const GameOptionsForm = struct {
         }
         _ = Inheritance.receiverOf(GameConfigurationUtil.getInstance().?, "updateCompetitionValue").updateCompetitionValue();
         const hashtable: ?*ABHashtable = Inheritance.upcast(?*ABHashtable, Inheritance.receiverOf(StdUtil.getInstance().?, "createHashtable").createHashtable());
-        const SCALE: ?*GameConfiguration = Inheritance.upcast(?*GameConfiguration, GameConfigurationCentral.getInstance().?.SCALE);
-        _ = Inheritance.call(hashtable.?, "put", .{ SCALE.?.getName(), Object.toString(Object.of(SCALE.?.getValue())) });
+        const SCALE: ?*GameConfiguration = Inheritance.upcast(?*GameConfiguration, Inheritance.fieldPointer(GameConfigurationCentral.getInstance().?, "SCALE").*);
+        _ = Inheritance.call(hashtable.?, "put", .{ SCALE.?.getName(), String.valueOf(Inheritance.receiverOf(SCALE.?.getValue().?, "intValue").intValue()) });
         const keyValuePersistance: ?*KeyValuePersistance = Inheritance.upcast(?*KeyValuePersistance, GameConfigurationPersistanceSingleton.getInstance());
         _ = Inheritance.receiver(keyValuePersistance.?, "clear").clear();
         _ = Inheritance.call(keyValuePersistance.?, "loadAll", .{ abeClientInformation });
@@ -180,7 +181,7 @@ pub const GameOptionsForm = struct {
         {
             var index: i32 = 0;
             while (index < size2) : (index += 1) {
-            integer = Inheritance.cast(?*Integer, list.?.objectArray[@intCast(index)]);
+            integer = Inheritance.cast(?*Integer, Inheritance.fieldPointer(list.?, "objectArray").*[@intCast(index)]);
             _ = Inheritance.call(keyValuePersistance.?, "delete", .{ abeClientInformation, integer.?.intValue() });
             }
         }

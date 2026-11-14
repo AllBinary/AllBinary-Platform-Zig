@@ -27,6 +27,7 @@ const BasicArrayList = @import("org/allbinary/util/BasicArrayList.zig").BasicArr
 const BasicArrayListD = @import("org/allbinary/util/BasicArrayListD.zig").BasicArrayListD;
 const DestroyedEvent = @import("org/allbinary/game/combat/destroy/event/DestroyedEvent.zig").DestroyedEvent;
 const DestroyedEventListenerInterface = @import("org/allbinary/game/combat/destroy/event/DestroyedEventListenerInterface.zig").DestroyedEventListenerInterface;
+const Exception = @import("java/lang/Exception.zig").Exception;
 
 pub const DestroyedEventHandler = struct {
     const Self = @This();
@@ -75,7 +76,7 @@ pub const DestroyedEventHandler = struct {
         const javaMonitor = Object.monitor(self).enter();
         defer javaMonitor.exit();
         _ = self.list.?.clear();
-        _ = self.base.removeAllListeners();
+        _ = Inheritance.receiver(&self.base, "removeAllListeners").removeAllListeners();
     }
     
 
@@ -94,11 +95,11 @@ pub const DestroyedEventHandler = struct {
             var index: i32 = self.list.?.size();
             while (value_N66586: { index -= 1; break :value_N66586 index; } >= 0) {
             { // try
-                const collidableDestroyableDamageableLayer: ?*CollidableDestroyableDamageableLayer = Inheritance.cast(?*CollidableDestroyableDamageableLayer, self.list.?.objectArray[@intCast(index)]);
+                const collidableDestroyableDamageableLayer: ?*CollidableDestroyableDamageableLayer = Inheritance.cast(?*CollidableDestroyableDamageableLayer, Inheritance.fieldPointer(self.list.?, "objectArray").*[@intCast(index)]);
                 _ = Inheritance.call(collidableDestroyableDamageableLayer.?, "onDestroyed", .{ Inheritance.cast(?*DestroyedEvent, eventObject) });
             }
             // catch (Exception e):
-//                 _ = Inheritance.call(Inheritance.fieldPointer(self, "logUtil").*.?, "put", .{ Inheritance.fieldPointer(self, "commonStrings").*.?.EXCEPTION, self, EventStrings.getInstance().?.FIRE_EVENT, e });
+//                 _ = Inheritance.call(Inheritance.fieldPointer(self, "logUtil").*.?, "put", .{ Inheritance.fieldPointer(Inheritance.fieldPointer(self, "commonStrings").*.?, "EXCEPTION").*, self, Inheritance.fieldPointer(EventStrings.getInstance().?, "FIRE_EVENT").*, e });
             }
         }
         _ = Inheritance.call(&self.base, "fireEvent", .{ eventObject });

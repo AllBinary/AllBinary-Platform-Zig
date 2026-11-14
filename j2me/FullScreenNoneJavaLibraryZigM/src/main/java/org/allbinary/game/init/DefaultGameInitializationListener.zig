@@ -29,6 +29,7 @@ const AllBinaryEventObject = @import("org/allbinary/logic/util/event/AllBinaryEv
 const EventStrings = @import("org/allbinary/logic/util/event/EventStrings.zig").EventStrings;
 const CommonStrings = @import("org/allbinary/string/CommonStrings.zig").CommonStrings;
 const Thread = @import("java/lang/Thread.zig").Thread;
+const Exception = @import("java/lang/Exception.zig").Exception;
 
 pub const DefaultGameInitializationListener = struct {
     const Self = @This();
@@ -58,7 +59,7 @@ pub const DefaultGameInitializationListener = struct {
 
     pub fn onEvent(self: *Self, eventObject: ?*AllBinaryEventObject) void {
         _ = eventObject;
-        _ = Inheritance.callStatic(ForcedLogUtil, "log", .{ EventStrings.getInstance().?.PERFORMANCE_MESSAGE, self });
+        _ = Inheritance.callStatic(ForcedLogUtil, "log", .{ Inheritance.fieldPointer(EventStrings.getInstance().?, "PERFORMANCE_MESSAGE").*, self });
     }
     
 
@@ -66,9 +67,9 @@ pub const DefaultGameInitializationListener = struct {
         const ON_GAME_INITIALIZED: ?*String = String.literal("onGameInitialized");
         const commonStrings: ?*CommonStrings = Inheritance.upcast(?*CommonStrings, CommonStrings.getInstance());
         { // try
-            _ = Inheritance.call(self.logUtil.?, "putF", .{ commonStrings.?.START, self, ON_GAME_INITIALIZED });
+            _ = Inheritance.call(self.logUtil.?, "putF", .{ Inheritance.fieldPointer(commonStrings.?, "START").*, self, ON_GAME_INITIALIZED });
             while (!self.swtJOGLProcessor.?.isHolderCreated()) {
-                _ = Inheritance.call(self.logUtil.?, "putF", .{ commonStrings.?.UPDATE, self, ON_GAME_INITIALIZED });
+                _ = Inheritance.call(self.logUtil.?, "putF", .{ Inheritance.fieldPointer(commonStrings.?, "UPDATE").*, self, ON_GAME_INITIALIZED });
                 _ = (std.Io.sleep(std.Io.Threaded.global_single_threaded.io(), std.Io.Duration.fromMilliseconds(20), .awake) catch {});
             }
             _ = Inheritance.call(FeatureResourceInitializationUtil.getInstance().?, "init", .{ Inheritance.receiver(gameInitializedEvent.?, "getLevel").getLevel() });
@@ -79,7 +80,7 @@ pub const DefaultGameInitializationListener = struct {
             }
         }
         // catch (Exception e):
-//             _ = Inheritance.call(self.logUtil.?, "put", .{ commonStrings.?.EXCEPTION, self, ON_GAME_INITIALIZED, e });
+//             _ = Inheritance.call(self.logUtil.?, "put", .{ Inheritance.fieldPointer(commonStrings.?, "EXCEPTION").*, self, ON_GAME_INITIALIZED, e });
     }
 };
 

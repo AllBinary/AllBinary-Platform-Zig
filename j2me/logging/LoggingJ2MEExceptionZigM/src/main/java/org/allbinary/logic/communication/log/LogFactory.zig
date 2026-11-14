@@ -30,7 +30,7 @@ pub const LogFactory = struct {
 
     // Static fields with runtime initializers: call staticInit once at startup
     pub fn staticInit() void {
-        LOG = Inheritance.callStatic(Log, "create4", .{ StringUtil.getInstance().?.EMPTY_STRING, NullUtil.getInstance().?.NULL_OBJECT, StringUtil.getInstance().?.EMPTY_STRING, NullUtil.getInstance().?.NULL_OBJECT });
+        LOG = Inheritance.callStatic(Log, "create4", .{ Inheritance.fieldPointer(StringUtil.getInstance().?, "EMPTY_STRING").*, Inheritance.fieldPointer(NullUtil.getInstance().?, "NULL_OBJECT").*, Inheritance.fieldPointer(StringUtil.getInstance().?, "EMPTY_STRING").*, Inheritance.fieldPointer(NullUtil.getInstance().?, "NULL_OBJECT").* });
     }
 
     pub fn create() *Self {
@@ -43,7 +43,7 @@ pub const LogFactory = struct {
     pub fn getInstanceD() ?*Log {
         const stringUtil: ?*StringUtil = Inheritance.upcast(?*StringUtil, StringUtil.getInstance());
         const nullUtil: ?*NullUtil = Inheritance.upcast(?*NullUtil, NullUtil.getInstance());
-        return Inheritance.callStatic(Log, "create4", .{ stringUtil.?.EMPTY_STRING, nullUtil.?.NULL_OBJECT, stringUtil.?.EMPTY_STRING, nullUtil.?.NULL_OBJECT });
+        return Inheritance.callStatic(Log, "create4", .{ Inheritance.fieldPointer(stringUtil.?, "EMPTY_STRING").*, Inheritance.fieldPointer(nullUtil.?, "NULL_OBJECT").*, Inheritance.fieldPointer(stringUtil.?, "EMPTY_STRING").*, Inheritance.fieldPointer(nullUtil.?, "NULL_OBJECT").* });
     }
     
 

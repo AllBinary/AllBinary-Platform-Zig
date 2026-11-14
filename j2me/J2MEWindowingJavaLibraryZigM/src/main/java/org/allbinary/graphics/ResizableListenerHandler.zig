@@ -19,6 +19,7 @@ const String = @import("java/lang/String.zig").String;
 const Object = @import("java/lang/Object.zig").Object;
 const Inheritance = @import("zig/Inheritance.zig");
 const ResizableListenerInterface = @import("org/allbinary/graphics/ResizableListenerInterface.zig").ResizableListenerInterface;
+const Exception = @import("java/lang/Exception.zig").Exception;
 
 pub const ResizableListenerHandler = struct {
     const Self = @This();

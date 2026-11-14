@@ -33,7 +33,7 @@
 
         <!--
         -->
-        <module>../../AllBinary-Platform-Integration</module>
+        <module>../../AllBinary-Platform-Integrationzig</module>
         
 <!--        <module>../j2me/games/platform/j2se/AllBinaryOnJ2SEBasePlatformJavaLibraryZigM</module>-->
         <module>../j2me/games/platform/j2se/AllBinaryOnJ2SEPlatformJavaLibraryZigM</module>
@@ -58,8 +58,8 @@
 
         <module>../j2me/games/GameJ2MEOptionalLibraryPOZigM</module>
 
-        <module>../j2me/media/graphics/geography/map/GraphP</module>
-        <module>../j2me/games/strategy/rts/RTSGameJavaLibraryP</module>
+        <module>../j2me/media/graphics/geography/map/GraphZigP</module>
+        <module>../j2me/games/strategy/rts/RTSGameJavaLibraryZigP</module>
         
         <module>../j2me/android/AllBinaryPlatformAndroidLibraryPOZigM</module>
 

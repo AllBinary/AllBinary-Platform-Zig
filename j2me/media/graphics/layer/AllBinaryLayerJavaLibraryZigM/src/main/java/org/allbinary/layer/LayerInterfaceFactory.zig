@@ -30,6 +30,7 @@ const AllBinaryLayer = @import("org/allbinary/layer/AllBinaryLayer.zig").AllBina
 const Layer = @import("org/allbinary/layer/Layer.zig").Layer;
 const LayerInterfaceFactoryInterface = @import("org/allbinary/layer/LayerInterfaceFactoryInterface.zig").LayerInterfaceFactoryInterface;
 const Integer = @import("java/lang/Integer.zig").Integer;
+const Exception = @import("java/lang/Exception.zig").Exception;
 
 pub const LayerInterfaceFactory = struct {
     const Self = @This();
@@ -71,9 +72,9 @@ pub const LayerInterfaceFactory = struct {
     // throws Exception
     pub fn getNexInstance(self: *Self, hashtable: ?*ABHashtable, x: i32, y: i32, z: i32) ?*AllBinaryLayer {
         const commonStrings: ?*CommonStrings = Inheritance.upcast(?*CommonStrings, CommonStrings.getInstance());
-        _ = Inheritance.call(self.logUtil.?, "putF", .{ Object.toString(Object.of(Inheritance.call(Inheritance.call(StringMaker.create(), "append", .{ self.HASHTABLE_LABEL }).?, "append", .{ Inheritance.call(StringUtil.getInstance().?, "toString", .{ hashtable }) }))), self, commonStrings.?.GET_INSTANCE });
+        _ = Inheritance.call(self.logUtil.?, "putF", .{ Object.toString(Object.of(Inheritance.call(Inheritance.call(StringMaker.create(), "append", .{ self.HASHTABLE_LABEL }).?, "append", .{ Inheritance.call(StringUtil.getInstance().?, "toString", .{ hashtable }) }))), self, Inheritance.fieldPointer(commonStrings.?, "GET_INSTANCE").* });
         const typeInteger: ?*Integer = Inheritance.cast(?*Integer, Inheritance.call(hashtable.?, "get", .{ Inheritance.cast(?Object, Layer.ID) }));
-        const layerInterfaceFactoryInterface: ?*LayerInterfaceFactoryInterface = Inheritance.cast(?*LayerInterfaceFactoryInterface, self.list.?.objectArray[@intCast(typeInteger.?.intValue() - 1)]);
+        const layerInterfaceFactoryInterface: ?*LayerInterfaceFactoryInterface = Inheritance.cast(?*LayerInterfaceFactoryInterface, Inheritance.fieldPointer(self.list.?, "objectArray").*[@intCast(Inheritance.arithmetic(.subtract, typeInteger.?.intValue(), 1))]);
         return Inheritance.upcast(?*AllBinaryLayer, Inheritance.call(layerInterfaceFactoryInterface.?, "getNextInstance", .{ hashtable, x, y, z }));
     }
     

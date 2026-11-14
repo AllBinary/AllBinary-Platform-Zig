@@ -39,7 +39,7 @@ pub const AllCommandsVisitor = struct {
     pub fn visit(self: *Self, anyType: ?Object) ?Object {
         _ = anyType;
         _ = self;
-        return Inheritance.upcast(?Object, BooleanFactory.getInstance().?.TRUE);
+        return Inheritance.upcast(?Object, Inheritance.fieldPointer(BooleanFactory.getInstance().?, "TRUE").*);
     }
 };
 

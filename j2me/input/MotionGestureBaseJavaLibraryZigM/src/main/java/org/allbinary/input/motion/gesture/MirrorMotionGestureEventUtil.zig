@@ -23,6 +23,7 @@ const PointFactory = @import("org/allbinary/graphics/PointFactory.zig").PointFac
 const MotionEventCircularPool = @import("org/allbinary/input/motion/gesture/observer/MotionEventCircularPool.zig").MotionEventCircularPool;
 const MotionGestureEvent = @import("org/allbinary/input/motion/gesture/observer/MotionGestureEvent.zig").MotionGestureEvent;
 const Integer = @import("java/lang/Integer.zig").Integer;
+const Exception = @import("java/lang/Exception.zig").Exception;
 
 pub const MirrorMotionGestureEventUtil = struct {
     const Self = @This();

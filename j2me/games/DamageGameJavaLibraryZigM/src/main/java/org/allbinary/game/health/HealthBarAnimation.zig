@@ -22,6 +22,7 @@ const Animation = @import("org/allbinary/animation/Animation.zig").Animation;
 const BasicHudFactory = @import("org/allbinary/game/graphics/hud/BasicHudFactory.zig").BasicHudFactory;
 const BasicColorFactory = @import("org/allbinary/graphics/color/BasicColorFactory.zig").BasicColorFactory;
 const AllBinaryLayer = @import("org/allbinary/layer/AllBinaryLayer.zig").AllBinaryLayer;
+const Exception = @import("java/lang/Exception.zig").Exception;
 
 pub const HealthBarAnimation = struct {
     const Self = @This();
@@ -50,12 +51,12 @@ pub const HealthBarAnimation = struct {
         this.allbinaryLayer = layerInterface;
         this.location = location;
         const basicHudFactory: ?*BasicHudFactory = Inheritance.upcast(?*BasicHudFactory, BasicHudFactory.getInstance());
-        if (this.location != basicHudFactory.?.TOPLEFT and this.location != basicHudFactory.?.BOTTOMLEFT) {
+        if (this.location != Inheritance.fieldPointer(basicHudFactory.?, "TOPLEFT").* and this.location != Inheritance.fieldPointer(basicHudFactory.?, "BOTTOMLEFT").*) {
             std.debug.panic("{any}", .{exception: { _ = String.literal("Location Not Valid"); break :exception error.Exception; }});
         }
-        if (Inheritance.receiver(layerInterface.?, "getWidth").getWidth() > 40) {
+        if (Inheritance.arithmetic(.greater, Inheritance.receiver(layerInterface.?, "getWidth").getWidth(), 40)) {
             this.thickness = 3;
-        } else if (Inheritance.receiver(layerInterface.?, "getWidth").getWidth() > 20) {
+        } else if (Inheritance.arithmetic(.greater, Inheritance.receiver(layerInterface.?, "getWidth").getWidth(), 20)) {
             this.thickness = 2;
         } else {
             this.thickness = 1;
@@ -69,16 +70,16 @@ pub const HealthBarAnimation = struct {
         self.x2 = newX2;
         const quarter: i32 = (Inheritance.receiver(self.allbinaryLayer.?, "getWidth").getWidth() >> @intCast(2));
         if (self.x2 > quarter * 3) {
-            Inheritance.fieldPointer(self, "basicColor").* = Inheritance.upcast(@TypeOf(Inheritance.fieldPointer(self, "basicColor").*), self.basicColorFactory.?.GREEN);
+            Inheritance.fieldPointer(self, "basicColor").* = Inheritance.upcast(@TypeOf(Inheritance.fieldPointer(self, "basicColor").*), Inheritance.fieldPointer(self.basicColorFactory.?, "GREEN").*);
             Inheritance.fieldPointer(self, "colorP").* = Inheritance.upcast(@TypeOf(Inheritance.fieldPointer(self, "colorP").*), Inheritance.receiverOf(Inheritance.fieldPointer(self, "basicColor").*.?, "intValue").intValue());
         } else if (self.x2 > quarter * 2) {
-            Inheritance.fieldPointer(self, "basicColor").* = Inheritance.upcast(@TypeOf(Inheritance.fieldPointer(self, "basicColor").*), self.basicColorFactory.?.YELLOW);
+            Inheritance.fieldPointer(self, "basicColor").* = Inheritance.upcast(@TypeOf(Inheritance.fieldPointer(self, "basicColor").*), Inheritance.fieldPointer(self.basicColorFactory.?, "YELLOW").*);
             Inheritance.fieldPointer(self, "colorP").* = Inheritance.upcast(@TypeOf(Inheritance.fieldPointer(self, "colorP").*), Inheritance.receiverOf(Inheritance.fieldPointer(self, "basicColor").*.?, "intValue").intValue());
         } else if (self.x2 > quarter) {
-            Inheritance.fieldPointer(self, "basicColor").* = Inheritance.upcast(@TypeOf(Inheritance.fieldPointer(self, "basicColor").*), self.basicColorFactory.?.ORANGE);
+            Inheritance.fieldPointer(self, "basicColor").* = Inheritance.upcast(@TypeOf(Inheritance.fieldPointer(self, "basicColor").*), Inheritance.fieldPointer(self.basicColorFactory.?, "ORANGE").*);
             Inheritance.fieldPointer(self, "colorP").* = Inheritance.upcast(@TypeOf(Inheritance.fieldPointer(self, "colorP").*), Inheritance.receiverOf(Inheritance.fieldPointer(self, "basicColor").*.?, "intValue").intValue());
         } else {
-            Inheritance.fieldPointer(self, "basicColor").* = Inheritance.upcast(@TypeOf(Inheritance.fieldPointer(self, "basicColor").*), self.basicColorFactory.?.RED);
+            Inheritance.fieldPointer(self, "basicColor").* = Inheritance.upcast(@TypeOf(Inheritance.fieldPointer(self, "basicColor").*), Inheritance.fieldPointer(self.basicColorFactory.?, "RED").*);
             Inheritance.fieldPointer(self, "colorP").* = Inheritance.upcast(@TypeOf(Inheritance.fieldPointer(self, "colorP").*), Inheritance.receiverOf(Inheritance.fieldPointer(self, "basicColor").*.?, "intValue").intValue());
         }
     }
@@ -86,9 +87,9 @@ pub const HealthBarAnimation = struct {
 
     pub fn getY(self: *Self) i32 {
         const basicHudFactory: ?*BasicHudFactory = Inheritance.upcast(?*BasicHudFactory, BasicHudFactory.getInstance());
-        if (self.location == basicHudFactory.?.TOPLEFT) {
-            return Inheritance.receiverOf(Inheritance.receiver(self.allbinaryLayer.?, "getViewPosition").getViewPosition().?, "getY").getY() - 4;
-        } else if (self.location == basicHudFactory.?.BOTTOMLEFT) {
+        if (self.location == Inheritance.fieldPointer(basicHudFactory.?, "TOPLEFT").*) {
+            return Inheritance.arithmetic(.subtract, Inheritance.receiverOf(Inheritance.receiver(self.allbinaryLayer.?, "getViewPosition").getViewPosition().?, "getY").getY(), 4);
+        } else if (self.location == Inheritance.fieldPointer(basicHudFactory.?, "BOTTOMLEFT").*) {
             return Inheritance.receiverOf(Inheritance.receiver(self.allbinaryLayer.?, "getViewPosition").getViewPosition().?, "getY2").getY2() + 4;
         }
         return -1;

@@ -18,8 +18,9 @@ const allocator = std.heap.page_allocator;
 const String = @import("java/lang/String.zig").String;
 const Object = @import("java/lang/Object.zig").Object;
 const Inheritance = @import("zig/Inheritance.zig");
-// const CommandListener = @import("javax/microedition/lcdui/CommandListener.zig").CommandListener;
+const CommandListener = @import("javax/microedition/lcdui/CommandListener.zig").CommandListener;
 const AbeClientInformationInterface = @import("org/allbinary/logic/system/security/licensing/AbeClientInformationInterface.zig").AbeClientInformationInterface;
+const Exception = @import("java/lang/Exception.zig").Exception;
 
 // Java interface: an implementation is a pointer and a table of functions
 pub const GameInitializationInterface = struct {
@@ -28,7 +29,7 @@ pub const GameInitializationInterface = struct {
     pointer: *anyopaque,
     object: Object,
     toStringFn: *const fn (pointer: *anyopaque) ?*String,
-    initFn: *const fn (pointer: *anyopaque, abeClientInformation: ?*AbeClientInformationInterface, commandListener: ?*CommandListener, level: i32) void,
+    initFn: *const fn (interface_pointer: *anyopaque, abeClientInformation: ?*AbeClientInformationInterface, commandListener: ?*CommandListener, level: i32) void,
 
     pub fn init(self: *Self, abeClientInformation: ?*AbeClientInformationInterface, commandListener: ?*CommandListener, level: i32) void {
         return self.initFn(self.pointer, abeClientInformation, commandListener, level);
@@ -40,15 +41,15 @@ pub const GameInitializationInterface = struct {
 
     // The interface value of an object with the methods. Like a Java class a method can be declared by the object or a superclass.
     pub fn of(object: anytype) ?*Self {
-        const Implementation = @TypeOf(object);
+        const ImplementationType = @TypeOf(object);
         const Methods = struct {
             fn toString(pointer: *anyopaque) ?*String {
-                const implementation: Implementation = @ptrCast(@alignCast(pointer));
+                const implementation: ImplementationType = @ptrCast(@alignCast(pointer));
                 return String.valueOf(implementation);
             }
-            fn init(pointer: *anyopaque, abeClientInformation: ?*AbeClientInformationInterface, commandListener: ?*CommandListener, level: i32) void {
-                const implementation: Implementation = @ptrCast(@alignCast(pointer));
-                return Inheritance.receiver(implementation, "init").init(abeClientInformation, commandListener, level);
+            fn init(interface_pointer: *anyopaque, abeClientInformation: ?*AbeClientInformationInterface, commandListener: ?*CommandListener, level: i32) void {
+                const implementation: ImplementationType = @ptrCast(@alignCast(interface_pointer));
+                return Inheritance.call(implementation, "init", .{ abeClientInformation, commandListener, level });
             }
         };
         const this = allocator.create(Self) catch unreachable;

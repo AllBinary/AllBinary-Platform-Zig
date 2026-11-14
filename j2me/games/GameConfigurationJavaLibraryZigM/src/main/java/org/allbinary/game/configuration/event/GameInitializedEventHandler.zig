@@ -23,6 +23,7 @@ const EventListenerInterface = @import("org/allbinary/logic/util/event/EventList
 const BasicEventHandler = @import("org/allbinary/logic/util/event/handler/BasicEventHandler.zig").BasicEventHandler;
 const GameInitializedEvent = @import("org/allbinary/game/configuration/event/GameInitializedEvent.zig").GameInitializedEvent;
 const GameInitializedListenerInterface = @import("org/allbinary/game/configuration/event/GameInitializedListenerInterface.zig").GameInitializedListenerInterface;
+const Exception = @import("java/lang/Exception.zig").Exception;
 
 pub const GameInitializedEventHandler = struct {
     const Self = @This();

@@ -19,8 +19,8 @@ const String = @import("java/lang/String.zig").String;
 const Object = @import("java/lang/Object.zig").Object;
 const Inheritance = @import("zig/Inheritance.zig");
 const HashMap = @import("java/util/HashMap.zig").HashMap;
-// const Map = @import("java/util/Map.zig").Map;
-// const Set = @import("java/util/Set.zig").Set;
+const Map = @import("java/util/Map.zig").Map;
+const Set = @import("java/util/Set.zig").Set;
 
 //J2SEForJ2ME
 pub const J2SEUtil = struct {

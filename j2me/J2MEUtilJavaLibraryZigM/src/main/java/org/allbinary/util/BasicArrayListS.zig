@@ -33,7 +33,7 @@ pub const BasicArrayListS = struct {
     pub fn create1(size: i32) *Self {
         const this = allocator.create(Self) catch unreachable;
         this.* = .{};
-        this.base = Inheritance.callStatic(BasicArrayList, "create1", .{ NullUtil.getInstance().?.NULL_OBJECT_ARRAY }).*;
+        this.base = Inheritance.callStatic(BasicArrayList, "create1", .{ Inheritance.fieldPointer(NullUtil.getInstance().?, "NULL_OBJECT_ARRAY").* }).*;
         if (size < 0) {
             std.debug.panic("{any}", .{exception: { _ = Object.toString(Object.of(Inheritance.call(Inheritance.call(StringMaker.create(), "append", .{ String.literal("Init Size Exception: ") }).?, "appendint", .{ size }))); break :exception error.IllegalArgumentException; }});
         }

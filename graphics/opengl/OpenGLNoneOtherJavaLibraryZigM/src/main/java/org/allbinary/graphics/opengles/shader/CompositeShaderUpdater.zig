@@ -18,8 +18,8 @@ const allocator = std.heap.page_allocator;
 const String = @import("java/lang/String.zig").String;
 const Object = @import("java/lang/Object.zig").Object;
 const Inheritance = @import("zig/Inheritance.zig");
-// const EGLConfig = @import("javax/microedition/khronos/egl/EGLConfig.zig").EGLConfig;
-// const GL10 = @import("javax/microedition/khronos/opengles/GL10.zig").GL10;
+const EGLConfig = @import("javax/microedition/khronos/egl/EGLConfig.zig").EGLConfig;
+const GL10 = @import("javax/microedition/khronos/opengles/GL10.zig").GL10;
 const NullUtil = @import("org/allbinary/logic/NullUtil.zig").NullUtil;
 const StringUtil = @import("org/allbinary/logic/string/StringUtil.zig").StringUtil;
 const CommonSeps = @import("org/allbinary/string/CommonSeps.zig").CommonSeps;
@@ -34,7 +34,7 @@ pub const CompositeShaderUpdater = struct {
 
     // Static fields with runtime initializers: call staticInit once at startup
     pub fn staticInit() void {
-        instanceC = Inheritance.callStatic(CompositeShaderUpdater, "create4", .{ Inheritance.receiverOf(StringUtil.getInstance().?, "getArrayInstance").getArrayInstance(), Inheritance.receiverOf(StringUtil.getInstance().?, "getArrayInstance").getArrayInstance(), Inheritance.receiverOf(StringUtil.getInstance().?, "getArrayInstance").getArrayInstance(), NullUtil.getInstance().?.NULL_INT_ARRAY });
+        instanceC = Inheritance.callStatic(CompositeShaderUpdater, "create4", .{ Inheritance.receiverOf(StringUtil.getInstance().?, "getArrayInstance").getArrayInstance(), Inheritance.receiverOf(StringUtil.getInstance().?, "getArrayInstance").getArrayInstance(), Inheritance.receiverOf(StringUtil.getInstance().?, "getArrayInstance").getArrayInstance(), Inheritance.fieldPointer(NullUtil.getInstance().?, "NULL_INT_ARRAY").* });
     }
 
     fn initFields(this: *Self) void {

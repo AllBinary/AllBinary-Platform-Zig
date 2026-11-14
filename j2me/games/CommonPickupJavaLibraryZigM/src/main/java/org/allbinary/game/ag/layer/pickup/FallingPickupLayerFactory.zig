@@ -22,6 +22,7 @@ const RemoteInfo = @import("org/allbinary/game/multiplayer/layer/RemoteInfo.zig"
 const AllBinaryLayer = @import("org/allbinary/layer/AllBinaryLayer.zig").AllBinaryLayer;
 const AllBinaryLayerFactoryInterface = @import("org/allbinary/layer/AllBinaryLayerFactoryInterface.zig").AllBinaryLayerFactoryInterface;
 const FallingPickupLayer = @import("org/allbinary/game/ag/layer/pickup/FallingPickupLayer.zig").FallingPickupLayer;
+const Exception = @import("java/lang/Exception.zig").Exception;
 
 pub const FallingPickupLayerFactory = struct {
     const Self = @This();

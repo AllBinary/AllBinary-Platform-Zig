@@ -18,7 +18,7 @@ const allocator = std.heap.page_allocator;
 const String = @import("java/lang/String.zig").String;
 const Object = @import("java/lang/Object.zig").Object;
 const Inheritance = @import("zig/Inheritance.zig");
-// const TextField = @import("javax/microedition/lcdui/TextField.zig").TextField;
+const TextField = @import("javax/microedition/lcdui/TextField.zig").TextField;
 const StdUtil = @import("org/allbinary/logic/StdUtil.zig").StdUtil;
 const StringUtil = @import("org/allbinary/logic/string/StringUtil.zig").StringUtil;
 const ABHashtable = @import("org/allbinary/util/ABHashtable.zig").ABHashtable;
@@ -40,8 +40,8 @@ pub const GameConfigurationTextInput = struct {
     }
 
     fn initFields(this: *Self) void {
-        this.label = Inheritance.upcast(?*String, StringUtil.getInstance().?.EMPTY_STRING);
-        this.text = Inheritance.upcast(?*String, StringUtil.getInstance().?.EMPTY_STRING);
+        this.label = Inheritance.upcast(?*String, Inheritance.fieldPointer(StringUtil.getInstance().?, "EMPTY_STRING").*);
+        this.text = Inheritance.upcast(?*String, Inheritance.fieldPointer(StringUtil.getInstance().?, "EMPTY_STRING").*);
     }
     
 
@@ -57,9 +57,9 @@ pub const GameConfigurationTextInput = struct {
     
 
     pub fn update(textField: ?*TextField) void {
-        const anyType: ?Object = Inheritance.cast(?Object, textField.?.getLabel());
+        const anyType: ?Object = Inheritance.cast(?Object, Inheritance.receiver(textField.?, "getLabel").getLabel());
         const gameConfigurationTextInput: ?*GameConfigurationTextInput = Inheritance.cast(?*GameConfigurationTextInput, Inheritance.call(GameConfigurationTextInput.hashtable.?, "get", .{ anyType }));
-        _ = Inheritance.call(gameConfigurationTextInput.?, "setText", .{ textField.?.getString() });
+        _ = Inheritance.call(gameConfigurationTextInput.?, "setText", .{ Inheritance.receiver(textField.?, "getString").getString() });
     }
     
 

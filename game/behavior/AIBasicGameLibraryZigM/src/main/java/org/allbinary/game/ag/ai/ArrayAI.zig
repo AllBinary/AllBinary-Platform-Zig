@@ -23,6 +23,7 @@ const GameInput = @import("org/allbinary/game/input/GameInput.zig").GameInput;
 const AllBinaryLayer = @import("org/allbinary/layer/AllBinaryLayer.zig").AllBinaryLayer;
 const AllBinaryLayerManager = @import("org/allbinary/layer/AllBinaryLayerManager.zig").AllBinaryLayerManager;
 const BasicAI = @import("org/allbinary/game/ai/BasicAI.zig").BasicAI;
+const Exception = @import("java/lang/Exception.zig").Exception;
 
 pub const ArrayAI = struct {
     const Self = @This();

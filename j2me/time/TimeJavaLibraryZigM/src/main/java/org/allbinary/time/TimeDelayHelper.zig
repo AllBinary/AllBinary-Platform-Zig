@@ -96,7 +96,7 @@ pub const TimeDelayHelper = struct {
     
 
     pub fn getElapsedTNT(self: *Self) i64 {
-        return std.Io.Timestamp.now(std.Io.Threaded.global_single_threaded.io(), .real).toMilliseconds() - self.startTime;
+        return Inheritance.arithmetic(.subtract, std.Io.Timestamp.now(std.Io.Threaded.global_single_threaded.io(), .real).toMilliseconds(), self.startTime);
     }
     
 
@@ -160,9 +160,9 @@ pub const TimeDelayHelper = struct {
         if (elapsed > 0) {
             const commonLabels: ?*CommonLabels = Inheritance.upcast(?*CommonLabels, CommonLabels.getInstance());
             const elapsedAsString: ?*String = Inheritance.upcast(?*String, String.valueOf(elapsed));
-            return Inheritance.upcast(?*String, Object.toString(Object.of(Inheritance.call(Inheritance.call(Inheritance.call(Inheritance.call(Inheritance.call(Inheritance.call(StringMaker.create(), "append", .{ commonLabels.?.START }).?, "appendlong", .{ self.startTime }).?, "append", .{ commonLabels.?.CURRENT }).?, "appendlong", .{ currentTime }).?, "append", .{ commonLabels.?.ELAPSED }).?, "append", .{ elapsedAsString }))));
+            return Inheritance.upcast(?*String, Object.toString(Object.of(Inheritance.call(Inheritance.call(Inheritance.call(Inheritance.call(Inheritance.call(Inheritance.call(StringMaker.create(), "append", .{ Inheritance.fieldPointer(commonLabels.?, "START").* }).?, "appendlong", .{ self.startTime }).?, "append", .{ Inheritance.fieldPointer(commonLabels.?, "CURRENT").* }).?, "appendlong", .{ currentTime }).?, "append", .{ Inheritance.fieldPointer(commonLabels.?, "ELAPSED").* }).?, "append", .{ elapsedAsString }))));
         } else {
-            return Inheritance.upcast(?*String, StringUtil.getInstance().?.EMPTY_STRING);
+            return Inheritance.upcast(?*String, Inheritance.fieldPointer(StringUtil.getInstance().?, "EMPTY_STRING").*);
         }
     }
     
@@ -173,9 +173,9 @@ pub const TimeDelayHelper = struct {
         if (elapsed > 0) {
             const commonLabels: ?*CommonLabels = Inheritance.upcast(?*CommonLabels, CommonLabels.getInstance());
             const elapsedAsString: ?*String = Inheritance.upcast(?*String, String.valueOf(elapsed));
-            return Inheritance.upcast(?*String, Object.toString(Object.of(Inheritance.call(Inheritance.call(Inheritance.call(Inheritance.call(Inheritance.call(Inheritance.call(StringMaker.create(), "append", .{ commonLabels.?.START }).?, "appendlong", .{ self.startTime }).?, "append", .{ commonLabels.?.CURRENT }).?, "appendlong", .{ currentTime }).?, "append", .{ commonLabels.?.ELAPSED }).?, "append", .{ elapsedAsString }))));
+            return Inheritance.upcast(?*String, Object.toString(Object.of(Inheritance.call(Inheritance.call(Inheritance.call(Inheritance.call(Inheritance.call(Inheritance.call(StringMaker.create(), "append", .{ Inheritance.fieldPointer(commonLabels.?, "START").* }).?, "appendlong", .{ self.startTime }).?, "append", .{ Inheritance.fieldPointer(commonLabels.?, "CURRENT").* }).?, "appendlong", .{ currentTime }).?, "append", .{ Inheritance.fieldPointer(commonLabels.?, "ELAPSED").* }).?, "append", .{ elapsedAsString }))));
         } else {
-            return Inheritance.upcast(?*String, StringUtil.getInstance().?.EMPTY_STRING);
+            return Inheritance.upcast(?*String, Inheritance.fieldPointer(StringUtil.getInstance().?, "EMPTY_STRING").*);
         }
     }
 };

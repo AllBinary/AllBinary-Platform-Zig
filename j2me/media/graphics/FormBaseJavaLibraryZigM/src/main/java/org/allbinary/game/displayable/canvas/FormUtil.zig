@@ -49,7 +49,7 @@ pub const FormUtil = struct {
         _ = self;
         const displayInfo: ?*DisplayInfoSingleton = Inheritance.upcast(?*DisplayInfoSingleton, DisplayInfoSingleton.getInstance());
         const pointFactory: ?*PointFactory = Inheritance.upcast(?*PointFactory, PointFactory.getInstance());
-        const rectangle: ?*Rectangle = Inheritance.callStatic(Rectangle, "create3", .{ Inheritance.call(pointFactory.?, "createXY", .{ 30, 10 }), displayInfo.?.getLastWidth() - 30, displayInfo.?.getLastHeight() - 35 });
+        const rectangle: ?*Rectangle = Inheritance.callStatic(Rectangle, "create3", .{ Inheritance.call(pointFactory.?, "createXY", .{ 30, 10 }), Inheritance.arithmetic(.subtract, displayInfo.?.getLastWidth(), 30), Inheritance.arithmetic(.subtract, displayInfo.?.getLastHeight(), 35) });
         return rectangle;
     }
 };

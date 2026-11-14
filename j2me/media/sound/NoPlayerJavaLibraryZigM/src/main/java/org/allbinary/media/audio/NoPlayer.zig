@@ -18,7 +18,7 @@ const allocator = std.heap.page_allocator;
 const String = @import("java/lang/String.zig").String;
 const Object = @import("java/lang/Object.zig").Object;
 const Inheritance = @import("zig/Inheritance.zig");
-// const Control = @import("javax/microedition/media/Control.zig").Control;
+const Control = @import("javax/microedition/media/Control.zig").Control;
 const StringUtil = @import("org/allbinary/logic/string/StringUtil.zig").StringUtil;
 const BasicPlayer = @import("org/allbinary/media/audio/BasicPlayer.zig").BasicPlayer;
 const NullControl = @import("org/allbinary/media/audio/NullControl.zig").NullControl;
@@ -51,7 +51,7 @@ pub const NoPlayer = struct {
 
     pub fn getContentType(self: *Self) ?*String {
         _ = self;
-        return Inheritance.upcast(?*String, StringUtil.getInstance().?.NULL_STRING);
+        return Inheritance.upcast(?*String, Inheritance.fieldPointer(StringUtil.getInstance().?, "NULL_STRING").*);
     }
     
 

@@ -28,6 +28,7 @@ const LogUtil = @import("org/allbinary/logic/communication/log/LogUtil.zig").Log
 const StringMaker = @import("org/allbinary/logic/string/StringMaker.zig").StringMaker;
 const StringUtil = @import("org/allbinary/logic/string/StringUtil.zig").StringUtil;
 const CommonStrings = @import("org/allbinary/string/CommonStrings.zig").CommonStrings;
+const Exception = @import("java/lang/Exception.zig").Exception;
 
 pub const GameGraphicsResourceUtil = struct {
     const Self = @This();
@@ -40,19 +41,19 @@ pub const GameGraphicsResourceUtil = struct {
 
     // Static fields with runtime initializers: call staticInit once at startup
     pub fn staticInit() void {
-        instance = Inheritance.upcast(?Object, NullUtil.getInstance().?.NULL_OBJECT);
+        instance = Inheritance.upcast(?Object, Inheritance.fieldPointer(NullUtil.getInstance().?, "NULL_OBJECT").*);
     }
 
     fn initFields(this: *Self) void {
         this.logUtil = Inheritance.upcast(?*LogUtil, LogUtil.getInstance());
         this.SPRITE = String.literal("_sprite");
         this.QUARTER = String.literal("_quarter");
-        this.name = Inheritance.upcast(?*String, StringUtil.getInstance().?.EMPTY_STRING);
+        this.name = Inheritance.upcast(?*String, Inheritance.fieldPointer(StringUtil.getInstance().?, "EMPTY_STRING").*);
     }
     
 
     pub fn getInstance() ?*GameGraphicsResourceUtil {
-        if (Object.same(GameGraphicsResourceUtil.instance, NullUtil.getInstance().?.NULL_OBJECT)) {
+        if (Object.same(GameGraphicsResourceUtil.instance, Inheritance.fieldPointer(NullUtil.getInstance().?, "NULL_OBJECT").*)) {
             GameGraphicsResourceUtil.instance = Inheritance.upcast(@TypeOf(GameGraphicsResourceUtil.instance), GameGraphicsResourceUtil.create());
         }
         return Inheritance.cast(?*GameGraphicsResourceUtil, GameGraphicsResourceUtil.instance);
@@ -68,7 +69,7 @@ pub const GameGraphicsResourceUtil = struct {
         }
         // catch (Exception e):
 //             const commonStrings: ?*CommonStrings = Inheritance.upcast(?*CommonStrings, CommonStrings.getInstance()); _ = commonStrings;
-//             _ = Inheritance.call(this.logUtil.?, "put", .{ commonStrings.?.EXCEPTION, this, commonStrings.?.CONSTRUCTOR, e });
+//             _ = Inheritance.call(this.logUtil.?, "put", .{ Inheritance.fieldPointer(commonStrings.?, "EXCEPTION").*, this, Inheritance.fieldPointer(commonStrings.?, "CONSTRUCTOR").*, e });
         return this;
     }
     
@@ -76,16 +77,16 @@ pub const GameGraphicsResourceUtil = struct {
     // throws Exception
     pub fn getString(self: *Self) ?*String {
         const graphicsFeatureFactory: ?*GraphicsFeatureFactory = Inheritance.upcast(?*GraphicsFeatureFactory, GraphicsFeatureFactory.getInstance());
-        var graphicsFeature: ?*GraphicsFeature = Inheritance.upcast(?*GraphicsFeature, graphicsFeatureFactory.?.NONE);
+        var graphicsFeature: ?*GraphicsFeature = Inheritance.upcast(?*GraphicsFeature, Inheritance.fieldPointer(graphicsFeatureFactory.?, "NONE").*);
         const features: ?*Features = Inheritance.upcast(?*Features, Features.getInstance());
-        if (Inheritance.call(features.?, "isFeature", .{ graphicsFeatureFactory.?.IMAGE_TO_ARRAY_GRAPHICS })) {
-            graphicsFeature = Inheritance.upcast(@TypeOf(graphicsFeature), graphicsFeatureFactory.?.IMAGE_TO_ARRAY_GRAPHICS);
-        } else if (Inheritance.call(features.?, "isFeature", .{ graphicsFeatureFactory.?.SPRITE_FULL_GRAPHICS })) {
-            graphicsFeature = Inheritance.upcast(@TypeOf(graphicsFeature), graphicsFeatureFactory.?.SPRITE_FULL_GRAPHICS);
-        } else if (Inheritance.call(features.?, "isFeature", .{ graphicsFeatureFactory.?.SPRITE_QUARTER_ROTATION_GRAPHICS })) {
-            graphicsFeature = Inheritance.upcast(@TypeOf(graphicsFeature), graphicsFeatureFactory.?.SPRITE_QUARTER_ROTATION_GRAPHICS);
-        } else if (Inheritance.call(features.?, "isFeature", .{ graphicsFeatureFactory.?.IMAGE_ROTATION_ON_THE_FLY })) {
-            graphicsFeature = Inheritance.upcast(@TypeOf(graphicsFeature), graphicsFeatureFactory.?.IMAGE_ROTATION_ON_THE_FLY);
+        if (Inheritance.call(features.?, "isFeature", .{ Inheritance.fieldPointer(graphicsFeatureFactory.?, "IMAGE_TO_ARRAY_GRAPHICS").* })) {
+            graphicsFeature = Inheritance.upcast(@TypeOf(graphicsFeature), Inheritance.fieldPointer(graphicsFeatureFactory.?, "IMAGE_TO_ARRAY_GRAPHICS").*);
+        } else if (Inheritance.call(features.?, "isFeature", .{ Inheritance.fieldPointer(graphicsFeatureFactory.?, "SPRITE_FULL_GRAPHICS").* })) {
+            graphicsFeature = Inheritance.upcast(@TypeOf(graphicsFeature), Inheritance.fieldPointer(graphicsFeatureFactory.?, "SPRITE_FULL_GRAPHICS").*);
+        } else if (Inheritance.call(features.?, "isFeature", .{ Inheritance.fieldPointer(graphicsFeatureFactory.?, "SPRITE_QUARTER_ROTATION_GRAPHICS").* })) {
+            graphicsFeature = Inheritance.upcast(@TypeOf(graphicsFeature), Inheritance.fieldPointer(graphicsFeatureFactory.?, "SPRITE_QUARTER_ROTATION_GRAPHICS").*);
+        } else if (Inheritance.call(features.?, "isFeature", .{ Inheritance.fieldPointer(graphicsFeatureFactory.?, "IMAGE_ROTATION_ON_THE_FLY").* })) {
+            graphicsFeature = Inheritance.upcast(@TypeOf(graphicsFeature), Inheritance.fieldPointer(graphicsFeatureFactory.?, "IMAGE_ROTATION_ON_THE_FLY").*);
         }
         return Inheritance.upcast(?*String, Inheritance.call(self, "getStringForFeature", .{ graphicsFeature }));
     }
@@ -97,19 +98,19 @@ pub const GameGraphicsResourceUtil = struct {
         const graphicsFeatureFactory: ?*GraphicsFeatureFactory = Inheritance.upcast(?*GraphicsFeatureFactory, GraphicsFeatureFactory.getInstance());
         _ = Inheritance.call(stringBuffer.?, "delete", .{ 0, stringBuffer.?.length() });
         const features: ?*Features = Inheritance.upcast(?*Features, Features.getInstance());
-        if (Inheritance.call(features.?, "isFeature", .{ graphicsFeatureFactory.?.VECTOR_GRAPHICS })) {
-        } else if (Inheritance.call(features.?, "isFeature", .{ graphicsFeatureFactory.?.IMAGE_GRAPHICS })) {
-            if (Object.same(graphicsFeature, graphicsFeatureFactory.?.IMAGE_TO_ARRAY_GRAPHICS) or Object.same(graphicsFeature, graphicsFeatureFactory.?.IMAGE_ROTATION_ON_THE_FLY)) {
-            } else if (Object.same(graphicsFeature, graphicsFeatureFactory.?.SPRITE_FULL_GRAPHICS)) {
+        if (Inheritance.call(features.?, "isFeature", .{ Inheritance.fieldPointer(graphicsFeatureFactory.?, "VECTOR_GRAPHICS").* })) {
+        } else if (Inheritance.call(features.?, "isFeature", .{ Inheritance.fieldPointer(graphicsFeatureFactory.?, "IMAGE_GRAPHICS").* })) {
+            if (Object.same(graphicsFeature, Inheritance.fieldPointer(graphicsFeatureFactory.?, "IMAGE_TO_ARRAY_GRAPHICS").*) or Object.same(graphicsFeature, Inheritance.fieldPointer(graphicsFeatureFactory.?, "IMAGE_ROTATION_ON_THE_FLY").*)) {
+            } else if (Object.same(graphicsFeature, Inheritance.fieldPointer(graphicsFeatureFactory.?, "SPRITE_FULL_GRAPHICS").*)) {
                 _ = Inheritance.call(stringBuffer.?, "append", .{ self.SPRITE });
-            } else if (Object.same(graphicsFeature, graphicsFeatureFactory.?.SPRITE_QUARTER_ROTATION_GRAPHICS)) {
+            } else if (Object.same(graphicsFeature, Inheritance.fieldPointer(graphicsFeatureFactory.?, "SPRITE_QUARTER_ROTATION_GRAPHICS").*)) {
                 _ = Inheritance.call(stringBuffer.?, "append", .{ self.QUARTER });
                 _ = Inheritance.call(stringBuffer.?, "append", .{ self.SPRITE });
             } else {
                 std.debug.panic("{any}", .{exception: { _ = String.literal("None/Unknown Sub Image Resource Type Specified"); break :exception error.Exception; }});
             }
         } else if (Inheritance.receiverOf(OpenGLFeatureUtil.getInstance().?, "isAnyThreed").isAnyThreed()) {
-            _ = Inheritance.call(stringBuffer.?, "append", .{ CanvasStrings.getInstance().?.OBJ_MODEL });
+            _ = Inheritance.call(stringBuffer.?, "append", .{ Inheritance.fieldPointer(CanvasStrings.getInstance().?, "OBJ_MODEL").* });
         } else {
             std.debug.panic("{any}", .{exception: { _ = String.literal("None/Unknown Main Image Resource Type Specified"); break :exception error.Exception; }});
         }

@@ -21,6 +21,7 @@ const Inheritance = @import("zig/Inheritance.zig");
 const GameFeatureControlledInterface = @import("org/allbinary/game/configuration/feature/GameFeatureControlledInterface.zig").GameFeatureControlledInterface;
 const RelativeRelationship = @import("org/allbinary/graphics/RelativeRelationship.zig").RelativeRelationship;
 const BasicArrayList = @import("org/allbinary/util/BasicArrayList.zig").BasicArrayList;
+const Exception = @import("java/lang/Exception.zig").Exception;
 
 // Java interface: an implementation is a pointer and a table of functions
 pub const ResourceRelativeRelationshipFactoryInterface = struct {
@@ -30,8 +31,8 @@ pub const ResourceRelativeRelationshipFactoryInterface = struct {
     object: Object,
     base: GameFeatureControlledInterface,
     toStringFn: *const fn (pointer: *anyopaque) ?*String,
-    getResourceRelativeRelationshipListFn: *const fn (pointer: *anyopaque, resource: ?*String) ?*BasicArrayList,
-    addResourceRelativeRelationshipFn: *const fn (pointer: *anyopaque, resource: ?*String, relativeRelationship: ?*RelativeRelationship) void,
+    getResourceRelativeRelationshipListFn: *const fn (interface_pointer: *anyopaque, resource: ?*String) ?*BasicArrayList,
+    addResourceRelativeRelationshipFn: *const fn (interface_pointer: *anyopaque, resource: ?*String, relativeRelationship: ?*RelativeRelationship) void,
 
     pub fn getResourceRelativeRelationshipList(self: *Self, resource: ?*String) ?*BasicArrayList {
         return self.getResourceRelativeRelationshipListFn(self.pointer, resource);
@@ -47,19 +48,19 @@ pub const ResourceRelativeRelationshipFactoryInterface = struct {
 
     // The interface value of an object with the methods. Like a Java class a method can be declared by the object or a superclass.
     pub fn of(object: anytype) ?*Self {
-        const Implementation = @TypeOf(object);
+        const ImplementationType = @TypeOf(object);
         const Methods = struct {
             fn toString(pointer: *anyopaque) ?*String {
-                const implementation: Implementation = @ptrCast(@alignCast(pointer));
+                const implementation: ImplementationType = @ptrCast(@alignCast(pointer));
                 return String.valueOf(implementation);
             }
-            fn getResourceRelativeRelationshipList(pointer: *anyopaque, resource: ?*String) ?*BasicArrayList {
-                const implementation: Implementation = @ptrCast(@alignCast(pointer));
-                return Inheritance.upcast(?*BasicArrayList, Inheritance.receiver(implementation, "getResourceRelativeRelationshipList").getResourceRelativeRelationshipList(resource));
+            fn getResourceRelativeRelationshipList(interface_pointer: *anyopaque, resource: ?*String) ?*BasicArrayList {
+                const implementation: ImplementationType = @ptrCast(@alignCast(interface_pointer));
+                return Inheritance.upcast(?*BasicArrayList, Inheritance.call(implementation, "getResourceRelativeRelationshipList", .{ resource }));
             }
-            fn addResourceRelativeRelationship(pointer: *anyopaque, resource: ?*String, relativeRelationship: ?*RelativeRelationship) void {
-                const implementation: Implementation = @ptrCast(@alignCast(pointer));
-                return Inheritance.receiver(implementation, "addResourceRelativeRelationship").addResourceRelativeRelationship(resource, relativeRelationship);
+            fn addResourceRelativeRelationship(interface_pointer: *anyopaque, resource: ?*String, relativeRelationship: ?*RelativeRelationship) void {
+                const implementation: ImplementationType = @ptrCast(@alignCast(interface_pointer));
+                return Inheritance.call(implementation, "addResourceRelativeRelationship", .{ resource, relativeRelationship });
             }
         };
         const this = allocator.create(Self) catch unreachable;

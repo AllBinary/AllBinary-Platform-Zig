@@ -20,6 +20,7 @@ const Object = @import("java/lang/Object.zig").Object;
 const Inheritance = @import("zig/Inheritance.zig");
 const AllBinarySensor = @import("org/allbinary/input/AllBinarySensor.zig").AllBinarySensor;
 const NoAllBinarySensor = @import("org/allbinary/input/NoAllBinarySensor.zig").NoAllBinarySensor;
+const Exception = @import("java/lang/Exception.zig").Exception;
 
 pub const SensorGameUpdateProcessor = struct {
     const Self = @This();

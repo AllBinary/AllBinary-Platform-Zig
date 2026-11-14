@@ -20,6 +20,7 @@ const Object = @import("java/lang/Object.zig").Object;
 const Inheritance = @import("zig/Inheritance.zig");
 const EventListenerInterface = @import("org/allbinary/logic/util/event/EventListenerInterface.zig").EventListenerInterface;
 const DisplayChangeEvent = @import("org/allbinary/graphics/displayable/event/DisplayChangeEvent.zig").DisplayChangeEvent;
+const Exception = @import("java/lang/Exception.zig").Exception;
 
 // Java interface: an implementation is a pointer and a table of functions
 pub const DisplayChangeEventListener = struct {
@@ -29,7 +30,7 @@ pub const DisplayChangeEventListener = struct {
     object: Object,
     base: EventListenerInterface,
     toStringFn: *const fn (pointer: *anyopaque) ?*String,
-    onDisplayChangeEventFn: *const fn (pointer: *anyopaque, displayChangeEvent: ?*DisplayChangeEvent) void,
+    onDisplayChangeEventFn: *const fn (interface_pointer: *anyopaque, displayChangeEvent: ?*DisplayChangeEvent) void,
 
     pub fn onDisplayChangeEvent(self: *Self, displayChangeEvent: ?*DisplayChangeEvent) void {
         return self.onDisplayChangeEventFn(self.pointer, displayChangeEvent);
@@ -41,15 +42,15 @@ pub const DisplayChangeEventListener = struct {
 
     // The interface value of an object with the methods. Like a Java class a method can be declared by the object or a superclass.
     pub fn of(object: anytype) ?*Self {
-        const Implementation = @TypeOf(object);
+        const ImplementationType = @TypeOf(object);
         const Methods = struct {
             fn toString(pointer: *anyopaque) ?*String {
-                const implementation: Implementation = @ptrCast(@alignCast(pointer));
+                const implementation: ImplementationType = @ptrCast(@alignCast(pointer));
                 return String.valueOf(implementation);
             }
-            fn onDisplayChangeEvent(pointer: *anyopaque, displayChangeEvent: ?*DisplayChangeEvent) void {
-                const implementation: Implementation = @ptrCast(@alignCast(pointer));
-                return Inheritance.receiver(implementation, "onDisplayChangeEvent").onDisplayChangeEvent(displayChangeEvent);
+            fn onDisplayChangeEvent(interface_pointer: *anyopaque, displayChangeEvent: ?*DisplayChangeEvent) void {
+                const implementation: ImplementationType = @ptrCast(@alignCast(interface_pointer));
+                return Inheritance.call(implementation, "onDisplayChangeEvent", .{ displayChangeEvent });
             }
         };
         const this = allocator.create(Self) catch unreachable;

@@ -6,7 +6,7 @@ const allocator = std.heap.page_allocator;
 const String = @import("java/lang/String.zig").String;
 const Object = @import("java/lang/Object.zig").Object;
 const Inheritance = @import("zig/Inheritance.zig");
-// const Graphics = @import("javax/microedition/lcdui/Graphics.zig").Graphics;
+const Graphics = @import("javax/microedition/lcdui/Graphics.zig").Graphics;
 const BasicColor = @import("org/allbinary/graphics/color/BasicColor.zig").BasicColor;
 const AnimationBehavior = @import("org/allbinary/animation/AnimationBehavior.zig").AnimationBehavior;
 const IndexedAnimation = @import("org/allbinary/animation/IndexedAnimation.zig").IndexedAnimation;
@@ -44,7 +44,7 @@ pub const FillAnimation = struct {
 
     pub fn setBasicColorP(self: *Self, basicColor: ?*BasicColor) void {
         var changed: bool = false;
-        if (Inheritance.receiver(self, "getBasicColorP").getBasicColorP() == null or !Object.same(Inheritance.receiverOf(Inheritance.receiver(self, "getBasicColorP").getBasicColorP().?, "intValue").intValue(), basicColor.?.intValue())) {
+        if (Object.isNull(Inheritance.receiver(self, "getBasicColorP").getBasicColorP()) or !Object.same(Inheritance.receiverOf(Inheritance.receiver(self, "getBasicColorP").getBasicColorP().?, "intValue").intValue(), basicColor.?.intValue())) {
             changed = true;
         }
         _ = Inheritance.call(&self.base, "setBasicColorP", .{ basicColor });
@@ -56,7 +56,7 @@ pub const FillAnimation = struct {
 
     pub fn changeBasicColor(self: *Self, basicColor: ?*BasicColor) void {
         var changed: bool = false;
-        if (Inheritance.receiver(self, "getChangeBasicColor").getChangeBasicColor() == null or !Object.same(Inheritance.receiverOf(Inheritance.receiver(self, "getChangeBasicColor").getChangeBasicColor().?, "intValue").intValue(), basicColor.?.intValue())) {
+        if (Object.isNull(Inheritance.receiver(self, "getChangeBasicColor").getChangeBasicColor()) or !Object.same(Inheritance.receiverOf(Inheritance.receiver(self, "getChangeBasicColor").getChangeBasicColor().?, "intValue").intValue(), basicColor.?.intValue())) {
             changed = true;
         }
         _ = Inheritance.call(&self.base, "changeBasicColor", .{ basicColor });

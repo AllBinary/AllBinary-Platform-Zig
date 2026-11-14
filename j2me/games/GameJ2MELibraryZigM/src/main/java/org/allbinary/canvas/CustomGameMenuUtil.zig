@@ -39,7 +39,7 @@ pub const CustomGameMenuUtil = struct {
         if (Inheritance.callStatic(AppletUtil, "isAppletLoader", .{ canvas })) {
         } else if (J2MEUtil.isHTML()) {
         } else {
-            _ = Inheritance.call(canvas.?, "addCommand", .{ gameCommandsFactory.?.EXIT_COMMAND });
+            _ = Inheritance.call(canvas.?, "addCommand", .{ Inheritance.fieldPointer(gameCommandsFactory.?, "EXIT_COMMAND").* });
         }
     }
 };

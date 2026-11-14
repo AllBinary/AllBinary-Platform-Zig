@@ -56,7 +56,7 @@ pub const Advertisements = struct {
         const size: i32 = self.pageList.?.size();
         if (size > 0) {
             const random: i32 = Inheritance.call(self.myRandomFactory.?, "getAbsoluteNextInt", .{ size });
-            const advertisementProcessorInterface: ?*AdvertisementProcessorInterface = Inheritance.cast(?*AdvertisementProcessorInterface, self.pageList.?.objectArray[@intCast(random)]);
+            const advertisementProcessorInterface: ?*AdvertisementProcessorInterface = Inheritance.cast(?*AdvertisementProcessorInterface, Inheritance.fieldPointer(self.pageList.?, "objectArray").*[@intCast(random)]);
             _ = advertisementProcessorInterface.?.start();
         }
     }
@@ -67,7 +67,7 @@ pub const Advertisements = struct {
             const size: i32 = self.pageList.?.size();
             if (size > 0) {
                 const random: i32 = Inheritance.call(self.myRandomFactory.?, "getAbsoluteNextInt", .{ size });
-                const advertisementProcessorInterface: ?*AdvertisementProcessorInterface = Inheritance.cast(?*AdvertisementProcessorInterface, self.pageList.?.objectArray[@intCast(random)]);
+                const advertisementProcessorInterface: ?*AdvertisementProcessorInterface = Inheritance.cast(?*AdvertisementProcessorInterface, Inheritance.fieldPointer(self.pageList.?, "objectArray").*[@intCast(random)]);
                 _ = advertisementProcessorInterface.?.process();
             }
         }
@@ -78,7 +78,7 @@ pub const Advertisements = struct {
         {
             var index: i32 = self.pageList.?.size();
             while (value_N66593: { index -= 1; break :value_N66593 index; } >= 0) {
-            const advertisementProcessorInterface: ?*AdvertisementProcessorInterface = Inheritance.cast(?*AdvertisementProcessorInterface, self.pageList.?.objectArray[@intCast(index)]);
+            const advertisementProcessorInterface: ?*AdvertisementProcessorInterface = Inheritance.cast(?*AdvertisementProcessorInterface, Inheritance.fieldPointer(self.pageList.?, "objectArray").*[@intCast(index)]);
             _ = advertisementProcessorInterface.?.stop();
             }
         }
@@ -96,7 +96,7 @@ pub const Advertisements = struct {
         {
             var index: i32 = self.bannerList.?.size();
             while (value_N66907: { index -= 1; break :value_N66907 index; } >= 0) {
-            const advertisementProcessorInterface: ?*AdvertisementProcessorInterface = Inheritance.cast(?*AdvertisementProcessorInterface, self.bannerList.?.objectArray[@intCast(index)]);
+            const advertisementProcessorInterface: ?*AdvertisementProcessorInterface = Inheritance.cast(?*AdvertisementProcessorInterface, Inheritance.fieldPointer(self.bannerList.?, "objectArray").*[@intCast(index)]);
             _ = advertisementProcessorInterface.?.start();
             }
         }
@@ -107,7 +107,7 @@ pub const Advertisements = struct {
         {
             var index: i32 = self.bannerList.?.size();
             while (value_N67096: { index -= 1; break :value_N67096 index; } >= 0) {
-            const advertisementProcessorInterface: ?*AdvertisementProcessorInterface = Inheritance.cast(?*AdvertisementProcessorInterface, self.bannerList.?.objectArray[@intCast(index)]);
+            const advertisementProcessorInterface: ?*AdvertisementProcessorInterface = Inheritance.cast(?*AdvertisementProcessorInterface, Inheritance.fieldPointer(self.bannerList.?, "objectArray").*[@intCast(index)]);
             _ = advertisementProcessorInterface.?.stop();
             }
         }
@@ -115,7 +115,7 @@ pub const Advertisements = struct {
     
 
     pub fn getBanner(self: *Self, index: i32) ?*AdvertisementProcessorInterface {
-        const advertisementProcessorInterface: ?*AdvertisementProcessorInterface = Inheritance.cast(?*AdvertisementProcessorInterface, self.bannerList.?.objectArray[@intCast(index)]);
+        const advertisementProcessorInterface: ?*AdvertisementProcessorInterface = Inheritance.cast(?*AdvertisementProcessorInterface, Inheritance.fieldPointer(self.bannerList.?, "objectArray").*[@intCast(index)]);
         return advertisementProcessorInterface;
     }
     

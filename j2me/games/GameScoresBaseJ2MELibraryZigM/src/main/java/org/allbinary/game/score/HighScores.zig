@@ -25,6 +25,7 @@ const BasicArrayList = @import("org/allbinary/util/BasicArrayList.zig").BasicArr
 const BasicArrayListD = @import("org/allbinary/util/BasicArrayListD.zig").BasicArrayListD;
 const HighScore = @import("org/allbinary/game/score/HighScore.zig").HighScore;
 const HighScoresInterface = @import("org/allbinary/game/score/HighScoresInterface.zig").HighScoresInterface;
+const Exception = @import("java/lang/Exception.zig").Exception;
 
 pub const HighScores = struct {
     const Self = @This();
@@ -109,8 +110,8 @@ pub const HighScores = struct {
         const stringBuffer: ?*StringMaker = StringMaker.create();
         _ = Inheritance.call(stringBuffer.?, "append", .{ String.literal("HighScores: ") });
         _ = Inheritance.call(stringBuffer.?, "append", .{ self.heading });
-        _ = Inheritance.call(stringBuffer.?, "append", .{ CommonSeps.getInstance().?.SPACE });
-        _ = Inheritance.call(stringBuffer.?, "append", .{ CommonLabels.getInstance().?.TOTAL_LABEL });
+        _ = Inheritance.call(stringBuffer.?, "append", .{ Inheritance.fieldPointer(CommonSeps.getInstance().?, "SPACE").* });
+        _ = Inheritance.call(stringBuffer.?, "append", .{ Inheritance.fieldPointer(CommonLabels.getInstance().?, "TOTAL_LABEL").* });
         _ = Inheritance.call(stringBuffer.?, "appendint", .{ self.orderedHighScoresList.?.size() });
         return Inheritance.upcast(?*String, Object.toString(Object.of(stringBuffer)));
     }

@@ -53,8 +53,8 @@ pub const HttpData = struct {
         this.initFields();
         const commonSeps: ?*CommonSeps = Inheritance.upcast(?*CommonSeps, CommonSeps.getInstance());
         this.EQUALS = Inheritance.upcast(@TypeOf(this.EQUALS), commonSeps.?.EQUALS);
-        this.PARAM_SEP = Inheritance.upcast(@TypeOf(this.PARAM_SEP), commonSeps.?.AMPERSAND);
-        this.URL_PARAM_SEP = Inheritance.upcast(@TypeOf(this.URL_PARAM_SEP), commonSeps.?.QUESTION);
+        this.PARAM_SEP = Inheritance.upcast(@TypeOf(this.PARAM_SEP), Inheritance.fieldPointer(commonSeps.?, "AMPERSAND").*);
+        this.URL_PARAM_SEP = Inheritance.upcast(@TypeOf(this.URL_PARAM_SEP), Inheritance.fieldPointer(commonSeps.?, "QUESTION").*);
         return this;
     }
 };

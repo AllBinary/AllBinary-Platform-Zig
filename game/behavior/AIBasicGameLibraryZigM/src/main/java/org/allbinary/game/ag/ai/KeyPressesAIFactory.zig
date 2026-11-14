@@ -26,6 +26,7 @@ const AllBinaryLayer = @import("org/allbinary/layer/AllBinaryLayer.zig").AllBina
 const ABHashtable = @import("org/allbinary/util/ABHashtable.zig").ABHashtable;
 const KeyPressesAI = @import("org/allbinary/game/ag/ai/KeyPressesAI.zig").KeyPressesAI;
 const MultiKeyPressesAI = @import("org/allbinary/game/ag/ai/MultiKeyPressesAI.zig").MultiKeyPressesAI;
+const Exception = @import("java/lang/Exception.zig").Exception;
 
 pub const KeyPressesAIFactory = struct {
     const Self = @This();

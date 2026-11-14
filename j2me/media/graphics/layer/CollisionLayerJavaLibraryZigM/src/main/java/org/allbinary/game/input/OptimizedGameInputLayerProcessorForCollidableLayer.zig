@@ -23,6 +23,7 @@ const AllBinaryLayer = @import("org/allbinary/layer/AllBinaryLayer.zig").AllBina
 const AllBinaryLayerManager = @import("org/allbinary/layer/AllBinaryLayerManager.zig").AllBinaryLayerManager;
 const LayerProcessor = @import("org/allbinary/layer/LayerProcessor.zig").LayerProcessor;
 const OptimizedGameInputLayerManager = @import("org/allbinary/game/input/OptimizedGameInputLayerManager.zig").OptimizedGameInputLayerManager;
+const Exception = @import("java/lang/Exception.zig").Exception;
 
 pub const OptimizedGameInputLayerProcessorForCollidableLayer = struct {
     const Self = @This();

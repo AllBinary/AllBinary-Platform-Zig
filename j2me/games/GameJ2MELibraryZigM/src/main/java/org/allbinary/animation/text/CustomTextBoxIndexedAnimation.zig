@@ -18,8 +18,8 @@ const allocator = std.heap.page_allocator;
 const String = @import("java/lang/String.zig").String;
 const Object = @import("java/lang/Object.zig").Object;
 const Inheritance = @import("zig/Inheritance.zig");
-// const Font = @import("javax/microedition/lcdui/Font.zig").Font;
-// const Graphics = @import("javax/microedition/lcdui/Graphics.zig").Graphics;
+const Font = @import("javax/microedition/lcdui/Font.zig").Font;
+const Graphics = @import("javax/microedition/lcdui/Graphics.zig").Graphics;
 const AnimationBehavior = @import("org/allbinary/animation/AnimationBehavior.zig").AnimationBehavior;
 const IndexedAnimation = @import("org/allbinary/animation/IndexedAnimation.zig").IndexedAnimation;
 const RawKeyEventListener = @import("org/allbinary/game/input/event/RawKeyEventListener.zig").RawKeyEventListener;
@@ -45,7 +45,7 @@ pub const CustomTextBoxIndexedAnimation = struct {
 
     fn initFields(this: *Self) void {
         
-        this.lastText = Inheritance.upcast(?*String, StringUtil.getInstance().?.INIT_STRING);
+        this.lastText = Inheritance.upcast(?*String, Inheritance.fieldPointer(StringUtil.getInstance().?, "INIT_STRING").*);
         this.hasChanged = true;
         this.textChangeListener = Inheritance.upcast(?*TextChangeListener, TextChangeListener.getInstance());
     }
@@ -120,6 +120,11 @@ pub const CustomTextBoxIndexedAnimation = struct {
         _ = y;
         _ = z;
         _ = self;
+    }
+    
+
+    pub fn getWidth(self: *Self) i32 {
+        return Inheritance.receiver(&self.base, "getWidth").getWidth();
     }
 };
 

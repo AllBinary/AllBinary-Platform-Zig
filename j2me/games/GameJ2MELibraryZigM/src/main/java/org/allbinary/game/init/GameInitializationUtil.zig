@@ -28,6 +28,7 @@ const MyCanvas = @import("org/allbinary/graphics/displayable/MyCanvas.zig").MyCa
 const AbeClientInformationInterface = @import("org/allbinary/logic/system/security/licensing/AbeClientInformationInterface.zig").AbeClientInformationInterface;
 const BasicBuildGameInitializerFactory = @import("org/allbinary/game/init/BasicBuildGameInitializerFactory.zig").BasicBuildGameInitializerFactory;
 const GameInitializationInterface = @import("org/allbinary/game/init/GameInitializationInterface.zig").GameInitializationInterface;
+const Exception = @import("java/lang/Exception.zig").Exception;
 
 pub const GameInitializationUtil = struct {
     const Self = @This();
@@ -55,15 +56,15 @@ pub const GameInitializationUtil = struct {
     // throws Exception
     pub fn initDemo(self: *Self, abeClientInformation: ?*AbeClientInformationInterface, canvas: ?*MyCanvas, gameInitializationInterfaceFactoryInterface: ?*BasicBuildGameInitializerFactory) void {
         const mainFeatureFactory: ?*MainFeatureFactory = Inheritance.upcast(?*MainFeatureFactory, MainFeatureFactory.getInstance());
-        if (Inheritance.call(ChangedGameFeatureListener.getInstance().?, "isChangedFeature", .{ mainFeatureFactory.?.STATIC })) {
+        if (Inheritance.call(ChangedGameFeatureListener.getInstance().?, "isChangedFeature", .{ Inheritance.fieldPointer(mainFeatureFactory.?, "STATIC").* })) {
             const gameInitializationInterface: ?*GameInitializationInterface = Inheritance.upcast(?*GameInitializationInterface, gameInitializationInterfaceFactoryInterface.?.getInstance());
             const features: ?*Features = Inheritance.upcast(?*Features, Features.getInstance());
-            if (Inheritance.call(features.?, "isFeature", .{ mainFeatureFactory.?.LOAD_ALL })) {
+            if (Inheritance.call(features.?, "isFeature", .{ Inheritance.fieldPointer(mainFeatureFactory.?, "LOAD_ALL").* })) {
                 _ = Inheritance.call(self, "initGame", .{ abeClientInformation, canvas, gameInitializationInterfaceFactoryInterface });
-            } else if (Inheritance.call(features.?, "isFeature", .{ mainFeatureFactory.?.LOAD_ONDEMAND })) {
+            } else if (Inheritance.call(features.?, "isFeature", .{ Inheritance.fieldPointer(mainFeatureFactory.?, "LOAD_ONDEMAND").* })) {
                 const resourceLoadingLevelFactory: ?*ResourceLoadingLevelFactory = Inheritance.upcast(?*ResourceLoadingLevelFactory, ResourceLoadingLevelFactory.getInstance());
-                _ = Inheritance.call(gameInitializationInterface.?, "init", .{ abeClientInformation, Inheritance.receiver(canvas.?, "getCustomCommandListener").getCustomCommandListener(), Inheritance.receiverOf(resourceLoadingLevelFactory.?.LOAD_EARLY.?, "getLevel").getLevel() });
-                _ = Inheritance.call(self.EVENT.?, "setResourceLoadingLevel", .{ resourceLoadingLevelFactory.?.LOAD_EARLY });
+                _ = Inheritance.call(gameInitializationInterface.?, "init", .{ abeClientInformation, Inheritance.receiver(canvas.?, "getCustomCommandListener").getCustomCommandListener(), Inheritance.receiverOf(Inheritance.fieldPointer(resourceLoadingLevelFactory.?, "LOAD_EARLY").*.?, "getLevel").getLevel() });
+                _ = Inheritance.call(self.EVENT.?, "setResourceLoadingLevel", .{ Inheritance.fieldPointer(resourceLoadingLevelFactory.?, "LOAD_EARLY").* });
             } else {
                 std.debug.panic("{any}", .{exception: { _ = String.literal("No Loading Feature Available"); break :exception error.Exception; }});
             }
@@ -74,13 +75,13 @@ pub const GameInitializationUtil = struct {
 
     // throws Exception
     pub fn initGame(self: *Self, abeClientInformation: ?*AbeClientInformationInterface, canvas: ?*MyCanvas, gameInitializationInterfaceFactoryInterface: ?*BasicBuildGameInitializerFactory) void {
-        if (Inheritance.call(ChangedGameFeatureListener.getInstance().?, "isChangedFeature", .{ MainFeatureFactory.getInstance().?.STATIC })) {
+        if (Inheritance.call(ChangedGameFeatureListener.getInstance().?, "isChangedFeature", .{ Inheritance.fieldPointer(MainFeatureFactory.getInstance().?, "STATIC").* })) {
             const gameInitializationInterface: ?*GameInitializationInterface = Inheritance.upcast(?*GameInitializationInterface, gameInitializationInterfaceFactoryInterface.?.getInstance());
             const resourceLoadingLevelFactory: ?*ResourceLoadingLevelFactory = Inheritance.upcast(?*ResourceLoadingLevelFactory, ResourceLoadingLevelFactory.getInstance());
-            _ = Inheritance.call(gameInitializationInterface.?, "init", .{ abeClientInformation, Inheritance.receiver(canvas.?, "getCustomCommandListener").getCustomCommandListener(), Inheritance.receiverOf(resourceLoadingLevelFactory.?.LOAD_ALL.?, "getLevel").getLevel() });
-            _ = Inheritance.call(self.EVENT.?, "setResourceLoadingLevel", .{ resourceLoadingLevelFactory.?.LOAD_ALL });
+            _ = Inheritance.call(gameInitializationInterface.?, "init", .{ abeClientInformation, Inheritance.receiver(canvas.?, "getCustomCommandListener").getCustomCommandListener(), Inheritance.receiverOf(Inheritance.fieldPointer(resourceLoadingLevelFactory.?, "LOAD_ALL").*.?, "getLevel").getLevel() });
+            _ = Inheritance.call(self.EVENT.?, "setResourceLoadingLevel", .{ Inheritance.fieldPointer(resourceLoadingLevelFactory.?, "LOAD_ALL").* });
             _ = Inheritance.call(GameInitializedEventHandler.getInstance().?, "fireEvent", .{ self.EVENT });
-            _ = Inheritance.call(ChangedGameFeatureListener.getInstance().?, "remove", .{ MainFeatureFactory.getInstance().?.STATIC });
+            _ = Inheritance.call(ChangedGameFeatureListener.getInstance().?, "remove", .{ Inheritance.fieldPointer(MainFeatureFactory.getInstance().?, "STATIC").* });
         }
     }
     

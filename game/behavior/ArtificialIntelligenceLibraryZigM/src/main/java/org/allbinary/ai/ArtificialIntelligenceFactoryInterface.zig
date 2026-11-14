@@ -19,6 +19,7 @@ const String = @import("java/lang/String.zig").String;
 const Object = @import("java/lang/Object.zig").Object;
 const Inheritance = @import("zig/Inheritance.zig");
 const ArtificialIntelligence = @import("org/allbinary/ai/ArtificialIntelligence.zig").ArtificialIntelligence;
+const Exception = @import("java/lang/Exception.zig").Exception;
 
 // Java interface: an implementation is a pointer and a table of functions
 pub const ArtificialIntelligenceFactoryInterface = struct {
@@ -27,7 +28,7 @@ pub const ArtificialIntelligenceFactoryInterface = struct {
     pointer: *anyopaque,
     object: Object,
     toStringFn: *const fn (pointer: *anyopaque) ?*String,
-    getInstanceFn: *const fn (pointer: *anyopaque, anyType: ?Object) ?*ArtificialIntelligence,
+    getInstanceFn: *const fn (interface_pointer: *anyopaque, anyType: ?Object) ?*ArtificialIntelligence,
 
     pub fn getInstance(self: *Self, anyType: ?Object) ?*ArtificialIntelligence {
         return self.getInstanceFn(self.pointer, anyType);
@@ -39,15 +40,15 @@ pub const ArtificialIntelligenceFactoryInterface = struct {
 
     // The interface value of an object with the methods. Like a Java class a method can be declared by the object or a superclass.
     pub fn of(object: anytype) ?*Self {
-        const Implementation = @TypeOf(object);
+        const ImplementationType = @TypeOf(object);
         const Methods = struct {
             fn toString(pointer: *anyopaque) ?*String {
-                const implementation: Implementation = @ptrCast(@alignCast(pointer));
+                const implementation: ImplementationType = @ptrCast(@alignCast(pointer));
                 return String.valueOf(implementation);
             }
-            fn getInstance(pointer: *anyopaque, anyType: ?Object) ?*ArtificialIntelligence {
-                const implementation: Implementation = @ptrCast(@alignCast(pointer));
-                return Inheritance.upcast(?*ArtificialIntelligence, Inheritance.receiver(implementation, "getInstance").getInstance(anyType));
+            fn getInstance(interface_pointer: *anyopaque, anyType: ?Object) ?*ArtificialIntelligence {
+                const implementation: ImplementationType = @ptrCast(@alignCast(interface_pointer));
+                return Inheritance.upcast(?*ArtificialIntelligence, Inheritance.call(implementation, "getInstance", .{ anyType }));
             }
         };
         const this = allocator.create(Self) catch unreachable;

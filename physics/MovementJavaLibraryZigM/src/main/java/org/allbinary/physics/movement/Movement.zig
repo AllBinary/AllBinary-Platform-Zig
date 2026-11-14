@@ -21,6 +21,7 @@ const Inheritance = @import("zig/Inheritance.zig");
 const AllBinaryGameLayer = @import("org/allbinary/game/layer/AllBinaryGameLayer.zig").AllBinaryGameLayer;
 const BasicDecimal = @import("org/allbinary/logic/math/BasicDecimal.zig").BasicDecimal;
 const MovementInterface = @import("org/allbinary/physics/movement/MovementInterface.zig").MovementInterface;
+const Exception = @import("java/lang/Exception.zig").Exception;
 
 pub const Movement = struct {
     const Self = @This();

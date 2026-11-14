@@ -34,7 +34,7 @@ pub const GroupCommonFactory = struct {
 
     // Static fields with runtime initializers: call staticInit once at startup
     pub fn staticInit() void {
-        instance = Inheritance.upcast(?Object, NullUtil.getInstance().?.NULL_OBJECT);
+        instance = Inheritance.upcast(?Object, Inheritance.fieldPointer(NullUtil.getInstance().?, "NULL_OBJECT").*);
     }
 
     fn initFields(this: *Self) void {
@@ -54,7 +54,7 @@ pub const GroupCommonFactory = struct {
     
 
     pub fn getInstance() ?*GroupCommonFactory {
-        if (Object.same(GroupCommonFactory.instance, NullUtil.getInstance().?.NULL_OBJECT)) {
+        if (Object.same(GroupCommonFactory.instance, Inheritance.fieldPointer(NullUtil.getInstance().?, "NULL_OBJECT").*)) {
             GroupCommonFactory.instance = Inheritance.upcast(@TypeOf(GroupCommonFactory.instance), GroupCommonFactory.create());
         }
         return Inheritance.cast(?*GroupCommonFactory, GroupCommonFactory.instance);

@@ -18,8 +18,8 @@ const allocator = std.heap.page_allocator;
 const String = @import("java/lang/String.zig").String;
 const Object = @import("java/lang/Object.zig").Object;
 const Inheritance = @import("zig/Inheritance.zig");
-// const InputStream = @import("java/io/InputStream.zig").InputStream;
-// const Player = @import("javax/microedition/media/Player.zig").Player;
+const InputStream = @import("java/io/InputStream.zig").InputStream;
+const Player = @import("javax/microedition/media/Player.zig").Player;
 const TsUtil = @import("org/allbinary/TsUtil.zig").TsUtil;
 const ProgressCanvasFactory = @import("org/allbinary/graphics/canvas/transition/progress/ProgressCanvasFactory.zig").ProgressCanvasFactory;
 const LogUtil = @import("org/allbinary/logic/communication/log/LogUtil.zig").LogUtil;
@@ -28,6 +28,7 @@ const CommonStrings = @import("org/allbinary/string/CommonStrings.zig").CommonSt
 const NoPlayer = @import("org/allbinary/media/audio/NoPlayer.zig").NoPlayer;
 const Sounds = @import("org/allbinary/media/audio/Sounds.zig").Sounds;
 const SoundsFactoryInterface = @import("org/allbinary/media/audio/SoundsFactoryInterface.zig").SoundsFactoryInterface;
+const Exception = @import("java/lang/Exception.zig").Exception;
 
 //NotDeviceSpecificNoMediaMIDP1Library
 pub const AllBinaryMediaManager = struct {
@@ -62,7 +63,7 @@ pub const AllBinaryMediaManager = struct {
     pub fn init(soundsFactoryInterface: ?*SoundsFactoryInterface) void {
         const logUtil: ?*LogUtil = Inheritance.upcast(?*LogUtil, LogUtil.getInstance());
         const commonString: ?*CommonStrings = Inheritance.upcast(?*CommonStrings, CommonStrings.getInstance());
-        _ = Inheritance.call(logUtil.?, "putF", .{ commonString.?.START, AllBinaryMediaManager.THIS, commonString.?.INIT });
+        _ = Inheritance.call(logUtil.?, "putF", .{ Inheritance.fieldPointer(commonString.?, "START").*, AllBinaryMediaManager.THIS, Inheritance.fieldPointer(commonString.?, "INIT").* });
         _ = Inheritance.call(ProgressCanvasFactory.getInstance().?, "addNormalPortion", .{ 50, String.literal("Media Manager") });
         _ = Inheritance.callStatic(Sounds, "create1", .{ soundsFactoryInterface }).init();
     }
@@ -81,7 +82,7 @@ pub const AllBinaryMediaManager = struct {
         _ = @"type";
         const logUtil: ?*LogUtil = Inheritance.upcast(?*LogUtil, LogUtil.getInstance());
         const commonString: ?*CommonStrings = Inheritance.upcast(?*CommonStrings, CommonStrings.getInstance());
-        _ = Inheritance.call(logUtil.?, "putF", .{ commonString.?.START, AllBinaryMediaManager.THIS, String.literal("creatPlayer(InputStream)") });
+        _ = Inheritance.call(logUtil.?, "putF", .{ Inheritance.fieldPointer(commonString.?, "START").*, AllBinaryMediaManager.THIS, String.literal("creatPlayer(InputStream)") });
         return Inheritance.cast(?*Player, NoPlayer.NO_PLAYER);
     }
     
@@ -90,7 +91,7 @@ pub const AllBinaryMediaManager = struct {
         _ = locator;
         const logUtil: ?*LogUtil = Inheritance.upcast(?*LogUtil, LogUtil.getInstance());
         const commonString: ?*CommonStrings = Inheritance.upcast(?*CommonStrings, CommonStrings.getInstance());
-        _ = Inheritance.call(logUtil.?, "putF", .{ commonString.?.START, AllBinaryMediaManager.THIS, String.literal("creatPlayer(locator)") });
+        _ = Inheritance.call(logUtil.?, "putF", .{ Inheritance.fieldPointer(commonString.?, "START").*, AllBinaryMediaManager.THIS, String.literal("creatPlayer(locator)") });
         return Inheritance.cast(?*Player, NoPlayer.NO_PLAYER);
     }
     

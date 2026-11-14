@@ -18,7 +18,8 @@ const allocator = std.heap.page_allocator;
 const String = @import("java/lang/String.zig").String;
 const Object = @import("java/lang/Object.zig").Object;
 const Inheritance = @import("zig/Inheritance.zig");
-// const Player = @import("javax/microedition/media/Player.zig").Player;
+const Player = @import("javax/microedition/media/Player.zig").Player;
+const Exception = @import("java/lang/Exception.zig").Exception;
 
 // Java interface: an implementation is a pointer and a table of functions
 pub const SoundInterface = struct {
@@ -27,9 +28,9 @@ pub const SoundInterface = struct {
     pointer: *anyopaque,
     object: Object,
     toStringFn: *const fn (pointer: *anyopaque) ?*String,
-    getResourceFn: *const fn (pointer: *anyopaque) ?*String,
-    getPlayerPFn: *const fn (pointer: *anyopaque) ?*Player,
-    initFn: *const fn (pointer: *anyopaque) void,
+    getResourceFn: *const fn (interface_pointer: *anyopaque) ?*String,
+    getPlayerPFn: *const fn (interface_pointer: *anyopaque) ?*Player,
+    initFn: *const fn (interface_pointer: *anyopaque) void,
 
     pub fn getResource(self: *Self) ?*String {
         return self.getResourceFn(self.pointer);
@@ -49,22 +50,22 @@ pub const SoundInterface = struct {
 
     // The interface value of an object with the methods. Like a Java class a method can be declared by the object or a superclass.
     pub fn of(object: anytype) ?*Self {
-        const Implementation = @TypeOf(object);
+        const ImplementationType = @TypeOf(object);
         const Methods = struct {
             fn toString(pointer: *anyopaque) ?*String {
-                const implementation: Implementation = @ptrCast(@alignCast(pointer));
+                const implementation: ImplementationType = @ptrCast(@alignCast(pointer));
                 return String.valueOf(implementation);
             }
-            fn getResource(pointer: *anyopaque) ?*String {
-                const implementation: Implementation = @ptrCast(@alignCast(pointer));
+            fn getResource(interface_pointer: *anyopaque) ?*String {
+                const implementation: ImplementationType = @ptrCast(@alignCast(interface_pointer));
                 return Inheritance.upcast(?*String, Inheritance.receiver(implementation, "getResource").getResource());
             }
-            fn getPlayerP(pointer: *anyopaque) ?*Player {
-                const implementation: Implementation = @ptrCast(@alignCast(pointer));
+            fn getPlayerP(interface_pointer: *anyopaque) ?*Player {
+                const implementation: ImplementationType = @ptrCast(@alignCast(interface_pointer));
                 return Inheritance.upcast(?*Player, Inheritance.receiver(implementation, "getPlayerP").getPlayerP());
             }
-            fn init(pointer: *anyopaque) void {
-                const implementation: Implementation = @ptrCast(@alignCast(pointer));
+            fn init(interface_pointer: *anyopaque) void {
+                const implementation: ImplementationType = @ptrCast(@alignCast(interface_pointer));
                 return Inheritance.receiver(implementation, "init").init();
             }
         };

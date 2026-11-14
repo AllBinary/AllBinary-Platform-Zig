@@ -24,6 +24,7 @@ const AllBinaryLayer = @import("org/allbinary/layer/AllBinaryLayer.zig").AllBina
 const AllBinaryLayerCircularPool = @import("org/allbinary/layer/AllBinaryLayerCircularPool.zig").AllBinaryLayerCircularPool;
 const AllBinaryLayerFactoryInterface = @import("org/allbinary/layer/AllBinaryLayerFactoryInterface.zig").AllBinaryLayerFactoryInterface;
 const LifeLayer = @import("org/allbinary/game/ag/layer/pickup/life/LifeLayer.zig").LifeLayer;
+const Exception = @import("java/lang/Exception.zig").Exception;
 
 pub const LifeLayerCircularStaticPool = struct {
     const Self = @This();

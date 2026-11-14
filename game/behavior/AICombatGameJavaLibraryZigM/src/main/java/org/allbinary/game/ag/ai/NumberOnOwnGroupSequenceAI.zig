@@ -25,6 +25,7 @@ const GroupLayerManagerListener = @import("org/allbinary/game/layer/identificati
 const AllBinaryLayer = @import("org/allbinary/layer/AllBinaryLayer.zig").AllBinaryLayer;
 const AllBinaryLayerManager = @import("org/allbinary/layer/AllBinaryLayerManager.zig").AllBinaryLayerManager;
 const Integer = @import("java/lang/Integer.zig").Integer;
+const Exception = @import("java/lang/Exception.zig").Exception;
 
 pub const NumberOnOwnGroupSequenceAI = struct {
     const Self = @This();
@@ -55,7 +56,7 @@ pub const NumberOnOwnGroupSequenceAI = struct {
         const index: i32 = Inheritance.receiver(self, "getIndex").getIndex();
         if (@as(i32, @intCast(self.numberOnSameTeam.len)) > index) {
             const size: i32 = Inheritance.call(GroupLayerManagerListener.getInstance().?, "getGroupSizeFromInterface", .{ layerInterface });
-            if (self.numberOnSameTeam[@intCast(index)].?.intValue() > size) {
+            if (Inheritance.arithmetic(.greater, self.numberOnSameTeam[@intCast(index)].?.intValue(), size)) {
                 _ = Inheritance.receiver(self, "next").next();
             }
         }

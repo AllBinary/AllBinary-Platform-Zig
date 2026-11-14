@@ -38,7 +38,7 @@ pub const GameTypeFactory = struct {
 
     fn initFields(this: *Self) void {
         this.NULL_GAME_TYPE_ARRAY = array_N65727: { const array_N65727_array = allocator.alloc(?*GameType, @intCast(0)) catch unreachable; @memset(array_N65727_array, null); break :array_N65727 array_N65727_array; };
-        this.NONE = Inheritance.callStatic(GameType, "create1", .{ StringUtil.getInstance().?.NULL_STRING });
+        this.NONE = Inheritance.callStatic(GameType, "create1", .{ Inheritance.fieldPointer(StringUtil.getInstance().?, "NULL_STRING").* });
         this.SINGLE_PLAYER = Inheritance.callStatic(GameType, "create1", .{ String.literal("Single Player") });
         this.MULTI_PLAYER = Inheritance.callStatic(GameType, "create1", .{ String.literal("Multi Player") });
         this.BOT = Inheritance.callStatic(GameType, "create1", .{ String.literal("Artificial Player") });

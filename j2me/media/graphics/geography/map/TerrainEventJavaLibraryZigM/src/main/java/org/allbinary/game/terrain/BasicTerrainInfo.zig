@@ -29,7 +29,7 @@ pub const BasicTerrainInfo = struct {
 
     // Static fields with runtime initializers: call staticInit once at startup
     pub fn staticInit() void {
-        NULL_BASIC_TERRAIN_INFO = Inheritance.callStatic(BasicTerrainInfo, "create1", .{ AngleFactory.getInstance().?.NOT_ANGLE });
+        NULL_BASIC_TERRAIN_INFO = Inheritance.callStatic(BasicTerrainInfo, "create1", .{ Inheritance.fieldPointer(AngleFactory.getInstance().?, "NOT_ANGLE").* });
     }
 
     fn initFields(this: *Self) void {

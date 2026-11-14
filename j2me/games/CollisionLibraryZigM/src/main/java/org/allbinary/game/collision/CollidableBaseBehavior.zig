@@ -18,7 +18,7 @@ const allocator = std.heap.page_allocator;
 const String = @import("java/lang/String.zig").String;
 const Object = @import("java/lang/Object.zig").Object;
 const Inheritance = @import("zig/Inheritance.zig");
-// const Graphics = @import("javax/microedition/lcdui/Graphics.zig").Graphics;
+const Graphics = @import("javax/microedition/lcdui/Graphics.zig").Graphics;
 const CollidableCompositeLayer = @import("org/allbinary/game/layer/CollidableCompositeLayer.zig").CollidableCompositeLayer;
 const AllBinaryLayer = @import("org/allbinary/layer/AllBinaryLayer.zig").AllBinaryLayer;
 const LogUtil = @import("org/allbinary/logic/communication/log/LogUtil.zig").LogUtil;
@@ -30,6 +30,7 @@ const CollidableInterfaceCompositeInterface = @import("org/allbinary/game/collis
 const CollisionType = @import("org/allbinary/game/collision/CollisionType.zig").CollisionType;
 const CollisionTypeFactory = @import("org/allbinary/game/collision/CollisionTypeFactory.zig").CollisionTypeFactory;
 const LayerCollisionUtil = @import("org/allbinary/game/collision/LayerCollisionUtil.zig").LayerCollisionUtil;
+const Exception = @import("java/lang/Exception.zig").Exception;
 
 pub const CollidableBaseBehavior = struct {
     const Self = @This();
@@ -83,7 +84,7 @@ pub const CollidableBaseBehavior = struct {
     pub fn collide(self: *Self, ownerLayer: ?*CollidableCompositeLayer, allbinaryCollidableLayer: ?*CollidableCompositeLayer) void {
         _ = ownerLayer;
         _ = allbinaryCollidableLayer;
-        std.debug.panic("{any}", .{exception: { _ = Object.toString(Object.of(Inheritance.call(Inheritance.call(Inheritance.call(StringMaker.create(), "append", .{ self.commonStrings.?.NOT_IMPLEMENTED }).?, "append", .{ CommonLabels.getInstance().?.COLON_SEP }).?, "append", .{ String.fromBytes(@as(*const Object.Class, @ptrCast(@alignCast(@as(?*anyopaque, @ptrCast(@constCast(Object.of(self).?.class))).?))).name) }))); break :exception error.Exception; }});
+        std.debug.panic("{any}", .{exception: { _ = Object.toString(Object.of(Inheritance.call(Inheritance.call(Inheritance.call(StringMaker.create(), "append", .{ Inheritance.fieldPointer(self.commonStrings.?, "NOT_IMPLEMENTED").* }).?, "append", .{ Inheritance.fieldPointer(CommonLabels.getInstance().?, "COLON_SEP").* }).?, "append", .{ String.fromBytes(@as(*const Object.Class, @ptrCast(@alignCast(@as(?*anyopaque, @ptrCast(@constCast(Object.of(self).?.class))).?))).name) }))); break :exception error.Exception; }});
     }
     
 
@@ -101,7 +102,7 @@ pub const CollidableBaseBehavior = struct {
     pub fn collideInterface(self: *Self, ownerLayer: ?*CollidableCompositeLayer, collidableInterfaceCompositeInterface: ?*CollidableInterfaceCompositeInterface) void {
         _ = ownerLayer;
         _ = collidableInterfaceCompositeInterface;
-        std.debug.panic("{any}", .{exception: { _ = self.commonStrings.?.NOT_IMPLEMENTED; break :exception error.Exception; }});
+        std.debug.panic("{any}", .{exception: { _ = Inheritance.fieldPointer(self.commonStrings.?, "NOT_IMPLEMENTED").*; break :exception error.Exception; }});
     }
     
 
@@ -115,7 +116,7 @@ pub const CollidableBaseBehavior = struct {
     pub fn getCollisionTypeWith(self: *Self, layerInterface: ?*AllBinaryLayer) ?*CollisionType {
         _ = layerInterface;
         _ = self;
-        return Inheritance.upcast(?*CollisionType, CollisionTypeFactory.getInstance().?.NONE);
+        return Inheritance.upcast(?*CollisionType, Inheritance.fieldPointer(CollisionTypeFactory.getInstance().?, "NONE").*);
     }
 };
 

@@ -59,12 +59,12 @@ pub const BaseChangedGameFeatureListener = struct {
 
     pub fn onEvent(self: *Self, eventObject: ?*AllBinaryEventObject) void {
         _ = eventObject;
-        _ = Inheritance.callStatic(ForcedLogUtil, "log", .{ CommonStrings.getInstance().?.NOT_IMPLEMENTED, self });
+        _ = Inheritance.callStatic(ForcedLogUtil, "log", .{ Inheritance.fieldPointer(CommonStrings.getInstance().?, "NOT_IMPLEMENTED").*, self });
     }
     
 
     pub fn onGameFeatureChange(self: *Self, gameFeatureEvent: ?*GameFeatureEvent) void {
-        _ = Inheritance.call(self.logUtil.?, "putF", .{ Object.toString(Object.of(Inheritance.call(Inheritance.call(StringMaker.create(), "append", .{ self.gameFeatureUtil.?.GAME_FEATURE_CHANGED }).?, "append", .{ Inheritance.receiver(gameFeatureEvent.?, "getWhatChanged").getWhatChanged() }))), self, self.gameFeatureUtil.?.ON_GAME_FEATURE_CHANGE });
+        _ = Inheritance.call(self.logUtil.?, "putF", .{ Object.toString(Object.of(Inheritance.call(Inheritance.call(StringMaker.create(), "append", .{ Inheritance.fieldPointer(self.gameFeatureUtil.?, "GAME_FEATURE_CHANGED").* }).?, "append", .{ Inheritance.receiver(gameFeatureEvent.?, "getWhatChanged").getWhatChanged() }))), self, Inheritance.fieldPointer(self.gameFeatureUtil.?, "ON_GAME_FEATURE_CHANGE").* });
         _ = Inheritance.call(self.list.?, "add", .{ Inheritance.receiver(gameFeatureEvent.?, "getGameOption").getGameOption() });
         _ = Inheritance.call(self, "setChanged", .{ true });
     }

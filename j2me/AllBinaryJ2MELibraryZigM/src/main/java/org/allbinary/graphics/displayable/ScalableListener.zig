@@ -26,10 +26,10 @@ pub const ScalableListener = struct {
     pointer: *anyopaque,
     object: Object,
     toStringFn: *const fn (pointer: *anyopaque) ?*String,
-    getRatioFn: *const fn (pointer: *anyopaque, ratio: f32) f32,
-    getLeftFn: *const fn (pointer: *anyopaque, xOffset: i32) i32,
-    getTopFn: *const fn (pointer: *anyopaque, yOffset: i32) i32,
-    scaleFn: *const fn (pointer: *anyopaque, ratio: f32) void,
+    getRatioFn: *const fn (interface_pointer: *anyopaque, ratio: f32) f32,
+    getLeftFn: *const fn (interface_pointer: *anyopaque, xOffset: i32) i32,
+    getTopFn: *const fn (interface_pointer: *anyopaque, yOffset: i32) i32,
+    scaleFn: *const fn (interface_pointer: *anyopaque, ratio: f32) void,
 
     pub fn getRatio(self: *Self, ratio: f32) f32 {
         return self.getRatioFn(self.pointer, ratio);
@@ -53,27 +53,27 @@ pub const ScalableListener = struct {
 
     // The interface value of an object with the methods. Like a Java class a method can be declared by the object or a superclass.
     pub fn of(object: anytype) ?*Self {
-        const Implementation = @TypeOf(object);
+        const ImplementationType = @TypeOf(object);
         const Methods = struct {
             fn toString(pointer: *anyopaque) ?*String {
-                const implementation: Implementation = @ptrCast(@alignCast(pointer));
+                const implementation: ImplementationType = @ptrCast(@alignCast(pointer));
                 return String.valueOf(implementation);
             }
-            fn getRatio(pointer: *anyopaque, ratio: f32) f32 {
-                const implementation: Implementation = @ptrCast(@alignCast(pointer));
-                return Inheritance.receiver(implementation, "getRatio").getRatio(ratio);
+            fn getRatio(interface_pointer: *anyopaque, ratio: f32) f32 {
+                const implementation: ImplementationType = @ptrCast(@alignCast(interface_pointer));
+                return Inheritance.call(implementation, "getRatio", .{ ratio });
             }
-            fn getLeft(pointer: *anyopaque, xOffset: i32) i32 {
-                const implementation: Implementation = @ptrCast(@alignCast(pointer));
-                return Inheritance.receiver(implementation, "getLeft").getLeft(xOffset);
+            fn getLeft(interface_pointer: *anyopaque, xOffset: i32) i32 {
+                const implementation: ImplementationType = @ptrCast(@alignCast(interface_pointer));
+                return Inheritance.call(implementation, "getLeft", .{ xOffset });
             }
-            fn getTop(pointer: *anyopaque, yOffset: i32) i32 {
-                const implementation: Implementation = @ptrCast(@alignCast(pointer));
-                return Inheritance.receiver(implementation, "getTop").getTop(yOffset);
+            fn getTop(interface_pointer: *anyopaque, yOffset: i32) i32 {
+                const implementation: ImplementationType = @ptrCast(@alignCast(interface_pointer));
+                return Inheritance.call(implementation, "getTop", .{ yOffset });
             }
-            fn scale(pointer: *anyopaque, ratio: f32) void {
-                const implementation: Implementation = @ptrCast(@alignCast(pointer));
-                return Inheritance.receiver(implementation, "scale").scale(ratio);
+            fn scale(interface_pointer: *anyopaque, ratio: f32) void {
+                const implementation: ImplementationType = @ptrCast(@alignCast(interface_pointer));
+                return Inheritance.call(implementation, "scale", .{ ratio });
             }
         };
         const this = allocator.create(Self) catch unreachable;

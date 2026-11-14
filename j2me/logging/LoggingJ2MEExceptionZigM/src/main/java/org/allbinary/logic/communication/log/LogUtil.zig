@@ -61,7 +61,7 @@ pub const LogUtil = struct {
             return;
         }
         const exception: ?Object = Inheritance.upcast(?Object, log.?.getThrowable());
-        if (exception == null) {
+        if (Object.isNull(exception)) {
             return;
         }
         const specialMessage: ?*String = Inheritance.upcast(?*String, log.?.getSpecialMessage());
@@ -88,8 +88,8 @@ pub const LogUtil = struct {
     
 
     pub fn put(self: *Self, specialMessage: ?*String, anyType: ?Object, functionName: ?*String, exception: ?Object) void {
-        var className: ?*String = Inheritance.upcast(?*String, CommonStrings.getInstance().?.EMPTY);
-        if (String.fromBytes(@as(*const Object.Class, @ptrCast(@alignCast(@as(?*anyopaque, @ptrCast(@constCast(Object.of(anyType).?.class))).?))).name) != null) {
+        var className: ?*String = Inheritance.upcast(?*String, Inheritance.fieldPointer(CommonStrings.getInstance().?, "EMPTY").*);
+        if (!Object.isNull(String.fromBytes(@as(*const Object.Class, @ptrCast(@alignCast(@as(?*anyopaque, @ptrCast(@constCast(Object.of(anyType).?.class))).?))).name))) {
             className = Inheritance.callStatic(String, "create1", .{ String.fromBytes(@as(*const Object.Class, @ptrCast(@alignCast(@as(?*anyopaque, @ptrCast(@constCast(Object.of(anyType).?.class))).?))).name) });
         }
         const message: ?*String = Inheritance.upcast(?*String, Inheritance.call(self.logFormatUtil.?, "get", .{ className, functionName, specialMessage, exception }));

@@ -23,6 +23,7 @@ const AllBinaryLayerManager = @import("org/allbinary/layer/AllBinaryLayerManager
 const BasicLayerProcessor = @import("org/allbinary/layer/BasicLayerProcessor.zig").BasicLayerProcessor;
 const BasicArrayList = @import("org/allbinary/util/BasicArrayList.zig").BasicArrayList;
 const DropLayerInterface = @import("org/allbinary/game/layer/drop/DropLayerInterface.zig").DropLayerInterface;
+const Exception = @import("java/lang/Exception.zig").Exception;
 
 pub const DropLayerProcessor = struct {
     const Self = @This();
@@ -59,7 +60,7 @@ pub const DropLayerProcessor = struct {
         {
             var index: i32 = 0;
             while (index < size) : (index += 1) {
-            layerInterface = Inheritance.cast(?*AllBinaryLayer, list.?.objectArray[@intCast(index)]);
+            layerInterface = Inheritance.cast(?*AllBinaryLayer, Inheritance.fieldPointer(list.?, "objectArray").*[@intCast(index)]);
             dropLayerInterface = Inheritance.cast(?*DropLayerInterface, layerInterface);
             layerInterface = Inheritance.cast(?*AllBinaryLayer, Inheritance.receiver(dropLayerInterface.?, "getDroppedLayer").getDroppedLayer());
             _ = Inheritance.call(allBinaryLayerManager.?, "append", .{ layerInterface });

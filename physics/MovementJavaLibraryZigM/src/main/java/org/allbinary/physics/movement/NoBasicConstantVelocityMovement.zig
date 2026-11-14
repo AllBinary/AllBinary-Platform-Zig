@@ -22,6 +22,7 @@ const AllBinaryGameLayer = @import("org/allbinary/game/layer/AllBinaryGameLayer.
 const BasicVelocityProperties = @import("org/allbinary/game/physics/velocity/BasicVelocityProperties.zig").BasicVelocityProperties;
 const BasicDecimal = @import("org/allbinary/logic/math/BasicDecimal.zig").BasicDecimal;
 const BasicConstantVelocityMovement = @import("org/allbinary/physics/movement/BasicConstantVelocityMovement.zig").BasicConstantVelocityMovement;
+const Exception = @import("java/lang/Exception.zig").Exception;
 
 pub const NoBasicConstantVelocityMovement = struct {
     const Self = @This();

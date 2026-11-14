@@ -26,7 +26,7 @@ pub const StateControlledInterface = struct {
     pointer: *anyopaque,
     object: Object,
     toStringFn: *const fn (pointer: *anyopaque) ?*String,
-    setStateFn: *const fn (pointer: *anyopaque, state: i32) void,
+    setStateFn: *const fn (interface_pointer: *anyopaque, state: i32) void,
 
     pub fn setState(self: *Self, state: i32) void {
         return self.setStateFn(self.pointer, state);
@@ -38,15 +38,15 @@ pub const StateControlledInterface = struct {
 
     // The interface value of an object with the methods. Like a Java class a method can be declared by the object or a superclass.
     pub fn of(object: anytype) ?*Self {
-        const Implementation = @TypeOf(object);
+        const ImplementationType = @TypeOf(object);
         const Methods = struct {
             fn toString(pointer: *anyopaque) ?*String {
-                const implementation: Implementation = @ptrCast(@alignCast(pointer));
+                const implementation: ImplementationType = @ptrCast(@alignCast(pointer));
                 return String.valueOf(implementation);
             }
-            fn setState(pointer: *anyopaque, state: i32) void {
-                const implementation: Implementation = @ptrCast(@alignCast(pointer));
-                return Inheritance.receiver(implementation, "setState").setState(state);
+            fn setState(interface_pointer: *anyopaque, state: i32) void {
+                const implementation: ImplementationType = @ptrCast(@alignCast(interface_pointer));
+                return Inheritance.call(implementation, "setState", .{ state });
             }
         };
         const this = allocator.create(Self) catch unreachable;

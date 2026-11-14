@@ -25,6 +25,7 @@ const TimeDelayHelper = @import("org/allbinary/time/TimeDelayHelper.zig").TimeDe
 const BasicArrayList = @import("org/allbinary/util/BasicArrayList.zig").BasicArrayList;
 const CommandFormInputProcessor = @import("org/allbinary/game/displayable/canvas/CommandFormInputProcessor.zig").CommandFormInputProcessor;
 const GameCommandCanvas = @import("org/allbinary/game/displayable/canvas/GameCommandCanvas.zig").GameCommandCanvas;
+const Exception = @import("java/lang/Exception.zig").Exception;
 
 pub const ImmediateCommandFormInputProcessor = struct {
     const Self = @This();
@@ -58,11 +59,11 @@ pub const ImmediateCommandFormInputProcessor = struct {
             _ = Inheritance.call(&self.base, "onPressGameKeyEvent", .{ gameKeyEvent });
             if (self.timeHelper.?.isTimeTNT()) {
                 _ = Inheritance.receiver(self, "processInputList").processInputList();
-                _ = Inheritance.call(self.gameCommandCanvas.?.repaintBehavior.?, "onChangeRepaint", .{ Inheritance.receiver(self, "getCanvas").getCanvas() });
+                _ = Inheritance.call(Inheritance.fieldPointer(self.gameCommandCanvas.?, "repaintBehavior").*.?, "onChangeRepaint", .{ Inheritance.receiver(self, "getCanvas").getCanvas() });
             }
         }
         // catch (Exception e):
-//             _ = Inheritance.call(Inheritance.fieldPointer(self, "logUtil").*.?, "put", .{ Inheritance.fieldPointer(self, "commonStrings").*.?.EXCEPTION, self, Inheritance.fieldPointer(self, "gameInputStrings").*.?.ON_PRESS_GAME_KEY, e });
+//             _ = Inheritance.call(Inheritance.fieldPointer(self, "logUtil").*.?, "put", .{ Inheritance.fieldPointer(Inheritance.fieldPointer(self, "commonStrings").*.?, "EXCEPTION").*, self, Inheritance.fieldPointer(Inheritance.fieldPointer(self, "gameInputStrings").*.?, "ON_PRESS_GAME_KEY").*, e });
     }
     
 
@@ -74,11 +75,11 @@ pub const ImmediateCommandFormInputProcessor = struct {
             _ = Inheritance.call(&self.base, "onDownGameKeyEvent", .{ gameKeyEvent });
             if (self.timeHelper.?.isTimeTNT()) {
                 _ = Inheritance.receiver(self, "processInputList").processInputList();
-                _ = Inheritance.call(self.gameCommandCanvas.?.repaintBehavior.?, "onChangeRepaint", .{ Inheritance.receiver(self, "getCanvas").getCanvas() });
+                _ = Inheritance.call(Inheritance.fieldPointer(self.gameCommandCanvas.?, "repaintBehavior").*.?, "onChangeRepaint", .{ Inheritance.receiver(self, "getCanvas").getCanvas() });
             }
         }
         // catch (Exception e):
-//             _ = Inheritance.call(Inheritance.fieldPointer(self, "logUtil").*.?, "put", .{ Inheritance.fieldPointer(self, "commonStrings").*.?.EXCEPTION, self, Inheritance.fieldPointer(self, "gameInputStrings").*.?.ON_DOWN_GAME_KEY, e });
+//             _ = Inheritance.call(Inheritance.fieldPointer(self, "logUtil").*.?, "put", .{ Inheritance.fieldPointer(Inheritance.fieldPointer(self, "commonStrings").*.?, "EXCEPTION").*, self, Inheritance.fieldPointer(Inheritance.fieldPointer(self, "gameInputStrings").*.?, "ON_DOWN_GAME_KEY").*, e });
     }
     
 
@@ -90,11 +91,11 @@ pub const ImmediateCommandFormInputProcessor = struct {
             _ = Inheritance.call(&self.base, "onUpGameKeyEvent", .{ gameKeyEvent });
             if (self.timeHelper.?.isTimeTNT()) {
                 _ = Inheritance.receiver(self, "processInputList").processInputList();
-                _ = Inheritance.call(self.gameCommandCanvas.?.repaintBehavior.?, "onChangeRepaint", .{ Inheritance.receiver(self, "getCanvas").getCanvas() });
+                _ = Inheritance.call(Inheritance.fieldPointer(self.gameCommandCanvas.?, "repaintBehavior").*.?, "onChangeRepaint", .{ Inheritance.receiver(self, "getCanvas").getCanvas() });
             }
         }
         // catch (Exception e):
-//             _ = Inheritance.call(Inheritance.fieldPointer(self, "logUtil").*.?, "put", .{ Inheritance.fieldPointer(self, "commonStrings").*.?.EXCEPTION, self, Inheritance.fieldPointer(self, "gameInputStrings").*.?.ON_UP_GAME_KEY, e });
+//             _ = Inheritance.call(Inheritance.fieldPointer(self, "logUtil").*.?, "put", .{ Inheritance.fieldPointer(Inheritance.fieldPointer(self, "commonStrings").*.?, "EXCEPTION").*, self, Inheritance.fieldPointer(Inheritance.fieldPointer(self, "gameInputStrings").*.?, "ON_UP_GAME_KEY").*, e });
     }
     
 
@@ -103,11 +104,11 @@ pub const ImmediateCommandFormInputProcessor = struct {
             _ = Inheritance.call(&self.base, "onMotionGestureEvent", .{ motionGestureEvent });
             if (self.timeHelper.?.isTimeTNT()) {
                 _ = Inheritance.receiver(self, "processInputList").processInputList();
-                _ = Inheritance.call(self.gameCommandCanvas.?.repaintBehavior.?, "onChangeRepaint", .{ Inheritance.receiver(self, "getCanvas").getCanvas() });
+                _ = Inheritance.call(Inheritance.fieldPointer(self.gameCommandCanvas.?, "repaintBehavior").*.?, "onChangeRepaint", .{ Inheritance.receiver(self, "getCanvas").getCanvas() });
             }
         }
         // catch (Exception e):
-//             _ = Inheritance.call(Inheritance.fieldPointer(self, "logUtil").*.?, "put", .{ Inheritance.fieldPointer(self, "commonStrings").*.?.EXCEPTION, self, String.literal("onMotionGestureEvent"), e });
+//             _ = Inheritance.call(Inheritance.fieldPointer(self, "logUtil").*.?, "put", .{ Inheritance.fieldPointer(Inheritance.fieldPointer(self, "commonStrings").*.?, "EXCEPTION").*, self, String.literal("onMotionGestureEvent"), e });
     }
 };
 

@@ -48,13 +48,13 @@ pub const Vertex = struct {
     pub fn toString(self: *Self) ?*String {
         const stringBuffer: ?*StringMaker = StringMaker.create();
         const positionStrings: ?*PositionStrings = Inheritance.upcast(?*PositionStrings, PositionStrings.getInstance());
-        _ = Inheritance.call(stringBuffer.?, "append", .{ positionStrings.?.X_LABEL });
+        _ = Inheritance.call(stringBuffer.?, "append", .{ Inheritance.fieldPointer(positionStrings.?, "X_LABEL").* });
         _ = Inheritance.call(stringBuffer.?, "append", .{ Object.toString(Object.of(self.x)) });
-        _ = Inheritance.call(stringBuffer.?, "append", .{ CommonSeps.getInstance().?.SPACE });
-        _ = Inheritance.call(stringBuffer.?, "append", .{ positionStrings.?.Y_LABEL });
+        _ = Inheritance.call(stringBuffer.?, "append", .{ Inheritance.fieldPointer(CommonSeps.getInstance().?, "SPACE").* });
+        _ = Inheritance.call(stringBuffer.?, "append", .{ Inheritance.fieldPointer(positionStrings.?, "Y_LABEL").* });
         _ = Inheritance.call(stringBuffer.?, "append", .{ Object.toString(Object.of(self.y)) });
-        _ = Inheritance.call(stringBuffer.?, "append", .{ CommonSeps.getInstance().?.SPACE });
-        _ = Inheritance.call(stringBuffer.?, "append", .{ positionStrings.?.Z_LABEL });
+        _ = Inheritance.call(stringBuffer.?, "append", .{ Inheritance.fieldPointer(CommonSeps.getInstance().?, "SPACE").* });
+        _ = Inheritance.call(stringBuffer.?, "append", .{ Inheritance.fieldPointer(positionStrings.?, "Z_LABEL").* });
         _ = Inheritance.call(stringBuffer.?, "append", .{ Object.toString(Object.of(self.z)) });
         return Inheritance.upcast(?*String, Object.toString(Object.of(stringBuffer)));
     }

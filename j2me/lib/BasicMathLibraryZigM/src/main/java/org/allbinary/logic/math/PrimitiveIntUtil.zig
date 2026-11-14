@@ -33,12 +33,12 @@ pub const PrimitiveIntUtil = struct {
     
 
     pub fn getArrayInstance() []i32 {
-        return NullUtil.getInstance().?.NULL_INT_ARRAY;
+        return Inheritance.fieldPointer(NullUtil.getInstance().?, "NULL_INT_ARRAY").*;
     }
     
 
     pub fn getTwoDimensionalArrayInstance() [][]i32 {
-        return NullUtil.getInstance().?.NULL_INT_ARRAY_ARRAY;
+        return Inheritance.fieldPointer(NullUtil.getInstance().?, "NULL_INT_ARRAY_ARRAY").*;
     }
 };
 

@@ -25,7 +25,7 @@ pub const Collision2DProcessor = struct {
 
     pub fn isCollision(self: *Self, myLayer: ?*AllBinaryLayer, myLayer2: ?*AllBinaryLayer) bool {
         _ = self;
-        if (Inheritance.receiver(myLayer2.?, "getXP").getXP() >= Inheritance.receiver(myLayer.?, "getX2").getX2() or Inheritance.receiver(myLayer2.?, "getYP").getYP() >= Inheritance.receiver(myLayer.?, "getY2").getY2() or Inheritance.receiver(myLayer2.?, "getX2").getX2() <= Inheritance.receiver(myLayer.?, "getXP").getXP() or Inheritance.receiver(myLayer2.?, "getY2").getY2() <= Inheritance.receiver(myLayer.?, "getYP").getYP()) {
+        if (Inheritance.arithmetic(.greater_equal, Inheritance.receiver(myLayer2.?, "getXP").getXP(), Inheritance.receiver(myLayer.?, "getX2").getX2()) or Inheritance.arithmetic(.greater_equal, Inheritance.receiver(myLayer2.?, "getYP").getYP(), Inheritance.receiver(myLayer.?, "getY2").getY2()) or Inheritance.arithmetic(.less_equal, Inheritance.receiver(myLayer2.?, "getX2").getX2(), Inheritance.receiver(myLayer.?, "getXP").getXP()) or Inheritance.arithmetic(.less_equal, Inheritance.receiver(myLayer2.?, "getY2").getY2(), Inheritance.receiver(myLayer.?, "getYP").getYP())) {
             return false;
         } else {
             return true;

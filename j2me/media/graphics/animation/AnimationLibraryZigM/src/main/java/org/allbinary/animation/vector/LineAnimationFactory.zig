@@ -23,6 +23,7 @@ const AnimationInterfaceFactoryInterface = @import("org/allbinary/animation/Anim
 const BasicColor = @import("org/allbinary/graphics/color/BasicColor.zig").BasicColor;
 const ScaleProperties = @import("org/allbinary/media/ScaleProperties.zig").ScaleProperties;
 const LineAnimation = @import("org/allbinary/animation/vector/LineAnimation.zig").LineAnimation;
+const Exception = @import("java/lang/Exception.zig").Exception;
 
 pub const LineAnimationFactory = struct {
     const Self = @This();

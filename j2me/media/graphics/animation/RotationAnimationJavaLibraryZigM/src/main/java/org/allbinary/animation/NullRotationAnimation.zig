@@ -11,6 +11,7 @@ const AngleInfo = @import("org/allbinary/math/AngleInfo.zig").AngleInfo;
 const CircularIndexUtil = @import("org/allbinary/util/CircularIndexUtil.zig").CircularIndexUtil;
 const AnimationBehavior = @import("org/allbinary/animation/AnimationBehavior.zig").AnimationBehavior;
 const RotationAnimation = @import("org/allbinary/animation/RotationAnimation.zig").RotationAnimation;
+const Exception = @import("java/lang/Exception.zig").Exception;
 
 pub const NullRotationAnimation = struct {
     const Self = @This();
@@ -24,7 +25,7 @@ pub const NullRotationAnimation = struct {
     
 
     pub fn createQuarter(animationBehavior: ?*AnimationBehavior) ?*NullRotationAnimation {
-        return Inheritance.callStatic(NullRotationAnimation, "create3", .{ Inheritance.callStatic(AngleInfo, "getInstance", .{ AngleFactory.getInstance().?.QUARTER_TOTAL_ANGLE }), Inheritance.callStatic(CircularIndexUtil, "createInstance", .{ 4 }), animationBehavior });
+        return Inheritance.callStatic(NullRotationAnimation, "create3", .{ Inheritance.callStatic(AngleInfo, "getInstance", .{ Inheritance.fieldPointer(AngleFactory.getInstance().?, "QUARTER_TOTAL_ANGLE").* }), Inheritance.callStatic(CircularIndexUtil, "createInstance", .{ 4 }), animationBehavior });
     }
     
 

@@ -41,10 +41,10 @@ pub const MotionGestureEvent = struct {
     const HASHCODE: ?*String = String.literal(" hashcode: ");
 
     fn initFields(this: *Self) void {
-        this.motionGesture = Inheritance.upcast(?*MotionGestureInput, TouchMotionGestureFactory.getInstance().?.NO_MOTION);
+        this.motionGesture = Inheritance.upcast(?*MotionGestureInput, Inheritance.fieldPointer(TouchMotionGestureFactory.getInstance().?, "NO_MOTION").*);
         
-        this.previousPoint = Inheritance.upcast(?*GPoint, PointFactory.getInstance().?.ZERO_ZERO);
-        this.currentPoint = Inheritance.upcast(?*GPoint, PointFactory.getInstance().?.ZERO_ZERO);
+        this.previousPoint = Inheritance.upcast(?*GPoint, Inheritance.fieldPointer(PointFactory.getInstance().?, "ZERO_ZERO").*);
+        this.currentPoint = Inheritance.upcast(?*GPoint, Inheritance.fieldPointer(PointFactory.getInstance().?, "ZERO_ZERO").*);
         this.commonLabels = Inheritance.upcast(?*CommonLabels, CommonLabels.getInstance());
     }
     
@@ -95,12 +95,12 @@ pub const MotionGestureEvent = struct {
         const stringBuffer: ?*StringMaker = StringMaker.create();
         const stringUtil: ?*StringUtil = Inheritance.upcast(?*StringUtil, StringUtil.getInstance());
         _ = Inheritance.call(stringBuffer.?, "append", .{ Inheritance.call(stringUtil.?, "toString", .{ self.motionGesture }) });
-        _ = Inheritance.call(stringBuffer.?, "append", .{ self.commonLabels.?.CURRENT });
+        _ = Inheritance.call(stringBuffer.?, "append", .{ Inheritance.fieldPointer(self.commonLabels.?, "CURRENT").* });
         _ = Inheritance.call(stringBuffer.?, "append", .{ Inheritance.call(stringUtil.?, "toString", .{ self.currentPoint }) });
         _ = Inheritance.call(stringBuffer.?, "append", .{ MotionGestureEvent.PREVIOUS });
         _ = Inheritance.call(stringBuffer.?, "append", .{ Inheritance.call(stringUtil.?, "toString", .{ self.previousPoint }) });
         _ = Inheritance.call(stringBuffer.?, "append", .{ MotionGestureEvent.HASHCODE });
-        _ = Inheritance.call(stringBuffer.?, "appendint", .{ @as(i32, @intCast(Inheritance.call(TsUtil.getInstance().?, "hashCode", .{ self }))) });
+        _ = Inheritance.call(stringBuffer.?, "appendint", .{ Inheritance.number(i32, Inheritance.call(TsUtil.getInstance().?, "hashCode", .{ self })) });
         return Inheritance.upcast(?*String, Object.toString(Object.of(stringBuffer)));
     }
     

@@ -31,16 +31,16 @@ pub const CancelTouchButtonInputFactory = struct {
 
     // Static fields with runtime initializers: call staticInit once at startup
     pub fn staticInit() void {
-        instance = Inheritance.upcast(?Object, NullUtil.getInstance().?.NULL_OBJECT);
+        instance = Inheritance.upcast(?Object, Inheritance.fieldPointer(NullUtil.getInstance().?, "NULL_OBJECT").*);
     }
 
     fn initFields(this: *Self) void {
-        this.cancelInputArray = array_N65879: { const array_N65879_array = allocator.alloc(?*TouchButtonInput, @intCast(InputFactory.getInstance().?.MAX)) catch unreachable; @memset(array_N65879_array, null); break :array_N65879 array_N65879_array; };
+        this.cancelInputArray = array_N65879: { const array_N65879_array = allocator.alloc(?*TouchButtonInput, @intCast(Inheritance.fieldPointer(InputFactory.getInstance().?, "MAX").*)) catch unreachable; @memset(array_N65879_array, null); break :array_N65879 array_N65879_array; };
     }
     
 
     pub fn getInstance() ?*CancelTouchButtonInputFactory {
-        if (Object.same(CancelTouchButtonInputFactory.instance, NullUtil.getInstance().?.NULL_OBJECT)) {
+        if (Object.same(CancelTouchButtonInputFactory.instance, Inheritance.fieldPointer(NullUtil.getInstance().?, "NULL_OBJECT").*)) {
             CancelTouchButtonInputFactory.instance = Inheritance.upcast(@TypeOf(CancelTouchButtonInputFactory.instance), CancelTouchButtonInputFactory.create());
         }
         return Inheritance.cast(?*CancelTouchButtonInputFactory, CancelTouchButtonInputFactory.instance);
@@ -55,13 +55,13 @@ pub const CancelTouchButtonInputFactory = struct {
         {
             var index: i32 = @as(i32, @intCast(this.cancelInputArray.len)) - 1;
             while (index >= 0) : (index -= 1) {
-            this.cancelInputArray[@intCast(index)] = Inheritance.upcast(@TypeOf(this.cancelInputArray[@intCast(index)]), basicTouchInputFactory.?.NONE);
+            this.cancelInputArray[@intCast(index)] = Inheritance.upcast(@TypeOf(this.cancelInputArray[@intCast(index)]), Inheritance.fieldPointer(basicTouchInputFactory.?, "NONE").*);
             }
         }
-        this.cancelInputArray[@intCast(Inheritance.receiverOf(basicTouchInputFactory.?.UP.?, "getSourceId").getSourceId())] = Inheritance.upcast(@TypeOf(this.cancelInputArray[@intCast(Inheritance.receiverOf(basicTouchInputFactory.?.UP.?, "getSourceId").getSourceId())]), basicTouchInputFactory.?.DOWN);
-        this.cancelInputArray[@intCast(Inheritance.receiverOf(basicTouchInputFactory.?.DOWN.?, "getSourceId").getSourceId())] = Inheritance.upcast(@TypeOf(this.cancelInputArray[@intCast(Inheritance.receiverOf(basicTouchInputFactory.?.DOWN.?, "getSourceId").getSourceId())]), basicTouchInputFactory.?.UP);
-        this.cancelInputArray[@intCast(Inheritance.receiverOf(basicTouchInputFactory.?.LEFT.?, "getSourceId").getSourceId())] = Inheritance.upcast(@TypeOf(this.cancelInputArray[@intCast(Inheritance.receiverOf(basicTouchInputFactory.?.LEFT.?, "getSourceId").getSourceId())]), basicTouchInputFactory.?.RIGHT);
-        this.cancelInputArray[@intCast(Inheritance.receiverOf(basicTouchInputFactory.?.RIGHT.?, "getSourceId").getSourceId())] = Inheritance.upcast(@TypeOf(this.cancelInputArray[@intCast(Inheritance.receiverOf(basicTouchInputFactory.?.RIGHT.?, "getSourceId").getSourceId())]), basicTouchInputFactory.?.LEFT);
+        this.cancelInputArray[@intCast(Inheritance.receiverOf(Inheritance.fieldPointer(basicTouchInputFactory.?, "UP").*.?, "getSourceId").getSourceId())] = Inheritance.upcast(@TypeOf(this.cancelInputArray[@intCast(Inheritance.receiverOf(Inheritance.fieldPointer(basicTouchInputFactory.?, "UP").*.?, "getSourceId").getSourceId())]), Inheritance.fieldPointer(basicTouchInputFactory.?, "DOWN").*);
+        this.cancelInputArray[@intCast(Inheritance.receiverOf(Inheritance.fieldPointer(basicTouchInputFactory.?, "DOWN").*.?, "getSourceId").getSourceId())] = Inheritance.upcast(@TypeOf(this.cancelInputArray[@intCast(Inheritance.receiverOf(Inheritance.fieldPointer(basicTouchInputFactory.?, "DOWN").*.?, "getSourceId").getSourceId())]), Inheritance.fieldPointer(basicTouchInputFactory.?, "UP").*);
+        this.cancelInputArray[@intCast(Inheritance.receiverOf(Inheritance.fieldPointer(basicTouchInputFactory.?, "LEFT").*.?, "getSourceId").getSourceId())] = Inheritance.upcast(@TypeOf(this.cancelInputArray[@intCast(Inheritance.receiverOf(Inheritance.fieldPointer(basicTouchInputFactory.?, "LEFT").*.?, "getSourceId").getSourceId())]), Inheritance.fieldPointer(basicTouchInputFactory.?, "RIGHT").*);
+        this.cancelInputArray[@intCast(Inheritance.receiverOf(Inheritance.fieldPointer(basicTouchInputFactory.?, "RIGHT").*.?, "getSourceId").getSourceId())] = Inheritance.upcast(@TypeOf(this.cancelInputArray[@intCast(Inheritance.receiverOf(Inheritance.fieldPointer(basicTouchInputFactory.?, "RIGHT").*.?, "getSourceId").getSourceId())]), Inheritance.fieldPointer(basicTouchInputFactory.?, "LEFT").*);
         return this;
     }
     

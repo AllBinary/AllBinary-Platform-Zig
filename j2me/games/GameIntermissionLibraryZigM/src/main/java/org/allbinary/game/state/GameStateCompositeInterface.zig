@@ -19,6 +19,7 @@ const String = @import("java/lang/String.zig").String;
 const Object = @import("java/lang/Object.zig").Object;
 const Inheritance = @import("zig/Inheritance.zig");
 const GameState = @import("org/allbinary/game/state/GameState.zig").GameState;
+const Exception = @import("java/lang/Exception.zig").Exception;
 
 // Java interface: an implementation is a pointer and a table of functions
 pub const GameStateCompositeInterface = struct {
@@ -27,8 +28,8 @@ pub const GameStateCompositeInterface = struct {
     pointer: *anyopaque,
     object: Object,
     toStringFn: *const fn (pointer: *anyopaque) ?*String,
-    setGameStateFn: *const fn (pointer: *anyopaque, gameState: ?*GameState) void,
-    getGameStateFn: *const fn (pointer: *anyopaque) ?*GameState,
+    setGameStateFn: *const fn (interface_pointer: *anyopaque, gameState: ?*GameState) void,
+    getGameStateFn: *const fn (interface_pointer: *anyopaque) ?*GameState,
 
     pub fn setGameState(self: *Self, gameState: ?*GameState) void {
         return self.setGameStateFn(self.pointer, gameState);
@@ -44,18 +45,18 @@ pub const GameStateCompositeInterface = struct {
 
     // The interface value of an object with the methods. Like a Java class a method can be declared by the object or a superclass.
     pub fn of(object: anytype) ?*Self {
-        const Implementation = @TypeOf(object);
+        const ImplementationType = @TypeOf(object);
         const Methods = struct {
             fn toString(pointer: *anyopaque) ?*String {
-                const implementation: Implementation = @ptrCast(@alignCast(pointer));
+                const implementation: ImplementationType = @ptrCast(@alignCast(pointer));
                 return String.valueOf(implementation);
             }
-            fn setGameState(pointer: *anyopaque, gameState: ?*GameState) void {
-                const implementation: Implementation = @ptrCast(@alignCast(pointer));
-                return Inheritance.receiver(implementation, "setGameState").setGameState(gameState);
+            fn setGameState(interface_pointer: *anyopaque, gameState: ?*GameState) void {
+                const implementation: ImplementationType = @ptrCast(@alignCast(interface_pointer));
+                return Inheritance.call(implementation, "setGameState", .{ gameState });
             }
-            fn getGameState(pointer: *anyopaque) ?*GameState {
-                const implementation: Implementation = @ptrCast(@alignCast(pointer));
+            fn getGameState(interface_pointer: *anyopaque) ?*GameState {
+                const implementation: ImplementationType = @ptrCast(@alignCast(interface_pointer));
                 return Inheritance.upcast(?*GameState, Inheritance.receiver(implementation, "getGameState").getGameState());
             }
         };

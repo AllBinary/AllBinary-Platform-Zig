@@ -42,7 +42,7 @@ pub const KeyFactoryInitializer = struct {
     
 
     pub fn init(self: *Self) void {
-        _ = Inheritance.call(self.logUtil.?, "putF", .{ Inheritance.fieldPointer(self, "commonStrings").*.?.START, self, Inheritance.fieldPointer(self, "commonStrings").*.?.INIT });
+        _ = Inheritance.call(self.logUtil.?, "putF", .{ Inheritance.fieldPointer(Inheritance.fieldPointer(self, "commonStrings").*.?, "START").*, self, Inheritance.fieldPointer(Inheritance.fieldPointer(self, "commonStrings").*.?, "INIT").* });
     }
 };
 

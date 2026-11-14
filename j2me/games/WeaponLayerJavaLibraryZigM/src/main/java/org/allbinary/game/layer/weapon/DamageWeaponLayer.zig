@@ -25,6 +25,7 @@ const Movement = @import("org/allbinary/physics/movement/Movement.zig").Movement
 const ViewPositionBase = @import("org/allbinary/view/ViewPositionBase.zig").ViewPositionBase;
 const CollidableDamageWeaponBehavior = @import("org/allbinary/game/layer/weapon/CollidableDamageWeaponBehavior.zig").CollidableDamageWeaponBehavior;
 const WeaponLayer = @import("org/allbinary/game/layer/weapon/WeaponLayer.zig").WeaponLayer;
+const Exception = @import("java/lang/Exception.zig").Exception;
 
 pub const DamageWeaponLayer = struct {
     const Self = @This();

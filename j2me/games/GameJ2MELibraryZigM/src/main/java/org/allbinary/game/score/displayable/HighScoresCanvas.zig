@@ -18,10 +18,9 @@ const allocator = std.heap.page_allocator;
 const String = @import("java/lang/String.zig").String;
 const Object = @import("java/lang/Object.zig").Object;
 const Inheritance = @import("zig/Inheritance.zig");
-// const Command = @import("javax/microedition/lcdui/Command.zig").Command;
-// const CommandListener = @import("javax/microedition/lcdui/CommandListener.zig").CommandListener;
-// const Graphics = @import("javax/microedition/lcdui/Graphics.zig").Graphics;
-const J2MEUtil = @import("org/allbinary/J2MEUtil.zig").J2MEUtil;
+const Command = @import("javax/microedition/lcdui/Command.zig").Command;
+const CommandListener = @import("javax/microedition/lcdui/CommandListener.zig").CommandListener;
+const Graphics = @import("javax/microedition/lcdui/Graphics.zig").Graphics;
 const GameInfo = @import("org/allbinary/game/GameInfo.zig").GameInfo;
 const GameCommandsFactory = @import("org/allbinary/game/commands/GameCommandsFactory.zig").GameCommandsFactory;
 const GameCommandCanvas = @import("org/allbinary/game/displayable/canvas/GameCommandCanvas.zig").GameCommandCanvas;
@@ -45,9 +44,9 @@ const SimpleTextPaintable = @import("org/allbinary/graphics/paint/SimpleTextPain
 const LogUtil = @import("org/allbinary/logic/communication/log/LogUtil.zig").LogUtil;
 const StringMaker = @import("org/allbinary/logic/string/StringMaker.zig").StringMaker;
 const CommonStrings = @import("org/allbinary/string/CommonStrings.zig").CommonStrings;
-const ARunnable = @import("org/allbinary/thread/ARunnable.zig").ARunnable;
 const SecondaryThreadPool = @import("org/allbinary/thread/SecondaryThreadPool.zig").SecondaryThreadPool;
-const ABSystemWrapper = @import("org/allbinary/logic/ABSystemWrapper.zig").ABSystemWrapper;
+const HighScoreRunnable = @import("org/allbinary/game/score/displayable/HighScoreRunnable.zig").HighScoreRunnable;
+const Exception = @import("java/lang/Exception.zig").Exception;
 
 pub const HighScoresCanvas = struct {
     const Self = @This();
@@ -70,14 +69,14 @@ pub const HighScoresCanvas = struct {
     fn initFields(this: *Self) void {
         this.paintable = Inheritance.upcast(?*Paintable, NullPaintable.getInstance());
         this.highScoreCommandsFactory = Inheritance.upcast(?*HighScoreCommandsFactory, HighScoreCommandsFactory.getInstance());
-        this.waitPaintable = Inheritance.callStatic(SimpleTextPaintable, "create2", .{ Inheritance.fieldPointer(this, "commonStrings").*.?.PLEASE_WAIT_FOR_SERVER, BasicColorFactory.getInstance().?.WHITE });
+        this.waitPaintable = Inheritance.callStatic(SimpleTextPaintable, "create2", .{ Inheritance.fieldPointer(Inheritance.fieldPointer(this, "commonStrings").*.?, "PLEASE_WAIT_FOR_SERVER").*, Inheritance.fieldPointer(BasicColorFactory.getInstance().?, "WHITE").* });
         
         
         
         this.highScoresHelper = HighScoresHelperBase.create();
         
         
-        this.currentCommand = Inheritance.upcast(?*Command, this.highScoreCommandsFactory.?.HIGH_SCORE_COMMANDS[@intCast(0)]);
+        this.currentCommand = Inheritance.upcast(?*Command, Inheritance.fieldPointer(this.highScoreCommandsFactory.?, "HIGH_SCORE_COMMANDS").*[@intCast(0)]);
         this.hasPainted = false;
     }
     
@@ -87,72 +86,21 @@ pub const HighScoresCanvas = struct {
         this.* = .{};
         this.base = Inheritance.callStatic(GameCommandCanvas, "create4", .{ commandListener, HighScoresCanvas.NAME, Inheritance.receiver(allBinaryGameLayerManager.?, "getBackgroundBasicColor").getBackgroundBasicColor(), Inheritance.receiver(allBinaryGameLayerManager.?, "getForegroundBasicColor").getForegroundBasicColor() }).*;
         this.initFields();
-        _ = Inheritance.call(Inheritance.fieldPointer(this, "logUtil").*.?, "putF", .{ Inheritance.fieldPointer(this, "commonStrings").*.?.START, this, Inheritance.fieldPointer(this, "commonStrings").*.?.CONSTRUCTOR });
-        this.highScoresPaintable = Inheritance.upcast(@TypeOf(this.highScoresPaintable), paintable);
+        _ = Inheritance.call(Inheritance.fieldPointer(this, "logUtil").*.?, "putF", .{ Inheritance.fieldPointer(Inheritance.fieldPointer(this, "commonStrings").*.?, "START").*, this, Inheritance.fieldPointer(Inheritance.fieldPointer(this, "commonStrings").*.?, "CONSTRUCTOR").* });
+        this.highScoresPaintable = paintable;
         this.highScoresFactoryInterface = highScoresFactoryInterface;
         this.highScoresCanvasInputProcessor = Inheritance.upcast(@TypeOf(this.highScoresCanvasInputProcessor), Inheritance.call(highScoresCanvasInputProcessorFactoryInterface.?, "getInstance", .{ this }));
         this.gameInfo = gameInfo;
         _ = Inheritance.call(this.waitPaintable.?, "setBasicColorP", .{ Inheritance.receiver(allBinaryGameLayerManager.?, "getForegroundBasicColor").getForegroundBasicColor() });
         _ = Inheritance.call(this.getHighScoresPaintable().?, "setBasicColorP", .{ Inheritance.receiver(allBinaryGameLayerManager.?, "getForegroundBasicColor").getForegroundBasicColor() });
         this.colorFillPaintable = Inheritance.upcast(@TypeOf(this.colorFillPaintable), Inheritance.call(ColorFillPaintableFactory.getInstance().?, "getInstance", .{ Inheritance.receiver(allBinaryGameLayerManager.?, "getBackgroundBasicColor").getBackgroundBasicColor(), false }));
-        if (Object.same(this.highScoresHelper.?.getHighScoresArray(), NoHighScoresFactory.getInstance().?.NO_HIGH_SCORES)) {
+        if (@as(i32, @intCast(this.highScoresHelper.?.getHighScoresArray().len)) == @as(i32, @intCast(Inheritance.fieldPointer(NoHighScoresFactory.getInstance().?, "NO_HIGH_SCORES").*.len))) {
             _ = Inheritance.call(this, "setPaintable", .{ this.waitPaintable });
         } else {
-            _ = Inheritance.call(Inheritance.fieldPointer(this, "logUtil").*.?, "putF", .{ String.literal("Show HighScores that are already loaded"), this, Inheritance.fieldPointer(this, "commonStrings").*.?.CONSTRUCTOR });
+            _ = Inheritance.call(Inheritance.fieldPointer(this, "logUtil").*.?, "putF", .{ String.literal("Show HighScores that are already loaded"), this, Inheritance.fieldPointer(Inheritance.fieldPointer(this, "commonStrings").*.?, "CONSTRUCTOR").* });
             _ = Inheritance.call(this, "updateCommand", .{ this.currentCommand });
             _ = Inheritance.call(this, "setPaintable", .{ this.getHighScoresPaintable() });
         }
-        const HighScoreRunnable = struct {
-            const Self = @This();
-            pub const java_name = "org.allbinary.game.score.displayable.HighScoreRunnable";
-            base: ARunnable = undefined,
-            highScoresCanvas: ?*HighScoresCanvas = null,
-
-    fn initFields(this: *Self) void {
-        _ = this;
-                
-    }
-            
-
-            pub fn create1(highScoresCanvas: ?*HighScoresCanvas) *Self {
-                const this = allocator.create(Self) catch unreachable;
-                this.* = .{};
-        this.base = ARunnable.create().*;
-                this.initFields();
-                Inheritance.fieldPointer(this, "highScoresCanvas").* = highScoresCanvas;
-                Inheritance.bindOverrides(this);
-                return this;
-            }
-            
-
-            pub fn run(self: *Self) void {
-                const commonStrings: ?*CommonStrings = Inheritance.upcast(?*CommonStrings, CommonStrings.getInstance());
-                const logUtil: ?*LogUtil = Inheritance.upcast(?*LogUtil, LogUtil.getInstance());
-                const highScoresCanvas: ?*HighScoresCanvas = Inheritance.fieldPointer(self, "highScoresCanvas").*;
-                { // try
-                    const isHTML: bool = J2MEUtil.isHTML();
-                    if (!isHTML) {
-                        while (!highScoresCanvas.?.hasPainted) {
-                        }
-                        highScoresCanvas.?.hasPainted = false;
-                    }
-                    const stringMaker: ?*StringMaker = StringMaker.create();
-                    const systemWrapper: ?*ABSystemWrapper = Inheritance.upcast(?*ABSystemWrapper, ABSystemWrapper.getInstance());
-                    const currentTimeMillis: i64 = systemWrapper.?.currentTimeMillis();
-                    _ = Inheritance.call(logUtil.?, "putF", .{ Object.toString(Object.of(Inheritance.call(Inheritance.call(stringMaker.?, "append", .{ String.literal("HighScoresCanvas - Request repaint to be sure: ") }).?, "appendlong", .{ currentTimeMillis }))), self, commonStrings.?.RUN });
-                    _ = Inheritance.call(highScoresCanvas.?.repaintBehavior.?, "onChangeRepaint", .{ highScoresCanvas });
-                    if (!isHTML) {
-                        while (!highScoresCanvas.?.hasPainted) {
-                        }
-                    }
-                    _ = Inheritance.call(stringMaker.?, "delete", .{ 0, stringMaker.?.length() });
-                    _ = Inheritance.call(logUtil.?, "putF", .{ Object.toString(Object.of(Inheritance.call(Inheritance.call(stringMaker.?, "append", .{ String.literal("HighScoresCanvas - Now that the canvas has completed repaint go ahead and fetch the scores: ") }).?, "appendlong", .{ currentTimeMillis }))), self, commonStrings.?.RUN });
-                    _ = Inheritance.receiver(highScoresCanvas.?, "executeUpdate").executeUpdate();
-                }
-                // catch (Exception e):
-//                     _ = Inheritance.call(logUtil.?, "put", .{ commonStrings.?.EXCEPTION, self, commonStrings.?.RUN, e });
-            }
-        };
         _ = Inheritance.call(SecondaryThreadPool.getInstance().?, "runTask", .{ Inheritance.callStatic(HighScoreRunnable, "create1", .{ this }) });
         Inheritance.bindOverrides(this);
         return this;
@@ -161,20 +109,20 @@ pub const HighScoresCanvas = struct {
 
     pub fn initCommands(self: *Self, cmdListener: ?*CommandListener) void {
         _ = Inheritance.receiver(self, "removeAllCommands").removeAllCommands();
-        _ = Inheritance.call(self, "addCommand", .{ GameCommandsFactory.getInstance().?.CLOSE_AND_SHOW_GAME_CANVAS });
+        _ = Inheritance.call(self, "addCommand", .{ Inheritance.fieldPointer(GameCommandsFactory.getInstance().?, "CLOSE_AND_SHOW_GAME_CANVAS").* });
         _ = Inheritance.call(self, "setCommandListener", .{ cmdListener });
     }
     
 
     pub fn open(self: *Self) void {
-        _ = self.base.open();
+        _ = Inheritance.receiver(&self.base, "open").open();
         _ = Inheritance.receiver(self.highScoresCanvasInputProcessor.?, "open").open();
     }
     
 
     // throws Exception
     pub fn close(self: *Self) void {
-        _ = self.base.close();
+        _ = Inheritance.receiver(&self.base, "close").close();
         _ = Inheritance.receiver(self.highScoresCanvasInputProcessor.?, "close").close();
     }
     
@@ -195,7 +143,7 @@ pub const HighScoresCanvas = struct {
             _ = Inheritance.call(self.highScoresFactoryInterface.?, "fetchHighScores", .{ self.getGameInfo(), self });
         }
         // catch (Exception e):
-//             _ = Inheritance.call(Inheritance.fieldPointer(self, "logUtil").*.?, "put", .{ Inheritance.fieldPointer(self, "commonStrings").*.?.EXCEPTION, self, Inheritance.fieldPointer(self, "commonStrings").*.?.UPDATE, e });
+//             _ = Inheritance.call(Inheritance.fieldPointer(self, "logUtil").*.?, "put", .{ Inheritance.fieldPointer(Inheritance.fieldPointer(self, "commonStrings").*.?, "EXCEPTION").*, self, Inheritance.fieldPointer(Inheritance.fieldPointer(self, "commonStrings").*.?, "UPDATE").*, e });
     }
     
 
@@ -206,23 +154,23 @@ pub const HighScoresCanvas = struct {
 
     pub fn setHighScoresArray(self: *Self, highScoresArray: []?*HighScores) void {
         { // try
-            if (highScoresArray != null) {
-                _ = Inheritance.call(Inheritance.fieldPointer(self, "logUtil").*.?, "putF", .{ Object.toString(Object.of(Inheritance.call(Inheritance.call(StringMaker.create(), "append", .{ Inheritance.fieldPointer(self, "commonStrings").*.?.START }).?, "appendint", .{ @as(i32, @intCast(highScoresArray.len)) }))), self, String.literal("setHighScoresArray") });
+            if (!Object.isNull(highScoresArray)) {
+                _ = Inheritance.call(Inheritance.fieldPointer(self, "logUtil").*.?, "putF", .{ Object.toString(Object.of(Inheritance.call(Inheritance.call(StringMaker.create(), "append", .{ Inheritance.fieldPointer(Inheritance.fieldPointer(self, "commonStrings").*.?, "START").* }).?, "appendint", .{ @as(i32, @intCast(highScoresArray.len)) }))), self, String.literal("setHighScoresArray") });
             } else {
-                _ = Inheritance.call(Inheritance.fieldPointer(self, "logUtil").*.?, "putF", .{ Inheritance.fieldPointer(self, "commonStrings").*.?.START, self, String.literal("setHighScoresArray") });
+                _ = Inheritance.call(Inheritance.fieldPointer(self, "logUtil").*.?, "putF", .{ Inheritance.fieldPointer(Inheritance.fieldPointer(self, "commonStrings").*.?, "START").*, self, String.literal("setHighScoresArray") });
             }
             _ = Inheritance.call(self.highScoresHelper.?, "setHighScoresArray", .{ highScoresArray });
             _ = Inheritance.call(self, "updateCommand", .{ self.currentCommand });
             _ = Inheritance.call(self, "setPaintable", .{ self.getHighScoresPaintable() });
         }
         // catch (Exception e):
-//             _ = Inheritance.call(Inheritance.fieldPointer(self, "logUtil").*.?, "put", .{ Inheritance.fieldPointer(self, "commonStrings").*.?.EXCEPTION, self, Inheritance.fieldPointer(self, "commonStrings").*.?.UPDATE, e });
+//             _ = Inheritance.call(Inheritance.fieldPointer(self, "logUtil").*.?, "put", .{ Inheritance.fieldPointer(Inheritance.fieldPointer(self, "commonStrings").*.?, "EXCEPTION").*, self, Inheritance.fieldPointer(Inheritance.fieldPointer(self, "commonStrings").*.?, "UPDATE").*, e });
     }
     
 
     // throws Exception
     pub fn updateCommand(self: *Self, command: ?*Command) void {
-        _ = Inheritance.call(Inheritance.fieldPointer(self, "logUtil").*.?, "putF", .{ Object.toString(Object.of(Inheritance.call(Inheritance.call(StringMaker.create(), "append", .{ Inheritance.fieldPointer(self, "commonStrings").*.?.START }).?, "append", .{ Inheritance.call(Inheritance.fieldPointer(self, "stringUtil").*.?, "toString", .{ command }) }))), self, Inheritance.fieldPointer(self, "commonStrings").*.?.UPDATE });
+        _ = Inheritance.call(Inheritance.fieldPointer(self, "logUtil").*.?, "putF", .{ Object.toString(Object.of(Inheritance.call(Inheritance.call(StringMaker.create(), "append", .{ Inheritance.fieldPointer(Inheritance.fieldPointer(self, "commonStrings").*.?, "START").* }).?, "append", .{ Inheritance.call(Inheritance.fieldPointer(self, "stringUtil").*.?, "toString", .{ command }) }))), self, Inheritance.fieldPointer(Inheritance.fieldPointer(self, "commonStrings").*.?, "UPDATE").* });
         const gameCommandsFactory: ?*GameCommandsFactory = Inheritance.upcast(?*GameCommandsFactory, GameCommandsFactory.getInstance());
         if (Inheritance.call(self.highScoreCommandsFactory.?, "isHighScoreCommand", .{ command })) {
             const index: i32 = Inheritance.call(self.highScoreCommandsFactory.?, "getIndex", .{ command });
@@ -238,13 +186,13 @@ pub const HighScoresCanvas = struct {
             }
             if (index != nextIndex) {
                 _ = Inheritance.receiver(self, "removeAllCommands").removeAllCommands();
-                _ = Inheritance.call(self, "addCommand", .{ gameCommandsFactory.?.CLOSE_AND_SHOW_GAME_CANVAS });
-                _ = Inheritance.call(self, "addCommand", .{ self.highScoreCommandsFactory.?.HIGH_SCORE_COMMANDS[@intCast(nextIndex)] });
+                _ = Inheritance.call(self, "addCommand", .{ Inheritance.fieldPointer(gameCommandsFactory.?, "CLOSE_AND_SHOW_GAME_CANVAS").* });
+                _ = Inheritance.call(self, "addCommand", .{ Inheritance.fieldPointer(self.highScoreCommandsFactory.?, "HIGH_SCORE_COMMANDS").*[@intCast(nextIndex)] });
             }
         }
         self.currentCommand = command;
         _ = self.close();
-        _ = self.base.initMenu();
+        _ = Inheritance.receiver(&self.base, "initMenu").initMenu();
         _ = self.open();
         _ = Inheritance.call(Inheritance.fieldPointer(self, "repaintBehavior").*.?, "onChangeRepaint", .{ self });
     }

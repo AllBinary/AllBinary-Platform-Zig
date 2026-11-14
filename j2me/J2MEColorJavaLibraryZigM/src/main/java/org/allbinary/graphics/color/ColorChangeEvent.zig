@@ -29,7 +29,7 @@ pub const ColorChangeEvent = struct {
     basicColor: ?*BasicColor = null,
 
     fn initFields(this: *Self) void {
-        this.basicColor = Inheritance.upcast(?*BasicColor, BasicColorFactory.getInstance().?.WHITE);
+        this.basicColor = Inheritance.upcast(?*BasicColor, Inheritance.fieldPointer(BasicColorFactory.getInstance().?, "WHITE").*);
     }
     
 

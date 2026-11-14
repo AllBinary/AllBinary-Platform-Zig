@@ -32,7 +32,7 @@ pub const MineWeaponResources = struct {
 
     // Static fields with runtime initializers: call staticInit once at startup
     pub fn staticInit() void {
-        instance = Inheritance.upcast(?Object, NullUtil.getInstance().?.NULL_OBJECT);
+        instance = Inheritance.upcast(?Object, Inheritance.fieldPointer(NullUtil.getInstance().?, "NULL_OBJECT").*);
     }
 
     fn initFields(this: *Self) void {
@@ -43,7 +43,7 @@ pub const MineWeaponResources = struct {
     
 
     pub fn getInstance() ?*MineWeaponResources {
-        if (Object.same(MineWeaponResources.instance, NullUtil.getInstance().?.NULL_OBJECT)) {
+        if (Object.same(MineWeaponResources.instance, Inheritance.fieldPointer(NullUtil.getInstance().?, "NULL_OBJECT").*)) {
             MineWeaponResources.instance = Inheritance.upcast(@TypeOf(MineWeaponResources.instance), MineWeaponResources.create());
         }
         return Inheritance.cast(?*MineWeaponResources, MineWeaponResources.instance);
@@ -61,7 +61,7 @@ pub const MineWeaponResources = struct {
         const SIZE_FOUR: ?*String = SMALL;
         const SIZE_FIVE: ?*String = SMALL;
         const SIZE_SIX: ?*String = SMALL;
-        const SIZE: []?*String = @constCast(&[_]?*String{ SMALL, MEDIUM, SIZE_FOUR, SIZE_FIVE, SIZE_SIX })[0..];
+        const SIZE: []?*String = @constCast(&[_]?*String{ Inheritance.upcast(?*String, SMALL), Inheritance.upcast(?*String, MEDIUM), Inheritance.upcast(?*String, SIZE_FOUR), Inheritance.upcast(?*String, SIZE_FIVE), Inheritance.upcast(?*String, SIZE_SIX) })[0..];
         _ = Inheritance.call(&this.base, "init", .{ ROOT, SIZE });
         Inheritance.bindOverrides(this);
         return this;

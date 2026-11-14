@@ -18,10 +18,11 @@ const allocator = std.heap.page_allocator;
 const String = @import("java/lang/String.zig").String;
 const Object = @import("java/lang/Object.zig").Object;
 const Inheritance = @import("zig/Inheritance.zig");
-// const Canvas = @import("javax/microedition/lcdui/Canvas.zig").Canvas;
-// const CommandListener = @import("javax/microedition/lcdui/CommandListener.zig").CommandListener;
+const Canvas = @import("javax/microedition/lcdui/Canvas.zig").Canvas;
+const CommandListener = @import("javax/microedition/lcdui/CommandListener.zig").CommandListener;
 const Features = @import("org/allbinary/game/configuration/feature/Features.zig").Features;
 const MainFeatureFactory = @import("org/allbinary/game/configuration/feature/MainFeatureFactory.zig").MainFeatureFactory;
+const Exception = @import("java/lang/Exception.zig").Exception;
 
 pub const FullScreenUtil = struct {
     const Self = @This();
@@ -47,7 +48,7 @@ pub const FullScreenUtil = struct {
 
     // throws Exception
     pub fn initOnRun(self: *Self, fullScreenInterface: ?*Canvas, commandListener: ?*CommandListener) void {
-        if (commandListener != null) {
+        if (!Object.isNull(commandListener)) {
             _ = Inheritance.call(self, "init", .{ fullScreenInterface });
         }
     }
@@ -63,7 +64,7 @@ pub const FullScreenUtil = struct {
         _ = self;
         const mainFeatureFactory: ?*MainFeatureFactory = Inheritance.upcast(?*MainFeatureFactory, MainFeatureFactory.getInstance());
         const features: ?*Features = Inheritance.upcast(?*Features, Features.getInstance());
-        if (Inheritance.call(features.?, "isFeature", .{ mainFeatureFactory.?.FULL_SCREEN }) != isFullScreen) {
+        if (Inheritance.call(features.?, "isFeature", .{ Inheritance.fieldPointer(mainFeatureFactory.?, "FULL_SCREEN").* }) != isFullScreen) {
             return true;
         }
         return false;

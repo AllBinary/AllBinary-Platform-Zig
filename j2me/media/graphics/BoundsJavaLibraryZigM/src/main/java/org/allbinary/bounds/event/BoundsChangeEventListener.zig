@@ -29,7 +29,7 @@ pub const BoundsChangeEventListener = struct {
     object: Object,
     base: EventListenerInterface,
     toStringFn: *const fn (pointer: *anyopaque) ?*String,
-    onBoundsChangeEventFn: *const fn (pointer: *anyopaque, boundsChangeEvent: ?*BoundsChangeEvent) void,
+    onBoundsChangeEventFn: *const fn (interface_pointer: *anyopaque, boundsChangeEvent: ?*BoundsChangeEvent) void,
 
     pub fn onBoundsChangeEvent(self: *Self, boundsChangeEvent: ?*BoundsChangeEvent) void {
         return self.onBoundsChangeEventFn(self.pointer, boundsChangeEvent);
@@ -41,15 +41,15 @@ pub const BoundsChangeEventListener = struct {
 
     // The interface value of an object with the methods. Like a Java class a method can be declared by the object or a superclass.
     pub fn of(object: anytype) ?*Self {
-        const Implementation = @TypeOf(object);
+        const ImplementationType = @TypeOf(object);
         const Methods = struct {
             fn toString(pointer: *anyopaque) ?*String {
-                const implementation: Implementation = @ptrCast(@alignCast(pointer));
+                const implementation: ImplementationType = @ptrCast(@alignCast(pointer));
                 return String.valueOf(implementation);
             }
-            fn onBoundsChangeEvent(pointer: *anyopaque, boundsChangeEvent: ?*BoundsChangeEvent) void {
-                const implementation: Implementation = @ptrCast(@alignCast(pointer));
-                return Inheritance.receiver(implementation, "onBoundsChangeEvent").onBoundsChangeEvent(boundsChangeEvent);
+            fn onBoundsChangeEvent(interface_pointer: *anyopaque, boundsChangeEvent: ?*BoundsChangeEvent) void {
+                const implementation: ImplementationType = @ptrCast(@alignCast(interface_pointer));
+                return Inheritance.call(implementation, "onBoundsChangeEvent", .{ boundsChangeEvent });
             }
         };
         const this = allocator.create(Self) catch unreachable;

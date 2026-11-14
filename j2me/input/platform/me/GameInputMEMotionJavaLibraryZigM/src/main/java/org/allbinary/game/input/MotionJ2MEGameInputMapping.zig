@@ -38,7 +38,7 @@ pub const MotionJ2MEGameInputMapping = struct {
 
     pub fn getDefault(self: *Self) ?*InputToGameKeyMapping {
         _ = self;
-        return Inheritance.upcast(?*InputToGameKeyMapping, MotionJ2MEDefaultGameInputMapping.create().getInputMapping());
+        return Inheritance.upcast(?*InputToGameKeyMapping, Inheritance.receiver(MotionJ2MEDefaultGameInputMapping.create(), "getInputMapping").getInputMapping());
     }
 };
 

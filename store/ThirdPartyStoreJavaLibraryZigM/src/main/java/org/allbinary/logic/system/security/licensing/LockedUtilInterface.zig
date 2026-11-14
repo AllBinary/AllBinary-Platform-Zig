@@ -27,8 +27,8 @@ pub const LockedUtilInterface = struct {
     pointer: *anyopaque,
     object: Object,
     toStringFn: *const fn (pointer: *anyopaque) ?*String,
-    isLockedFn: *const fn (pointer: *anyopaque) bool,
-    isLockedFeatureFn: *const fn (pointer: *anyopaque, lockableFeatrue: ?*LockableFeature) bool,
+    isLockedFn: *const fn (interface_pointer: *anyopaque) bool,
+    isLockedFeatureFn: *const fn (interface_pointer: *anyopaque, lockableFeatrue: ?*LockableFeature) bool,
 
     pub fn isLocked(self: *Self) bool {
         return self.isLockedFn(self.pointer);
@@ -44,19 +44,19 @@ pub const LockedUtilInterface = struct {
 
     // The interface value of an object with the methods. Like a Java class a method can be declared by the object or a superclass.
     pub fn of(object: anytype) ?*Self {
-        const Implementation = @TypeOf(object);
+        const ImplementationType = @TypeOf(object);
         const Methods = struct {
             fn toString(pointer: *anyopaque) ?*String {
-                const implementation: Implementation = @ptrCast(@alignCast(pointer));
+                const implementation: ImplementationType = @ptrCast(@alignCast(pointer));
                 return String.valueOf(implementation);
             }
-            fn isLocked(pointer: *anyopaque) bool {
-                const implementation: Implementation = @ptrCast(@alignCast(pointer));
+            fn isLocked(interface_pointer: *anyopaque) bool {
+                const implementation: ImplementationType = @ptrCast(@alignCast(interface_pointer));
                 return Inheritance.receiver(implementation, "isLocked").isLocked();
             }
-            fn isLockedFeature(pointer: *anyopaque, lockableFeatrue: ?*LockableFeature) bool {
-                const implementation: Implementation = @ptrCast(@alignCast(pointer));
-                return Inheritance.receiver(implementation, "isLockedFeature").isLockedFeature(lockableFeatrue);
+            fn isLockedFeature(interface_pointer: *anyopaque, lockableFeatrue: ?*LockableFeature) bool {
+                const implementation: ImplementationType = @ptrCast(@alignCast(interface_pointer));
+                return Inheritance.call(implementation, "isLockedFeature", .{ lockableFeatrue });
             }
         };
         const this = allocator.create(Self) catch unreachable;

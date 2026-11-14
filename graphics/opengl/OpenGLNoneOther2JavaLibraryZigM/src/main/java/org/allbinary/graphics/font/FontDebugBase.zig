@@ -6,7 +6,7 @@ const allocator = std.heap.page_allocator;
 const String = @import("java/lang/String.zig").String;
 const Object = @import("java/lang/Object.zig").Object;
 const Inheritance = @import("zig/Inheritance.zig");
-// const Font = @import("javax/microedition/lcdui/Font.zig").Font;
+const Font = @import("javax/microedition/lcdui/Font.zig").Font;
 const StringMaker = @import("org/allbinary/logic/string/StringMaker.zig").StringMaker;
 
 //OpenGLNoneOther2JavaLibrary

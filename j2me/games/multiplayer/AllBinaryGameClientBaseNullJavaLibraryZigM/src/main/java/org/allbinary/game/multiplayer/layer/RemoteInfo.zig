@@ -20,7 +20,7 @@ pub const RemoteInfo = struct {
 
     // Static fields with runtime initializers: call staticInit once at startup
     pub fn staticInit() void {
-        REMOTE_INFO = Inheritance.callStatic(RemoteInfo, "create4", .{ StringUtil.getInstance().?.EMPTY_STRING, -1, -1, RemoteInfo.NEW_PLAYER_ID });
+        REMOTE_INFO = Inheritance.callStatic(RemoteInfo, "create4", .{ Inheritance.fieldPointer(StringUtil.getInstance().?, "EMPTY_STRING").*, -1, -1, RemoteInfo.NEW_PLAYER_ID });
     }
     
 

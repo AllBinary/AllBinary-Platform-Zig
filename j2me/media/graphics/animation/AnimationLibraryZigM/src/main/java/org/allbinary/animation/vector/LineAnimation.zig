@@ -18,7 +18,7 @@ const allocator = std.heap.page_allocator;
 const String = @import("java/lang/String.zig").String;
 const Object = @import("java/lang/Object.zig").Object;
 const Inheritance = @import("zig/Inheritance.zig");
-// const Graphics = @import("javax/microedition/lcdui/Graphics.zig").Graphics;
+const Graphics = @import("javax/microedition/lcdui/Graphics.zig").Graphics;
 const Animation = @import("org/allbinary/animation/Animation.zig").Animation;
 const BasicColor = @import("org/allbinary/graphics/color/BasicColor.zig").BasicColor;
 const ColorCompositeInterface = @import("org/allbinary/graphics/color/ColorCompositeInterface.zig").ColorCompositeInterface;
@@ -37,7 +37,7 @@ pub const LineAnimation = struct {
 
     fn initFields(this: *Self) void {
         this.newLine = array_N65788: { const array_N65788_array = allocator.alloc([]i32, @intCast(2)) catch unreachable; for (array_N65788_array) |*array_N65788_row| { array_N65788_row.* = allocator.alloc(i32, @intCast(2)) catch unreachable; @memset(array_N65788_row.*, 0); } break :array_N65788 array_N65788_array; };
-        this.tempLine = NullUtil.getInstance().?.NULL_INT_ARRAY_ARRAY;
+        this.tempLine = Inheritance.fieldPointer(NullUtil.getInstance().?, "NULL_INT_ARRAY_ARRAY").*;
         this.line = array_N65911: { const array_N65911_array = allocator.alloc([]i32, @intCast(2)) catch unreachable; for (array_N65911_array) |*array_N65911_row| { array_N65911_row.* = allocator.alloc(i32, @intCast(2)) catch unreachable; @memset(array_N65911_row.*, 0); } break :array_N65911 array_N65911_array; };
     }
     
@@ -80,13 +80,23 @@ pub const LineAnimation = struct {
         _ = x;
         _ = y;
         const currentLine: [][]i32 = self.line;
-        _ = Inheritance.call(Inheritance.fieldPointer(self, "basicSetColorUtil").*.?, "setBasicColorP3", .{ graphics, Inheritance.receiver(self, "getBasicColorP").getBasicColorP(), Inheritance.receiver(self, "getColor").getColor() });
+        _ = Inheritance.call(Inheritance.fieldPointer(self, "basicSetColorUtil").*.?, "setBasicColorP3", .{ graphics, self.getBasicColorP(), Inheritance.receiver(self, "getColor").getColor() });
         _ = Inheritance.call(graphics.?, "drawLine", .{ currentLine[@intCast(0)][@intCast(0)], currentLine[@intCast(0)][@intCast(1)], currentLine[@intCast(1)][@intCast(0)], currentLine[@intCast(1)][@intCast(1)] });
     }
     
 
     pub fn nextFrame(self: *Self) void {
         _ = self;
+    }
+    
+
+    pub fn getBasicColorP(self: *Self) ?*BasicColor {
+        return Inheritance.upcast(?*BasicColor, Inheritance.receiver(&self.base, "getBasicColorP").getBasicColorP());
+    }
+    
+
+    pub fn setBasicColorP(self: *Self, basicColor: ?*BasicColor) void {
+        _ = Inheritance.call(&self.base, "setBasicColorP", .{ basicColor });
     }
 };
 

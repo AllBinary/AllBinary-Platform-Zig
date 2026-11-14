@@ -23,6 +23,7 @@ const ScoreableInterface = @import("org/allbinary/game/score/ScoreableInterface.
 const AllBinaryLayer = @import("org/allbinary/layer/AllBinaryLayer.zig").AllBinaryLayer;
 const AllBinaryLayerCircularPool = @import("org/allbinary/layer/AllBinaryLayerCircularPool.zig").AllBinaryLayerCircularPool;
 const WeaponLayer = @import("org/allbinary/game/layer/weapon/WeaponLayer.zig").WeaponLayer;
+const Exception = @import("java/lang/Exception.zig").Exception;
 
 pub const WeaponLayerCircularPool = struct {
     const Self = @This();
@@ -41,7 +42,7 @@ pub const WeaponLayerCircularPool = struct {
 
     // throws Exception
     pub fn getInstanceWeaponLayer(self: *Self, sourceLayerInterface: ?*AllBinaryLayer, x: i32, y: i32, z: i32, angle: i32, otherAngle: i32, weaponProperties: ?*WeaponProperties, scoreable: ?*ScoreableInterface) ?*WeaponLayer {
-        const weaponLayer: ?*WeaponLayer = Inheritance.cast(?*WeaponLayer, self.base.getNextInstance());
+        const weaponLayer: ?*WeaponLayer = Inheritance.cast(?*WeaponLayer, Inheritance.receiver(&self.base, "getNextInstance").getNextInstance());
         _ = Inheritance.call(weaponLayer.?, "initXYZ", .{ x, y, z });
         _ = Inheritance.call(weaponLayer.?, "init", .{ sourceLayerInterface, angle, otherAngle, weaponProperties, scoreable });
         return weaponLayer;

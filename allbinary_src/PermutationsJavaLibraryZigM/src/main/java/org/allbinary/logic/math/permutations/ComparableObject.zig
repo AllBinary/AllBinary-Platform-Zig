@@ -33,9 +33,9 @@ pub const ComparableObject = struct {
     
 
     pub fn compareTo(self: *Self, anyType: ?Object) i32 {
-        if (Inheritance.call(TsUtil.getInstance().?, "hashCode", .{ self }) < Inheritance.call(TsUtil.getInstance().?, "hashCode", .{ anyType })) {
+        if (Inheritance.arithmetic(.less, Inheritance.call(TsUtil.getInstance().?, "hashCode", .{ self }), Inheritance.call(TsUtil.getInstance().?, "hashCode", .{ anyType }))) {
             return -1;
-        } else if (Inheritance.call(TsUtil.getInstance().?, "hashCode", .{ self }) > Inheritance.call(TsUtil.getInstance().?, "hashCode", .{ anyType })) {
+        } else if (Inheritance.arithmetic(.greater, Inheritance.call(TsUtil.getInstance().?, "hashCode", .{ self }), Inheritance.call(TsUtil.getInstance().?, "hashCode", .{ anyType }))) {
             return 1;
         }
         return 0;

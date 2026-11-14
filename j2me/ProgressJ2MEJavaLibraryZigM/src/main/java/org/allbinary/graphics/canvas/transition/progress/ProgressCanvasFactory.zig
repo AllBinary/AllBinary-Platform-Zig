@@ -32,7 +32,7 @@ pub const ProgressCanvasFactory = struct {
 
     // Static fields with runtime initializers: call staticInit once at startup
     pub fn staticInit() void {
-        PROGRESS_FORM_SCREEN = Inheritance.upcast(?Object, NullUtil.getInstance().?.NULL_OBJECT);
+        PROGRESS_FORM_SCREEN = Inheritance.upcast(?Object, Inheritance.fieldPointer(NullUtil.getInstance().?, "NULL_OBJECT").*);
     }
 
     pub fn create() *Self {
@@ -43,8 +43,8 @@ pub const ProgressCanvasFactory = struct {
     
 
     pub fn getInstance() ?*ProgressCanvas {
-        if (Object.same(ProgressCanvasFactory.PROGRESS_FORM_SCREEN, NullUtil.getInstance().?.NULL_OBJECT)) {
-            ProgressCanvasFactory.PROGRESS_FORM_SCREEN = Inheritance.upcast(@TypeOf(ProgressCanvasFactory.PROGRESS_FORM_SCREEN), Inheritance.callStatic(ProgressCanvas, "create3", .{ StringUtil.getInstance().?.EMPTY_STRING, BasicColorFactory.getInstance().?.BLACK, BasicColorFactory.getInstance().?.WHITE }));
+        if (Object.same(ProgressCanvasFactory.PROGRESS_FORM_SCREEN, Inheritance.fieldPointer(NullUtil.getInstance().?, "NULL_OBJECT").*)) {
+            ProgressCanvasFactory.PROGRESS_FORM_SCREEN = Inheritance.upcast(@TypeOf(ProgressCanvasFactory.PROGRESS_FORM_SCREEN), Inheritance.callStatic(ProgressCanvas, "create3", .{ Inheritance.fieldPointer(StringUtil.getInstance().?, "EMPTY_STRING").*, Inheritance.fieldPointer(BasicColorFactory.getInstance().?, "BLACK").*, Inheritance.fieldPointer(BasicColorFactory.getInstance().?, "WHITE").* }));
         }
         return Inheritance.cast(?*ProgressCanvas, ProgressCanvasFactory.PROGRESS_FORM_SCREEN);
     }

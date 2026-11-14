@@ -29,6 +29,7 @@ const BasicArrayListD = @import("org/allbinary/util/BasicArrayListD.zig").BasicA
 const TerrainEvent = @import("org/allbinary/game/terrain/TerrainEvent.zig").TerrainEvent;
 const TerrainEventListener = @import("org/allbinary/game/terrain/TerrainEventListener.zig").TerrainEventListener;
 const TerrainEventListenerInterface = @import("org/allbinary/game/terrain/TerrainEventListenerInterface.zig").TerrainEventListenerInterface;
+const Exception = @import("java/lang/Exception.zig").Exception;
 
 pub const TerrainEventHandler = struct {
     const Self = @This();
@@ -39,7 +40,7 @@ pub const TerrainEventHandler = struct {
 
     // Static fields with runtime initializers: call staticInit once at startup
     pub fn staticInit() void {
-        hashtable = Inheritance.upcast(?*ABHashtable, StdUtil.getInstance().?.NULL_TABLE);
+        hashtable = Inheritance.upcast(?*ABHashtable, Inheritance.fieldPointer(StdUtil.getInstance().?, "NULL_TABLE").*);
     }
 
     fn initFields(this: *Self) void {
@@ -54,7 +55,7 @@ pub const TerrainEventHandler = struct {
 
     pub fn getInstance(anyType: ?Object) ?*TerrainEventHandler {
         var eventHandlerCanBeNull: ?Object = Inheritance.upcast(?Object, Inheritance.call(TerrainEventHandler.hashtable.?, "get", .{ anyType }));
-        if (eventHandlerCanBeNull == null) {
+        if (Object.isNull(eventHandlerCanBeNull)) {
             eventHandlerCanBeNull = Inheritance.upcast(@TypeOf(eventHandlerCanBeNull), TerrainEventHandler.create());
             _ = Inheritance.call(TerrainEventHandler.hashtable.?, "put", .{ anyType, eventHandlerCanBeNull });
         }
@@ -81,7 +82,7 @@ pub const TerrainEventHandler = struct {
 
     pub fn removeAllListeners(self: *Self) void {
         _ = self.list.?.clear();
-        _ = self.base.removeAllListeners();
+        _ = Inheritance.receiver(&self.base, "removeAllListeners").removeAllListeners();
     }
     
 
@@ -101,7 +102,7 @@ pub const TerrainEventHandler = struct {
                 _ = Inheritance.call(terrainEventListener.?, "onTerrainEvent", .{ Inheritance.cast(?*TerrainEvent, eventObject) });
             }
             // catch (Exception e):
-//                 _ = Inheritance.call(Inheritance.fieldPointer(self, "logUtil").*.?, "put", .{ Inheritance.fieldPointer(self, "commonStrings").*.?.EXCEPTION, self, EventStrings.getInstance().?.FIRE_EVENT, e });
+//                 _ = Inheritance.call(Inheritance.fieldPointer(self, "logUtil").*.?, "put", .{ Inheritance.fieldPointer(Inheritance.fieldPointer(self, "commonStrings").*.?, "EXCEPTION").*, self, Inheritance.fieldPointer(EventStrings.getInstance().?, "FIRE_EVENT").*, e });
             }
         }
         _ = Inheritance.call(&self.base, "fireEvent", .{ eventObject });

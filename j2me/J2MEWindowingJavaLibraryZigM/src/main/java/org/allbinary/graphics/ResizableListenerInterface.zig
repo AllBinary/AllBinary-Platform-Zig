@@ -26,7 +26,7 @@ pub const ResizableListenerInterface = struct {
     pointer: *anyopaque,
     object: Object,
     toStringFn: *const fn (pointer: *anyopaque) ?*String,
-    onResizableFn: *const fn (pointer: *anyopaque, isResizable: bool) void,
+    onResizableFn: *const fn (interface_pointer: *anyopaque, isResizable: bool) void,
 
     pub fn onResizable(self: *Self, isResizable: bool) void {
         return self.onResizableFn(self.pointer, isResizable);
@@ -38,15 +38,15 @@ pub const ResizableListenerInterface = struct {
 
     // The interface value of an object with the methods. Like a Java class a method can be declared by the object or a superclass.
     pub fn of(object: anytype) ?*Self {
-        const Implementation = @TypeOf(object);
+        const ImplementationType = @TypeOf(object);
         const Methods = struct {
             fn toString(pointer: *anyopaque) ?*String {
-                const implementation: Implementation = @ptrCast(@alignCast(pointer));
+                const implementation: ImplementationType = @ptrCast(@alignCast(pointer));
                 return String.valueOf(implementation);
             }
-            fn onResizable(pointer: *anyopaque, isResizable: bool) void {
-                const implementation: Implementation = @ptrCast(@alignCast(pointer));
-                return Inheritance.receiver(implementation, "onResizable").onResizable(isResizable);
+            fn onResizable(interface_pointer: *anyopaque, isResizable: bool) void {
+                const implementation: ImplementationType = @ptrCast(@alignCast(interface_pointer));
+                return Inheritance.call(implementation, "onResizable", .{ isResizable });
             }
         };
         const this = allocator.create(Self) catch unreachable;

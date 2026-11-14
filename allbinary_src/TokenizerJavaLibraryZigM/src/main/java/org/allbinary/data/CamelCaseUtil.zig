@@ -26,6 +26,7 @@ const CommonSeps = @import("org/allbinary/string/CommonSeps.zig").CommonSeps;
 const BasicArrayList = @import("org/allbinary/util/BasicArrayList.zig").BasicArrayList;
 const BasicArrayListD = @import("org/allbinary/util/BasicArrayListD.zig").BasicArrayListD;
 const Character = @import("java/lang/Character.zig").Character;
+const Exception = @import("java/lang/Exception.zig").Exception;
 
 pub const CamelCaseUtil = struct {
     const Self = @This();
@@ -57,13 +58,10 @@ pub const CamelCaseUtil = struct {
 
     // throws Exception
     pub fn getAsCamelCase(self: *Self, string: ?*String, stringBuilder: ?*StringMaker) ?*String {
-        if (string == null) {
-            return Inheritance.upcast(?*String, StringUtil.getInstance().?.EMPTY_STRING);
-        }
         const stringValidationUtil: ?*StringValidationUtil = Inheritance.upcast(?*StringValidationUtil, StringValidationUtil.getInstance());
         _ = Inheritance.call(stringBuilder.?, "delete", .{ 0, stringBuilder.?.length() });
         const list: ?*BasicArrayList = Inheritance.upcast(?*BasicArrayList, BasicArrayListD.create());
-        const tokenizer: ?*Tokenizer = Inheritance.callStatic(Tokenizer, "create1", .{ self.commonSeps.?.UNDERSCORE });
+        const tokenizer: ?*Tokenizer = Inheritance.callStatic(Tokenizer, "create1", .{ Inheritance.fieldPointer(self.commonSeps.?, "UNDERSCORE").* });
         _ = Inheritance.call(tokenizer.?, "getTokensFromString", .{ string, list });
         const size: i32 = list.?.size();
         var word: ?*String = null;

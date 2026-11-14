@@ -18,8 +18,8 @@ const allocator = std.heap.page_allocator;
 const String = @import("java/lang/String.zig").String;
 const Object = @import("java/lang/Object.zig").Object;
 const Inheritance = @import("zig/Inheritance.zig");
-// const Image = @import("javax/microedition/lcdui/Image.zig").Image;
-// const Sprite = @import("javax/microedition/lcdui/game/Sprite.zig").Sprite;
+const Image = @import("javax/microedition/lcdui/Image.zig").Image;
+const Sprite = @import("javax/microedition/lcdui/game/Sprite.zig").Sprite;
 const Animation = @import("org/allbinary/animation/Animation.zig").Animation;
 const AnimationBehaviorFactory = @import("org/allbinary/animation/AnimationBehaviorFactory.zig").AnimationBehaviorFactory;
 const ProceduralAnimationInterfaceFactoryInterface = @import("org/allbinary/animation/ProceduralAnimationInterfaceFactoryInterface.zig").ProceduralAnimationInterfaceFactoryInterface;
@@ -29,6 +29,7 @@ const ForcedLogUtil = @import("org/allbinary/logic/communication/log/ForcedLogUt
 const PrimitiveIntUtil = @import("org/allbinary/logic/math/PrimitiveIntUtil.zig").PrimitiveIntUtil;
 const AllBinaryAdjustedSpriteRotationAnimation = @import("org/allbinary/animation/image/sprite/AllBinaryAdjustedSpriteRotationAnimation.zig").AllBinaryAdjustedSpriteRotationAnimation;
 const AllBinarySpriteRotationAnimation = @import("org/allbinary/animation/image/sprite/AllBinarySpriteRotationAnimation.zig").AllBinarySpriteRotationAnimation;
+const Exception = @import("java/lang/Exception.zig").Exception;
 
 pub const AllBinarySpriteRotationAnimationFactory = struct {
     const Self = @This();
@@ -98,24 +99,24 @@ pub const AllBinarySpriteRotationAnimationFactory = struct {
     
 
     pub fn init(self: *Self, dx: i32, dy: i32) void {
-        Inheritance.fieldPointer(self, "animationFactoryInitializationVisitor").*.?.dx = Inheritance.upcast(@TypeOf(Inheritance.fieldPointer(self, "animationFactoryInitializationVisitor").*.?.dx), dx);
-        Inheritance.fieldPointer(self, "animationFactoryInitializationVisitor").*.?.dy = Inheritance.upcast(@TypeOf(Inheritance.fieldPointer(self, "animationFactoryInitializationVisitor").*.?.dy), dy);
+        Inheritance.fieldPointer(Inheritance.fieldPointer(self, "animationFactoryInitializationVisitor").*.?, "dx").* = Inheritance.upcast(@TypeOf(Inheritance.fieldPointer(Inheritance.fieldPointer(self, "animationFactoryInitializationVisitor").*.?, "dx").*), dx);
+        Inheritance.fieldPointer(Inheritance.fieldPointer(self, "animationFactoryInitializationVisitor").*.?, "dy").* = Inheritance.upcast(@TypeOf(Inheritance.fieldPointer(Inheritance.fieldPointer(self, "animationFactoryInitializationVisitor").*.?, "dy").*), dy);
     }
     
 
     pub fn initWH(self: *Self, dx: i32, dy: i32) void {
         _ = Inheritance.call(self, "init", .{ dx, dy });
-        Inheritance.fieldPointer(self, "animationFactoryInitializationVisitor").*.?.dx += (divide_N67977: { const left_N67977 = -Inheritance.fieldPointer(self, "animationFactoryInitializationVisitor").*.?.width; const right_N67977 = 5; break :divide_N67977 if (comptime @typeInfo(@TypeOf(left_N67977)) == .int or @TypeOf(left_N67977) == comptime_int) @divTrunc(left_N67977, right_N67977) else left_N67977 / right_N67977; });
-        Inheritance.fieldPointer(self, "animationFactoryInitializationVisitor").*.?.dy += (divide_N68038: { const left_N68038 = -Inheritance.fieldPointer(self, "animationFactoryInitializationVisitor").*.?.height; const right_N68038 = 5; break :divide_N68038 if (comptime @typeInfo(@TypeOf(left_N68038)) == .int or @TypeOf(left_N68038) == comptime_int) @divTrunc(left_N68038, right_N68038) else left_N68038 / right_N68038; });
+        Inheritance.fieldPointer(Inheritance.fieldPointer(self, "animationFactoryInitializationVisitor").*.?, "dx").* += (divide_N67977: { const left_N67977 = -Inheritance.fieldPointer(Inheritance.fieldPointer(self, "animationFactoryInitializationVisitor").*.?, "width").*; const right_N67977 = 5; break :divide_N67977 if (comptime @typeInfo(@TypeOf(left_N67977)) == .int or @TypeOf(left_N67977) == comptime_int) @divTrunc(left_N67977, right_N67977) else left_N67977 / right_N67977; });
+        Inheritance.fieldPointer(Inheritance.fieldPointer(self, "animationFactoryInitializationVisitor").*.?, "dy").* += (divide_N68038: { const left_N68038 = -Inheritance.fieldPointer(Inheritance.fieldPointer(self, "animationFactoryInitializationVisitor").*.?, "height").*; const right_N68038 = 5; break :divide_N68038 if (comptime @typeInfo(@TypeOf(left_N68038)) == .int or @TypeOf(left_N68038) == comptime_int) @divTrunc(left_N68038, right_N68038) else left_N68038 / right_N68038; });
     }
     
 
     // throws Exception
     pub fn getInstance(self: *Self, instanceId: i32) ?*Animation {
         _ = instanceId;
-        const sprite: ?*Sprite = Inheritance.upcast(?*Sprite, Inheritance.call(self.animationFactorySpriteScaleUtil.?, "createImage", .{ Inheritance.receiver(self, "getImage").getImage(), Inheritance.fieldPointer(self, "animationFactoryInitializationVisitor").*.?.width, Inheritance.fieldPointer(self, "animationFactoryInitializationVisitor").*.?.height, Inheritance.fieldPointer(self, "scaleProperties").*.?.scaleWidth, Inheritance.fieldPointer(self, "scaleProperties").*.?.scaleHeight }));
-        if (Inheritance.fieldPointer(self, "animationFactoryInitializationVisitor").*.?.dx != 0 or Inheritance.fieldPointer(self, "animationFactoryInitializationVisitor").*.?.dy != 0) {
-            return Inheritance.upcast(?*Animation, Inheritance.callStatic(AllBinaryAdjustedSpriteRotationAnimation, "create5", .{ sprite, Inheritance.receiver(self, "getImage").getImage(), Inheritance.fieldPointer(self, "animationFactoryInitializationVisitor").*.?.dx, Inheritance.fieldPointer(self, "animationFactoryInitializationVisitor").*.?.dy, Inheritance.fieldPointer(self, "animationBehaviorFactory").*.?.getOrCreateInstance() }));
+        const sprite: ?*Sprite = Inheritance.upcast(?*Sprite, Inheritance.call(self.animationFactorySpriteScaleUtil.?, "createImage", .{ Inheritance.receiver(self, "getImage").getImage(), Inheritance.fieldPointer(Inheritance.fieldPointer(self, "animationFactoryInitializationVisitor").*.?, "width").*, Inheritance.fieldPointer(Inheritance.fieldPointer(self, "animationFactoryInitializationVisitor").*.?, "height").*, Inheritance.fieldPointer(Inheritance.fieldPointer(self, "scaleProperties").*.?, "scaleWidth").*, Inheritance.fieldPointer(Inheritance.fieldPointer(self, "scaleProperties").*.?, "scaleHeight").* }));
+        if (Inheritance.fieldPointer(Inheritance.fieldPointer(self, "animationFactoryInitializationVisitor").*.?, "dx").* != 0 or Inheritance.fieldPointer(Inheritance.fieldPointer(self, "animationFactoryInitializationVisitor").*.?, "dy").* != 0) {
+            return Inheritance.upcast(?*Animation, Inheritance.callStatic(AllBinaryAdjustedSpriteRotationAnimation, "create5", .{ sprite, Inheritance.receiver(self, "getImage").getImage(), Inheritance.fieldPointer(Inheritance.fieldPointer(self, "animationFactoryInitializationVisitor").*.?, "dx").*, Inheritance.fieldPointer(Inheritance.fieldPointer(self, "animationFactoryInitializationVisitor").*.?, "dy").*, Inheritance.fieldPointer(self, "animationBehaviorFactory").*.?.getOrCreateInstance() }));
         } else {
             return Inheritance.upcast(?*Animation, Inheritance.callStatic(AllBinarySpriteRotationAnimation, "create3", .{ sprite, Inheritance.receiver(self, "getImage").getImage(), Inheritance.fieldPointer(self, "animationBehaviorFactory").*.?.getOrCreateInstance() }));
         }

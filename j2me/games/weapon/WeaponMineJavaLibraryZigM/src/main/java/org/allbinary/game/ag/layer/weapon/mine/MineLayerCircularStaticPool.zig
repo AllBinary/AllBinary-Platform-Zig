@@ -22,6 +22,7 @@ const WeaponLayerCircularPool = @import("org/allbinary/game/layer/weapon/WeaponL
 const ViewPositionFactoryInterface = @import("org/allbinary/view/ViewPositionFactoryInterface.zig").ViewPositionFactoryInterface;
 const MineCountedPickedUpLayerInterfaceFactory = @import("org/allbinary/game/ag/layer/weapon/mine/MineCountedPickedUpLayerInterfaceFactory.zig").MineCountedPickedUpLayerInterfaceFactory;
 const MineLayerFactory = @import("org/allbinary/game/ag/layer/weapon/mine/MineLayerFactory.zig").MineLayerFactory;
+const Exception = @import("java/lang/Exception.zig").Exception;
 
 pub const MineLayerCircularStaticPool = struct {
     const Self = @This();

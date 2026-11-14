@@ -6,10 +6,11 @@ const allocator = std.heap.page_allocator;
 const String = @import("java/lang/String.zig").String;
 const Object = @import("java/lang/Object.zig").Object;
 const Inheritance = @import("zig/Inheritance.zig");
-// const Image = @import("javax/microedition/lcdui/Image.zig").Image;
-// const NullImage = @import("javax/microedition/lcdui/NullImage.zig").NullImage;
+const Image = @import("javax/microedition/lcdui/Image.zig").Image;
+const NullImage = @import("javax/microedition/lcdui/NullImage.zig").NullImage;
 const BasicColor = @import("org/allbinary/graphics/color/BasicColor.zig").BasicColor;
 const ABCustomItem = @import("org/allbinary/graphics/form/item/ABCustomItem.zig").ABCustomItem;
+const Exception = @import("java/lang/Exception.zig").Exception;
 
 pub const ABCustomImageItem = struct {
     const Self = @This();

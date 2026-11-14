@@ -25,6 +25,7 @@ const StringUtil = @import("org/allbinary/logic/string/StringUtil.zig").StringUt
 const AllBinaryEventObject = @import("org/allbinary/logic/util/event/AllBinaryEventObject.zig").AllBinaryEventObject;
 const CommonStrings = @import("org/allbinary/string/CommonStrings.zig").CommonStrings;
 const CompleteMotionGestureInputInterface = @import("org/allbinary/game/input/CompleteMotionGestureInputInterface.zig").CompleteMotionGestureInputInterface;
+const Exception = @import("java/lang/Exception.zig").Exception;
 
 pub const CompleteMotionGestureInputEvent = struct {
     const Self = @This();
@@ -38,8 +39,8 @@ pub const CompleteMotionGestureInputEvent = struct {
 
     fn initFields(this: *Self) void {
         this.logUtil = Inheritance.upcast(?*LogUtil, LogUtil.getInstance());
-        this.name = Inheritance.upcast(?*String, StringUtil.getInstance().?.EMPTY_STRING);
-        this.motionGestureInput = Inheritance.upcast(?*MotionGestureInput, TouchMotionGestureFactory.getInstance().?.NO_MOTION);
+        this.name = Inheritance.upcast(?*String, Inheritance.fieldPointer(StringUtil.getInstance().?, "EMPTY_STRING").*);
+        this.motionGestureInput = Inheritance.upcast(?*MotionGestureInput, Inheritance.fieldPointer(TouchMotionGestureFactory.getInstance().?, "NO_MOTION").*);
     }
     
 
@@ -54,7 +55,7 @@ pub const CompleteMotionGestureInputEvent = struct {
         }
         // catch (Exception e):
 //             const commonStrings: ?*CommonStrings = Inheritance.upcast(?*CommonStrings, CommonStrings.getInstance()); _ = commonStrings;
-//             _ = Inheritance.call(this.logUtil.?, "put", .{ commonStrings.?.EXCEPTION, this, String.literal("InputToGameKeyEventAction"), e });
+//             _ = Inheritance.call(this.logUtil.?, "put", .{ Inheritance.fieldPointer(commonStrings.?, "EXCEPTION").*, this, String.literal("InputToGameKeyEventAction"), e });
         Inheritance.bindOverrides(this);
         return this;
     }

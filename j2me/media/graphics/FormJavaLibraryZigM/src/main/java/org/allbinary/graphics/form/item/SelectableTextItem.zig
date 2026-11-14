@@ -18,7 +18,7 @@ const allocator = std.heap.page_allocator;
 const String = @import("java/lang/String.zig").String;
 const Object = @import("java/lang/Object.zig").Object;
 const Inheritance = @import("zig/Inheritance.zig");
-// const Graphics = @import("javax/microedition/lcdui/Graphics.zig").Graphics;
+const Graphics = @import("javax/microedition/lcdui/Graphics.zig").Graphics;
 const BasicColor = @import("org/allbinary/graphics/color/BasicColor.zig").BasicColor;
 const ABStringComponent = @import("org/allbinary/graphics/form/item/ABStringComponent.zig").ABStringComponent;
 const ABTextItem = @import("org/allbinary/graphics/form/item/ABTextItem.zig").ABTextItem;
@@ -47,7 +47,7 @@ pub const SelectableTextItem = struct {
     pub fn paintXY(self: *Self, graphics: ?*Graphics, x: i32, y: i32) void {
         _ = Inheritance.call(Inheritance.fieldPointer(self, "myFontProcessor").*.?, "process", .{ graphics });
         const stringComponent: ?*ABStringComponent = Inheritance.upcast(?*ABStringComponent, Inheritance.receiver(self, "getLabelStringComponent").getLabelStringComponent());
-        if (stringComponent != null) {
+        if (!Object.isNull(stringComponent)) {
             _ = Inheritance.call(graphics.?, "setColor", .{ Inheritance.receiverOf(stringComponent.?.getForegroundBasicColor().?, "intValue").intValue() });
         }
         _ = Inheritance.call(graphics.?, "drawString", .{ Inheritance.receiver(self, "getLabel").getLabel(), x + 2, y, 0 });

@@ -38,7 +38,7 @@ pub const BasicGroupFactory = struct {
 
     // Static fields with runtime initializers: call staticInit once at startup
     pub fn staticInit() void {
-        instance = Inheritance.upcast(?Object, NullUtil.getInstance().?.NULL_OBJECT);
+        instance = Inheritance.upcast(?Object, Inheritance.fieldPointer(NullUtil.getInstance().?, "NULL_OBJECT").*);
     }
 
     fn initFields(this: *Self) void {
@@ -48,10 +48,10 @@ pub const BasicGroupFactory = struct {
         this.ENEMY = Inheritance.callStatic(Group, "create2", .{ String.literal("Bad Guys"), @as(i16, @intCast(1)) });
         this.ENEMY_ON_LEVEL = Inheritance.callStatic(Group, "create2", .{ String.literal("Bad Guys on Level"), @as(i16, @intCast(2)) });
         this.NONE = Inheritance.callStatic(Group, "create2", .{ String.literal("Not On A Team"), @as(i16, @intCast(3)) });
-        this.GOOD_ARRAY = @constCast(&[_]?*Group{ this.GOOD })[0..];
-        this.ENEMY_ARRAY = @constCast(&[_]?*Group{ this.ENEMY })[0..];
-        this.ENEMY_ON_LEVEL_ARRAY = @constCast(&[_]?*Group{ this.ENEMY, this.ENEMY_ON_LEVEL })[0..];
-        this.NONE_ARRAY = @constCast(&[_]?*Group{ this.NONE })[0..];
+        this.GOOD_ARRAY = @constCast(&[_]?*Group{ Inheritance.upcast(?*Group, this.GOOD) })[0..];
+        this.ENEMY_ARRAY = @constCast(&[_]?*Group{ Inheritance.upcast(?*Group, this.ENEMY) })[0..];
+        this.ENEMY_ON_LEVEL_ARRAY = @constCast(&[_]?*Group{ Inheritance.upcast(?*Group, this.ENEMY), Inheritance.upcast(?*Group, this.ENEMY_ON_LEVEL) })[0..];
+        this.NONE_ARRAY = @constCast(&[_]?*Group{ Inheritance.upcast(?*Group, this.NONE) })[0..];
     }
 
     pub fn create() *Self {
@@ -63,7 +63,7 @@ pub const BasicGroupFactory = struct {
     
 
     pub fn getInstance() ?*BasicGroupFactory {
-        if (Object.same(BasicGroupFactory.instance, NullUtil.getInstance().?.NULL_OBJECT)) {
+        if (Object.same(BasicGroupFactory.instance, Inheritance.fieldPointer(NullUtil.getInstance().?, "NULL_OBJECT").*)) {
             BasicGroupFactory.instance = Inheritance.upcast(@TypeOf(BasicGroupFactory.instance), BasicGroupFactory.create());
         }
         return Inheritance.cast(?*BasicGroupFactory, BasicGroupFactory.instance);

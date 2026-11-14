@@ -18,8 +18,8 @@ const allocator = std.heap.page_allocator;
 const String = @import("java/lang/String.zig").String;
 const Object = @import("java/lang/Object.zig").Object;
 const Inheritance = @import("zig/Inheritance.zig");
-// const GL = @import("javax/microedition/khronos/opengles/GL.zig").GL;
-// const Graphics = @import("javax/microedition/lcdui/Graphics.zig").Graphics;
+const GL = @import("javax/microedition/khronos/opengles/GL.zig").GL;
+const Graphics = @import("javax/microedition/lcdui/Graphics.zig").Graphics;
 const Animation = @import("org/allbinary/animation/Animation.zig").Animation;
 const IndexedAnimation = @import("org/allbinary/animation/IndexedAnimation.zig").IndexedAnimation;
 const NullAnimationFactory = @import("org/allbinary/animation/NullAnimationFactory.zig").NullAnimationFactory;
@@ -40,6 +40,7 @@ const Movement = @import("org/allbinary/physics/movement/Movement.zig").Movement
 const ViewPosition = @import("org/allbinary/view/ViewPosition.zig").ViewPosition;
 const ViewPositionBase = @import("org/allbinary/view/ViewPositionBase.zig").ViewPositionBase;
 const CollidableWeaponBehavior = @import("org/allbinary/game/layer/weapon/CollidableWeaponBehavior.zig").CollidableWeaponBehavior;
+const Exception = @import("java/lang/Exception.zig").Exception;
 
 pub const WeaponLayer = struct {
     const Self = @This();
@@ -78,7 +79,7 @@ pub const WeaponLayer = struct {
     pub fn create8(name: ?*String, remoteInfo: ?*RemoteInfo, multiPlayerType: i32, movement: ?*Movement, animationInterface: ?*Animation, destroyedAnimationInterface: ?*Animation, rectangle: ?*Rectangle, viewPosition: ?*ViewPositionBase) *Self {
         const this = allocator.create(Self) catch unreachable;
         this.* = .{};
-        this.base = Inheritance.callStatic(MultiPlayerGameLayer, "create5", .{ remoteInfo, BasicGroupFactory.getInstance().?.NONE_ARRAY, name, rectangle, viewPosition }).*;
+        this.base = Inheritance.callStatic(MultiPlayerGameLayer, "create5", .{ remoteInfo, Inheritance.fieldPointer(BasicGroupFactory.getInstance().?, "NONE_ARRAY").*, name, rectangle, viewPosition }).*;
         this.initFields();
         this.initAnimationInterface = animationInterface;
         _ = Inheritance.call(this, "setAnimationInterface", .{ animationInterface });
@@ -98,9 +99,9 @@ pub const WeaponLayer = struct {
 
     // throws Exception
     pub fn initXYZ(self: *Self, x: i32, y: i32, z: i32) void {
-        Inheritance.fieldPointer(self, "x").* = x;
-        Inheritance.fieldPointer(self, "y").* = y;
-        Inheritance.fieldPointer(self, "z").* = z;
+        Inheritance.fieldPointer(self, "x").* = Inheritance.upcast(@TypeOf(Inheritance.fieldPointer(self, "x").*), x);
+        Inheritance.fieldPointer(self, "y").* = Inheritance.upcast(@TypeOf(Inheritance.fieldPointer(self, "y").*), y);
+        Inheritance.fieldPointer(self, "z").* = Inheritance.upcast(@TypeOf(Inheritance.fieldPointer(self, "z").*), z);
     }
     
 
@@ -112,7 +113,7 @@ pub const WeaponLayer = struct {
         _ = Inheritance.call(self, "setOwnerLayerInterface", .{ sourceLayerInterface });
         _ = Inheritance.call(self.collidableWeaponBehavior.?, "init", .{ sourceLayerInterface });
         _ = self.setGroupInterfaces();
-        if (scoreable != null) {
+        if (!Object.isNull(scoreable)) {
             self.scoreableInterface = scoreable;
         }
         self.totalDamage = 0;
@@ -124,8 +125,8 @@ pub const WeaponLayer = struct {
 
     pub fn setGroupInterfaces(self: *Self) void {
         const basicGroupFactory: ?*BasicGroupFactory = Inheritance.upcast(?*BasicGroupFactory, BasicGroupFactory.getInstance());
-        if (Object.same(Inheritance.receiver(self.sourceLayerInterface.?, "getGroupInterface").getGroupInterface()[@intCast(0)], basicGroupFactory.?.ENEMY)) {
-            _ = Inheritance.call(self, "setGroupInterface", .{ basicGroupFactory.?.ENEMY_ARRAY });
+        if (Object.same(Inheritance.receiver(self.sourceLayerInterface.?, "getGroupInterface").getGroupInterface()[@intCast(0)], Inheritance.fieldPointer(basicGroupFactory.?, "ENEMY").*)) {
+            _ = Inheritance.call(self, "setGroupInterface", .{ Inheritance.fieldPointer(basicGroupFactory.?, "ENEMY_ARRAY").* });
         } else {
             _ = Inheritance.call(self, "setGroupInterface", .{ Inheritance.receiver(self.sourceLayerInterface.?, "getGroupInterface").getGroupInterface() });
         }
@@ -139,7 +140,7 @@ pub const WeaponLayer = struct {
             if (Inheritance.receiver(self, "isReadyForExplosion").isReadyForExplosion()) {
                 const indexedAnimationInterface: ?*IndexedAnimation = Inheritance.cast(?*IndexedAnimation, self.getAnimationInterface());
                 const currentFrame: i32 = Inheritance.receiver(indexedAnimationInterface.?, "getFrame").getFrame();
-                if (currentFrame < Inheritance.receiver(indexedAnimationInterface.?, "getAnimationSize").getAnimationSize() - 1) {
+                if (Inheritance.arithmetic(.less, currentFrame, Inheritance.arithmetic(.subtract, Inheritance.receiver(indexedAnimationInterface.?, "getAnimationSize").getAnimationSize(), 1))) {
                     _ = Inheritance.receiver(indexedAnimationInterface.?, "nextFrame").nextFrame();
                 } else {
                     _ = Inheritance.call(self, "setDestroyed", .{ true });
@@ -172,7 +173,7 @@ pub const WeaponLayer = struct {
     
 
     pub fn givePoints(self: *Self, total: i32) void {
-        _ = Inheritance.call(self.scoreableInterface.?, "addPoints", .{ Inheritance.receiverOf(GameConfigurationUtil.getInstance().?, "getCompetitionValue").getCompetitionValue() * total });
+        _ = Inheritance.call(self.scoreableInterface.?, "addPoints", .{ Inheritance.arithmetic(.multiply, Inheritance.receiverOf(GameConfigurationUtil.getInstance().?, "getCompetitionValue").getCompetitionValue(), total) });
     }
     
 
@@ -247,13 +248,13 @@ pub const WeaponLayer = struct {
 
     pub fn paint(self: *Self, graphics: ?*Graphics) void {
         const viewPosition: ?*ViewPositionBase = Inheritance.upcast(?*ViewPositionBase, Inheritance.receiver(self, "getViewPosition").getViewPosition());
-        _ = Inheritance.call(self.animationInterface.?, "paintXY", .{ graphics, Inheritance.receiver(viewPosition.?, "getX").getX() - Inheritance.receiver(self, "getHalfWidth").getHalfWidth(), Inheritance.receiver(viewPosition.?, "getY").getY() - Inheritance.receiver(self, "getHalfHeight").getHalfHeight() });
+        _ = Inheritance.call(self.animationInterface.?, "paintXY", .{ graphics, Inheritance.arithmetic(.subtract, Inheritance.receiver(viewPosition.?, "getX").getX(), Inheritance.receiver(self, "getHalfWidth").getHalfWidth()), Inheritance.arithmetic(.subtract, Inheritance.receiver(viewPosition.?, "getY").getY(), Inheritance.receiver(self, "getHalfHeight").getHalfHeight()) });
     }
     
 
     pub fn paintThreed(self: *Self, graphics: ?*Graphics) void {
         const viewPosition: ?*ViewPositionBase = Inheritance.upcast(?*ViewPositionBase, Inheritance.receiver(self, "getViewPosition").getViewPosition());
-        _ = Inheritance.call(self.animationInterface.?, "paintThreedXYZ", .{ graphics, Inheritance.receiver(viewPosition.?, "getX").getX() - Inheritance.receiver(self, "getHalfWidth").getHalfWidth(), Inheritance.receiver(viewPosition.?, "getY").getY() - Inheritance.receiver(self, "getHalfHeight").getHalfHeight(), Inheritance.receiver(viewPosition.?, "getZ").getZ() - Inheritance.receiver(self, "getHalfDepth").getHalfDepth() });
+        _ = Inheritance.call(self.animationInterface.?, "paintThreedXYZ", .{ graphics, Inheritance.arithmetic(.subtract, Inheritance.receiver(viewPosition.?, "getX").getX(), Inheritance.receiver(self, "getHalfWidth").getHalfWidth()), Inheritance.arithmetic(.subtract, Inheritance.receiver(viewPosition.?, "getY").getY(), Inheritance.receiver(self, "getHalfHeight").getHalfHeight()), Inheritance.arithmetic(.subtract, Inheritance.receiver(viewPosition.?, "getZ").getZ(), Inheritance.receiver(self, "getHalfDepth").getHalfDepth()) });
     }
     
 

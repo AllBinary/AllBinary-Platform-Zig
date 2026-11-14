@@ -18,7 +18,7 @@ const allocator = std.heap.page_allocator;
 const String = @import("java/lang/String.zig").String;
 const Object = @import("java/lang/Object.zig").Object;
 const Inheritance = @import("zig/Inheritance.zig");
-// const Graphics = @import("javax/microedition/lcdui/Graphics.zig").Graphics;
+const Graphics = @import("javax/microedition/lcdui/Graphics.zig").Graphics;
 const BasicColor = @import("org/allbinary/graphics/color/BasicColor.zig").BasicColor;
 const ColorFillPaintable = @import("org/allbinary/game/paint/ColorFillPaintable.zig").ColorFillPaintable;
 
@@ -39,7 +39,7 @@ pub const OverScanColorFillPaintable = struct {
 
     pub fn paint(self: *Self, graphics: ?*Graphics) void {
         _ = Inheritance.call(graphics.?, "setColor", .{ Inheritance.fieldPointer(self, "colorP").* });
-        _ = Inheritance.call(graphics.?, "fillRect", .{ -graphics.?.getClipX(), -graphics.?.getClipY(), Inheritance.receiverOf(Inheritance.fieldPointer(self, "displayInfoSingleton").*.?, "getLastWidth").getLastWidth() + (graphics.?.getClipX() * 2), Inheritance.receiverOf(Inheritance.fieldPointer(self, "displayInfoSingleton").*.?, "getLastHeight").getLastHeight() + (graphics.?.getClipY() * 2) });
+        _ = Inheritance.call(graphics.?, "fillRect", .{ -graphics.?.getClipX(), -graphics.?.getClipY(), Inheritance.plus(Inheritance.receiverOf(Inheritance.fieldPointer(self, "displayInfoSingleton").*.?, "getLastWidth").getLastWidth(), (Inheritance.arithmetic(.multiply, graphics.?.getClipX(), 2))), Inheritance.plus(Inheritance.receiverOf(Inheritance.fieldPointer(self, "displayInfoSingleton").*.?, "getLastHeight").getLastHeight(), (Inheritance.arithmetic(.multiply, graphics.?.getClipY(), 2))) });
     }
 };
 

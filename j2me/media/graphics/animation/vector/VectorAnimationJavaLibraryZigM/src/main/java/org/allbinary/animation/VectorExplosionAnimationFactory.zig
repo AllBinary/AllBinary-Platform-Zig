@@ -26,6 +26,7 @@ const ProceduralAnimationInterfaceFactoryInterface = @import("org/allbinary/anim
 const VectorAnimationInterface = @import("org/allbinary/animation/VectorAnimationInterface.zig").VectorAnimationInterface;
 const VectorExplosionGenerator = @import("org/allbinary/animation/VectorExplosionGenerator.zig").VectorExplosionGenerator;
 const VectorRotationAnimation = @import("org/allbinary/animation/VectorRotationAnimation.zig").VectorRotationAnimation;
+const Exception = @import("java/lang/Exception.zig").Exception;
 
 pub const VectorExplosionAnimationFactory = struct {
     const Self = @This();
@@ -38,7 +39,7 @@ pub const VectorExplosionAnimationFactory = struct {
 
     fn initFields(this: *Self) void {
         this.vectorExplosionGenerator = Inheritance.upcast(?*VectorExplosionGenerator, VectorExplosionGenerator.getInstance());
-        this.basicColor = Inheritance.upcast(?*BasicColor, BasicColorFactory.getInstance().?.WHITE);
+        this.basicColor = Inheritance.upcast(?*BasicColor, Inheritance.fieldPointer(BasicColorFactory.getInstance().?, "WHITE").*);
         
     }
     
@@ -58,7 +59,7 @@ pub const VectorExplosionAnimationFactory = struct {
         const vectorRotationAnimationInterface: ?*VectorAnimationInterface = Inheritance.cast(?*VectorAnimationInterface, animationInterface);
         const frame: i32 = Inheritance.receiver(vectorRotationAnimationInterface.?, "getFrame").getFrame();
         const framePoints: [][]i32 = Inheritance.call(vectorRotationAnimationInterface.?, "getPoints", .{ frame });
-        const points: [][][]i32 = Inheritance.call(self.vectorExplosionGenerator.?, "getInstance", .{ framePoints, 6, self.vectorExplosionGenerator.?.ROTATION });
+        const points: [][][]i32 = Inheritance.call(self.vectorExplosionGenerator.?, "getInstance", .{ framePoints, 6, Inheritance.fieldPointer(self.vectorExplosionGenerator.?, "ROTATION").* });
         return Inheritance.upcast(?*Animation, Inheritance.callStatic(VectorRotationAnimation, "create3", .{ points, self.getBasicColorP(), self.animationBehaviorFactory.?.getOrCreateInstance() }));
     }
     

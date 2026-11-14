@@ -45,7 +45,7 @@ pub const ResourceLoadingLevelFactory = struct {
         this.LEVEL = Inheritance.callStatic(ResourceLoadingLevel, "create2", .{ String.literal("Level"), @as(i32, std.math.maxInt(i32)) - 99 });
         this.MAX_LEVEL = Inheritance.callStatic(ResourceLoadingLevel, "create2", .{ String.literal("Max Level"), @as(i32, std.math.maxInt(i32)) - 100 });
         this.LOAD_ALL = Inheritance.callStatic(ResourceLoadingLevel, "create2", .{ String.literal("Load All"), -1 });
-        this.RESOURCE_LOADING_LEVEL_ARRAY = @constCast(&[_]?*ResourceLoadingLevel{ this.LOAD_ALL, this.MAX_LEVEL, this.LEVEL, this.LOAD_GAME, this.LOAD_TOUCH, this.LOAD_EARLY })[0..];
+        this.RESOURCE_LOADING_LEVEL_ARRAY = @constCast(&[_]?*ResourceLoadingLevel{ Inheritance.upcast(?*ResourceLoadingLevel, this.LOAD_ALL), Inheritance.upcast(?*ResourceLoadingLevel, this.MAX_LEVEL), Inheritance.upcast(?*ResourceLoadingLevel, this.LEVEL), Inheritance.upcast(?*ResourceLoadingLevel, this.LOAD_GAME), Inheritance.upcast(?*ResourceLoadingLevel, this.LOAD_TOUCH), Inheritance.upcast(?*ResourceLoadingLevel, this.LOAD_EARLY) })[0..];
     }
 
     pub fn create() *Self {

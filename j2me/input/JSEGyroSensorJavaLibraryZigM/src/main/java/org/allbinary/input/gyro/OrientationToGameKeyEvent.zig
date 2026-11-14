@@ -23,6 +23,7 @@ const SensorFeatureFactory = @import("org/allbinary/game/configuration/feature/S
 const Orientation = @import("org/allbinary/logic/math/Orientation.zig").Orientation;
 const AllBinaryOrientationSensor = @import("org/allbinary/input/gyro/AllBinaryOrientationSensor.zig").AllBinaryOrientationSensor;
 const NoGyroSensor = @import("org/allbinary/input/gyro/NoGyroSensor.zig").NoGyroSensor;
+const Exception = @import("java/lang/Exception.zig").Exception;
 
 pub const OrientationToGameKeyEvent = struct {
     const Self = @This();
@@ -40,7 +41,7 @@ pub const OrientationToGameKeyEvent = struct {
         const this = allocator.create(Self) catch unreachable;
         this.* = .{};
         this.initFields();
-        if (Inheritance.call(Features.getInstance().?, "isFeature", .{ SensorFeatureFactory.getInstance().?.NO_ORIENTATION })) {
+        if (Inheritance.call(Features.getInstance().?, "isFeature", .{ Inheritance.fieldPointer(SensorFeatureFactory.getInstance().?, "NO_ORIENTATION").* })) {
             this.allBinaryGyroSensor = Inheritance.upcast(@TypeOf(this.allBinaryGyroSensor), NoGyroSensor.create());
         } else {
             std.debug.panic("{any}", .{exception: { _ = String.literal("Not Such Feature"); break :exception error.Exception; }});

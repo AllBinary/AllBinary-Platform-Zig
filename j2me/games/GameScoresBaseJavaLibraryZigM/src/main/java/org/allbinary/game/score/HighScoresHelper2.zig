@@ -70,7 +70,7 @@ pub const HighScoresHelper2 = struct {
         _ = self.circularIndexUtil.?.next();
         var highScores: ?*HighScores = Inheritance.upcast(?*HighScores, Inheritance.fieldPointer(self, "highScoresArrayP").*[@intCast(self.circularIndexUtil.?.getIndex())]);
         var index: i32 = 0;
-        while (highScores.?.getTotal() < 1 and index < @as(i32, @intCast(Inheritance.fieldPointer(self, "highScoresArrayP").*.len))) {
+        while (Inheritance.arithmetic(.less, highScores.?.getTotal(), 1) and index < @as(i32, @intCast(Inheritance.fieldPointer(self, "highScoresArrayP").*.len))) {
             highScores = Inheritance.upcast(@TypeOf(highScores), Inheritance.fieldPointer(self, "highScoresArrayP").*[@intCast(self.circularIndexUtil.?.next())]);
             index += 1;
         }

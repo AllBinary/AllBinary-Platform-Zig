@@ -54,19 +54,19 @@ pub const ValidatorBase = struct {
 
     pub fn isValid(self: *Self) ?*Boolean {
         _ = self;
-        return Inheritance.upcast(?*Boolean, BooleanFactory.getInstance().?.TRUE);
+        return Inheritance.upcast(?*Boolean, Inheritance.fieldPointer(BooleanFactory.getInstance().?, "TRUE").*);
     }
     
 
     pub fn validationInfo(self: *Self) ?*String {
         _ = self;
-        return Inheritance.upcast(?*String, StringUtil.getInstance().?.EMPTY_STRING);
+        return Inheritance.upcast(?*String, Inheritance.fieldPointer(StringUtil.getInstance().?, "EMPTY_STRING").*);
     }
     
 
     pub fn toHashtable(self: *Self) ?*ABHashtable {
         _ = self;
-        return Inheritance.upcast(?*ABHashtable, StdUtil.getInstance().?.NULL_TABLE);
+        return Inheritance.upcast(?*ABHashtable, Inheritance.fieldPointer(StdUtil.getInstance().?, "NULL_TABLE").*);
     }
     
 

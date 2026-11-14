@@ -69,7 +69,7 @@ pub const ThreadFactoryUtil = struct {
     
 
     pub fn getInstanceForRunnable(self: *Self, runnable: ?*ABRunnable) ?*Thread {
-        return Inheritance.upcast(?*Thread, Inheritance.call(self, "getInstanceType", .{ runnable, Inheritance.receiver(runnable.?, "getType").getType() }));
+        return Inheritance.upcast(?*Thread, Inheritance.call(self, "getInstanceType", .{ runnable, runnable.?.getType() }));
     }
     
 
@@ -78,17 +78,17 @@ pub const ThreadFactoryUtil = struct {
         if (J2MEUtil.isHTML()) {
             if (@"type" == DemoCanvas.TYPE or @"type" == AllBinaryGameCanvas.TYPE) {
                 const demoGameSingleThreadStartRunnable: ?*RunnableCanvasSingleThreadStartRunnable = Inheritance.callStatic(RunnableCanvasSingleThreadStartRunnable, "create1", .{ Inheritance.cast(?*RunnableCanvas, runnable) });
-                _ = Inheritance.callStatic(PreLogUtil, "put", .{ Object.toString(Object.of(Inheritance.call(Inheritance.call(StringMaker.create(), "append", .{ String.literal("Using Pseudo Thread for DemoCanvas/AllBinaryGameCanvas under PlayN/HTML5: ") }).?, "append", .{ Inheritance.call(StringUtil.getInstance().?, "toString", .{ runnable }) }))), self, commonStrings.?.CONSTRUCTOR });
+                _ = Inheritance.callStatic(PreLogUtil, "put", .{ Object.toString(Object.of(Inheritance.call(Inheritance.call(StringMaker.create(), "append", .{ String.literal("Using Pseudo Thread for DemoCanvas/AllBinaryGameCanvas under PlayN/HTML5: ") }).?, "append", .{ Inheritance.call(StringUtil.getInstance().?, "toString", .{ runnable }) }))), self, Inheritance.fieldPointer(commonStrings.?, "CONSTRUCTOR").* });
                 const primaryThreadPool: ?*ThreadPool = Inheritance.upcast(?*ThreadPool, PrimaryThreadPool.getInstance());
                 _ = Inheritance.call(primaryThreadPool.?, "runTask", .{ demoGameSingleThreadStartRunnable });
             } else {
-                _ = Inheritance.callStatic(PreLogUtil, "put", .{ Object.toString(Object.of(Inheritance.call(Inheritance.call(StringMaker.create(), "append", .{ String.literal("Using Pseudo Thread for Runnable under PlayN/HTML5: ") }).?, "append", .{ Inheritance.call(StringUtil.getInstance().?, "toString", .{ runnable }) }))), self, commonStrings.?.CONSTRUCTOR });
+                _ = Inheritance.callStatic(PreLogUtil, "put", .{ Object.toString(Object.of(Inheritance.call(Inheritance.call(StringMaker.create(), "append", .{ String.literal("Using Pseudo Thread for Runnable under PlayN/HTML5: ") }).?, "append", .{ Inheritance.call(StringUtil.getInstance().?, "toString", .{ runnable }) }))), self, Inheritance.fieldPointer(commonStrings.?, "CONSTRUCTOR").* });
                 const primaryThreadPool: ?*ThreadPool = Inheritance.upcast(?*ThreadPool, PrimaryThreadPool.getInstance());
                 _ = Inheritance.call(primaryThreadPool.?, "runTask", .{ runnable });
             }
         }
         const thread: ?*Thread = Inheritance.callStatic(Thread, "create2", .{ runnable, Object.toString(Object.of(runnable)) });
-        _ = Inheritance.call(self.logUtil.?, "putF", .{ Object.toString(Object.of(thread)), self, commonStrings.?.CONSTRUCTOR });
+        _ = Inheritance.call(self.logUtil.?, "putF", .{ Object.toString(Object.of(thread)), self, Inheritance.fieldPointer(commonStrings.?, "CONSTRUCTOR").* });
         return thread;
     }
     

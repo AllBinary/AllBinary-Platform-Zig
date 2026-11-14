@@ -18,14 +18,15 @@ const allocator = std.heap.page_allocator;
 const String = @import("java/lang/String.zig").String;
 const Object = @import("java/lang/Object.zig").Object;
 const Inheritance = @import("zig/Inheritance.zig");
-// const Canvas = @import("javax/microedition/lcdui/Canvas.zig").Canvas;
-// const NullCanvas = @import("javax/microedition/lcdui/NullCanvas.zig").NullCanvas;
+const Canvas = @import("javax/microedition/lcdui/Canvas.zig").Canvas;
+const NullCanvas = @import("javax/microedition/lcdui/NullCanvas.zig").NullCanvas;
 const PlayerGameInput = @import("org/allbinary/game/input/PlayerGameInput.zig").PlayerGameInput;
 const MyCanvas = @import("org/allbinary/graphics/displayable/MyCanvas.zig").MyCanvas;
 const BaseMotionGestureEventListener = @import("org/allbinary/input/motion/gesture/observer/BaseMotionGestureEventListener.zig").BaseMotionGestureEventListener;
 const MotionGestureEvent = @import("org/allbinary/input/motion/gesture/observer/MotionGestureEvent.zig").MotionGestureEvent;
 const BasicArrayList = @import("org/allbinary/util/BasicArrayList.zig").BasicArrayList;
 const BasicArrayListD = @import("org/allbinary/util/BasicArrayListD.zig").BasicArrayListD;
+const Exception = @import("java/lang/Exception.zig").Exception;
 
 pub const BasicMenuInputProcessor = struct {
     const Self = @This();
@@ -64,7 +65,7 @@ pub const BasicMenuInputProcessor = struct {
     
 
     pub fn setCanvas(self: *Self, canvas: ?*MyCanvas) void {
-        self.canvas = canvas;
+        self.canvas = Inheritance.upcast(@TypeOf(self.canvas), canvas);
     }
     
 

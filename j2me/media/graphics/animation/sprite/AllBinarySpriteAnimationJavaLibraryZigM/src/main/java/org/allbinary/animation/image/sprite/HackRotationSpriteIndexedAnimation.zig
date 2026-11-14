@@ -18,14 +18,15 @@ const allocator = std.heap.page_allocator;
 const String = @import("java/lang/String.zig").String;
 const Object = @import("java/lang/Object.zig").Object;
 const Inheritance = @import("zig/Inheritance.zig");
-// const Graphics = @import("javax/microedition/lcdui/Graphics.zig").Graphics;
-// const Image = @import("javax/microedition/lcdui/Image.zig").Image;
-// const Sprite = @import("javax/microedition/lcdui/game/Sprite.zig").Sprite;
+const Graphics = @import("javax/microedition/lcdui/Graphics.zig").Graphics;
+const Image = @import("javax/microedition/lcdui/Image.zig").Image;
+const Sprite = @import("javax/microedition/lcdui/game/Sprite.zig").Sprite;
 const AnimationBehavior = @import("org/allbinary/animation/AnimationBehavior.zig").AnimationBehavior;
 const RotationAnimation = @import("org/allbinary/animation/RotationAnimation.zig").RotationAnimation;
 const PrimitiveIntUtil = @import("org/allbinary/logic/math/PrimitiveIntUtil.zig").PrimitiveIntUtil;
 const AngleInfo = @import("org/allbinary/math/AngleInfo.zig").AngleInfo;
 const CircularIndexUtil = @import("org/allbinary/util/CircularIndexUtil.zig").CircularIndexUtil;
+const Exception = @import("java/lang/Exception.zig").Exception;
 
 pub const HackRotationSpriteIndexedAnimation = struct {
     const Self = @This();
@@ -77,17 +78,17 @@ pub const HackRotationSpriteIndexedAnimation = struct {
     
 
     pub fn nextRotation(self: *Self) void {
-        _ = self.sprite.?.nextFrame();
+        _ = Inheritance.receiver(self.sprite.?, "nextFrame").nextFrame();
     }
     
 
     pub fn previousRotation(self: *Self) void {
-        _ = self.sprite.?.prevFrame();
+        _ = Inheritance.receiver(self.sprite.?, "prevFrame").prevFrame();
     }
     
 
     pub fn getSize(self: *Self) i32 {
-        return self.sprite.?.getRawFrameCount();
+        return Inheritance.receiver(self.sprite.?, "getRawFrameCount").getRawFrameCount();
     }
     
 
@@ -97,7 +98,7 @@ pub const HackRotationSpriteIndexedAnimation = struct {
     
 
     pub fn getFrame(self: *Self) i32 {
-        return self.sprite.?.getFrame();
+        return Inheritance.receiver(self.sprite.?, "getFrame").getFrame();
     }
     
 

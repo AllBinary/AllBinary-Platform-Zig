@@ -18,8 +18,8 @@ const allocator = std.heap.page_allocator;
 const String = @import("java/lang/String.zig").String;
 const Object = @import("java/lang/Object.zig").Object;
 const Inheritance = @import("zig/Inheritance.zig");
-// const MediaException = @import("javax/microedition/media/MediaException.zig").MediaException;
-// const TimeBase = @import("javax/microedition/media/TimeBase.zig").TimeBase;
+const MediaException = @import("javax/microedition/media/MediaException.zig").MediaException;
+const TimeBase = @import("javax/microedition/media/TimeBase.zig").TimeBase;
 
 // Java interface: an implementation is a pointer and a table of functions
 pub const TimeBaseInterface = struct {
@@ -28,8 +28,8 @@ pub const TimeBaseInterface = struct {
     pointer: *anyopaque,
     object: Object,
     toStringFn: *const fn (pointer: *anyopaque) ?*String,
-    getTimeBaseFn: *const fn (pointer: *anyopaque) ?*TimeBase,
-    setTimeBaseFn: *const fn (pointer: *anyopaque, timeBase: ?*TimeBase) void,
+    getTimeBaseFn: *const fn (interface_pointer: *anyopaque) ?*TimeBase,
+    setTimeBaseFn: *const fn (interface_pointer: *anyopaque, timeBase: ?*TimeBase) void,
 
     pub fn getTimeBase(self: *Self) ?*TimeBase {
         return self.getTimeBaseFn(self.pointer);
@@ -45,19 +45,19 @@ pub const TimeBaseInterface = struct {
 
     // The interface value of an object with the methods. Like a Java class a method can be declared by the object or a superclass.
     pub fn of(object: anytype) ?*Self {
-        const Implementation = @TypeOf(object);
+        const ImplementationType = @TypeOf(object);
         const Methods = struct {
             fn toString(pointer: *anyopaque) ?*String {
-                const implementation: Implementation = @ptrCast(@alignCast(pointer));
+                const implementation: ImplementationType = @ptrCast(@alignCast(pointer));
                 return String.valueOf(implementation);
             }
-            fn getTimeBase(pointer: *anyopaque) ?*TimeBase {
-                const implementation: Implementation = @ptrCast(@alignCast(pointer));
+            fn getTimeBase(interface_pointer: *anyopaque) ?*TimeBase {
+                const implementation: ImplementationType = @ptrCast(@alignCast(interface_pointer));
                 return Inheritance.upcast(?*TimeBase, Inheritance.receiver(implementation, "getTimeBase").getTimeBase());
             }
-            fn setTimeBase(pointer: *anyopaque, timeBase: ?*TimeBase) void {
-                const implementation: Implementation = @ptrCast(@alignCast(pointer));
-                return Inheritance.receiver(implementation, "setTimeBase").setTimeBase(timeBase);
+            fn setTimeBase(interface_pointer: *anyopaque, timeBase: ?*TimeBase) void {
+                const implementation: ImplementationType = @ptrCast(@alignCast(interface_pointer));
+                return Inheritance.call(implementation, "setTimeBase", .{ timeBase });
             }
         };
         const this = allocator.create(Self) catch unreachable;

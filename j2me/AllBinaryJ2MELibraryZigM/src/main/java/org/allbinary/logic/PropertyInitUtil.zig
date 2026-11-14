@@ -42,7 +42,7 @@ pub const PropertyInitUtil = struct {
     pub fn getInstance(value: i32) ?*PropertyInitUtil {
         const commonStrings: ?*CommonStrings = Inheritance.upcast(?*CommonStrings, CommonStrings.getInstance());
         const logUtil: ?*LogUtil = Inheritance.upcast(?*LogUtil, LogUtil.getInstance());
-        _ = Inheritance.call(logUtil.?, "putF", .{ Object.toString(Object.of(Inheritance.call(Inheritance.call(StringMaker.create(), "append", .{ String.literal("PropertyInitUtil: ") }).?, "appendint", .{ value }))), logUtil, commonStrings.?.CONSTRUCTOR });
+        _ = Inheritance.call(logUtil.?, "putF", .{ Object.toString(Object.of(Inheritance.call(Inheritance.call(StringMaker.create(), "append", .{ String.literal("PropertyInitUtil: ") }).?, "appendint", .{ value }))), logUtil, Inheritance.fieldPointer(commonStrings.?, "CONSTRUCTOR").* });
         return Inheritance.upcast(?*PropertyInitUtil, PropertyInitUtil.instance);
     }
 };

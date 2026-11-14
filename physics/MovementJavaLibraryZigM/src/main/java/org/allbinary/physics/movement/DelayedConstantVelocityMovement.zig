@@ -24,6 +24,7 @@ const BasicDecimal = @import("org/allbinary/logic/math/BasicDecimal.zig").BasicD
 const GameTickTimeDelayHelperFactory = @import("org/allbinary/time/GameTickTimeDelayHelperFactory.zig").GameTickTimeDelayHelperFactory;
 const TimeDelayHelper = @import("org/allbinary/time/TimeDelayHelper.zig").TimeDelayHelper;
 const BasicConstantVelocityMovement = @import("org/allbinary/physics/movement/BasicConstantVelocityMovement.zig").BasicConstantVelocityMovement;
+const Exception = @import("java/lang/Exception.zig").Exception;
 
 pub const DelayedConstantVelocityMovement = struct {
     const Self = @This();
@@ -56,7 +57,7 @@ pub const DelayedConstantVelocityMovement = struct {
 
     // throws Exception
     pub fn process(self: *Self, layer: ?*AllBinaryGameLayer) void {
-        if (Inheritance.call(self.timeDelayHelper.?, "isTime", .{ GameTickTimeDelayHelperFactory.getInstance().?.startTime })) {
+        if (Inheritance.call(self.timeDelayHelper.?, "isTime", .{ Inheritance.fieldPointer(GameTickTimeDelayHelperFactory.getInstance().?, "startTime").* })) {
             _ = Inheritance.call(&self.base, "process", .{ layer });
         }
     }

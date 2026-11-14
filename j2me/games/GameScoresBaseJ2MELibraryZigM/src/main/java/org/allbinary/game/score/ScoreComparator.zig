@@ -18,14 +18,15 @@ const allocator = std.heap.page_allocator;
 const String = @import("java/lang/String.zig").String;
 const Object = @import("java/lang/Object.zig").Object;
 const Inheritance = @import("zig/Inheritance.zig");
-// const ByteArrayInputStream = @import("java/io/ByteArrayInputStream.zig").ByteArrayInputStream;
-// const DataInputStream = @import("java/io/DataInputStream.zig").DataInputStream;
+const ByteArrayInputStream = @import("java/io/ByteArrayInputStream.zig").ByteArrayInputStream;
+const DataInputStream = @import("java/io/DataInputStream.zig").DataInputStream;
 // const EOFException = @import("java/io/EOFException.zig").EOFException;
-// const IOException = @import("java/io/IOException.zig").IOException;
-// const RecordComparator = @import("javax/microedition/rms/RecordComparator.zig").RecordComparator;
+const IOException = @import("java/io/IOException.zig").IOException;
+const RecordComparator = @import("javax/microedition/rms/RecordComparator.zig").RecordComparator;
 const LogUtil = @import("org/allbinary/logic/communication/log/LogUtil.zig").LogUtil;
 const CommonStrings = @import("org/allbinary/string/CommonStrings.zig").CommonStrings;
 const Long = @import("java/lang/Long.zig").Long;
+const Exception = @import("java/lang/Exception.zig").Exception;
 
 pub const ScoreComparator = struct {
     const Self = @This();
@@ -69,13 +70,13 @@ pub const ScoreComparator = struct {
         }
         // catch (EOFException e):
 //             const commonStrings: ?*CommonStrings = Inheritance.upcast(?*CommonStrings, CommonStrings.getInstance()); _ = commonStrings;
-//             _ = Inheritance.call(self.logUtil.?, "put", .{ commonStrings.?.EXCEPTION, self, String.literal("compare"), e });
+//             _ = Inheritance.call(self.logUtil.?, "put", .{ Inheritance.fieldPointer(commonStrings.?, "EXCEPTION").*, self, String.literal("compare"), e });
         // catch (IOException e):
 //             const commonStrings: ?*CommonStrings = Inheritance.upcast(?*CommonStrings, CommonStrings.getInstance()); _ = commonStrings;
-//             _ = Inheritance.call(self.logUtil.?, "put", .{ commonStrings.?.EXCEPTION, self, String.literal("compare"), e });
+//             _ = Inheritance.call(self.logUtil.?, "put", .{ Inheritance.fieldPointer(commonStrings.?, "EXCEPTION").*, self, String.literal("compare"), e });
         // catch (Exception e):
 //             const commonStrings: ?*CommonStrings = Inheritance.upcast(?*CommonStrings, CommonStrings.getInstance()); _ = commonStrings;
-//             _ = Inheritance.call(self.logUtil.?, "put", .{ commonStrings.?.EXCEPTION, self, String.literal("compare"), e });
+//             _ = Inheritance.call(self.logUtil.?, "put", .{ Inheritance.fieldPointer(commonStrings.?, "EXCEPTION").*, self, String.literal("compare"), e });
         if (self.isHighestBest) {
             return Inheritance.call(self, "getHighTooLow", .{ scoreOne, scoreTwo });
         } else {

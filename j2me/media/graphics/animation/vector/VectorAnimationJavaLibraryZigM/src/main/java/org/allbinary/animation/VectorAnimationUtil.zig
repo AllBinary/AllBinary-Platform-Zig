@@ -46,14 +46,13 @@ pub const VectorAnimationUtil = struct {
 
     pub fn toAnimationArrayFromListOfPointListWithPointsPerFrame(self: *Self, vector: ?*BasicArrayList, pointsPerFrame: i32) [][][]i32 {
         const size: i32 = vector.?.size();
-        const points: [][][]i32 = undefined // Otherwise - newArray - 3
-;
+        const points: [][][]i32 = array_N65822: { const array_N65822_array = allocator.alloc([][]i32, @intCast(size)) catch unreachable; for (array_N65822_array) |*array_N65822_row| { array_N65822_row.* = allocator.alloc([]i32, @intCast(pointsPerFrame)) catch unreachable; for (array_N65822_row.*) |*array_N65822_cell| { array_N65822_cell.* = allocator.alloc(i32, @intCast(2)) catch unreachable; @memset(array_N65822_cell.*, 0); } } break :array_N65822 array_N65822_array; };
         var nextBasicArrayList: ?*BasicArrayList = null;
         var framePoints: [][]i32 = &.{};
         {
             var index: i32 = 0;
             while (index < size) : (index += 1) {
-            nextBasicArrayList = Inheritance.cast(?*BasicArrayList, vector.?.objectArray[@intCast(index)]);
+            nextBasicArrayList = Inheritance.cast(?*BasicArrayList, Inheritance.fieldPointer(vector.?, "objectArray").*[@intCast(index)]);
             framePoints = Inheritance.upcast(@TypeOf(framePoints), Inheritance.call(self, "toFrameArrayFromPointBasicArrayList", .{ nextBasicArrayList }));
             {
                 var pointIndex: i32 = 0;
@@ -70,14 +69,13 @@ pub const VectorAnimationUtil = struct {
 
     pub fn toAnimationArrayFromListOfPointList(self: *Self, vector: ?*BasicArrayList) [][][]i32 {
         const size: i32 = vector.?.size();
-        const points: [][][]i32 = undefined // Otherwise - newArray - 3
-;
+        const points: [][][]i32 = array_N66522: { const array_N66522_array = allocator.alloc([][]i32, @intCast(size)) catch unreachable; for (array_N66522_array) |*array_N66522_row| { array_N66522_row.* = allocator.alloc([]i32, @intCast(0)) catch unreachable; for (array_N66522_row.*) |*array_N66522_cell| { array_N66522_cell.* = allocator.alloc(i32, @intCast(0)) catch unreachable; @memset(array_N66522_cell.*, 0); } } break :array_N66522 array_N66522_array; };
         var nextBasicArrayList: ?*BasicArrayList = null;
         var framePoints: [][]i32 = &.{};
         {
             var index: i32 = 0;
             while (index < size) : (index += 1) {
-            nextBasicArrayList = Inheritance.cast(?*BasicArrayList, vector.?.objectArray[@intCast(index)]);
+            nextBasicArrayList = Inheritance.cast(?*BasicArrayList, Inheritance.fieldPointer(vector.?, "objectArray").*[@intCast(index)]);
             framePoints = Inheritance.upcast(@TypeOf(framePoints), Inheritance.call(self, "toFrameArrayFromPointBasicArrayList", .{ nextBasicArrayList }));
             points[@intCast(index)] = Inheritance.upcast(@TypeOf(points[@intCast(index)]), array_N66779: { const array_N66779_array = allocator.alloc([]i32, @intCast(@as(i32, @intCast(framePoints.len)))) catch unreachable; for (array_N66779_array) |*array_N66779_row| { array_N66779_row.* = allocator.alloc(i32, @intCast(2)) catch unreachable; @memset(array_N66779_row.*, 0); } break :array_N66779 array_N66779_array; });
             {
@@ -100,7 +98,7 @@ pub const VectorAnimationUtil = struct {
         {
             var index: i32 = 0;
             while (index < size) : (index += 1) {
-            const nextPoint: ?*GPoint = Inheritance.cast(?*GPoint, list.?.objectArray[@intCast(index)]);
+            const nextPoint: ?*GPoint = Inheritance.cast(?*GPoint, Inheritance.fieldPointer(list.?, "objectArray").*[@intCast(index)]);
             points[@intCast(index)][@intCast(0)] = Inheritance.upcast(@TypeOf(points[@intCast(index)][@intCast(0)]), nextPoint.?.getX());
             points[@intCast(index)][@intCast(1)] = Inheritance.upcast(@TypeOf(points[@intCast(index)][@intCast(1)]), nextPoint.?.getY());
             }

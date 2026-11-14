@@ -18,8 +18,8 @@ const allocator = std.heap.page_allocator;
 const String = @import("java/lang/String.zig").String;
 const Object = @import("java/lang/Object.zig").Object;
 const Inheritance = @import("zig/Inheritance.zig");
-// const Command = @import("javax/microedition/lcdui/Command.zig").Command;
-// const Graphics = @import("javax/microedition/lcdui/Graphics.zig").Graphics;
+const Command = @import("javax/microedition/lcdui/Command.zig").Command;
+const Graphics = @import("javax/microedition/lcdui/Graphics.zig").Graphics;
 const J2MEUtil = @import("org/allbinary/J2MEUtil.zig").J2MEUtil;
 const Animation = @import("org/allbinary/animation/Animation.zig").Animation;
 const NullAnimationFactory = @import("org/allbinary/animation/NullAnimationFactory.zig").NullAnimationFactory;
@@ -32,6 +32,7 @@ const CommandTextItem = @import("org/allbinary/graphics/form/item/CommandTextIte
 const ABCustomItem = @import("org/allbinary/graphics/form/item/ABCustomItem.zig").ABCustomItem;
 const ItemPaintableFactory = @import("org/allbinary/graphics/form/ItemPaintableFactory.zig").ItemPaintableFactory;
 const ScrollCurrentSelectionForm = @import("org/allbinary/graphics/form/ScrollCurrentSelectionForm.zig").ScrollCurrentSelectionForm;
+const Exception = @import("java/lang/Exception.zig").Exception;
 
 pub const CommandCurrentSelectionForm = struct {
     const Self = @This();
@@ -94,14 +95,14 @@ pub const CommandCurrentSelectionForm = struct {
 
     pub fn addAt(self: *Self, index: i32, item: ?*ABCustomItem) void {
         const basicColorFactory: ?*BasicColorFactory = Inheritance.upcast(?*BasicColorFactory, BasicColorFactory.getInstance());
-        const buttonColor: ?*BasicColor = Inheritance.upcast(?*BasicColor, basicColorFactory.?.TRANSPARENT_GREY);
-        const selectedButtonColor: ?*BasicColor = Inheritance.upcast(?*BasicColor, basicColorFactory.?.TRANSPARENT_RED);
+        const buttonColor: ?*BasicColor = Inheritance.upcast(?*BasicColor, Inheritance.fieldPointer(basicColorFactory.?, "TRANSPARENT_GREY").*);
+        const selectedButtonColor: ?*BasicColor = Inheritance.upcast(?*BasicColor, Inheritance.fieldPointer(basicColorFactory.?, "TRANSPARENT_RED").*);
         const width: i32 = item.?.getMinimumWidth();
         const height: i32 = item.?.getMinimumHeight();
         var adjustedBorder: i32 = 3;
         const offset: i32 = -(Inheritance.fieldPointer(self, "halfBorder").* + adjustedBorder);
-        const rectWidth: i32 = width + Inheritance.fieldPointer(self, "border").* - adjustedBorder;
-        const rectHeight: i32 = height + Inheritance.fieldPointer(self, "border").* - adjustedBorder;
+        const rectWidth: i32 = Inheritance.arithmetic(.subtract, width + Inheritance.fieldPointer(self, "border").*, adjustedBorder);
+        const rectHeight: i32 = Inheritance.arithmetic(.subtract, height + Inheritance.fieldPointer(self, "border").*, adjustedBorder);
         if (J2MEUtil.isJ2ME() or J2MEUtil.isHTML()) {
             self.selectedAnimationArray[@intCast(index)] = Inheritance.upcast(@TypeOf(self.selectedAnimationArray[@intCast(index)]), Inheritance.callStatic(RectangleAdjustedAnimation, "create5", .{ rectWidth, rectHeight, offset, offset, selectedButtonColor }));
         } else {
@@ -129,14 +130,14 @@ pub const CommandCurrentSelectionForm = struct {
 
     pub fn updateAt(self: *Self, index: i32, item: ?*ABCustomItem) void {
         const basicColorFactory: ?*BasicColorFactory = Inheritance.upcast(?*BasicColorFactory, BasicColorFactory.getInstance());
-        const buttonColor: ?*BasicColor = Inheritance.upcast(?*BasicColor, basicColorFactory.?.TRANSPARENT_GREY);
-        const selectedButtonColor: ?*BasicColor = Inheritance.upcast(?*BasicColor, basicColorFactory.?.TRANSPARENT_RED);
+        const buttonColor: ?*BasicColor = Inheritance.upcast(?*BasicColor, Inheritance.fieldPointer(basicColorFactory.?, "TRANSPARENT_GREY").*);
+        const selectedButtonColor: ?*BasicColor = Inheritance.upcast(?*BasicColor, Inheritance.fieldPointer(basicColorFactory.?, "TRANSPARENT_RED").*);
         const width: i32 = item.?.getMinimumWidth();
         const height: i32 = item.?.getMinimumHeight();
         var adjustedBorder: i32 = 3;
         const offset: i32 = -(Inheritance.fieldPointer(self, "halfBorder").* + adjustedBorder);
-        const rectWidth: i32 = width + Inheritance.fieldPointer(self, "border").* - adjustedBorder;
-        const rectHeight: i32 = height + Inheritance.fieldPointer(self, "border").* - adjustedBorder;
+        const rectWidth: i32 = Inheritance.arithmetic(.subtract, width + Inheritance.fieldPointer(self, "border").*, adjustedBorder);
+        const rectHeight: i32 = Inheritance.arithmetic(.subtract, height + Inheritance.fieldPointer(self, "border").*, adjustedBorder);
         if (J2MEUtil.isJ2ME() or J2MEUtil.isHTML()) {
             const rectangleAdjustedAnimation: ?*RectangleAdjustedAnimation = Inheritance.cast(?*RectangleAdjustedAnimation, self.selectedAnimationArray[@intCast(index)]);
             _ = Inheritance.call(rectangleAdjustedAnimation.?, "setWidth", .{ rectWidth });
@@ -172,7 +173,7 @@ pub const CommandCurrentSelectionForm = struct {
     
 
     pub fn getSelectedCommand(self: *Self) ?*Command {
-        const index: i32 = self.base.getSelectedIndex();
+        const index: i32 = Inheritance.receiver(&self.base, "getSelectedIndex").getSelectedIndex();
         const commandTextItem: ?*CommandTextItem = Inheritance.cast(?*CommandTextItem, Inheritance.call(self, "get", .{ index }));
         return Inheritance.upcast(?*Command, Inheritance.receiver(commandTextItem.?, "getCommand").getCommand());
     }
@@ -192,7 +193,7 @@ pub const CommandCurrentSelectionForm = struct {
 
     pub fn deleteAll(self: *Self) void {
         _ = self.initAnimations();
-        _ = self.base.deleteAll();
+        _ = Inheritance.receiver(&self.base, "deleteAll").deleteAll();
     }
     
 

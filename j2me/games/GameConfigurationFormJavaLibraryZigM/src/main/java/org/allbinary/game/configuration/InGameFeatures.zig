@@ -45,11 +45,11 @@ pub const InGameFeatures = struct {
     pub fn init(self: *Self) void {
         const LABEL: ?*String = String.literal("Screen Buttons");
         const orientationData: ?*OrientationData = Inheritance.upcast(?*OrientationData, OrientationData.getInstance());
-        const exclusiveOrientationSensorVector: ?*BasicArrayList = Inheritance.cast(?*BasicArrayList, Inheritance.call(Inheritance.receiverOf(GameFeatureChoiceGroups.getExclusiveInstance().?, "get").get().?, "get", .{ Inheritance.cast(?Object, orientationData.?.ORIENTATION_SENSOR_INPUT) }));
+        const exclusiveOrientationSensorVector: ?*BasicArrayList = Inheritance.cast(?*BasicArrayList, Inheritance.call(Inheritance.receiverOf(GameFeatureChoiceGroups.getExclusiveInstance().?, "get").get().?, "get", .{ Inheritance.cast(?Object, Inheritance.fieldPointer(orientationData.?, "ORIENTATION_SENSOR_INPUT").*) }));
         const inGameFeatureChoiceGroups: ?*InGameFeatureChoiceGroups = Inheritance.upcast(?*InGameFeatureChoiceGroups, InGameFeatureChoiceGroups.getExclusiveInstance());
-        if (exclusiveOrientationSensorVector != null) {
-            const inGameExclusiveOrientationSensorVectorCanBeNull: ?Object = Inheritance.upcast(?Object, Inheritance.call(inGameFeatureChoiceGroups.?.get().?, "get", .{ Inheritance.cast(?Object, orientationData.?.ORIENTATION_SENSOR_INPUT) }));
-            if (inGameExclusiveOrientationSensorVectorCanBeNull == null) {
+        if (!Object.isNull(exclusiveOrientationSensorVector)) {
+            const inGameExclusiveOrientationSensorVectorCanBeNull: ?Object = Inheritance.upcast(?Object, Inheritance.call(inGameFeatureChoiceGroups.?.get().?, "get", .{ Inheritance.cast(?Object, Inheritance.fieldPointer(orientationData.?, "ORIENTATION_SENSOR_INPUT").*) }));
+            if (Object.isNull(inGameExclusiveOrientationSensorVectorCanBeNull)) {
                 _ = self.addToInGameMenu();
             } else {
                 const inGameExclusiveOrientationSensorVector: ?*BasicArrayList = Inheritance.cast(?*BasicArrayList, inGameExclusiveOrientationSensorVectorCanBeNull);
@@ -59,12 +59,12 @@ pub const InGameFeatures = struct {
             }
         }
         const features: ?*Features = Inheritance.upcast(?*Features, Features.getInstance());
-        if (Inheritance.call(features.?, "isFeature", .{ TouchFeatureFactory.getInstance().?.SHOW_SCREEN_BUTTONS }) or Inheritance.call(features.?, "isFeature", .{ TouchFeatureFactory.getInstance().?.AUTO_HIDE_SHOW_SCREEN_BUTTONS }) or Inheritance.call(features.?, "isFeature", .{ TouchFeatureFactory.getInstance().?.HIDE_SCREEN_BUTTONS })) {
+        if (Inheritance.call(features.?, "isFeature", .{ Inheritance.fieldPointer(TouchFeatureFactory.getInstance().?, "SHOW_SCREEN_BUTTONS").* }) or Inheritance.call(features.?, "isFeature", .{ Inheritance.fieldPointer(TouchFeatureFactory.getInstance().?, "AUTO_HIDE_SHOW_SCREEN_BUTTONS").* }) or Inheritance.call(features.?, "isFeature", .{ Inheritance.fieldPointer(TouchFeatureFactory.getInstance().?, "HIDE_SCREEN_BUTTONS").* })) {
             const exclusiveScreenButtonsVector: ?*BasicArrayList = Inheritance.upcast(?*BasicArrayList, BasicArrayListD.create());
             const touchFeatureFactory: ?*TouchFeatureFactory = Inheritance.upcast(?*TouchFeatureFactory, TouchFeatureFactory.getInstance());
-            _ = Inheritance.call(exclusiveScreenButtonsVector.?, "add", .{ touchFeatureFactory.?.AUTO_HIDE_SHOW_SCREEN_BUTTONS });
-            _ = Inheritance.call(exclusiveScreenButtonsVector.?, "add", .{ touchFeatureFactory.?.SHOW_SCREEN_BUTTONS });
-            _ = Inheritance.call(exclusiveScreenButtonsVector.?, "add", .{ touchFeatureFactory.?.HIDE_SCREEN_BUTTONS });
+            _ = Inheritance.call(exclusiveScreenButtonsVector.?, "add", .{ Inheritance.fieldPointer(touchFeatureFactory.?, "AUTO_HIDE_SHOW_SCREEN_BUTTONS").* });
+            _ = Inheritance.call(exclusiveScreenButtonsVector.?, "add", .{ Inheritance.fieldPointer(touchFeatureFactory.?, "SHOW_SCREEN_BUTTONS").* });
+            _ = Inheritance.call(exclusiveScreenButtonsVector.?, "add", .{ Inheritance.fieldPointer(touchFeatureFactory.?, "HIDE_SCREEN_BUTTONS").* });
             _ = Inheritance.call(inGameFeatureChoiceGroups.?, "add", .{ LABEL, exclusiveScreenButtonsVector });
         }
     }
@@ -74,9 +74,9 @@ pub const InGameFeatures = struct {
         _ = self;
         const orientationData: ?*OrientationData = Inheritance.upcast(?*OrientationData, OrientationData.getInstance());
         const inGameExclusiveOrientationSensorVector: ?*BasicArrayList = Inheritance.upcast(?*BasicArrayList, BasicArrayListD.create());
-        _ = Inheritance.call(inGameExclusiveOrientationSensorVector.?, "add", .{ SensorFeatureFactory.getInstance().?.ORIENTATION_SENSORS });
-        _ = Inheritance.call(inGameExclusiveOrientationSensorVector.?, "add", .{ SensorFeatureFactory.getInstance().?.NO_ORIENTATION });
-        _ = Inheritance.call(InGameFeatureChoiceGroups.getExclusiveInstance().?, "add", .{ orientationData.?.ORIENTATION_SENSOR_INPUT, inGameExclusiveOrientationSensorVector });
+        _ = Inheritance.call(inGameExclusiveOrientationSensorVector.?, "add", .{ Inheritance.fieldPointer(SensorFeatureFactory.getInstance().?, "ORIENTATION_SENSORS").* });
+        _ = Inheritance.call(inGameExclusiveOrientationSensorVector.?, "add", .{ Inheritance.fieldPointer(SensorFeatureFactory.getInstance().?, "NO_ORIENTATION").* });
+        _ = Inheritance.call(InGameFeatureChoiceGroups.getExclusiveInstance().?, "add", .{ Inheritance.fieldPointer(orientationData.?, "ORIENTATION_SENSOR_INPUT").*, inGameExclusiveOrientationSensorVector });
     }
     
 
@@ -84,11 +84,11 @@ pub const InGameFeatures = struct {
         _ = self;
         const features: ?*Features = Inheritance.upcast(?*Features, Features.getInstance());
         const touchFeatureFactory: ?*TouchFeatureFactory = Inheritance.upcast(?*TouchFeatureFactory, TouchFeatureFactory.getInstance());
-        if (Inheritance.call(features.?, "isFeature", .{ touchFeatureFactory.?.SHOW_SCREEN_BUTTONS }) or Inheritance.call(features.?, "isFeature", .{ touchFeatureFactory.?.AUTO_HIDE_SHOW_SCREEN_BUTTONS }) or Inheritance.call(features.?, "isFeature", .{ touchFeatureFactory.?.HIDE_SCREEN_BUTTONS })) {
+        if (Inheritance.call(features.?, "isFeature", .{ Inheritance.fieldPointer(touchFeatureFactory.?, "SHOW_SCREEN_BUTTONS").* }) or Inheritance.call(features.?, "isFeature", .{ Inheritance.fieldPointer(touchFeatureFactory.?, "AUTO_HIDE_SHOW_SCREEN_BUTTONS").* }) or Inheritance.call(features.?, "isFeature", .{ Inheritance.fieldPointer(touchFeatureFactory.?, "HIDE_SCREEN_BUTTONS").* })) {
             return true;
         }
-        const exclusiveOrientationSensorVector: ?*BasicArrayList = Inheritance.cast(?*BasicArrayList, Inheritance.call(Inheritance.receiverOf(GameFeatureChoiceGroups.getExclusiveInstance().?, "get").get().?, "get", .{ Inheritance.cast(?Object, OrientationData.getInstance().?.ORIENTATION_SENSOR_INPUT) }));
-        if (exclusiveOrientationSensorVector != null) {
+        const exclusiveOrientationSensorVector: ?*BasicArrayList = Inheritance.cast(?*BasicArrayList, Inheritance.call(Inheritance.receiverOf(GameFeatureChoiceGroups.getExclusiveInstance().?, "get").get().?, "get", .{ Inheritance.cast(?Object, Inheritance.fieldPointer(OrientationData.getInstance().?, "ORIENTATION_SENSOR_INPUT").*) }));
+        if (!Object.isNull(exclusiveOrientationSensorVector)) {
             return true;
         }
         return false;

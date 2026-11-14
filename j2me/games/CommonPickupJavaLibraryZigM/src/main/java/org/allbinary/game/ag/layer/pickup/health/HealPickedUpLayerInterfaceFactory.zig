@@ -29,6 +29,7 @@ const AllBinaryLayer = @import("org/allbinary/layer/AllBinaryLayer.zig").AllBina
 const HealLayerCircularStaticPool = @import("org/allbinary/game/ag/layer/pickup/health/HealLayerCircularStaticPool.zig").HealLayerCircularStaticPool;
 const HealLayerFactory = @import("org/allbinary/game/ag/layer/pickup/health/HealLayerFactory.zig").HealLayerFactory;
 const HealthResources = @import("org/allbinary/game/ag/layer/pickup/health/HealthResources.zig").HealthResources;
+const Exception = @import("java/lang/Exception.zig").Exception;
 
 pub const HealPickedUpLayerInterfaceFactory = struct {
     const Self = @This();
@@ -57,7 +58,7 @@ pub const HealPickedUpLayerInterfaceFactory = struct {
     pub fn create() *Self {
         const this = allocator.create(Self) catch unreachable;
         this.* = .{};
-        this.base = Inheritance.callStatic(PickedUpLayerInterfaceFactory, "create3", .{ PickedUpLayerTypeFactory.getInstance().?.HEAL, Inheritance.callStatic(IconLayerFactory, "getInstance", .{ Inheritance.call(Inheritance.call(FeaturedAnimationInterfaceFactoryInterfaceFactory.getInstance().?, "get", .{ HealthResources.getInstance().?.RESOURCE }).?, "getInstance", .{ 0 }), 10, 10 }), Inheritance.call(Inheritance.call(FeaturedAnimationInterfaceFactoryInterfaceFactory.getInstance().?, "get", .{ HealthResources.getInstance().?.RESOURCE }).?, "getInstance", .{ 0 }) }).*;
+        this.base = Inheritance.callStatic(PickedUpLayerInterfaceFactory, "create3", .{ Inheritance.fieldPointer(PickedUpLayerTypeFactory.getInstance().?, "HEAL").*, Inheritance.callStatic(IconLayerFactory, "getInstance", .{ Inheritance.call(Inheritance.call(FeaturedAnimationInterfaceFactoryInterfaceFactory.getInstance().?, "get", .{ Inheritance.fieldPointer(HealthResources.getInstance().?, "RESOURCE").* }).?, "getInstance", .{ 0 }), 10, 10 }), Inheritance.call(Inheritance.call(FeaturedAnimationInterfaceFactoryInterfaceFactory.getInstance().?, "get", .{ Inheritance.fieldPointer(HealthResources.getInstance().?, "RESOURCE").* }).?, "getInstance", .{ 0 }) }).*;
         this.initFields();
         Inheritance.bindOverrides(this);
         return this;

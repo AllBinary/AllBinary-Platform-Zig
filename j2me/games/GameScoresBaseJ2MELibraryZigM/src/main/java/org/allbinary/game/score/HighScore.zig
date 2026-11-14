@@ -19,11 +19,12 @@ const String = @import("java/lang/String.zig").String;
 const Object = @import("java/lang/Object.zig").Object;
 const Inheritance = @import("zig/Inheritance.zig");
 const ByteArrayOutputStream = @import("java/io/ByteArrayOutputStream.zig").ByteArrayOutputStream;
-// const DataOutputStream = @import("java/io/DataOutputStream.zig").DataOutputStream;
+const DataOutputStream = @import("java/io/DataOutputStream.zig").DataOutputStream;
 const GameInfo = @import("org/allbinary/game/GameInfo.zig").GameInfo;
 const StringMaker = @import("org/allbinary/logic/string/StringMaker.zig").StringMaker;
 const CommonSeps = @import("org/allbinary/string/CommonSeps.zig").CommonSeps;
 const Long = @import("java/lang/Long.zig").Long;
+const Exception = @import("java/lang/Exception.zig").Exception;
 
 pub const HighScore = struct {
     const Self = @This();
@@ -99,7 +100,7 @@ pub const HighScore = struct {
 
     pub fn toString(self: *Self) ?*String {
         const commonSeps: ?*CommonSeps = Inheritance.upcast(?*CommonSeps, CommonSeps.getInstance());
-        return Inheritance.upcast(?*String, Object.toString(Object.of(Inheritance.call(Inheritance.call(Inheritance.call(Inheritance.call(Inheritance.call(StringMaker.create(), "append", .{ self.name }).?, "append", .{ commonSeps.?.COLON }).?, "appendlong", .{ self.score }).?, "append", .{ commonSeps.?.FORWARD_SLASH }).?, "append", .{ self.scoreString }))));
+        return Inheritance.upcast(?*String, Object.toString(Object.of(Inheritance.call(Inheritance.call(Inheritance.call(Inheritance.call(Inheritance.call(StringMaker.create(), "append", .{ self.name }).?, "append", .{ Inheritance.fieldPointer(commonSeps.?, "COLON").* }).?, "appendlong", .{ self.score }).?, "append", .{ Inheritance.fieldPointer(commonSeps.?, "FORWARD_SLASH").* }).?, "append", .{ self.scoreString }))));
     }
 };
 

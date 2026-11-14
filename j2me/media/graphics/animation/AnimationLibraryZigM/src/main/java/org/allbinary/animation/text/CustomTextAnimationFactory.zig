@@ -18,7 +18,7 @@ const allocator = std.heap.page_allocator;
 const String = @import("java/lang/String.zig").String;
 const Object = @import("java/lang/Object.zig").Object;
 const Inheritance = @import("zig/Inheritance.zig");
-// const Font = @import("javax/microedition/lcdui/Font.zig").Font;
+const Font = @import("javax/microedition/lcdui/Font.zig").Font;
 const Animation = @import("org/allbinary/animation/Animation.zig").Animation;
 const AnimationBehaviorFactory = @import("org/allbinary/animation/AnimationBehaviorFactory.zig").AnimationBehaviorFactory;
 const AnimationInterfaceFactoryInterface = @import("org/allbinary/animation/AnimationInterfaceFactoryInterface.zig").AnimationInterfaceFactoryInterface;
@@ -28,6 +28,7 @@ const LogUtil = @import("org/allbinary/logic/communication/log/LogUtil.zig").Log
 const ScaleProperties = @import("org/allbinary/media/ScaleProperties.zig").ScaleProperties;
 const AdjustCustomTextAnimation = @import("org/allbinary/animation/text/AdjustCustomTextAnimation.zig").AdjustCustomTextAnimation;
 const CustomTextAnimation = @import("org/allbinary/animation/text/CustomTextAnimation.zig").CustomTextAnimation;
+const Exception = @import("java/lang/Exception.zig").Exception;
 
 pub const CustomTextAnimationFactory = struct {
     const Self = @This();
@@ -46,7 +47,7 @@ pub const CustomTextAnimationFactory = struct {
     fn initFields(this: *Self) void {
         this.logUtil = Inheritance.upcast(?*LogUtil, LogUtil.getInstance());
         
-        this.basicColor = Inheritance.upcast(?*BasicColor, BasicColorFactory.getInstance().?.BLACK);
+        this.basicColor = Inheritance.upcast(?*BasicColor, Inheritance.fieldPointer(BasicColorFactory.getInstance().?, "BLACK").*);
         
         
         this.dx = 0;
@@ -70,8 +71,8 @@ pub const CustomTextAnimationFactory = struct {
         this.initFields();
         this.scaleProperties = ScaleProperties.create();
         this.text = text;
-        this.scaleProperties.?.scaleHeight = Inheritance.upcast(@TypeOf(this.scaleProperties.?.scaleHeight), fontSize - (@divTrunc(fontSize, 4)));
-        this.initScaleHeight = this.scaleProperties.?.scaleHeight;
+        Inheritance.fieldPointer(this.scaleProperties.?, "scaleHeight").* = Inheritance.upcast(@TypeOf(Inheritance.fieldPointer(this.scaleProperties.?, "scaleHeight").*), fontSize - (@divTrunc(fontSize, 4)));
+        this.initScaleHeight = Inheritance.fieldPointer(this.scaleProperties.?, "scaleHeight").*;
         this.animationBehaviorFactory = animationBehaviorFactory;
         this.font = Inheritance.upcast(@TypeOf(this.font), Inheritance.callStatic(Font, "getFont", .{ Font.FACE_SYSTEM, Font.STYLE_PLAIN, this.initScaleHeight }));
         return this;
@@ -83,9 +84,9 @@ pub const CustomTextAnimationFactory = struct {
         _ = instanceId;
         var customTextAnimation: ?*CustomTextAnimation = null;
         if (self.dx != 0 or self.dy != 0) {
-            customTextAnimation = Inheritance.upcast(@TypeOf(customTextAnimation), Inheritance.callStatic(AdjustCustomTextAnimation, "create5", .{ self.text, self.scaleProperties.?.scaleHeight, self.dx, self.dy, self.animationBehaviorFactory.?.getOrCreateInstance() }));
+            customTextAnimation = Inheritance.upcast(@TypeOf(customTextAnimation), Inheritance.callStatic(AdjustCustomTextAnimation, "create5", .{ self.text, Inheritance.fieldPointer(self.scaleProperties.?, "scaleHeight").*, self.dx, self.dy, self.animationBehaviorFactory.?.getOrCreateInstance() }));
         } else {
-            customTextAnimation = Inheritance.callStatic(CustomTextAnimation, "create3", .{ self.text, self.scaleProperties.?.scaleHeight, self.animationBehaviorFactory.?.getOrCreateInstance() });
+            customTextAnimation = Inheritance.callStatic(CustomTextAnimation, "create3", .{ self.text, Inheritance.fieldPointer(self.scaleProperties.?, "scaleHeight").*, self.animationBehaviorFactory.?.getOrCreateInstance() });
         }
         _ = Inheritance.call(customTextAnimation.?, "setBasicColorP", .{ self.basicColor });
         return Inheritance.upcast(?*Animation, customTextAnimation);

@@ -59,11 +59,11 @@ pub const CompositeGroup = struct {
         const commonStrings: ?*CommonStrings = Inheritance.upcast(?*CommonStrings, CommonStrings.getInstance());
         const groupCommonFactory: ?*GroupCommonFactory = Inheritance.upcast(?*GroupCommonFactory, GroupCommonFactory.getInstance());
         const stringBuffer: ?*StringMaker = StringMaker.create();
-        _ = Inheritance.call(stringBuffer.?, "append", .{ groupCommonFactory.?.ADDING_LABEL });
+        _ = Inheritance.call(stringBuffer.?, "append", .{ Inheritance.fieldPointer(groupCommonFactory.?, "ADDING_LABEL").* });
         _ = Inheritance.call(stringBuffer.?, "append", .{ Object.toString(Object.of(groupInterface)) });
-        _ = Inheritance.call(stringBuffer.?, "append", .{ groupCommonFactory.?.TO_LABEL });
+        _ = Inheritance.call(stringBuffer.?, "append", .{ Inheritance.fieldPointer(groupCommonFactory.?, "TO_LABEL").* });
         _ = Inheritance.call(stringBuffer.?, "append", .{ Inheritance.call(StringUtil.getInstance().?, "toString", .{ self.groupInterface }) });
-        _ = Inheritance.call(self.logUtil.?, "putF", .{ Object.toString(Object.of(stringBuffer)), self, commonStrings.?.ADD });
+        _ = Inheritance.call(self.logUtil.?, "putF", .{ Object.toString(Object.of(stringBuffer)), self, Inheritance.fieldPointer(commonStrings.?, "ADD").* });
         _ = Inheritance.call(self.list.?, "add", .{ groupInterface });
     }
     

@@ -18,7 +18,7 @@ const allocator = std.heap.page_allocator;
 const String = @import("java/lang/String.zig").String;
 const Object = @import("java/lang/Object.zig").Object;
 const Inheritance = @import("zig/Inheritance.zig");
-// const MIDlet = @import("javax/microedition/midlet/MIDlet.zig").MIDlet;
+const MIDlet = @import("javax/microedition/midlet/MIDlet.zig").MIDlet;
 const AllBinaryMidlet = @import("org/allbinary/midlet/AllBinaryMidlet.zig").AllBinaryMidlet;
 
 pub const MidletFactoryInterface = struct {

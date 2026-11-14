@@ -58,8 +58,8 @@ pub const AngleInfo = struct {
     
 
     pub fn adjustAngle(self: *Self, frame: i32) void {
-        const newAngle: i32 = self.angleIncrementInfo.?.getAngleIncrement() * frame - 90;
-        _ = Inheritance.call(self, "setAngle", .{ @as(i16, @intCast(Inheritance.call(self.frameUtil.?, "adjustAngleToFrameAngle", .{ newAngle }))) });
+        const newAngle: i32 = Inheritance.arithmetic(.subtract, Inheritance.arithmetic(.multiply, self.angleIncrementInfo.?.getAngleIncrement(), frame), 90);
+        _ = Inheritance.call(self, "setAngle", .{ Inheritance.number(i16, Inheritance.call(self.frameUtil.?, "adjustAngleToFrameAngle", .{ newAngle })) });
     }
     
 
@@ -82,7 +82,7 @@ pub const AngleInfo = struct {
         const stringBuffer: ?*StringMaker = StringMaker.create();
         _ = Inheritance.call(stringBuffer.?, "append", .{ AngleInfo.ANGLE });
         _ = Inheritance.call(stringBuffer.?, "appendshort", .{ self.angle });
-        _ = Inheritance.call(stringBuffer.?, "append", .{ CommonSeps.getInstance().?.SPACE });
+        _ = Inheritance.call(stringBuffer.?, "append", .{ Inheritance.fieldPointer(CommonSeps.getInstance().?, "SPACE").* });
         _ = Inheritance.call(stringBuffer.?, "append", .{ Inheritance.call(StringUtil.getInstance().?, "toString", .{ self.getAngleIncrementInfo() }) });
         return Inheritance.upcast(?*String, Object.toString(Object.of(stringBuffer)));
     }

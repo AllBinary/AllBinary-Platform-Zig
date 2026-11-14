@@ -23,6 +23,7 @@ const GameInput = @import("org/allbinary/game/input/GameInput.zig").GameInput;
 const DisplayInfoSingleton = @import("org/allbinary/graphics/displayable/DisplayInfoSingleton.zig").DisplayInfoSingleton;
 const AllBinaryLayer = @import("org/allbinary/layer/AllBinaryLayer.zig").AllBinaryLayer;
 const AllBinaryLayerManager = @import("org/allbinary/layer/AllBinaryLayerManager.zig").AllBinaryLayerManager;
+const Exception = @import("java/lang/Exception.zig").Exception;
 
 pub const ScrollOverAtHalfAI = struct {
     const Self = @This();
@@ -48,17 +49,17 @@ pub const ScrollOverAtHalfAI = struct {
         const halfWidth: i32 = Inheritance.receiver(ownerLayerInterface.?, "getHalfWidth").getHalfWidth();
         const halfHeight: i32 = Inheritance.receiver(ownerLayerInterface.?, "getHalfHeight").getHalfHeight();
         const displayInfo: ?*DisplayInfoSingleton = Inheritance.upcast(?*DisplayInfoSingleton, DisplayInfoSingleton.getInstance());
-        if (x > displayInfo.?.getLastWidth() - halfWidth) {
+        if (Inheritance.arithmetic(.greater, x, Inheritance.arithmetic(.subtract, displayInfo.?.getLastWidth(), halfWidth))) {
             _ = Inheritance.call(ownerLayerInterface.?, "setPosition", .{ halfWidth + 1, y, Inheritance.receiver(ownerLayerInterface.?, "getZP").getZP() });
         }
-        if (y > displayInfo.?.getLastHeight() - halfHeight) {
+        if (Inheritance.arithmetic(.greater, y, Inheritance.arithmetic(.subtract, displayInfo.?.getLastHeight(), halfHeight))) {
             _ = Inheritance.call(ownerLayerInterface.?, "setPosition", .{ x, halfHeight + 1, Inheritance.receiver(ownerLayerInterface.?, "getZP").getZP() });
         }
         if (x < -halfWidth) {
-            _ = Inheritance.call(ownerLayerInterface.?, "setPosition", .{ displayInfo.?.getLastWidth() - halfWidth, y, Inheritance.receiver(ownerLayerInterface.?, "getZP").getZP() });
+            _ = Inheritance.call(ownerLayerInterface.?, "setPosition", .{ Inheritance.arithmetic(.subtract, displayInfo.?.getLastWidth(), halfWidth), y, Inheritance.receiver(ownerLayerInterface.?, "getZP").getZP() });
         }
         if (y < -halfHeight) {
-            _ = Inheritance.call(ownerLayerInterface.?, "setPosition", .{ x, displayInfo.?.getLastHeight() - halfHeight, Inheritance.receiver(ownerLayerInterface.?, "getZP").getZP() });
+            _ = Inheritance.call(ownerLayerInterface.?, "setPosition", .{ x, Inheritance.arithmetic(.subtract, displayInfo.?.getLastHeight(), halfHeight), Inheritance.receiver(ownerLayerInterface.?, "getZP").getZP() });
         }
     }
 };

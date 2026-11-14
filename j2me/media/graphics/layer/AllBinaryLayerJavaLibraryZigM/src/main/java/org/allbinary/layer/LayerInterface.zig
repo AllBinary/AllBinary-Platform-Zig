@@ -30,25 +30,28 @@ pub const LayerInterface = struct {
     pointer: *anyopaque,
     object: Object,
     base: NamedInterface,
+    base2: PaintableInterface,
+    base3: GroupInterfaceCompositeInterface,
+    base4: PositionInterface,
     toStringFn: *const fn (pointer: *anyopaque) ?*String,
-    getHeightFn: *const fn (pointer: *anyopaque) i32,
-    getWidthFn: *const fn (pointer: *anyopaque) i32,
-    getHalfHeightFn: *const fn (pointer: *anyopaque) i32,
-    getHalfWidthFn: *const fn (pointer: *anyopaque) i32,
-    getXPFn: *const fn (pointer: *anyopaque) i32,
-    getYPFn: *const fn (pointer: *anyopaque) i32,
-    getZPFn: *const fn (pointer: *anyopaque) i32,
-    getX2Fn: *const fn (pointer: *anyopaque) i32,
-    getY2Fn: *const fn (pointer: *anyopaque) i32,
-    getZ2Fn: *const fn (pointer: *anyopaque) i32,
-    isVisibleFn: *const fn (pointer: *anyopaque) bool,
-    moveDXYZFn: *const fn (pointer: *anyopaque, dx: i32, dy: i32, dz: i32) void,
-    setVisibleFn: *const fn (pointer: *anyopaque, visible: bool) void,
-    implmentsTickableInterfaceFn: *const fn (pointer: *anyopaque) bool,
-    implmentsCollidableInterfaceFn: *const fn (pointer: *anyopaque) bool,
-    implmentsGameInputInterfaceFn: *const fn (pointer: *anyopaque) bool,
-    implmentsArtificialIntelligenceCompositeInterfaceFn: *const fn (pointer: *anyopaque) bool,
-    getTypeFn: *const fn (pointer: *anyopaque) i32,
+    getHeightFn: *const fn (interface_pointer: *anyopaque) i32,
+    getWidthFn: *const fn (interface_pointer: *anyopaque) i32,
+    getHalfHeightFn: *const fn (interface_pointer: *anyopaque) i32,
+    getHalfWidthFn: *const fn (interface_pointer: *anyopaque) i32,
+    getXPFn: *const fn (interface_pointer: *anyopaque) i32,
+    getYPFn: *const fn (interface_pointer: *anyopaque) i32,
+    getZPFn: *const fn (interface_pointer: *anyopaque) i32,
+    getX2Fn: *const fn (interface_pointer: *anyopaque) i32,
+    getY2Fn: *const fn (interface_pointer: *anyopaque) i32,
+    getZ2Fn: *const fn (interface_pointer: *anyopaque) i32,
+    isVisibleFn: *const fn (interface_pointer: *anyopaque) bool,
+    moveDXYZFn: *const fn (interface_pointer: *anyopaque, dx: i32, dy: i32, dz: i32) void,
+    setVisibleFn: *const fn (interface_pointer: *anyopaque, visible: bool) void,
+    implmentsTickableInterfaceFn: *const fn (interface_pointer: *anyopaque) bool,
+    implmentsCollidableInterfaceFn: *const fn (interface_pointer: *anyopaque) bool,
+    implmentsGameInputInterfaceFn: *const fn (interface_pointer: *anyopaque) bool,
+    implmentsArtificialIntelligenceCompositeInterfaceFn: *const fn (interface_pointer: *anyopaque) bool,
+    getTypeFn: *const fn (interface_pointer: *anyopaque) i32,
 
     pub fn getHeight(self: *Self) i32 {
         return self.getHeightFn(self.pointer);
@@ -128,87 +131,87 @@ pub const LayerInterface = struct {
 
     // The interface value of an object with the methods. Like a Java class a method can be declared by the object or a superclass.
     pub fn of(object: anytype) ?*Self {
-        const Implementation = @TypeOf(object);
+        const ImplementationType = @TypeOf(object);
         const Methods = struct {
             fn toString(pointer: *anyopaque) ?*String {
-                const implementation: Implementation = @ptrCast(@alignCast(pointer));
+                const implementation: ImplementationType = @ptrCast(@alignCast(pointer));
                 return String.valueOf(implementation);
             }
-            fn getHeight(pointer: *anyopaque) i32 {
-                const implementation: Implementation = @ptrCast(@alignCast(pointer));
+            fn getHeight(interface_pointer: *anyopaque) i32 {
+                const implementation: ImplementationType = @ptrCast(@alignCast(interface_pointer));
                 return Inheritance.receiver(implementation, "getHeight").getHeight();
             }
-            fn getWidth(pointer: *anyopaque) i32 {
-                const implementation: Implementation = @ptrCast(@alignCast(pointer));
+            fn getWidth(interface_pointer: *anyopaque) i32 {
+                const implementation: ImplementationType = @ptrCast(@alignCast(interface_pointer));
                 return Inheritance.receiver(implementation, "getWidth").getWidth();
             }
-            fn getHalfHeight(pointer: *anyopaque) i32 {
-                const implementation: Implementation = @ptrCast(@alignCast(pointer));
+            fn getHalfHeight(interface_pointer: *anyopaque) i32 {
+                const implementation: ImplementationType = @ptrCast(@alignCast(interface_pointer));
                 return Inheritance.receiver(implementation, "getHalfHeight").getHalfHeight();
             }
-            fn getHalfWidth(pointer: *anyopaque) i32 {
-                const implementation: Implementation = @ptrCast(@alignCast(pointer));
+            fn getHalfWidth(interface_pointer: *anyopaque) i32 {
+                const implementation: ImplementationType = @ptrCast(@alignCast(interface_pointer));
                 return Inheritance.receiver(implementation, "getHalfWidth").getHalfWidth();
             }
-            fn getXP(pointer: *anyopaque) i32 {
-                const implementation: Implementation = @ptrCast(@alignCast(pointer));
+            fn getXP(interface_pointer: *anyopaque) i32 {
+                const implementation: ImplementationType = @ptrCast(@alignCast(interface_pointer));
                 return Inheritance.receiver(implementation, "getXP").getXP();
             }
-            fn getYP(pointer: *anyopaque) i32 {
-                const implementation: Implementation = @ptrCast(@alignCast(pointer));
+            fn getYP(interface_pointer: *anyopaque) i32 {
+                const implementation: ImplementationType = @ptrCast(@alignCast(interface_pointer));
                 return Inheritance.receiver(implementation, "getYP").getYP();
             }
-            fn getZP(pointer: *anyopaque) i32 {
-                const implementation: Implementation = @ptrCast(@alignCast(pointer));
+            fn getZP(interface_pointer: *anyopaque) i32 {
+                const implementation: ImplementationType = @ptrCast(@alignCast(interface_pointer));
                 return Inheritance.receiver(implementation, "getZP").getZP();
             }
-            fn getX2(pointer: *anyopaque) i32 {
-                const implementation: Implementation = @ptrCast(@alignCast(pointer));
+            fn getX2(interface_pointer: *anyopaque) i32 {
+                const implementation: ImplementationType = @ptrCast(@alignCast(interface_pointer));
                 return Inheritance.receiver(implementation, "getX2").getX2();
             }
-            fn getY2(pointer: *anyopaque) i32 {
-                const implementation: Implementation = @ptrCast(@alignCast(pointer));
+            fn getY2(interface_pointer: *anyopaque) i32 {
+                const implementation: ImplementationType = @ptrCast(@alignCast(interface_pointer));
                 return Inheritance.receiver(implementation, "getY2").getY2();
             }
-            fn getZ2(pointer: *anyopaque) i32 {
-                const implementation: Implementation = @ptrCast(@alignCast(pointer));
+            fn getZ2(interface_pointer: *anyopaque) i32 {
+                const implementation: ImplementationType = @ptrCast(@alignCast(interface_pointer));
                 return Inheritance.receiver(implementation, "getZ2").getZ2();
             }
-            fn isVisible(pointer: *anyopaque) bool {
-                const implementation: Implementation = @ptrCast(@alignCast(pointer));
+            fn isVisible(interface_pointer: *anyopaque) bool {
+                const implementation: ImplementationType = @ptrCast(@alignCast(interface_pointer));
                 return Inheritance.receiver(implementation, "isVisible").isVisible();
             }
-            fn moveDXYZ(pointer: *anyopaque, dx: i32, dy: i32, dz: i32) void {
-                const implementation: Implementation = @ptrCast(@alignCast(pointer));
-                return Inheritance.receiver(implementation, "moveDXYZ").moveDXYZ(dx, dy, dz);
+            fn moveDXYZ(interface_pointer: *anyopaque, dx: i32, dy: i32, dz: i32) void {
+                const implementation: ImplementationType = @ptrCast(@alignCast(interface_pointer));
+                return Inheritance.call(implementation, "moveDXYZ", .{ dx, dy, dz });
             }
-            fn setVisible(pointer: *anyopaque, visible: bool) void {
-                const implementation: Implementation = @ptrCast(@alignCast(pointer));
-                return Inheritance.receiver(implementation, "setVisible").setVisible(visible);
+            fn setVisible(interface_pointer: *anyopaque, visible: bool) void {
+                const implementation: ImplementationType = @ptrCast(@alignCast(interface_pointer));
+                return Inheritance.call(implementation, "setVisible", .{ visible });
             }
-            fn implmentsTickableInterface(pointer: *anyopaque) bool {
-                const implementation: Implementation = @ptrCast(@alignCast(pointer));
+            fn implmentsTickableInterface(interface_pointer: *anyopaque) bool {
+                const implementation: ImplementationType = @ptrCast(@alignCast(interface_pointer));
                 return Inheritance.receiver(implementation, "implmentsTickableInterface").implmentsTickableInterface();
             }
-            fn implmentsCollidableInterface(pointer: *anyopaque) bool {
-                const implementation: Implementation = @ptrCast(@alignCast(pointer));
+            fn implmentsCollidableInterface(interface_pointer: *anyopaque) bool {
+                const implementation: ImplementationType = @ptrCast(@alignCast(interface_pointer));
                 return Inheritance.receiver(implementation, "implmentsCollidableInterface").implmentsCollidableInterface();
             }
-            fn implmentsGameInputInterface(pointer: *anyopaque) bool {
-                const implementation: Implementation = @ptrCast(@alignCast(pointer));
+            fn implmentsGameInputInterface(interface_pointer: *anyopaque) bool {
+                const implementation: ImplementationType = @ptrCast(@alignCast(interface_pointer));
                 return Inheritance.receiver(implementation, "implmentsGameInputInterface").implmentsGameInputInterface();
             }
-            fn implmentsArtificialIntelligenceCompositeInterface(pointer: *anyopaque) bool {
-                const implementation: Implementation = @ptrCast(@alignCast(pointer));
+            fn implmentsArtificialIntelligenceCompositeInterface(interface_pointer: *anyopaque) bool {
+                const implementation: ImplementationType = @ptrCast(@alignCast(interface_pointer));
                 return Inheritance.receiver(implementation, "implmentsArtificialIntelligenceCompositeInterface").implmentsArtificialIntelligenceCompositeInterface();
             }
-            fn getType(pointer: *anyopaque) i32 {
-                const implementation: Implementation = @ptrCast(@alignCast(pointer));
+            fn getType(interface_pointer: *anyopaque) i32 {
+                const implementation: ImplementationType = @ptrCast(@alignCast(interface_pointer));
                 return Inheritance.receiver(implementation, "getType").getType();
             }
         };
         const this = allocator.create(Self) catch unreachable;
-        this.* = .{ .pointer = object, .object = Object.of(object).?, .base = NamedInterface.of(object).?.*, .toStringFn = Methods.toString, .getHeightFn = Methods.getHeight, .getWidthFn = Methods.getWidth, .getHalfHeightFn = Methods.getHalfHeight, .getHalfWidthFn = Methods.getHalfWidth, .getXPFn = Methods.getXP, .getYPFn = Methods.getYP, .getZPFn = Methods.getZP, .getX2Fn = Methods.getX2, .getY2Fn = Methods.getY2, .getZ2Fn = Methods.getZ2, .isVisibleFn = Methods.isVisible, .moveDXYZFn = Methods.moveDXYZ, .setVisibleFn = Methods.setVisible, .implmentsTickableInterfaceFn = Methods.implmentsTickableInterface, .implmentsCollidableInterfaceFn = Methods.implmentsCollidableInterface, .implmentsGameInputInterfaceFn = Methods.implmentsGameInputInterface, .implmentsArtificialIntelligenceCompositeInterfaceFn = Methods.implmentsArtificialIntelligenceCompositeInterface, .getTypeFn = Methods.getType };
+        this.* = .{ .pointer = object, .object = Object.of(object).?, .base = NamedInterface.of(object).?.*, .base2 = PaintableInterface.of(object).?.*, .base3 = GroupInterfaceCompositeInterface.of(object).?.*, .base4 = PositionInterface.of(object).?.*, .toStringFn = Methods.toString, .getHeightFn = Methods.getHeight, .getWidthFn = Methods.getWidth, .getHalfHeightFn = Methods.getHalfHeight, .getHalfWidthFn = Methods.getHalfWidth, .getXPFn = Methods.getXP, .getYPFn = Methods.getYP, .getZPFn = Methods.getZP, .getX2Fn = Methods.getX2, .getY2Fn = Methods.getY2, .getZ2Fn = Methods.getZ2, .isVisibleFn = Methods.isVisible, .moveDXYZFn = Methods.moveDXYZ, .setVisibleFn = Methods.setVisible, .implmentsTickableInterfaceFn = Methods.implmentsTickableInterface, .implmentsCollidableInterfaceFn = Methods.implmentsCollidableInterface, .implmentsGameInputInterfaceFn = Methods.implmentsGameInputInterface, .implmentsArtificialIntelligenceCompositeInterfaceFn = Methods.implmentsArtificialIntelligenceCompositeInterface, .getTypeFn = Methods.getType };
         return this;
     }
 };

@@ -19,6 +19,7 @@ const String = @import("java/lang/String.zig").String;
 const Object = @import("java/lang/Object.zig").Object;
 const Inheritance = @import("zig/Inheritance.zig");
 const Visitor = @import("org/allbinary/logic/util/visitor/Visitor.zig").Visitor;
+const StringMaker = @import("org/allbinary/logic/string/StringMaker.zig").StringMaker;
 const IntPermutationVisitor = @import("org/allbinary/logic/math/permutations/IntPermutationVisitor.zig").IntPermutationVisitor;
 const System = @import("java/lang/System.zig").System;
 
@@ -115,7 +116,7 @@ pub const OrderedIntArrayPermutationUtil = struct {
     pub fn main(args: []?*String) void {
         _ = args;
         const TOTAL: i32 = 3;
-        const data: []i32 = array_N67263: { const array_N67263_array = allocator.alloc(i32, @intCast(TOTAL)) catch unreachable; @memset(array_N67263_array, 0); break :array_N67263 array_N67263_array; };
+        const data: []i32 = array_N67293: { const array_N67293_array = allocator.alloc(i32, @intCast(TOTAL)) catch unreachable; @memset(array_N67293_array, 0); break :array_N67293 array_N67293_array; };
         {
             var i: i32 = 0;
             while (i < TOTAL) : (i += 1) {
@@ -125,7 +126,7 @@ pub const OrderedIntArrayPermutationUtil = struct {
         const permutationVisitor: ?*IntPermutationVisitor = Inheritance.callStatic(IntPermutationVisitor, "create1", .{ data });
         const ORIGINAL_DATA_LABEL: ?*String = String.literal("Original Data: ");
         _ = std.debug.print("{s}", .{String.text(ORIGINAL_DATA_LABEL)});
-        _ = Inheritance.call(permutationVisitor.?, "print", .{ data });
+        _ = Inheritance.call(permutationVisitor.?, "print", .{ data, StringMaker.create() });
         _ = Inheritance.call(OrderedIntArrayPermutationUtil.getInstance().?, "generate", .{ data, permutationVisitor });
     }
 };

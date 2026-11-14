@@ -60,7 +60,7 @@ pub const HashtableUtil = struct {
         while (Inheritance.call(self.enumerationUtil.?, "hasMoreElements", .{ enumeration })) {
             keyCanBeNull = Inheritance.upcast(@TypeOf(keyCanBeNull), Inheritance.call(self.enumerationUtil.?, "nextElement", .{ enumeration }));
             valueCanBeNull = Inheritance.upcast(@TypeOf(valueCanBeNull), Inheritance.call(hashtable.?, "get", .{ keyCanBeNull }));
-            if (valueCanBeNull == null) {
+            if (Object.isNull(valueCanBeNull)) {
             } else {
                 _ = Inheritance.call(hashtable.?, "put", .{ keyCanBeNull, valueCanBeNull });
             }

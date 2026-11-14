@@ -18,7 +18,7 @@ const allocator = std.heap.page_allocator;
 const String = @import("java/lang/String.zig").String;
 const Object = @import("java/lang/Object.zig").Object;
 const Inheritance = @import("zig/Inheritance.zig");
-// const Graphics = @import("javax/microedition/lcdui/Graphics.zig").Graphics;
+const Graphics = @import("javax/microedition/lcdui/Graphics.zig").Graphics;
 const AnimationBehavior = @import("org/allbinary/animation/AnimationBehavior.zig").AnimationBehavior;
 const IndexedAnimation = @import("org/allbinary/animation/IndexedAnimation.zig").IndexedAnimation;
 const IndexedAnimationBehavior = @import("org/allbinary/animation/IndexedAnimationBehavior.zig").IndexedAnimationBehavior;
@@ -95,19 +95,19 @@ pub const TitleAnimation = struct {
         const currentTime: i64 = self.systemWrapper.?.currentTimeMillis();
         const totalTimeElapsed: i64 = currentTime - self.lastFrameStartTime;
         const indexedAnimationBehavior: ?*IndexedAnimationBehavior = Inheritance.cast(?*IndexedAnimationBehavior, Inheritance.receiver(self, "getAnimationBehavior").getAnimationBehavior());
-        if (totalTimeElapsed > indexedAnimationBehavior.?.frameDelayTime) {
+        if (Inheritance.arithmetic(.greater, totalTimeElapsed, Inheritance.fieldPointer(indexedAnimationBehavior.?, "frameDelayTime").*)) {
             _ = self.previousFrame();
             self.lastFrameStartTime = currentTime;
         }
         if (Inheritance.receiver(self.animationInterfaceArray[@intCast(0)].?, "getFrame").getFrame() == 0) {
-            indexedAnimationBehavior.?.loopIndex += 1;
+            Inheritance.fieldPointer(indexedAnimationBehavior.?, "loopIndex").* += 1;
         }
     }
     
 
     pub fn isComplete(self: *Self) bool {
         const indexedAnimationBehavior: ?*IndexedAnimationBehavior = Inheritance.cast(?*IndexedAnimationBehavior, Inheritance.receiver(self, "getAnimationBehavior").getAnimationBehavior());
-        if (indexedAnimationBehavior.?.loopTotal == -1 or indexedAnimationBehavior.?.loopIndex < indexedAnimationBehavior.?.loopTotal or self.getFrame() != 0) {
+        if (Inheritance.fieldPointer(indexedAnimationBehavior.?, "loopTotal").* == -1 or Inheritance.arithmetic(.less, Inheritance.fieldPointer(indexedAnimationBehavior.?, "loopIndex").*, Inheritance.fieldPointer(indexedAnimationBehavior.?, "loopTotal").*) or self.getFrame() != 0) {
             return false;
         } else {
             return true;
@@ -180,7 +180,7 @@ pub const TitleAnimation = struct {
         _ = ay;
         var x: i32 = 0;
         if (self.widthP != @as(i32, std.math.minInt(i32))) {
-            x = ((divide_N68755: { const left_N68755 = (self.displayInfoSingleton.?.getLastWidth() - self.widthP); const right_N68755 = 2; break :divide_N68755 if (comptime @typeInfo(@TypeOf(left_N68755)) == .int or @TypeOf(left_N68755) == comptime_int) @divTrunc(left_N68755, right_N68755) else left_N68755 / right_N68755; }));
+            x = ((divide_N68755: { const left_N68755 = (Inheritance.arithmetic(.subtract, self.displayInfoSingleton.?.getLastWidth(), self.widthP)); const right_N68755 = 2; break :divide_N68755 if (comptime @typeInfo(@TypeOf(left_N68755)) == .int or @TypeOf(left_N68755) == comptime_int) @divTrunc(left_N68755, right_N68755) else left_N68755 / right_N68755; }));
         }
         var deltaX: i32 = 0;
         var deltaY: i32 = 0;

@@ -18,13 +18,14 @@ const allocator = std.heap.page_allocator;
 const String = @import("java/lang/String.zig").String;
 const Object = @import("java/lang/Object.zig").Object;
 const Inheritance = @import("zig/Inheritance.zig");
-// const GL = @import("javax/microedition/khronos/opengles/GL.zig").GL;
-// const Graphics = @import("javax/microedition/lcdui/Graphics.zig").Graphics;
+const GL = @import("javax/microedition/khronos/opengles/GL.zig").GL;
+const Graphics = @import("javax/microedition/lcdui/Graphics.zig").Graphics;
 const BasicColor = @import("org/allbinary/graphics/color/BasicColor.zig").BasicColor;
 const BasicColorFactory = @import("org/allbinary/graphics/color/BasicColorFactory.zig").BasicColorFactory;
 const BasicColorSetUtil = @import("org/allbinary/graphics/color/BasicColorSetUtil.zig").BasicColorSetUtil;
 const OpenGLSurfaceChangedInterface = @import("org/allbinary/image/opengles/OpenGLSurfaceChangedInterface.zig").OpenGLSurfaceChangedInterface;
 const AnimationInterface = @import("org/allbinary/animation/AnimationInterface.zig").AnimationInterface;
+const Exception = @import("java/lang/Exception.zig").Exception;
 
 pub const Animation = struct {
     const Self = @This();
@@ -41,9 +42,9 @@ pub const Animation = struct {
 
     fn initFields(this: *Self) void {
         this.basicSetColorUtil = Inheritance.upcast(?*BasicColorSetUtil, BasicColorSetUtil.getInstance());
-        this.basicColor = Inheritance.upcast(?*BasicColor, BasicColorFactory.getInstance().?.WHITE);
+        this.basicColor = Inheritance.upcast(?*BasicColor, Inheritance.fieldPointer(BasicColorFactory.getInstance().?, "WHITE").*);
         this.colorP = 0;
-        this.changeBasicColorP = Inheritance.upcast(?*BasicColor, BasicColorFactory.getInstance().?.NULL_COLOR);
+        this.changeBasicColorP = Inheritance.upcast(?*BasicColor, Inheritance.fieldPointer(BasicColorFactory.getInstance().?, "NULL_COLOR").*);
         this.changeColorP = 0;
         this.alphaP = 0;
     }

@@ -29,9 +29,9 @@ pub const PickedUpLayerInterfaceFactoryInterface = struct {
     pointer: *anyopaque,
     object: Object,
     toStringFn: *const fn (pointer: *anyopaque) ?*String,
-    getPickedUpLayerTypeFn: *const fn (pointer: *anyopaque) ?*PickedUpLayerType,
-    getIconLayerFn: *const fn (pointer: *anyopaque) ?*AllBinaryLayer,
-    getAnimationInterfaceFn: *const fn (pointer: *anyopaque) ?*Animation,
+    getPickedUpLayerTypeFn: *const fn (interface_pointer: *anyopaque) ?*PickedUpLayerType,
+    getIconLayerFn: *const fn (interface_pointer: *anyopaque) ?*AllBinaryLayer,
+    getAnimationInterfaceFn: *const fn (interface_pointer: *anyopaque) ?*Animation,
 
     pub fn getPickedUpLayerType(self: *Self) ?*PickedUpLayerType {
         return self.getPickedUpLayerTypeFn(self.pointer);
@@ -51,22 +51,22 @@ pub const PickedUpLayerInterfaceFactoryInterface = struct {
 
     // The interface value of an object with the methods. Like a Java class a method can be declared by the object or a superclass.
     pub fn of(object: anytype) ?*Self {
-        const Implementation = @TypeOf(object);
+        const ImplementationType = @TypeOf(object);
         const Methods = struct {
             fn toString(pointer: *anyopaque) ?*String {
-                const implementation: Implementation = @ptrCast(@alignCast(pointer));
+                const implementation: ImplementationType = @ptrCast(@alignCast(pointer));
                 return String.valueOf(implementation);
             }
-            fn getPickedUpLayerType(pointer: *anyopaque) ?*PickedUpLayerType {
-                const implementation: Implementation = @ptrCast(@alignCast(pointer));
+            fn getPickedUpLayerType(interface_pointer: *anyopaque) ?*PickedUpLayerType {
+                const implementation: ImplementationType = @ptrCast(@alignCast(interface_pointer));
                 return Inheritance.upcast(?*PickedUpLayerType, Inheritance.receiver(implementation, "getPickedUpLayerType").getPickedUpLayerType());
             }
-            fn getIconLayer(pointer: *anyopaque) ?*AllBinaryLayer {
-                const implementation: Implementation = @ptrCast(@alignCast(pointer));
+            fn getIconLayer(interface_pointer: *anyopaque) ?*AllBinaryLayer {
+                const implementation: ImplementationType = @ptrCast(@alignCast(interface_pointer));
                 return Inheritance.upcast(?*AllBinaryLayer, Inheritance.receiver(implementation, "getIconLayer").getIconLayer());
             }
-            fn getAnimationInterface(pointer: *anyopaque) ?*Animation {
-                const implementation: Implementation = @ptrCast(@alignCast(pointer));
+            fn getAnimationInterface(interface_pointer: *anyopaque) ?*Animation {
+                const implementation: ImplementationType = @ptrCast(@alignCast(interface_pointer));
                 return Inheritance.upcast(?*Animation, Inheritance.receiver(implementation, "getAnimationInterface").getAnimationInterface());
             }
         };

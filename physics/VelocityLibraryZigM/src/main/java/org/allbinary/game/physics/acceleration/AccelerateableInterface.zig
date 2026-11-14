@@ -27,7 +27,7 @@ pub const AccelerateableInterface = struct {
     pointer: *anyopaque,
     object: Object,
     toStringFn: *const fn (pointer: *anyopaque) ?*String,
-    accelerateFn: *const fn (pointer: *anyopaque, accelerate_: ?*BasicDecimal) void,
+    accelerateFn: *const fn (interface_pointer: *anyopaque, accelerate_: ?*BasicDecimal) void,
 
     pub fn accelerate(self: *Self, accelerate_: ?*BasicDecimal) void {
         return self.accelerateFn(self.pointer, accelerate_);
@@ -39,15 +39,15 @@ pub const AccelerateableInterface = struct {
 
     // The interface value of an object with the methods. Like a Java class a method can be declared by the object or a superclass.
     pub fn of(object: anytype) ?*Self {
-        const Implementation = @TypeOf(object);
+        const ImplementationType = @TypeOf(object);
         const Methods = struct {
             fn toString(pointer: *anyopaque) ?*String {
-                const implementation: Implementation = @ptrCast(@alignCast(pointer));
+                const implementation: ImplementationType = @ptrCast(@alignCast(pointer));
                 return String.valueOf(implementation);
             }
-            fn accelerate(pointer: *anyopaque, accelerate_: ?*BasicDecimal) void {
-                const implementation: Implementation = @ptrCast(@alignCast(pointer));
-                return Inheritance.receiver(implementation, "accelerate").accelerate(accelerate_);
+            fn accelerate(interface_pointer: *anyopaque, accelerate_: ?*BasicDecimal) void {
+                const implementation: ImplementationType = @ptrCast(@alignCast(interface_pointer));
+                return Inheritance.call(implementation, "accelerate", .{ accelerate_ });
             }
         };
         const this = allocator.create(Self) catch unreachable;

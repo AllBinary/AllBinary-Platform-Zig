@@ -20,6 +20,7 @@ const Object = @import("java/lang/Object.zig").Object;
 const Inheritance = @import("zig/Inheritance.zig");
 const AllBinaryOrientationSensor = @import("org/allbinary/input/gyro/AllBinaryOrientationSensor.zig").AllBinaryOrientationSensor;
 const NoGyroSensor = @import("org/allbinary/input/gyro/NoGyroSensor.zig").NoGyroSensor;
+const Exception = @import("java/lang/Exception.zig").Exception;
 
 pub const GyroSensorFactory = struct {
     const Self = @This();

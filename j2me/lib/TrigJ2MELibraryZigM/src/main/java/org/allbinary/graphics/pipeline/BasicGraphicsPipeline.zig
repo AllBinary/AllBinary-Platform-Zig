@@ -24,6 +24,7 @@ const Angle = @import("org/allbinary/math/Angle.zig").Angle;
 const NoDecimalTrigTable = @import("org/allbinary/math/NoDecimalTrigTable.zig").NoDecimalTrigTable;
 const BasicArrayList = @import("org/allbinary/util/BasicArrayList.zig").BasicArrayList;
 const BasicArrayListD = @import("org/allbinary/util/BasicArrayListD.zig").BasicArrayListD;
+const Exception = @import("java/lang/Exception.zig").Exception;
 
 pub const BasicGraphicsPipeline = struct {
     const Self = @This();
@@ -65,7 +66,7 @@ pub const BasicGraphicsPipeline = struct {
         {
             var index: i32 = 0;
             while (index < size) : (index += 1) {
-            secondPoint = Inheritance.cast(?*GPoint, self.pointBasicArrayList.?.objectArray[@intCast(index)]);
+            secondPoint = Inheritance.cast(?*GPoint, Inheritance.fieldPointer(self.pointBasicArrayList.?, "objectArray").*[@intCast(index)]);
             if (secondPoint.?.getX() != 1000) {
                 _ = Inheritance.call(newBasicArrayList.?, "add", .{ Inheritance.call(pointFactory.?, "createXY", .{ secondPoint.?.getX() + x, secondPoint.?.getY() + y }) });
             } else {
@@ -79,7 +80,7 @@ pub const BasicGraphicsPipeline = struct {
 
     // throws Exception
     pub fn rotateToAngle(self: *Self, angle: ?*Angle) void {
-        _ = Inheritance.call(self, "rotate", .{ @as(i32, @intCast(angle.?.getValue())) });
+        _ = Inheritance.call(self, "rotate", .{ Inheritance.number(i32, angle.?.getValue()) });
     }
     
 
@@ -98,13 +99,13 @@ pub const BasicGraphicsPipeline = struct {
         {
             var index: i32 = 0;
             while (index < size) : (index += 1) {
-            secondPoint = Inheritance.cast(?*GPoint, self.pointBasicArrayList.?.objectArray[@intCast(index)]);
+            secondPoint = Inheritance.cast(?*GPoint, Inheritance.fieldPointer(self.pointBasicArrayList.?, "objectArray").*[@intCast(index)]);
             if (secondPoint.?.getX() != 1000) {
                 sin = Inheritance.call(self.noDecimalTrigTable.?, "sin", .{ angle });
                 cos = Inheritance.call(self.noDecimalTrigTable.?, "cos", .{ angle });
-                y = secondPoint.?.getY() * sin;
-                secondX = (secondPoint.?.getX() * cos) - y;
-                secondY = (secondPoint.?.getX() * sin) + (secondPoint.?.getY() * cos);
+                y = Inheritance.arithmetic(.multiply, secondPoint.?.getY(), sin);
+                secondX = Inheritance.arithmetic(.subtract, (Inheritance.arithmetic(.multiply, secondPoint.?.getX(), cos)), y);
+                secondY = Inheritance.plus((Inheritance.arithmetic(.multiply, secondPoint.?.getX(), sin)), (Inheritance.arithmetic(.multiply, secondPoint.?.getY(), cos)));
                 point = Inheritance.upcast(@TypeOf(point), Inheritance.call(pointFactory.?, "createXY", .{ @divTrunc(@as(i32, @intCast(secondX)), 10000), @divTrunc(@as(i32, @intCast(secondY)), 10000) }));
                 _ = Inheritance.call(newBasicArrayList.?, "add", .{ point });
             } else {
@@ -128,13 +129,13 @@ pub const BasicGraphicsPipeline = struct {
         {
             var index: i32 = 0;
             while (index < size) : (index += 1) {
-            secondPoint = Inheritance.cast(?*GPoint, self.pointBasicArrayList.?.objectArray[@intCast(index)]);
+            secondPoint = Inheritance.cast(?*GPoint, Inheritance.fieldPointer(self.pointBasicArrayList.?, "objectArray").*[@intCast(index)]);
             if (secondPoint.?.getX() != 1000) {
                 newX = 0;
-                if (secondPoint.?.getX() > halfWidth) {
-                    newX = halfWidth - (secondPoint.?.getX() - halfWidth);
+                if (Inheritance.arithmetic(.greater, secondPoint.?.getX(), halfWidth)) {
+                    newX = Inheritance.arithmetic(.subtract, halfWidth, (Inheritance.arithmetic(.subtract, secondPoint.?.getX(), halfWidth)));
                 } else {
-                    newX = halfWidth + (halfWidth - secondPoint.?.getX());
+                    newX = halfWidth + (Inheritance.arithmetic(.subtract, halfWidth, secondPoint.?.getX()));
                 }
                 point = Inheritance.upcast(@TypeOf(point), Inheritance.call(pointFactory.?, "createXY", .{ newX, secondPoint.?.getY() }));
                 _ = Inheritance.call(newBasicArrayList.?, "add", .{ point });

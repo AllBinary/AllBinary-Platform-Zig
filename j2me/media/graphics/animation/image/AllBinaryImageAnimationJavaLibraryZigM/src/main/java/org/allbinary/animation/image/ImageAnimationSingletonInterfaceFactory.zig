@@ -23,6 +23,7 @@ const AnimationBehavior = @import("org/allbinary/animation/AnimationBehavior.zig
 const SingletonAnimationInterfaceFactory = @import("org/allbinary/animation/SingletonAnimationInterfaceFactory.zig").SingletonAnimationInterfaceFactory;
 const AnimationFrameToImageUtil = @import("org/allbinary/image/AnimationFrameToImageUtil.zig").AnimationFrameToImageUtil;
 const ImageAnimation = @import("org/allbinary/animation/image/ImageAnimation.zig").ImageAnimation;
+const Exception = @import("java/lang/Exception.zig").Exception;
 
 pub const ImageAnimationSingletonInterfaceFactory = struct {
     const Self = @This();

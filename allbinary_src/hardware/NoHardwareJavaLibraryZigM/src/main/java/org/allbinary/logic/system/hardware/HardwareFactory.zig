@@ -21,6 +21,7 @@ const Inheritance = @import("zig/Inheritance.zig");
 const OperatingSystemInterface = @import("org/allbinary/logic/system/os/OperatingSystemInterface.zig").OperatingSystemInterface;
 const HardwareInterface = @import("org/allbinary/logic/system/hardware/HardwareInterface.zig").HardwareInterface;
 const NoHardware = @import("org/allbinary/logic/system/hardware/NoHardware.zig").NoHardware;
+const Exception = @import("java/lang/Exception.zig").Exception;
 
 pub const HardwareFactory = struct {
     const Self = @This();

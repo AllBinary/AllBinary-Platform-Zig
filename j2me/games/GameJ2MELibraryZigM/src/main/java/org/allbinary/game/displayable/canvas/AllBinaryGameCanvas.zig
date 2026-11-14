@@ -18,12 +18,12 @@ const allocator = std.heap.page_allocator;
 const String = @import("java/lang/String.zig").String;
 const Object = @import("java/lang/Object.zig").Object;
 const Inheritance = @import("zig/Inheritance.zig");
-// const ChoiceGroup = @import("javax/microedition/lcdui/ChoiceGroup.zig").ChoiceGroup;
-// const CommandListener = @import("javax/microedition/lcdui/CommandListener.zig").CommandListener;
-// const Font = @import("javax/microedition/lcdui/Font.zig").Font;
-// const Graphics = @import("javax/microedition/lcdui/Graphics.zig").Graphics;
-// const Item = @import("javax/microedition/lcdui/Item.zig").Item;
-// const NullCommandListener = @import("javax/microedition/lcdui/NullCommandListener.zig").NullCommandListener;
+const ChoiceGroup = @import("javax/microedition/lcdui/ChoiceGroup.zig").ChoiceGroup;
+const CommandListener = @import("javax/microedition/lcdui/CommandListener.zig").CommandListener;
+const Font = @import("javax/microedition/lcdui/Font.zig").Font;
+const Graphics = @import("javax/microedition/lcdui/Graphics.zig").Graphics;
+const Item = @import("javax/microedition/lcdui/Item.zig").Item;
+const NullCommandListener = @import("javax/microedition/lcdui/NullCommandListener.zig").NullCommandListener;
 const AndroidUtil = @import("org/allbinary/AndroidUtil.zig").AndroidUtil;
 const J2MEUtil = @import("org/allbinary/J2MEUtil.zig").J2MEUtil;
 const GameAdStateFactory = @import("org/allbinary/business/advertisement/GameAdStateFactory.zig").GameAdStateFactory;
@@ -174,10 +174,11 @@ const NullWaitGameRunnable = @import("org/allbinary/game/displayable/canvas/Null
 const PopupCommandFormInputProcessor = @import("org/allbinary/game/displayable/canvas/PopupCommandFormInputProcessor.zig").PopupCommandFormInputProcessor;
 const PopupMenuInputProcessor = @import("org/allbinary/game/displayable/canvas/PopupMenuInputProcessor.zig").PopupMenuInputProcessor;
 const PopupMenuInterface = @import("org/allbinary/game/displayable/canvas/PopupMenuInterface.zig").PopupMenuInterface;
+const SaveHighScoreRunnable = @import("org/allbinary/game/displayable/canvas/SaveHighScoreRunnable.zig").SaveHighScoreRunnable;
 const StartIntermissionProcessor = @import("org/allbinary/game/displayable/canvas/StartIntermissionProcessor.zig").StartIntermissionProcessor;
 const Integer = @import("java/lang/Integer.zig").Integer;
 const Thread = @import("java/lang/Thread.zig").Thread;
-const Runnable = @import("java/lang/Runnable.zig").Runnable;
+const Exception = @import("java/lang/Exception.zig").Exception;
 
 pub const AllBinaryGameCanvas = struct {
     const Self = @This();
@@ -298,7 +299,7 @@ pub const AllBinaryGameCanvas = struct {
         this.startIntermissionInterface = Inheritance.upcast(?*IntermissionInterface, Intermission.create());
         this.endLevelIntermissionInterface = Inheritance.upcast(?*IntermissionInterface, Intermission.create());
         this.gameLayerManager = Inheritance.upcast(?*AllBinaryGameLayerManager, AllBinaryGameLayerManager.getNullInstance());
-        this.gameState = Inheritance.upcast(?*GameState, this.gameStateFactory.?.NO_GAME_STATE);
+        this.gameState = Inheritance.upcast(?*GameState, Inheritance.fieldPointer(this.gameStateFactory.?, "NO_GAME_STATE").*);
         this.gameOver = false;
         this.initialized = false;
         this.gameStateTimeHelper = Inheritance.callStatic(TimeDelayHelper, "create1", .{ 0 });
@@ -308,7 +309,7 @@ pub const AllBinaryGameCanvas = struct {
         this.highScoresPaintable = Inheritance.upcast(?*Paintable, NullPaintable.getInstance());
         this.localPlayerGameInputList = Inheritance.upcast(?*BasicArrayList, BasicArrayListD.create());
         this.isCheating = false;
-        this.hashtable = Inheritance.upcast(?*ABHashtable, Inheritance.fieldPointer(this, "stdUtil").*.?.NULL_TABLE);
+        this.hashtable = Inheritance.upcast(?*ABHashtable, Inheritance.fieldPointer(Inheritance.fieldPointer(this, "stdUtil").*.?, "NULL_TABLE").*);
         this.isSingleKeyRepeatableProcessing = false;
         this.gameInitializationInterfaceFactoryInterface = Inheritance.upcast(?*BasicBuildGameInitializerFactory, BasicBuildGameInitializerFactory.NULL_BASE_BUILD_GMAE_INITIALIZER_FACTORY);
         this.touchButtonsPaintable = Inheritance.upcast(?*Paintable, NullPaintable.getInstance());
@@ -336,7 +337,7 @@ pub const AllBinaryGameCanvas = struct {
         this.openMenuPaintable = Inheritance.upcast(?*Paintable, NullPaintable.getInstance());
         this.menuPaintable = Inheritance.upcast(?*Paintable, NullPaintable.getInstance());
         this.currentTouchInputFactory = Inheritance.upcast(?*BaseTouchInput, NoButtonsTouchInputFactory.getInstance());
-        this.colorFillPaintable = Inheritance.upcast(?*ColorFillBasePaintable, Inheritance.call(ColorFillPaintableFactory.getInstance().?, "getInstance", .{ this.basicColorFactory.?.BLACK, true }));
+        this.colorFillPaintable = Inheritance.upcast(?*ColorFillBasePaintable, Inheritance.call(ColorFillPaintableFactory.getInstance().?, "getInstance", .{ Inheritance.fieldPointer(this.basicColorFactory.?, "BLACK").*, true }));
         this.baseGameStatistics = Inheritance.upcast(?*BaseGameStatistics, GameStatisticsFactory.getInstance());
         this.primaryPlayerQueue = Inheritance.upcast(?*PlayerQueue, PrimaryPlayerQueueFactory.getInstance());
         this.secondaryPlayerQueue = Inheritance.upcast(?*PlayerQueue, SecondaryPlayerQueueFactory.getInstance());
@@ -360,13 +361,13 @@ pub const AllBinaryGameCanvas = struct {
     pub fn create5(commandListener: ?*CommandListener, gameLayerManager: ?*AllBinaryGameLayerManager, highScoresFactoryInterface: ?*HighScoresFactoryInterface, gameInitializationInterfaceFactoryInterface: ?*BasicBuildGameInitializerFactory, buffered: bool) *Self {
         const this = allocator.create(Self) catch unreachable;
         this.* = .{};
-        this.base = Inheritance.callStatic(RunnableCanvas, "create3", .{ commandListener, CanvasStrings.getInstance().?.EMPTY_CHILD_NAME_LIST, true }).*;
+        this.base = Inheritance.callStatic(RunnableCanvas, "create3", .{ commandListener, Inheritance.fieldPointer(CanvasStrings.getInstance().?, "EMPTY_CHILD_NAME_LIST").*, true }).*;
         this.initFields();
         this.highScoresHelper = Inheritance.upcast(@TypeOf(this.highScoresHelper), highScoresFactoryInterface.?.createHighScoresHelper());
         this.gameInitializationInterfaceFactoryInterface = gameInitializationInterfaceFactoryInterface;
         _ = Inheritance.call(this, "init", .{ gameLayerManager, buffered });
         this.highScoresFactoryInterface = highScoresFactoryInterface;
-        if (Object.same(Inheritance.receiverOf(Inheritance.receiver(this.gameLayerManager.?, "getGameInfo").getGameInfo().?, "getGameType").getGameType(), this.gameTypeFactory.?.BOT) or Object.same(Inheritance.receiverOf(Inheritance.receiver(this.gameLayerManager.?, "getGameInfo").getGameInfo().?, "getGameType").getGameType(), this.gameTypeFactory.?.NONE)) {
+        if (Object.same(Inheritance.receiverOf(Inheritance.receiver(this.gameLayerManager.?, "getGameInfo").getGameInfo().?, "getGameType").getGameType(), Inheritance.fieldPointer(this.gameTypeFactory.?, "BOT").*) or Object.same(Inheritance.receiverOf(Inheritance.receiver(this.gameLayerManager.?, "getGameInfo").getGameInfo().?, "getGameType").getGameType(), Inheritance.fieldPointer(this.gameTypeFactory.?, "NONE").*)) {
             this.gameBehavior = Inheritance.upcast(@TypeOf(this.gameBehavior), DemoGameBehavior.getInstance());
             this.menuBehavior = Inheritance.upcast(@TypeOf(this.menuBehavior), BaseMenuBehavior.getInstance());
         } else {
@@ -385,7 +386,7 @@ pub const AllBinaryGameCanvas = struct {
     pub fn updateMeasurement(self: *Self, graphics: ?*Graphics) void {
         { // try
             const font: ?*Font = Inheritance.upcast(?*Font, graphics.?.getFont());
-            _ = Inheritance.call(Inheritance.fieldPointer(self, "logUtil").*.?, "putF", .{ Object.toString(Object.of(Inheritance.call(Inheritance.call(Inheritance.call(Inheritance.call(Inheritance.call(StringMaker.create(), "append", .{ Inheritance.fieldPointer(self, "commonStrings").*.?.START }).?, "append", .{ Inheritance.fieldPointer(self, "canvasStrings").*.?.FD_WIDTH }).?, "appendint", .{ @as(i32, @intCast(Inheritance.callStatic(MyFontProcessor, "defaultCharWidth", .{ font }))) }).?, "append", .{ Inheritance.fieldPointer(self, "canvasStrings").*.?.FD_HEIGHT }).?, "appendint", .{ @as(i32, @intCast(font.?.getHeight())) }))), self, Inheritance.fieldPointer(self, "canvasStrings").*.?.UPDATE_MEASUREMENT });
+            _ = Inheritance.call(Inheritance.fieldPointer(self, "logUtil").*.?, "putF", .{ Object.toString(Object.of(Inheritance.call(Inheritance.call(Inheritance.call(Inheritance.call(Inheritance.call(StringMaker.create(), "append", .{ Inheritance.fieldPointer(Inheritance.fieldPointer(self, "commonStrings").*.?, "START").* }).?, "append", .{ Inheritance.fieldPointer(Inheritance.fieldPointer(self, "canvasStrings").*.?, "FD_WIDTH").* }).?, "appendint", .{ Inheritance.number(i32, Inheritance.callStatic(MyFontProcessor, "defaultCharWidth", .{ font })) }).?, "append", .{ Inheritance.fieldPointer(Inheritance.fieldPointer(self, "canvasStrings").*.?, "FD_HEIGHT").* }).?, "appendint", .{ Inheritance.number(i32, font.?.getHeight()) }))), self, Inheritance.fieldPointer(Inheritance.fieldPointer(self, "canvasStrings").*.?, "UPDATE_MEASUREMENT").* });
             self.fontHeightP = font.?.getHeight();
             _ = Inheritance.call(self.myFormUtil.?, "updateMeasurement", .{ graphics });
             const popupMenuRectangle: ?*Rectangle = Inheritance.upcast(?*Rectangle, self.myFormUtil.?.getPopupMenuRectangle());
@@ -398,7 +399,7 @@ pub const AllBinaryGameCanvas = struct {
             self.myFontProcessor = Inheritance.upcast(@TypeOf(self.myFontProcessor), MyFontProcessor.getInstance());
         }
         // catch (Exception e):
-//             _ = Inheritance.call(Inheritance.fieldPointer(self, "logUtil").*.?, "put", .{ Inheritance.fieldPointer(self, "commonStrings").*.?.EXCEPTION, self, Inheritance.fieldPointer(self, "canvasStrings").*.?.ON_DISPLAY_CHANGE_EVENT, e });
+//             _ = Inheritance.call(Inheritance.fieldPointer(self, "logUtil").*.?, "put", .{ Inheritance.fieldPointer(Inheritance.fieldPointer(self, "commonStrings").*.?, "EXCEPTION").*, self, Inheritance.fieldPointer(Inheritance.fieldPointer(self, "canvasStrings").*.?, "ON_DISPLAY_CHANGE_EVENT").*, e });
     }
     
 
@@ -410,27 +411,27 @@ pub const AllBinaryGameCanvas = struct {
 
     pub fn setCurrentThread(self: *Self) void {
         if (J2MEUtil.isHTML()) {
-            _ = self.base.setCurrentThreadFake();
+            _ = Inheritance.receiver(&self.base, "setCurrentThreadFake").setCurrentThreadFake();
         } else {
-            _ = self.base.setCurrentThread();
+            _ = Inheritance.receiver(&self.base, "setCurrentThread").setCurrentThread();
         }
     }
     
 
     pub fn onEvent(self: *Self, eventObject: ?*AllBinaryEventObject) void {
         _ = eventObject;
-        _ = Inheritance.callStatic(ForcedLogUtil, "log", .{ EventStrings.getInstance().?.PERFORMANCE_MESSAGE, self });
+        _ = Inheritance.callStatic(ForcedLogUtil, "log", .{ Inheritance.fieldPointer(EventStrings.getInstance().?, "PERFORMANCE_MESSAGE").*, self });
     }
     
 
     pub fn onDisplayChangeEvent(self: *Self, displayChangeEvent: ?*DisplayChangeEvent) void {
         { // try
-            _ = Inheritance.call(Inheritance.fieldPointer(self, "logUtil").*.?, "putF", .{ Object.toString(Object.of(Inheritance.call(Inheritance.call(StringMaker.create(), "append", .{ Inheritance.fieldPointer(self, "commonStrings").*.?.START }).?, "append", .{ Object.toString(Object.of(DisplayInfoSingleton.getInstance())) }))), self, Inheritance.fieldPointer(self, "canvasStrings").*.?.UPDATE_MEASUREMENT });
+            _ = Inheritance.call(Inheritance.fieldPointer(self, "logUtil").*.?, "putF", .{ Object.toString(Object.of(Inheritance.call(Inheritance.call(StringMaker.create(), "append", .{ Inheritance.fieldPointer(Inheritance.fieldPointer(self, "commonStrings").*.?, "START").* }).?, "append", .{ Object.toString(Object.of(DisplayInfoSingleton.getInstance())) }))), self, Inheritance.fieldPointer(Inheritance.fieldPointer(self, "canvasStrings").*.?, "UPDATE_MEASUREMENT").* });
             self.myFontProcessor = self.updateMyFontProcessor;
             _ = Inheritance.call(self.menuBehavior.?, "onDisplayChangeEvent", .{ self, displayChangeEvent });
         }
         // catch (Exception e):
-//             _ = Inheritance.call(Inheritance.fieldPointer(self, "logUtil").*.?, "put", .{ Inheritance.fieldPointer(self, "commonStrings").*.?.EXCEPTION, self, Inheritance.fieldPointer(self, "canvasStrings").*.?.ON_DISPLAY_CHANGE_EVENT, e });
+//             _ = Inheritance.call(Inheritance.fieldPointer(self, "logUtil").*.?, "put", .{ Inheritance.fieldPointer(Inheritance.fieldPointer(self, "commonStrings").*.?, "EXCEPTION").*, self, Inheritance.fieldPointer(Inheritance.fieldPointer(self, "canvasStrings").*.?, "ON_DISPLAY_CHANGE_EVENT").*, e });
     }
     
 
@@ -441,7 +442,7 @@ pub const AllBinaryGameCanvas = struct {
         const rectangle: ?*Rectangle = Inheritance.upcast(?*Rectangle, self.formUtil.?.createFormRectangle());
         _ = Inheritance.call(self.menuForm.?, "init", .{ rectangle, formType });
         if (!Object.same(self.currentTouchInputFactory, NoButtonsTouchInputFactory.getInstance())) {
-            _ = Inheritance.call(self.touchButtonFactory.?, "toggle", .{ Inheritance.receiver(self, "isPaused").isPaused(), self.currentTouchInputFactory.?.getList() });
+            _ = Inheritance.call(self.touchButtonFactory.?, "toggle", .{ self.isPaused(), self.currentTouchInputFactory.?.getList() });
         }
         self.myFontProcessor = self.updateMyFontProcessor;
     }
@@ -449,7 +450,7 @@ pub const AllBinaryGameCanvas = struct {
 
     // throws Exception
     pub fn processSleep(self: *Self) void {
-        _ = self.base.processSleep();
+        _ = Inheritance.receiver(&self.base, "processSleep").processSleep();
         if (AllBinaryMediaManager.update()) {
             if (!self.primaryPlayerQueue.?.process()) {
                 _ = self.secondaryPlayerQueue.?.process();
@@ -466,7 +467,7 @@ pub const AllBinaryGameCanvas = struct {
         if (Object.same(self.popupMenuInputProcessor, NoMenuInputProcessor.getInstance())) {
             const features: ?*Features = Inheritance.upcast(?*Features, Features.getInstance());
             const popupMenuRectangle: ?*Rectangle = Inheritance.upcast(?*Rectangle, self.myFormUtil.?.getPopupMenuRectangle());
-            if (Inheritance.call(features.?, "isFeature", .{ self.touchFeatureFactory.?.TOUCH_ENABLED })) {
+            if (Inheritance.call(features.?, "isFeature", .{ Inheritance.fieldPointer(self.touchFeatureFactory.?, "TOUCH_ENABLED").* })) {
                 _ = Inheritance.call(self, "setOpenMenuPaintable", .{ Inheritance.callStatic(BasicPopupMenuPaintable, "create3", .{ popupMenuRectangle, Inheritance.receiver(self.gameLayerManager.?, "getBackgroundBasicColor").getBackgroundBasicColor(), Inheritance.receiver(self.gameLayerManager.?, "getForegroundBasicColor").getForegroundBasicColor() }) });
                 _ = Inheritance.call(self, "setPopupMenuInputProcessor", .{ Inheritance.callStatic(PopupMenuInputProcessor, "create4", .{ BasicArrayListD.create(), -1, self, popupMenuRectangle }) });
             }
@@ -480,7 +481,7 @@ pub const AllBinaryGameCanvas = struct {
             _ = Inheritance.call(self.menuBehavior.?, "initMenu", .{ self });
         }
         // catch (Exception e):
-//             _ = Inheritance.call(Inheritance.fieldPointer(self, "logUtil").*.?, "put", .{ Inheritance.fieldPointer(self, "commonStrings").*.?.EXCEPTION, self, String.literal("initMenu"), e });
+//             _ = Inheritance.call(Inheritance.fieldPointer(self, "logUtil").*.?, "put", .{ Inheritance.fieldPointer(Inheritance.fieldPointer(self, "commonStrings").*.?, "EXCEPTION").*, self, String.literal("initMenu"), e });
     }
     
 
@@ -492,10 +493,10 @@ pub const AllBinaryGameCanvas = struct {
         const commandTextItemArrayFactory: ?*CommandTextItemArrayFactory = Inheritance.upcast(?*CommandTextItemArrayFactory, gameLimitedCommandTextItemArrayFactory.?.getCommandTextItemArrayFactory());
         const items: []?*ABCustomItem = Inheritance.call(commandTextItemArrayFactory.?, "getInstance", .{ Inheritance.receiver(self, "getCommandStack").getCommandStack(), Inheritance.receiver(self.gameLayerManager.?, "getBackgroundBasicColor").getBackgroundBasicColor(), Inheritance.receiver(self.gameLayerManager.?, "getForegroundBasicColor").getForegroundBasicColor() });
         const rectangle: ?*Rectangle = Inheritance.upcast(?*Rectangle, self.formUtil.?.createFormRectangle());
-        _ = Inheritance.call(self, "setMenuForm", .{ Inheritance.callStatic(CommandCurrentSelectionFormFactory, "getInstance", .{ StringUtil.getInstance().?.EMPTY_STRING, items, rectangle, formType, 25, false, Inheritance.receiver(self.gameLayerManager.?, "getBackgroundBasicColor").getBackgroundBasicColor(), Inheritance.receiver(self.gameLayerManager.?, "getForegroundBasicColor").getForegroundBasicColor() }) });
+        _ = Inheritance.call(self, "setMenuForm", .{ Inheritance.callStatic(CommandCurrentSelectionFormFactory, "getInstance", .{ Inheritance.fieldPointer(StringUtil.getInstance().?, "EMPTY_STRING").*, items, rectangle, formType, 25, false, Inheritance.receiver(self.gameLayerManager.?, "getBackgroundBasicColor").getBackgroundBasicColor(), Inheritance.receiver(self.gameLayerManager.?, "getForegroundBasicColor").getForegroundBasicColor() }) });
         const scrollSelectionForm: ?*ScrollSelectionForm = Inheritance.upcast(?*ScrollSelectionForm, self.getMenuForm());
         const features: ?*Features = Inheritance.upcast(?*Features, Features.getInstance());
-        if (Inheritance.call(features.?, "isFeature", .{ self.touchFeatureFactory.?.TOUCH_ENABLED })) {
+        if (Inheritance.call(features.?, "isFeature", .{ Inheritance.fieldPointer(self.touchFeatureFactory.?, "TOUCH_ENABLED").* })) {
             self.mainMenuInputProcessor = Inheritance.upcast(@TypeOf(self.mainMenuInputProcessor), Inheritance.callStatic(PopupCommandFormInputProcessor, "create5", .{ BasicArrayListD.create(), -1, self, scrollSelectionForm, Inheritance.cast(?*PopupMenuInputProcessor, self.getPopupMenuInputProcessor()) }));
         } else {
         }
@@ -513,7 +514,7 @@ pub const AllBinaryGameCanvas = struct {
             _ = Inheritance.call(self.menuBehavior.?, "updateMenu", .{ self });
         }
         // catch (Exception e):
-//             _ = Inheritance.call(Inheritance.fieldPointer(self, "logUtil").*.?, "put", .{ Inheritance.fieldPointer(self, "commonStrings").*.?.EXCEPTION, self, String.literal("initMenu"), e });
+//             _ = Inheritance.call(Inheritance.fieldPointer(self, "logUtil").*.?, "put", .{ Inheritance.fieldPointer(Inheritance.fieldPointer(self, "commonStrings").*.?, "EXCEPTION").*, self, String.literal("initMenu"), e });
     }
     
 
@@ -543,8 +544,8 @@ pub const AllBinaryGameCanvas = struct {
         defer javaMonitor.exit();
         _ = Inheritance.call(self.gameBehavior.?, "pause", .{ self });
         _ = self.closeMenu();
-        _ = self.base.pause();
-        _ = Inheritance.call(self.touchButtonFactory.?, "toggle", .{ Inheritance.receiver(self, "isPaused").isPaused(), Inheritance.receiverOf(BasicArrayListUtil.getInstance().?, "getImmutableInstance").getImmutableInstance() });
+        _ = Inheritance.receiver(&self.base, "pause").pause();
+        _ = Inheritance.call(self.touchButtonFactory.?, "toggle", .{ self.isPaused(), Inheritance.receiverOf(BasicArrayListUtil.getInstance().?, "getImmutableInstance").getImmutableInstance() });
         _ = Inheritance.receiverOf(Inheritance.fieldPointer(self, "tsUtil").*.?, "gc").gc();
     }
     
@@ -553,11 +554,11 @@ pub const AllBinaryGameCanvas = struct {
         // Java synchronized method
         const javaMonitor = Object.monitor(self).enter();
         defer javaMonitor.exit();
-        _ = Inheritance.call(Inheritance.fieldPointer(self, "logUtil").*.?, "putF", .{ Inheritance.fieldPointer(self, "commonStrings").*.?.START, self, self.gameStrings.?.UNPAUSE });
+        _ = Inheritance.call(Inheritance.fieldPointer(self, "logUtil").*.?, "putF", .{ Inheritance.fieldPointer(Inheritance.fieldPointer(self, "commonStrings").*.?, "START").*, self, Inheritance.fieldPointer(self.gameStrings.?, "UNPAUSE").* });
         _ = self.closeMenu();
         _ = Inheritance.receiverOf(Inheritance.fieldPointer(self, "tsUtil").*.?, "gc").gc();
-        _ = self.base.unPause();
-        _ = Inheritance.call(self.touchButtonFactory.?, "toggle", .{ Inheritance.receiver(self, "isPaused").isPaused(), Inheritance.receiverOf(BasicArrayListUtil.getInstance().?, "getImmutableInstance").getImmutableInstance() });
+        _ = Inheritance.receiver(&self.base, "unPause").unPause();
+        _ = Inheritance.call(self.touchButtonFactory.?, "toggle", .{ self.isPaused(), Inheritance.receiverOf(BasicArrayListUtil.getInstance().?, "getImmutableInstance").getImmutableInstance() });
         _ = Inheritance.call(self.gameBehavior.?, "unPause", .{ self });
     }
     
@@ -590,7 +591,7 @@ pub const AllBinaryGameCanvas = struct {
 
     // throws Exception
     pub fn toggleMenu(self: *Self) void {
-        _ = Inheritance.call(Inheritance.fieldPointer(self, "logUtil").*.?, "putF", .{ Inheritance.fieldPointer(self, "commonStrings").*.?.START, self, self.gameStrings.?.TOGGLE_MENU });
+        _ = Inheritance.call(Inheritance.fieldPointer(self, "logUtil").*.?, "putF", .{ Inheritance.fieldPointer(Inheritance.fieldPointer(self, "commonStrings").*.?, "START").*, self, Inheritance.fieldPointer(self.gameStrings.?, "TOGGLE_MENU").* });
         if (Object.same(self.getMenuPaintable(), self.getOpenMenuPaintable())) {
             _ = self.pause();
             _ = self.updateMenu();
@@ -653,13 +654,13 @@ pub const AllBinaryGameCanvas = struct {
         _ = Inheritance.call(self, "setLayerManager", .{ gameLayerManager });
         if (!buffered) {
             const BUFF_MESSAGE: ?*String = String.literal("XXX Not Buffering Causes Concurrency Issues XXX");
-            _ = Inheritance.call(Inheritance.fieldPointer(self, "logUtil").*.?, "putF", .{ BUFF_MESSAGE, self, Inheritance.fieldPointer(self, "commonStrings").*.?.CONSTRUCTOR });
+            _ = Inheritance.call(Inheritance.fieldPointer(self, "logUtil").*.?, "putF", .{ BUFF_MESSAGE, self, Inheritance.fieldPointer(Inheritance.fieldPointer(self, "commonStrings").*.?, "CONSTRUCTOR").* });
         } else {
             std.debug.panic("{any}", .{exception: { _ = String.literal("Buffering is disabled"); break :exception error.Exception; }});
         }
         _ = Inheritance.call(self, "setGameInputProcessor", .{ Processor.getInstance() });
         const features: ?*Features = Inheritance.upcast(?*Features, Features.getInstance());
-        if (Inheritance.call(features.?, "isFeature", .{ GameFeatureFactory.getInstance().?.CHEATING })) {
+        if (Inheritance.call(features.?, "isFeature", .{ Inheritance.fieldPointer(GameFeatureFactory.getInstance().?, "CHEATING").* })) {
             self.isCheating = true;
             self.cheatProcessor = Inheritance.upcast(@TypeOf(self.cheatProcessor), Inheritance.callStatic(CheatGameInputProcessor, "create1", .{ self }));
             _ = Inheritance.call(self.gameKeyEventHandler.?, "addListener", .{ self.cheatProcessor });
@@ -694,7 +695,7 @@ pub const AllBinaryGameCanvas = struct {
 
     // throws Exception
     pub fn mediaInit(self: *Self) void {
-        _ = Inheritance.callStatic(ForcedLogUtil, "log", .{ Inheritance.fieldPointer(self, "commonStrings").*.?.NOT_IMPLEMENTED, self });
+        _ = Inheritance.callStatic(ForcedLogUtil, "log", .{ Inheritance.fieldPointer(Inheritance.fieldPointer(self, "commonStrings").*.?, "NOT_IMPLEMENTED").*, self });
     }
     
 
@@ -708,20 +709,20 @@ pub const AllBinaryGameCanvas = struct {
         _ = Inheritance.call(GameInitializationUtil.getInstance().?, "initGame", .{ abeClientInformation, self, self.gameInitializationInterfaceFactoryInterface });
         const gameFeatureFactory: ?*GameFeatureFactory = Inheritance.upcast(?*GameFeatureFactory, GameFeatureFactory.getInstance());
         const changedGameFeatureListener: ?*ChangedGameFeatureListener = Inheritance.upcast(?*ChangedGameFeatureListener, ChangedGameFeatureListener.getInstance());
-        if (Inheritance.call(changedGameFeatureListener.?, "isChangedFeature", .{ gameFeatureFactory.?.SOUND })) {
+        if (Inheritance.call(changedGameFeatureListener.?, "isChangedFeature", .{ Inheritance.fieldPointer(gameFeatureFactory.?, "SOUND").* })) {
             const features: ?*Features = Inheritance.upcast(?*Features, Features.getInstance());
-            _ = Inheritance.call(Inheritance.fieldPointer(self, "logUtil").*.?, "putF", .{ Object.toString(Object.of(Inheritance.call(Inheritance.call(StringMaker.create(), "append", .{ String.literal("Sound Changing To: ") }).?, "appendboolean", .{ Inheritance.call(features.?, "isFeature", .{ gameFeatureFactory.?.SOUND }) }))), self, String.literal("initConfigurable") });
+            _ = Inheritance.call(Inheritance.fieldPointer(self, "logUtil").*.?, "putF", .{ Object.toString(Object.of(Inheritance.call(Inheritance.call(StringMaker.create(), "append", .{ String.literal("Sound Changing To: ") }).?, "appendboolean", .{ Inheritance.call(features.?, "isFeature", .{ Inheritance.fieldPointer(gameFeatureFactory.?, "SOUND").* }) }))), self, String.literal("initConfigurable") });
             _ = self.mediaInit();
-            _ = Inheritance.call(changedGameFeatureListener.?, "remove", .{ gameFeatureFactory.?.SOUND });
+            _ = Inheritance.call(changedGameFeatureListener.?, "remove", .{ Inheritance.fieldPointer(gameFeatureFactory.?, "SOUND").* });
         }
         const sensorFeatureFactory: ?*SensorFeatureFactory = Inheritance.upcast(?*SensorFeatureFactory, SensorFeatureFactory.getInstance());
-        if (Inheritance.call(changedGameFeatureListener.?, "isChangedFeature", .{ sensorFeatureFactory.?.ORIENTATION_SENSORS }) or Inheritance.call(changedGameFeatureListener.?, "isChangedFeature", .{ sensorFeatureFactory.?.NO_ORIENTATION }) or Inheritance.call(changedGameFeatureListener.?, "isChangedFeature", .{ sensorFeatureFactory.?.SIMULATED_ORIENTATION_SENSORS })) {
-            _ = Inheritance.call(changedGameFeatureListener.?, "remove", .{ sensorFeatureFactory.?.NO_ORIENTATION });
-            _ = Inheritance.call(changedGameFeatureListener.?, "remove", .{ sensorFeatureFactory.?.ORIENTATION_SENSORS });
-            _ = Inheritance.call(changedGameFeatureListener.?, "remove", .{ sensorFeatureFactory.?.SIMULATED_ORIENTATION_SENSORS });
+        if (Inheritance.call(changedGameFeatureListener.?, "isChangedFeature", .{ Inheritance.fieldPointer(sensorFeatureFactory.?, "ORIENTATION_SENSORS").* }) or Inheritance.call(changedGameFeatureListener.?, "isChangedFeature", .{ Inheritance.fieldPointer(sensorFeatureFactory.?, "NO_ORIENTATION").* }) or Inheritance.call(changedGameFeatureListener.?, "isChangedFeature", .{ Inheritance.fieldPointer(sensorFeatureFactory.?, "SIMULATED_ORIENTATION_SENSORS").* })) {
+            _ = Inheritance.call(changedGameFeatureListener.?, "remove", .{ Inheritance.fieldPointer(sensorFeatureFactory.?, "NO_ORIENTATION").* });
+            _ = Inheritance.call(changedGameFeatureListener.?, "remove", .{ Inheritance.fieldPointer(sensorFeatureFactory.?, "ORIENTATION_SENSORS").* });
+            _ = Inheritance.call(changedGameFeatureListener.?, "remove", .{ Inheritance.fieldPointer(sensorFeatureFactory.?, "SIMULATED_ORIENTATION_SENSORS").* });
         }
         const resourceLoadingLevelFactory: ?*ResourceLoadingLevelFactory = Inheritance.upcast(?*ResourceLoadingLevelFactory, ResourceLoadingLevelFactory.getInstance());
-        _ = Inheritance.call(self, "loadResourceLoadingLevel", .{ resourceLoadingLevelFactory.?.LOAD_GAME });
+        _ = Inheritance.call(self, "loadResourceLoadingLevel", .{ Inheritance.fieldPointer(resourceLoadingLevelFactory.?, "LOAD_GAME").* });
     }
     
 
@@ -737,9 +738,9 @@ pub const AllBinaryGameCanvas = struct {
 
     // throws Exception
     pub fn initTouch(self: *Self) void {
-        const gameInitializedEvent: ?*GameInitializedEvent = Inheritance.upcast(?*GameInitializedEvent, GameInitializationUtil.getInstance().?.EVENT);
+        const gameInitializedEvent: ?*GameInitializedEvent = Inheritance.upcast(?*GameInitializedEvent, Inheritance.fieldPointer(GameInitializationUtil.getInstance().?, "EVENT").*);
         const resourceLoadingLevelFactory: ?*ResourceLoadingLevelFactory = Inheritance.upcast(?*ResourceLoadingLevelFactory, ResourceLoadingLevelFactory.getInstance());
-        _ = Inheritance.call(gameInitializedEvent.?, "setResourceLoadingLevel", .{ resourceLoadingLevelFactory.?.LOAD_TOUCH });
+        _ = Inheritance.call(gameInitializedEvent.?, "setResourceLoadingLevel", .{ Inheritance.fieldPointer(resourceLoadingLevelFactory.?, "LOAD_TOUCH").* });
         _ = Inheritance.call(GameInitializedEventHandler.getInstance().?, "fireEvent", .{ gameInitializedEvent });
         _ = self.touchButtonFactory.?.defaultList();
         _ = self.updateTouch();
@@ -751,8 +752,8 @@ pub const AllBinaryGameCanvas = struct {
     pub fn updateCurrentTouchInputFactory(self: *Self, nextTouchInput: ?*BaseTouchInput) void {
         if (!Object.same(nextTouchInput, self.currentTouchInputFactory)) {
             self.currentTouchInputFactory = nextTouchInput;
-            _ = Inheritance.callStatic(PreLogUtil, "put", .{ Object.toString(Object.of(self.currentTouchInputFactory)), self, self.gameInputStrings.?.UDPATE_CURRENT_TOUCH_INPUT_FACTORY });
-            _ = Inheritance.call(self.touchButtonFactory.?, "toggle", .{ Inheritance.receiver(self, "isPaused").isPaused(), self.currentTouchInputFactory.?.getList() });
+            _ = Inheritance.callStatic(PreLogUtil, "put", .{ Object.toString(Object.of(self.currentTouchInputFactory)), self, Inheritance.fieldPointer(self.gameInputStrings.?, "UDPATE_CURRENT_TOUCH_INPUT_FACTORY").* });
+            _ = Inheritance.call(self.touchButtonFactory.?, "toggle", .{ self.isPaused(), self.currentTouchInputFactory.?.getList() });
         }
     }
     
@@ -766,8 +767,8 @@ pub const AllBinaryGameCanvas = struct {
     // throws Exception
     pub fn updateTouch2(self: *Self) void {
         const features: ?*Features = Inheritance.upcast(?*Features, Features.getInstance());
-        if (Inheritance.call(features.?, "isFeature", .{ self.touchFeatureFactory.?.AUTO_HIDE_SHOW_SCREEN_BUTTONS })) {
-            if (Inheritance.receiverOf(Inheritance.receiver(self.gameLayerManager.?, "getGameInfo").getGameInfo().?, "getCurrentLevel").getCurrentLevel() - self.getStartLevel() == 1) {
+        if (Inheritance.call(features.?, "isFeature", .{ Inheritance.fieldPointer(self.touchFeatureFactory.?, "AUTO_HIDE_SHOW_SCREEN_BUTTONS").* })) {
+            if (Inheritance.arithmetic(.subtract, Inheritance.receiverOf(Inheritance.receiver(self.gameLayerManager.?, "getGameInfo").getGameInfo().?, "getCurrentLevel").getCurrentLevel(), self.getStartLevel()) == 1) {
                 _ = Inheritance.call(self, "setTouchPaintableP", .{ NullPaintable.getInstance() });
             }
         }
@@ -792,11 +793,11 @@ pub const AllBinaryGameCanvas = struct {
         const gameCommandsFactory: ?*GameCommandsFactory = Inheritance.upcast(?*GameCommandsFactory, GameCommandsFactory.getInstance());
         const myCommandsFactory: ?*MyCommandsFactory = Inheritance.upcast(?*MyCommandsFactory, MyCommandsFactory.getInstance());
         if (!Object.same(DebugFactory.getInstance(), NoDebug.getInstance())) {
-            _ = Inheritance.call(self, "addCommand", .{ gameCommandsFactory.?.START_TRACE });
+            _ = Inheritance.call(self, "addCommand", .{ Inheritance.fieldPointer(gameCommandsFactory.?, "START_TRACE").* });
         }
-        _ = Inheritance.call(self, "addCommand", .{ gameCommandsFactory.?.RESTART_COMMAND });
-        _ = Inheritance.call(self, "addCommand", .{ myCommandsFactory.?.PAUSE_COMMAND });
-        _ = Inheritance.call(self, "addCommand", .{ gameCommandsFactory.?.QUIT_COMMAND });
+        _ = Inheritance.call(self, "addCommand", .{ Inheritance.fieldPointer(gameCommandsFactory.?, "RESTART_COMMAND").* });
+        _ = Inheritance.call(self, "addCommand", .{ Inheritance.fieldPointer(myCommandsFactory.?, "PAUSE_COMMAND").* });
+        _ = Inheritance.call(self, "addCommand", .{ Inheritance.fieldPointer(gameCommandsFactory.?, "QUIT_COMMAND").* });
         const isOverScan: bool = Inheritance.receiverOf(Inheritance.receiverOf(OperatingSystemFactory.getInstance().?, "getOperatingSystemInstance").getOperatingSystemInstance().?, "isOverScan").isOverScan();
         if (J2MEUtil.isHTML()) {
         } else if (SWTUtil.isSWT) {
@@ -804,8 +805,8 @@ pub const AllBinaryGameCanvas = struct {
             if (Inheritance.receiverOf(TouchScreenFactory.getInstance().?, "isTouch").isTouch() and Inheritance.receiver(InGameFeatures.create(), "isAny").isAny()) {
                 _ = Inheritance.call(self, "addCommand", .{ InGameOptionsForm.DISPLAY });
             }
-            _ = Inheritance.call(self, "addCommand", .{ gameCommandsFactory.?.SAVE });
-            _ = Inheritance.call(self, "addCommand", .{ gameCommandsFactory.?.DISPLAY_LOAD_FORM });
+            _ = Inheritance.call(self, "addCommand", .{ Inheritance.fieldPointer(gameCommandsFactory.?, "SAVE").* });
+            _ = Inheritance.call(self, "addCommand", .{ Inheritance.fieldPointer(gameCommandsFactory.?, "DISPLAY_LOAD_FORM").* });
         }
     }
     
@@ -813,7 +814,7 @@ pub const AllBinaryGameCanvas = struct {
     pub fn itemStateChanged(self: *Self, item: ?*Item) void {
         { // try
             const itemLabel: ?*String = Inheritance.upcast(?*String, item.?.getLabel());
-            _ = Inheritance.call(Inheritance.fieldPointer(self, "logUtil").*.?, "putF", .{ Object.toString(Object.of(Inheritance.call(Inheritance.call(StringMaker.create(), "append", .{ Inheritance.fieldPointer(self, "commonLabels").*.?.ITEM_LABEL }).?, "append", .{ itemLabel }))), self, String.literal("itemStateChanged") });
+            _ = Inheritance.call(Inheritance.fieldPointer(self, "logUtil").*.?, "putF", .{ Object.toString(Object.of(Inheritance.call(Inheritance.call(StringMaker.create(), "append", .{ Inheritance.fieldPointer(Inheritance.fieldPointer(self, "commonLabels").*.?, "ITEM_LABEL").* }).?, "append", .{ itemLabel }))), self, String.literal("itemStateChanged") });
             if (Object.instanceOf(Object.of(item), ChoiceGroup)) {
                 const gameFeatureUtil: ?*GameFeatureUtil = Inheritance.upcast(?*GameFeatureUtil, GameFeatureUtil.getInstance());
                 if (Inheritance.call(gameFeatureUtil.?, "isExclusive", .{ itemLabel })) {
@@ -828,7 +829,7 @@ pub const AllBinaryGameCanvas = struct {
             _ = Inheritance.call(self.sensorGameUpdateProcessor.?, "sendNotifications", .{ self.gameLayerManager });
         }
         // catch (Exception e):
-//             _ = Inheritance.call(Inheritance.fieldPointer(self, "logUtil").*.?, "put", .{ Inheritance.fieldPointer(self, "commonStrings").*.?.EXCEPTION, self, String.literal("itemStateChanged"), e });
+//             _ = Inheritance.call(Inheritance.fieldPointer(self, "logUtil").*.?, "put", .{ Inheritance.fieldPointer(Inheritance.fieldPointer(self, "commonStrings").*.?, "EXCEPTION").*, self, String.literal("itemStateChanged"), e });
     }
     
 
@@ -840,12 +841,12 @@ pub const AllBinaryGameCanvas = struct {
 
     pub fn updateScreenButtonPaintable2(self: *Self) void {
         const features: ?*Features = Inheritance.upcast(?*Features, Features.getInstance());
-        if (Inheritance.call(features.?, "isFeature", .{ self.touchFeatureFactory.?.AUTO_HIDE_SHOW_SCREEN_BUTTONS })) {
+        if (Inheritance.call(features.?, "isFeature", .{ Inheritance.fieldPointer(self.touchFeatureFactory.?, "AUTO_HIDE_SHOW_SCREEN_BUTTONS").* })) {
             _ = Inheritance.call(self, "setTouchPaintableP", .{ self.getTouchButtonsPaintable() });
             _ = Inheritance.call(self, "setStartLevel", .{ Inheritance.receiverOf(Inheritance.receiver(self.gameLayerManager.?, "getGameInfo").getGameInfo().?, "getCurrentLevel").getCurrentLevel() });
-        } else if (Inheritance.call(features.?, "isFeature", .{ self.touchFeatureFactory.?.SHOW_SCREEN_BUTTONS })) {
+        } else if (Inheritance.call(features.?, "isFeature", .{ Inheritance.fieldPointer(self.touchFeatureFactory.?, "SHOW_SCREEN_BUTTONS").* })) {
             _ = Inheritance.call(self, "setTouchPaintableP", .{ self.getTouchButtonsPaintable() });
-        } else if (Inheritance.call(features.?, "isFeature", .{ self.touchFeatureFactory.?.HIDE_SCREEN_BUTTONS })) {
+        } else if (Inheritance.call(features.?, "isFeature", .{ Inheritance.fieldPointer(self.touchFeatureFactory.?, "HIDE_SCREEN_BUTTONS").* })) {
             _ = Inheritance.call(self, "setTouchPaintableP", .{ NullPaintable.getInstance() });
         } else {
             _ = Inheritance.call(self, "setTouchPaintableP", .{ NullPaintable.getInstance() });
@@ -881,10 +882,10 @@ pub const AllBinaryGameCanvas = struct {
 
     // throws Exception
     pub fn processGameOver(self: *Self) void {
-        _ = Inheritance.callStatic(PreLogUtil, "put", .{ Inheritance.fieldPointer(self, "commonStrings").*.?.START, self, self.gameStrings.?.SET_GAME_OVER });
+        _ = Inheritance.callStatic(PreLogUtil, "put", .{ Inheritance.fieldPointer(Inheritance.fieldPointer(self, "commonStrings").*.?, "START").*, self, Inheritance.fieldPointer(self.gameStrings.?, "SET_GAME_OVER").* });
         _ = Inheritance.call(self, "setGameOver", .{ true });
         _ = Inheritance.receiver(self, "removePauseCommand").removePauseCommand();
-        _ = Inheritance.call(self, "setGameState", .{ self.gameStateFactory.?.SHOW_END_RESULT_GAME_STATE });
+        _ = Inheritance.call(self, "setGameState", .{ Inheritance.fieldPointer(self.gameStateFactory.?, "SHOW_END_RESULT_GAME_STATE").* });
         _ = Inheritance.call(self, "setEndGamePaintable", .{ self.getEndGameStatePaintable() });
     }
     
@@ -911,7 +912,7 @@ pub const AllBinaryGameCanvas = struct {
 
     // throws Exception
     pub fn setGameState(self: *Self, gameState: ?*GameState) void {
-        _ = Inheritance.call(Inheritance.fieldPointer(self, "logUtil").*.?, "putF", .{ Object.toString(Object.of(Inheritance.call(Inheritance.call(StringMaker.create(), "append", .{ self.gameStrings.?.GAME_STATE }).?, "append", .{ Inheritance.call(Inheritance.fieldPointer(self, "stringUtil").*.?, "toString", .{ gameState }) }))), self, self.gameStrings.?.SET_GAME_STATE });
+        _ = Inheritance.call(Inheritance.fieldPointer(self, "logUtil").*.?, "putF", .{ Object.toString(Object.of(Inheritance.call(Inheritance.call(StringMaker.create(), "append", .{ Inheritance.fieldPointer(self.gameStrings.?, "GAME_STATE").* }).?, "append", .{ Inheritance.call(Inheritance.fieldPointer(self, "stringUtil").*.?, "toString", .{ gameState }) }))), self, Inheritance.fieldPointer(self.gameStrings.?, "SET_GAME_STATE").* });
         self.gameState = gameState;
         _ = self.gameStateTimeHelper.?.setStartTimeTNT();
         _ = self.updateEndGameProcessor();
@@ -924,14 +925,14 @@ pub const AllBinaryGameCanvas = struct {
     pub fn updateGameState(self: *Self) void {
         const gameAdState: ?*GameAdState = Inheritance.upcast(?*GameAdState, self.gameAdStateFactory.?.getCurrentInstance());
         _ = Inheritance.call(gameAdState.?, "processAdState", .{ self.gameState, Inheritance.receiverOf(Inheritance.receiver(self.gameLayerManager.?, "getGameInfo").getGameInfo().?, "getGameType").getGameType() });
-        if (!Object.same(self.gameState, self.gameStateFactory.?.PLAYING_GAME_STATE)) {
+        if (!Object.same(self.gameState, Inheritance.fieldPointer(self.gameStateFactory.?, "PLAYING_GAME_STATE").*)) {
             _ = Inheritance.receiver(gameAdState.?, "processPageAdState").processPageAdState();
         }
     }
     
 
     pub fn updateGameKeyEventProcessor(self: *Self) void {
-        if (!Object.same(self.getGameState(), self.gameStateFactory.?.PLAYING_GAME_STATE) or self.isCheating) {
+        if (!Object.same(self.getGameState(), Inheritance.fieldPointer(self.gameStateFactory.?, "PLAYING_GAME_STATE").*) or self.isCheating) {
         } else {
         }
     }
@@ -973,7 +974,7 @@ pub const AllBinaryGameCanvas = struct {
 
     // throws Exception
     pub fn updateEndGameProcessor2(self: *Self) void {
-        if (Object.same(self.getGameState(), self.gameStateFactory.?.SHOW_END_RESULT_GAME_STATE) or Object.same(self.getGameState(), self.gameStateFactory.?.SHOW_HIGH_SCORE_GAME_STATE)) {
+        if (Object.same(self.getGameState(), Inheritance.fieldPointer(self.gameStateFactory.?, "SHOW_END_RESULT_GAME_STATE").*) or Object.same(self.getGameState(), Inheritance.fieldPointer(self.gameStateFactory.?, "SHOW_HIGH_SCORE_GAME_STATE").*)) {
             _ = Inheritance.call(self, "setEndGameProcessor", .{ self.realEndGameProcessor });
         } else {
             _ = Inheritance.call(self, "setEndGameProcessor", .{ Processor.getInstance() });
@@ -990,7 +991,7 @@ pub const AllBinaryGameCanvas = struct {
 
     // throws Exception
     pub fn cleanupGame(self: *Self) void {
-        _ = Inheritance.call(Inheritance.fieldPointer(self, "logUtil").*.?, "putF", .{ Inheritance.fieldPointer(self, "commonStrings").*.?.START, self, Inheritance.fieldPointer(self, "commonStrings").*.?.CLEANUP });
+        _ = Inheritance.call(Inheritance.fieldPointer(self, "logUtil").*.?, "putF", .{ Inheritance.fieldPointer(Inheritance.fieldPointer(self, "commonStrings").*.?, "START").*, self, Inheritance.fieldPointer(Inheritance.fieldPointer(self, "commonStrings").*.?, "CLEANUP").* });
         const progressCanvas: ?*ProgressCanvas = Inheritance.upcast(?*ProgressCanvas, ProgressCanvasFactory.getInstance());
         _ = Inheritance.call(progressCanvas.?, "addNormalPortion", .{ 10, String.literal("Cleaning Up") });
         _ = self.primaryPlayerQueue.?.clear();
@@ -1002,7 +1003,7 @@ pub const AllBinaryGameCanvas = struct {
     // throws Exception
     pub fn loadResourceLoadingLevel(self: *Self, resourceLoadingLevel: ?*ResourceLoadingLevel) void {
         _ = self;
-        const gameInitializedEvent: ?*GameInitializedEvent = Inheritance.upcast(?*GameInitializedEvent, GameInitializationUtil.getInstance().?.EVENT);
+        const gameInitializedEvent: ?*GameInitializedEvent = Inheritance.upcast(?*GameInitializedEvent, Inheritance.fieldPointer(GameInitializationUtil.getInstance().?, "EVENT").*);
         _ = Inheritance.call(gameInitializedEvent.?, "setResourceLoadingLevel", .{ resourceLoadingLevel });
         _ = Inheritance.call(GameInitializedEventHandler.getInstance().?, "fireEvent", .{ gameInitializedEvent });
     }
@@ -1011,7 +1012,7 @@ pub const AllBinaryGameCanvas = struct {
     // throws Exception
     pub fn loadResources(self: *Self, level: i32) void {
         _ = self;
-        const gameInitializedEvent: ?*GameInitializedEvent = Inheritance.upcast(?*GameInitializedEvent, GameInitializationUtil.getInstance().?.EVENT);
+        const gameInitializedEvent: ?*GameInitializedEvent = Inheritance.upcast(?*GameInitializedEvent, Inheritance.fieldPointer(GameInitializationUtil.getInstance().?, "EVENT").*);
         _ = Inheritance.call(gameInitializedEvent.?, "setLevel", .{ level });
         _ = Inheritance.call(GameInitializedEventHandler.getInstance().?, "fireEvent", .{ gameInitializedEvent });
     }
@@ -1037,7 +1038,7 @@ pub const AllBinaryGameCanvas = struct {
         _ = Inheritance.call(self, "setHighScoresPaintable", .{ NullPaintable.getInstance() });
         _ = Inheritance.call(progressCanvas.?, "addNormalPortion", .{ portion, String.literal("Finishing.") });
         _ = Inheritance.call(self.getEndGameInfoP().?, "update", .{ Inheritance.receiverOf(self.getLayerManager().?, "getGameInfo").getGameInfo(), self });
-        self.isSingleKeyRepeatableProcessing = Inheritance.call(features.?, "isFeature", .{ InputFeatureFactory.getInstance().?.SINGLE_KEY_REPEAT_PRESS });
+        self.isSingleKeyRepeatableProcessing = Inheritance.call(features.?, "isFeature", .{ Inheritance.fieldPointer(InputFeatureFactory.getInstance().?, "SINGLE_KEY_REPEAT_PRESS").* });
         _ = Inheritance.call(self, "setGameOver", .{ false });
         _ = Inheritance.call(progressCanvas.?, "addNormalPortion", .{ portion, String.literal("Finishing..") });
         _ = self.updateColor();
@@ -1047,8 +1048,8 @@ pub const AllBinaryGameCanvas = struct {
         }
         _ = Inheritance.call(progressCanvas.?, "addNormalPortion", .{ portion, String.literal("Finishing...") });
         if (Inheritance.receiver(self, "isMainCanvas").isMainCanvas() or !self.isInitialized()) {
-            if (Inheritance.call(features.?, "isFeature", .{ MainFeatureFactory.getInstance().?.LOAD_ONDEMAND })) {
-                if (Inheritance.receiver(self, "getCustomCommandListener").getCustomCommandListener() != null) {
+            if (Inheritance.call(features.?, "isFeature", .{ Inheritance.fieldPointer(MainFeatureFactory.getInstance().?, "LOAD_ONDEMAND").* })) {
+                if (!Object.isNull(Inheritance.receiver(self, "getCustomCommandListener").getCustomCommandListener())) {
                     _ = Inheritance.receiver(progressCanvas.?, "end").end();
                 }
             } else {
@@ -1068,13 +1069,13 @@ pub const AllBinaryGameCanvas = struct {
     
 
     pub fn buildGame2(self: *Self) void {
-        _ = Inheritance.callStatic(PreLogUtil, "put", .{ Object.toString(Object.of(Inheritance.call(Inheritance.call(StringMaker.create(), "append", .{ self.gameInputStrings.?.ENABLE_PLAYER_GAME_INPUTS }).?, "appendint", .{ self.localPlayerGameInputList.?.size() }))), self, self.BUILD_GAME });
+        _ = Inheritance.callStatic(PreLogUtil, "put", .{ Object.toString(Object.of(Inheritance.call(Inheritance.call(StringMaker.create(), "append", .{ Inheritance.fieldPointer(self.gameInputStrings.?, "ENABLE_PLAYER_GAME_INPUTS").* }).?, "appendint", .{ self.localPlayerGameInputList.?.size() }))), self, self.BUILD_GAME });
         var playerGameInput: ?*PlayerGameInput = null;
         {
             var index: i32 = self.localPlayerGameInputList.?.size() - 1;
             while (index >= 0) : (index -= 1) {
             playerGameInput = Inheritance.cast(?*PlayerGameInput, Inheritance.call(self.localPlayerGameInputList.?, "get", .{ index }));
-            _ = Inheritance.callStatic(PreLogUtil, "put", .{ Object.toString(Object.of(Inheritance.call(Inheritance.call(StringMaker.create(), "append", .{ self.gameInputStrings.?.ENABLE_PLAYER_GAME_INPUT }).?, "append", .{ Object.toString(Object.of(playerGameInput)) }))), self, self.BUILD_GAME });
+            _ = Inheritance.callStatic(PreLogUtil, "put", .{ Object.toString(Object.of(Inheritance.call(Inheritance.call(StringMaker.create(), "append", .{ Inheritance.fieldPointer(self.gameInputStrings.?, "ENABLE_PLAYER_GAME_INPUT").* }).?, "append", .{ Object.toString(Object.of(playerGameInput)) }))), self, self.BUILD_GAME });
             _ = Inheritance.receiver(playerGameInput.?, "removeNonAIInputGameKeyEvents").removeNonAIInputGameKeyEvents();
             _ = Inheritance.call(self, "addKeyInputListener", .{ playerGameInput });
             }
@@ -1095,9 +1096,9 @@ pub const AllBinaryGameCanvas = struct {
 
     // throws Exception
     pub fn loadState(self: *Self) void {
-        _ = Inheritance.call(Inheritance.fieldPointer(self, "logUtil").*.?, "putF", .{ Inheritance.fieldPointer(self, "commonStrings").*.?.START, self, Inheritance.fieldPointer(self, "commonStrings").*.?.LOAD });
+        _ = Inheritance.call(Inheritance.fieldPointer(self, "logUtil").*.?, "putF", .{ Inheritance.fieldPointer(Inheritance.fieldPointer(self, "commonStrings").*.?, "START").*, self, Inheritance.fieldPointer(Inheritance.fieldPointer(self, "commonStrings").*.?, "LOAD").* });
         const hashtable: ?*ABHashtable = Inheritance.upcast(?*ABHashtable, self.getLoadStateHashtable());
-        if (hashtable != null and Inheritance.receiver(hashtable.?, "size").size() > 0) {
+        if (!Object.isNull(hashtable) and Inheritance.receiver(hashtable.?, "size").size() > 0) {
             const levelAsString: ?*String = Inheritance.cast(?*String, Inheritance.call(hashtable.?, "get", .{ Inheritance.cast(?Object, GameInfo.LEVEL_NAME) }));
             const level: i32 = Inheritance.receiverOf(Inheritance.callStatic(Integer, "valueOf", .{ levelAsString }).?, "intValue").intValue();
             const gameInfo: ?*GameInfo = Inheritance.upcast(?*GameInfo, Inheritance.receiver(self.gameLayerManager.?, "getGameInfo").getGameInfo());
@@ -1108,13 +1109,13 @@ pub const AllBinaryGameCanvas = struct {
 
     // throws Exception
     pub fn getLoadStateHashtable(self: *Self) ?*ABHashtable {
-        _ = Inheritance.call(Inheritance.fieldPointer(self, "logUtil").*.?, "putF", .{ Object.toString(Object.of(Inheritance.call(Inheritance.call(StringMaker.create(), "append", .{ Inheritance.fieldPointer(self, "commonLabels").*.?.START_LABEL }).?, "append", .{ Inheritance.call(Inheritance.fieldPointer(self, "stringUtil").*.?, "toString", .{ self.hashtable }) }))), self, String.literal("getLoadStateHashtable") });
+        _ = Inheritance.call(Inheritance.fieldPointer(self, "logUtil").*.?, "putF", .{ Object.toString(Object.of(Inheritance.call(Inheritance.call(StringMaker.create(), "append", .{ Inheritance.fieldPointer(Inheritance.fieldPointer(self, "commonLabels").*.?, "START_LABEL").* }).?, "append", .{ Inheritance.call(Inheritance.fieldPointer(self, "stringUtil").*.?, "toString", .{ self.hashtable }) }))), self, String.literal("getLoadStateHashtable") });
         return self.hashtable;
     }
     
 
     pub fn setLoadStateHashtable(self: *Self, hashtable: ?*ABHashtable) void {
-        _ = Inheritance.call(Inheritance.fieldPointer(self, "logUtil").*.?, "putF", .{ Object.toString(Object.of(Inheritance.call(Inheritance.call(StringMaker.create(), "append", .{ Inheritance.fieldPointer(self, "commonLabels").*.?.START_LABEL }).?, "append", .{ Inheritance.call(Inheritance.fieldPointer(self, "stringUtil").*.?, "toString", .{ hashtable }) }))), self, String.literal("setLoadStateHashtable") });
+        _ = Inheritance.call(Inheritance.fieldPointer(self, "logUtil").*.?, "putF", .{ Object.toString(Object.of(Inheritance.call(Inheritance.call(StringMaker.create(), "append", .{ Inheritance.fieldPointer(Inheritance.fieldPointer(self, "commonLabels").*.?, "START_LABEL").* }).?, "append", .{ Inheritance.call(Inheritance.fieldPointer(self, "stringUtil").*.?, "toString", .{ hashtable }) }))), self, String.literal("setLoadStateHashtable") });
         self.hashtable = hashtable;
     }
     
@@ -1130,7 +1131,7 @@ pub const AllBinaryGameCanvas = struct {
 
     pub fn paintGameOver(self: *Self, graphics: ?*Graphics) void {
         _ = graphics;
-        _ = Inheritance.callStatic(ForcedLogUtil, "log", .{ Inheritance.fieldPointer(self, "commonStrings").*.?.NOT_IMPLEMENTED, self });
+        _ = Inheritance.callStatic(ForcedLogUtil, "log", .{ Inheritance.fieldPointer(Inheritance.fieldPointer(self, "commonStrings").*.?, "NOT_IMPLEMENTED").*, self });
     }
     
 
@@ -1228,7 +1229,7 @@ pub const AllBinaryGameCanvas = struct {
             const myCommandsFactory: ?*MyCommandsFactory = Inheritance.upcast(?*MyCommandsFactory, MyCommandsFactory.getInstance());
             const progressCanvas: ?*ProgressCanvas = Inheritance.upcast(?*ProgressCanvas, ProgressCanvasFactory.getInstance());
             _ = Inheritance.receiver(progressCanvas.?, "start").start();
-            _ = Inheritance.call(Inheritance.receiver(self, "getCustomCommandListener").getCustomCommandListener().?, "commandAction", .{ myCommandsFactory.?.SET_DISPLAYABLE, progressCanvas });
+            _ = Inheritance.call(Inheritance.receiver(self, "getCustomCommandListener").getCustomCommandListener().?, "commandAction", .{ Inheritance.fieldPointer(myCommandsFactory.?, "SET_DISPLAYABLE").*, progressCanvas });
             portion = 4;
         }
         return portion;
@@ -1253,7 +1254,7 @@ pub const AllBinaryGameCanvas = struct {
 
     // throws Exception
     pub fn processGame(self: *Self) void {
-        _ = self.base.process();
+        _ = Inheritance.receiver(&self.base, "process").process();
         if (AllBinaryMediaManager.update()) {
             if (!self.primaryPlayerQueue.?.process()) {
                 _ = self.secondaryPlayerQueue.?.process();
@@ -1279,11 +1280,11 @@ pub const AllBinaryGameCanvas = struct {
     pub fn shouldWait(self: *Self) void {
         const features: ?*Features = Inheritance.upcast(?*Features, Features.getInstance());
         if (AndroidUtil.isAndroid()) {
-        } else if (Inheritance.call(features.?, "isFeature", .{ self.openGLFeatureFactory.?.OPENGL_2D })) {
+        } else if (Inheritance.call(features.?, "isFeature", .{ Inheritance.fieldPointer(self.openGLFeatureFactory.?, "OPENGL_2D").* })) {
         } else {
-            if (Inheritance.call(features.?, "isDefault", .{ self.openGLFeatureFactory.?.OPENGL })) {
+            if (Inheritance.call(features.?, "isDefault", .{ Inheritance.fieldPointer(self.openGLFeatureFactory.?, "OPENGL").* })) {
                 const openGLImageSpecificFactory: ?*OpenGLImageSpecificFactory = Inheritance.upcast(?*OpenGLImageSpecificFactory, OpenGLImageSpecificFactory.getInstance());
-                while (openGLImageSpecificFactory.?.updating) {
+                while (Inheritance.fieldPointer(openGLImageSpecificFactory.?, "updating").*) {
                     _ = (std.Io.sleep(std.Io.Threaded.global_single_threaded.io(), std.Io.Duration.fromMilliseconds(self.YIELD_SLEEP), .awake) catch {});
                 }
             }
@@ -1293,7 +1294,7 @@ pub const AllBinaryGameCanvas = struct {
 
     pub fn run(self: *Self) void {
         { // try
-            _ = Inheritance.call(Inheritance.fieldPointer(self, "logUtil").*.?, "putF", .{ Inheritance.fieldPointer(self, "commonStrings").*.?.START_RUNNABLE, self, Inheritance.fieldPointer(self, "commonStrings").*.?.RUN });
+            _ = Inheritance.call(Inheritance.fieldPointer(self, "logUtil").*.?, "putF", .{ Inheritance.fieldPointer(Inheritance.fieldPointer(self, "commonStrings").*.?, "START_RUNNABLE").*, self, Inheritance.fieldPointer(Inheritance.fieldPointer(self, "commonStrings").*.?, "RUN").* });
             const progressCanvas: ?*ProgressCanvas = Inheritance.upcast(?*ProgressCanvas, ProgressCanvasFactory.getInstance());
             _ = Inheritance.call(progressCanvas.?, "addNormalPortion", .{ 50, String.literal("Game Thread") });
             _ = self.setCurrentThread();
@@ -1311,36 +1312,36 @@ pub const AllBinaryGameCanvas = struct {
             _ = Inheritance.receiver(gameAdState.?, "init").init();
             _ = Inheritance.call(gameAdState.?, "setGameIsReady", .{ true });
             _ = Inheritance.call(self.gameBehavior.?, "run", .{ self });
-            _ = Inheritance.call(Inheritance.fieldPointer(self, "logUtil").*.?, "putF", .{ Inheritance.fieldPointer(self, "commonStrings").*.?.END_RUNNABLE, self, Inheritance.fieldPointer(self, "commonStrings").*.?.RUN });
+            _ = Inheritance.call(Inheritance.fieldPointer(self, "logUtil").*.?, "putF", .{ Inheritance.fieldPointer(Inheritance.fieldPointer(self, "commonStrings").*.?, "END_RUNNABLE").*, self, Inheritance.fieldPointer(Inheritance.fieldPointer(self, "commonStrings").*.?, "RUN").* });
         }
         // catch (Exception e):
-//             _ = Inheritance.call(Inheritance.fieldPointer(self, "logUtil").*.?, "put", .{ Inheritance.fieldPointer(self, "commonStrings").*.?.EXCEPTION, self, Inheritance.fieldPointer(self, "commonStrings").*.?.RUN, e });
+//             _ = Inheritance.call(Inheritance.fieldPointer(self, "logUtil").*.?, "put", .{ Inheritance.fieldPointer(Inheritance.fieldPointer(self, "commonStrings").*.?, "EXCEPTION").*, self, Inheritance.fieldPointer(Inheritance.fieldPointer(self, "commonStrings").*.?, "RUN").*, e });
     }
     
 
     // throws Exception
     pub fn run2(self: *Self) void {
         const features: ?*Features = Inheritance.upcast(?*Features, Features.getInstance());
-        if (Inheritance.call(features.?, "isDefault", .{ self.openGLFeatureFactory.?.OPENGL_AS_GAME_THREAD }) or J2MEUtil.isHTML()) {
-            if (Inheritance.call(features.?, "isDefault", .{ self.openGLFeatureFactory.?.OPENGL_AS_GAME_THREAD })) {
-                _ = Inheritance.call(Inheritance.fieldPointer(self, "logUtil").*.?, "putF", .{ Inheritance.receiverOf(self.openGLFeatureFactory.?.OPENGL_AS_GAME_THREAD.?, "getName").getName(), self, Inheritance.fieldPointer(self, "commonStrings").*.?.RUN });
+        if (Inheritance.call(features.?, "isDefault", .{ Inheritance.fieldPointer(self.openGLFeatureFactory.?, "OPENGL_AS_GAME_THREAD").* }) or J2MEUtil.isHTML()) {
+            if (Inheritance.call(features.?, "isDefault", .{ Inheritance.fieldPointer(self.openGLFeatureFactory.?, "OPENGL_AS_GAME_THREAD").* })) {
+                _ = Inheritance.call(Inheritance.fieldPointer(self, "logUtil").*.?, "putF", .{ Inheritance.receiverOf(Inheritance.fieldPointer(self.openGLFeatureFactory.?, "OPENGL_AS_GAME_THREAD").*.?, "getName").getName(), self, Inheritance.fieldPointer(Inheritance.fieldPointer(self, "commonStrings").*.?, "RUN").* });
             }
             if (J2MEUtil.isHTML()) {
-                _ = Inheritance.call(Inheritance.fieldPointer(self, "logUtil").*.?, "putF", .{ GraphicsStrings.getInstance().?.HTML, self, Inheritance.fieldPointer(self, "commonStrings").*.?.RUN });
+                _ = Inheritance.call(Inheritance.fieldPointer(self, "logUtil").*.?, "putF", .{ Inheritance.fieldPointer(GraphicsStrings.getInstance().?, "HTML").*, self, Inheritance.fieldPointer(Inheritance.fieldPointer(self, "commonStrings").*.?, "RUN").* });
             }
             const currentDisplayableFactory: ?*CurrentDisplayableFactory = Inheritance.upcast(?*CurrentDisplayableFactory, CurrentDisplayableFactory.getInstance());
             _ = Inheritance.call(currentDisplayableFactory.?, "setRunnable", .{ self.gameRunnable });
             _ = Inheritance.call(currentDisplayableFactory.?, "setDisplayable", .{ self });
             _ = Inheritance.receiverOf(OpenGLThreadUtil.getInstance().?, "onResume").onResume();
-        } else if (Inheritance.call(features.?, "isDefault", .{ self.openGLFeatureFactory.?.OPENGL_AND_GAME_HAVE_DIFFERENT_THREADS })) {
-            _ = Inheritance.call(Inheritance.fieldPointer(self, "logUtil").*.?, "putF", .{ Inheritance.receiverOf(self.openGLFeatureFactory.?.OPENGL_AND_GAME_HAVE_DIFFERENT_THREADS.?, "getName").getName(), self, Inheritance.fieldPointer(self, "commonStrings").*.?.RUN });
+        } else if (Inheritance.call(features.?, "isDefault", .{ Inheritance.fieldPointer(self.openGLFeatureFactory.?, "OPENGL_AND_GAME_HAVE_DIFFERENT_THREADS").* })) {
+            _ = Inheritance.call(Inheritance.fieldPointer(self, "logUtil").*.?, "putF", .{ Inheritance.receiverOf(Inheritance.fieldPointer(self.openGLFeatureFactory.?, "OPENGL_AND_GAME_HAVE_DIFFERENT_THREADS").*.?, "getName").getName(), self, Inheritance.fieldPointer(Inheritance.fieldPointer(self, "commonStrings").*.?, "RUN").* });
             _ = Inheritance.receiverOf(OpenGLThreadUtil.getInstance().?, "onResume").onResume();
             while (Inheritance.receiver(self, "isRunning").isRunning()) {
                 _ = self.run3();
             }
             _ = self.end();
         } else {
-            _ = Inheritance.call(Inheritance.fieldPointer(self, "logUtil").*.?, "putF", .{ String.literal("this thread"), self, Inheritance.fieldPointer(self, "commonStrings").*.?.RUN });
+            _ = Inheritance.call(Inheritance.fieldPointer(self, "logUtil").*.?, "putF", .{ String.literal("this thread"), self, Inheritance.fieldPointer(Inheritance.fieldPointer(self, "commonStrings").*.?, "RUN").* });
             while (Inheritance.receiver(self, "isRunning").isRunning()) {
                 _ = self.run3();
             }
@@ -1364,8 +1365,8 @@ pub const AllBinaryGameCanvas = struct {
             const features: ?*Features = Inheritance.upcast(?*Features, Features.getInstance());
             if (running) {
             } else {
-                if (Inheritance.call(features.?, "isDefault", .{ self.openGLFeatureFactory.?.OPENGL }) or SWTUtil.isSWT) {
-                    if (!Object.same(Inheritance.receiverOf(Inheritance.receiver(self.gameLayerManager.?, "getGameInfo").getGameInfo().?, "getGameType").getGameType(), self.gameTypeFactory.?.BOT)) {
+                if (Inheritance.call(features.?, "isDefault", .{ Inheritance.fieldPointer(self.openGLFeatureFactory.?, "OPENGL").* }) or SWTUtil.isSWT) {
+                    if (!Object.same(Inheritance.receiverOf(Inheritance.receiver(self.gameLayerManager.?, "getGameInfo").getGameInfo().?, "getGameType").getGameType(), Inheritance.fieldPointer(self.gameTypeFactory.?, "BOT").*)) {
                         const currentDisplayableFactory: ?*CurrentDisplayableFactory = Inheritance.upcast(?*CurrentDisplayableFactory, CurrentDisplayableFactory.getInstance());
                         _ = currentDisplayableFactory.?.clearRunnable();
                     }
@@ -1374,14 +1375,14 @@ pub const AllBinaryGameCanvas = struct {
             }
         }
         // catch (Exception e):
-//             _ = Inheritance.call(Inheritance.fieldPointer(self, "logUtil").*.?, "put", .{ Inheritance.fieldPointer(self, "commonStrings").*.?.EXCEPTION, self, Inheritance.fieldPointer(self, "SET_RUNNING").*, e });
+//             _ = Inheritance.call(Inheritance.fieldPointer(self, "logUtil").*.?, "put", .{ Inheritance.fieldPointer(Inheritance.fieldPointer(self, "commonStrings").*.?, "EXCEPTION").*, self, Inheritance.fieldPointer(self, "SET_RUNNING").*, e });
     }
     
 
     // throws Exception
     pub fn end(self: *Self) void {
         _ = self.screenCapture.?.endRecording();
-        _ = Inheritance.call(self.baseGameStatistics.?, "add", .{ Object.toString(Object.of(Inheritance.call(Inheritance.call(StringMaker.create(), "append", .{ Object.toString(Object.of(self.baseGameStatistics)) }).?, "append", .{ CommonSeps.getInstance().?.NEW_LINE }))) });
+        _ = Inheritance.call(self.baseGameStatistics.?, "add", .{ Object.toString(Object.of(Inheritance.call(Inheritance.call(StringMaker.create(), "append", .{ Object.toString(Object.of(self.baseGameStatistics)) }).?, "append", .{ Inheritance.fieldPointer(CommonSeps.getInstance().?, "NEW_LINE").* }))) });
         _ = self.baseGameStatistics.?.init();
         _ = Inheritance.call(self.gameKeyEventHandler.?, "removeListener", .{ self.cheatProcessor });
         _ = self.close();
@@ -1401,7 +1402,7 @@ pub const AllBinaryGameCanvas = struct {
 
     pub fn createHighScore(self: *Self, score: i64) ?*HighScore {
         const gameInfo: ?*GameInfo = Inheritance.upcast(?*GameInfo, Inheritance.receiver(self.gameLayerManager.?, "getGameInfo").getGameInfo());
-        return Inheritance.callStatic(HighScore, "create4", .{ 0, String.literal("NONE"), Inheritance.callStatic(GameInfo, "create5", .{ gameInfo.?.getGameType(), gameInfo.?.getGameMode(), PlayerTypesFactory.getInstance().?.PLAYER_TYPE_ONE, 0, 0 }), score });
+        return Inheritance.callStatic(HighScore, "create4", .{ 0, String.literal("NONE"), Inheritance.callStatic(GameInfo, "create5", .{ gameInfo.?.getGameType(), gameInfo.?.getGameMode(), Inheritance.fieldPointer(PlayerTypesFactory.getInstance().?, "PLAYER_TYPE_ONE").*, 0, 0 }), score });
     }
     
 
@@ -1416,45 +1417,10 @@ pub const AllBinaryGameCanvas = struct {
         const highScore: ?*HighScore = Inheritance.upcast(?*HighScore, Inheritance.call(self, "createHighScore", .{ score }));
         const textBox: ?*HighScoreTextBox = Inheritance.callStatic(HighScoreTextBox, "create9", .{ self.highScoresFactoryInterface, self.highScoresHelper, abeClientInformation, Inheritance.receiver(self.gameLayerManager.?, "getGameInfo").getGameInfo(), Inheritance.receiver(self, "getCustomCommandListener").getCustomCommandListener(), name, highScore, Inheritance.receiver(self.gameLayerManager.?, "getBackgroundBasicColor").getBackgroundBasicColor(), Inheritance.receiver(self.gameLayerManager.?, "getForegroundBasicColor").getForegroundBasicColor() });
         if (isLast) {
-            _ = Inheritance.call(Inheritance.receiver(self, "getCustomCommandListener").getCustomCommandListener().?, "commandAction", .{ GameCommandsFactory.getInstance().?.SET_MENU_DISPLAYABLE, textBox });
+            _ = Inheritance.call(Inheritance.receiver(self, "getCustomCommandListener").getCustomCommandListener().?, "commandAction", .{ Inheritance.fieldPointer(GameCommandsFactory.getInstance().?, "SET_MENU_DISPLAYABLE").*, textBox });
         }
         if (autoSubmit) {
-            const SaveHighScoreRunnable = struct {
-                const Self = @This();
-                pub const java_name = "org.allbinary.game.displayable.canvas.SaveHighScoreRunnable";
-                pub const java_interfaces = .{ Runnable };
-                progressCanvas: ?*ProgressCanvas = null,
-    // Implements Runnable
-
-    fn initFields(this: *Self) void {
-                    this.progressCanvas = Inheritance.upcast(?*ProgressCanvas, ProgressCanvasFactory.getInstance());
-    }
-
-    pub fn create() *Self {
-        const this = allocator.create(Self) catch unreachable;
-        this.* = .{};
-        this.initFields();
-        return this;
-    }
-                
-
-                pub fn run(self: *Self) void {
-                    _ = self;
-                    const logUtil: ?*LogUtil = Inheritance.upcast(?*LogUtil, LogUtil.getInstance()); _ = logUtil;
-                    { // try
-                        if (Inheritance.fieldPointer(self, "isLast").*) {
-                            _ = Inheritance.receiver(Inheritance.fieldPointer(self, "textBox").*.?, "submit").submit();
-                        } else {
-                            _ = Inheritance.receiver(Inheritance.fieldPointer(self, "textBox").*.?, "saveHighScore").saveHighScore();
-                        }
-                    }
-                    // catch (Exception e):
-//                         const commonStrings: ?*CommonStrings = Inheritance.upcast(?*CommonStrings, CommonStrings.getInstance()); _ = commonStrings;
-//                         _ = Inheritance.call(logUtil.?, "put", .{ commonStrings.?.EXCEPTION, self, String.literal("run"), e });
-//                         _ = Inheritance.receiver(Inheritance.fieldPointer(self, "progressCanvas").*.?, "end").end();
-                }
-            };
-            _ = Inheritance.call(SecondaryThreadPool.getInstance().?, "runTask", .{ SaveHighScoreRunnable.create() });
+            _ = Inheritance.call(SecondaryThreadPool.getInstance().?, "runTask", .{ Inheritance.callStatic(SaveHighScoreRunnable, "create2", .{ isLast, textBox }) });
         }
     }
     
@@ -1496,7 +1462,7 @@ pub const AllBinaryGameCanvas = struct {
     
 
     pub fn setTouchPaintableP(self: *Self, paintable: ?*Paintable) void {
-        self.touchPaintable = Inheritance.upcast(@TypeOf(self.touchPaintable), paintable);
+        self.touchPaintable = paintable;
     }
     
 
@@ -1757,7 +1723,7 @@ pub const AllBinaryGameCanvas = struct {
     pub fn isRunningInAnotherThread(self: *Self) bool {
         const features: ?*Features = Inheritance.upcast(?*Features, Features.getInstance());
         const openGLFeatureFactory: ?*OpenGLFeatureFactory = Inheritance.upcast(?*OpenGLFeatureFactory, OpenGLFeatureFactory.getInstance());
-        if (Inheritance.call(features.?, "isDefault", .{ openGLFeatureFactory.?.OPENGL_AS_GAME_THREAD })) {
+        if (Inheritance.call(features.?, "isDefault", .{ Inheritance.fieldPointer(openGLFeatureFactory.?, "OPENGL_AS_GAME_THREAD").* })) {
             return true;
         } else {
             return Inheritance.receiver(self, "isRunning").isRunning();
@@ -1768,6 +1734,16 @@ pub const AllBinaryGameCanvas = struct {
     pub fn getType(self: *Self) i32 {
         _ = self;
         return AllBinaryGameCanvas.TYPE;
+    }
+    
+
+    pub fn getTitle(self: *Self) ?*String {
+        return Inheritance.upcast(?*String, Inheritance.receiver(&self.base, "getTitle").getTitle());
+    }
+    
+
+    pub fn isPaused(self: *Self) bool {
+        return Inheritance.receiver(&self.base, "isPaused").isPaused();
     }
 };
 

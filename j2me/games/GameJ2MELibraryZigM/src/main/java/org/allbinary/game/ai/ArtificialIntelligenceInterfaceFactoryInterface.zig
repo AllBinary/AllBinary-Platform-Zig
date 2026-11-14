@@ -22,6 +22,7 @@ const ArtificialIntelligenceInterface = @import("org/allbinary/ai/ArtificialInte
 const GameInput = @import("org/allbinary/game/input/GameInput.zig").GameInput;
 const AllBinaryLayer = @import("org/allbinary/layer/AllBinaryLayer.zig").AllBinaryLayer;
 const ABHashtable = @import("org/allbinary/util/ABHashtable.zig").ABHashtable;
+const Exception = @import("java/lang/Exception.zig").Exception;
 
 // Java interface: an implementation is a pointer and a table of functions
 pub const ArtificialIntelligenceInterfaceFactoryInterface = struct {
@@ -30,7 +31,7 @@ pub const ArtificialIntelligenceInterfaceFactoryInterface = struct {
     pointer: *anyopaque,
     object: Object,
     toStringFn: *const fn (pointer: *anyopaque) ?*String,
-    getInstanceFn: *const fn (pointer: *anyopaque, hashtable: ?*ABHashtable, ownerLayerInterface: ?*AllBinaryLayer, gameInput: ?*GameInput) ?*ArtificialIntelligenceInterface,
+    getInstanceFn: *const fn (interface_pointer: *anyopaque, hashtable: ?*ABHashtable, ownerLayerInterface: ?*AllBinaryLayer, gameInput: ?*GameInput) ?*ArtificialIntelligenceInterface,
 
     pub fn getInstance(self: *Self, hashtable: ?*ABHashtable, ownerLayerInterface: ?*AllBinaryLayer, gameInput: ?*GameInput) ?*ArtificialIntelligenceInterface {
         return self.getInstanceFn(self.pointer, hashtable, ownerLayerInterface, gameInput);
@@ -42,15 +43,15 @@ pub const ArtificialIntelligenceInterfaceFactoryInterface = struct {
 
     // The interface value of an object with the methods. Like a Java class a method can be declared by the object or a superclass.
     pub fn of(object: anytype) ?*Self {
-        const Implementation = @TypeOf(object);
+        const ImplementationType = @TypeOf(object);
         const Methods = struct {
             fn toString(pointer: *anyopaque) ?*String {
-                const implementation: Implementation = @ptrCast(@alignCast(pointer));
+                const implementation: ImplementationType = @ptrCast(@alignCast(pointer));
                 return String.valueOf(implementation);
             }
-            fn getInstance(pointer: *anyopaque, hashtable: ?*ABHashtable, ownerLayerInterface: ?*AllBinaryLayer, gameInput: ?*GameInput) ?*ArtificialIntelligenceInterface {
-                const implementation: Implementation = @ptrCast(@alignCast(pointer));
-                return Inheritance.upcast(?*ArtificialIntelligenceInterface, Inheritance.receiver(implementation, "getInstance").getInstance(hashtable, ownerLayerInterface, gameInput));
+            fn getInstance(interface_pointer: *anyopaque, hashtable: ?*ABHashtable, ownerLayerInterface: ?*AllBinaryLayer, gameInput: ?*GameInput) ?*ArtificialIntelligenceInterface {
+                const implementation: ImplementationType = @ptrCast(@alignCast(interface_pointer));
+                return Inheritance.upcast(?*ArtificialIntelligenceInterface, Inheritance.call(implementation, "getInstance", .{ hashtable, ownerLayerInterface, gameInput }));
             }
         };
         const this = allocator.create(Self) catch unreachable;

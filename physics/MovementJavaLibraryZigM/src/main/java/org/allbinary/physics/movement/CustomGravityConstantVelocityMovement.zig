@@ -23,6 +23,7 @@ const GravityUtil = @import("org/allbinary/game/physics/acceleration/GravityUtil
 const VelocityProperties = @import("org/allbinary/game/physics/velocity/VelocityProperties.zig").VelocityProperties;
 const BasicDecimal = @import("org/allbinary/logic/math/BasicDecimal.zig").BasicDecimal;
 const BasicConstantVelocityMovement = @import("org/allbinary/physics/movement/BasicConstantVelocityMovement.zig").BasicConstantVelocityMovement;
+const Exception = @import("java/lang/Exception.zig").Exception;
 
 pub const CustomGravityConstantVelocityMovement = struct {
     const Self = @This();
@@ -40,7 +41,7 @@ pub const CustomGravityConstantVelocityMovement = struct {
     pub fn create2(speedBasicDecimal: ?*BasicDecimal, customGravity: i32) *Self {
         const this = allocator.create(Self) catch unreachable;
         this.* = .{};
-        this.base = Inheritance.callStatic(BasicConstantVelocityMovement, "create2", .{ speedBasicDecimal, Inheritance.callStatic(VelocityProperties, "create2", .{ @as(i32, @intCast(speedBasicDecimal.?.getUnscaled())), @as(i32, @intCast(speedBasicDecimal.?.getUnscaled())) }) }).*;
+        this.base = Inheritance.callStatic(BasicConstantVelocityMovement, "create2", .{ speedBasicDecimal, Inheritance.callStatic(VelocityProperties, "create2", .{ Inheritance.number(i32, speedBasicDecimal.?.getUnscaled()), Inheritance.number(i32, speedBasicDecimal.?.getUnscaled()) }) }).*;
         this.initFields();
         this.customGravity = customGravity;
         Inheritance.bindOverrides(this);

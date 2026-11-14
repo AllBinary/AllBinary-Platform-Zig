@@ -6,9 +6,9 @@ const allocator = std.heap.page_allocator;
 const String = @import("java/lang/String.zig").String;
 const Object = @import("java/lang/Object.zig").Object;
 const Inheritance = @import("zig/Inheritance.zig");
-// const Buffer = @import("java/nio/Buffer.zig").Buffer;
-// const FloatBuffer = @import("java/nio/FloatBuffer.zig").FloatBuffer;
-// const IntBuffer = @import("java/nio/IntBuffer.zig").IntBuffer;
+const Buffer = @import("java/nio/Buffer.zig").Buffer;
+const FloatBuffer = @import("java/nio/FloatBuffer.zig").FloatBuffer;
+const IntBuffer = @import("java/nio/IntBuffer.zig").IntBuffer;
 const GL10 = @import("javax/microedition/khronos/opengles/GL10.zig").GL10;
 
 // Java interface: an implementation is a pointer and a table of functions
@@ -19,50 +19,50 @@ pub const GL11 = struct {
     object: Object,
     base: GL10,
     toStringFn: *const fn (pointer: *anyopaque) ?*String,
-    glBindBufferFn: *const fn (pointer: *anyopaque, target: i32, buffer: i32) void,
-    glBufferDataFn: *const fn (pointer: *anyopaque, target: i32, size: i32, data: ?*Buffer, usage: i32) void,
-    glBufferSubDataFn: *const fn (pointer: *anyopaque, target: i32, offset: i32, size: i32, data: ?*Buffer) void,
-    glClipPlanefFn: *const fn (pointer: *anyopaque, plane: i32, equation: []f32, offset: i32) void,
-    glClipPlanefFn: *const fn (pointer: *anyopaque, plane: i32, equation: ?*FloatBuffer) void,
-    glColor4ubFn: *const fn (pointer: *anyopaque, red: i8, green: i8, blue: i8, alpha: i8) void,
-    glColorPointerFn: *const fn (pointer: *anyopaque, size: i32, @"type": i32, stride: i32, offset: i32) void,
-    glDeleteBuffersFn: *const fn (pointer: *anyopaque, n: i32, buffers: []i32, offset: i32) void,
-    glDeleteBuffersFn: *const fn (pointer: *anyopaque, n: i32, buffers: ?*IntBuffer) void,
-    glDrawElementsFn: *const fn (pointer: *anyopaque, mode: i32, count: i32, @"type": i32, offset: i32) void,
-    glGenBuffersFn: *const fn (pointer: *anyopaque, n: i32, buffers: []i32, offset: i32) void,
-    glGenBuffersFn: *const fn (pointer: *anyopaque, n: i32, buffers: ?*IntBuffer) void,
-    glGetBufferParameterivFn: *const fn (pointer: *anyopaque, target: i32, pname: i32, params: []i32, offset: i32) void,
-    glGetBufferParameterivFn: *const fn (pointer: *anyopaque, target: i32, pname: i32, params: ?*IntBuffer) void,
-    glGetClipPlanefFn: *const fn (pointer: *anyopaque, pname: i32, eqn: []f32, offset: i32) void,
-    glGetClipPlanefFn: *const fn (pointer: *anyopaque, pname: i32, eqn: ?*FloatBuffer) void,
-    glGetFloatvFn: *const fn (pointer: *anyopaque, pname: i32, params: []f32, offset: i32) void,
-    glGetFloatvFn: *const fn (pointer: *anyopaque, pname: i32, params: ?*FloatBuffer) void,
-    glGetLightfvFn: *const fn (pointer: *anyopaque, light: i32, pname: i32, params: []f32, offset: i32) void,
-    glGetLightfvFn: *const fn (pointer: *anyopaque, light: i32, pname: i32, params: ?*FloatBuffer) void,
-    glGetMaterialfvFn: *const fn (pointer: *anyopaque, face: i32, pname: i32, params: []f32, offset: i32) void,
-    glGetMaterialfvFn: *const fn (pointer: *anyopaque, face: i32, pname: i32, params: ?*FloatBuffer) void,
-    glGetTexEnvivFn: *const fn (pointer: *anyopaque, env: i32, pname: i32, params: []i32, offset: i32) void,
-    glGetTexEnvivFn: *const fn (pointer: *anyopaque, env: i32, pname: i32, params: ?*IntBuffer) void,
-    glGetTexParameterfvFn: *const fn (pointer: *anyopaque, target: i32, pname: i32, params: []f32, offset: i32) void,
-    glGetTexParameterfvFn: *const fn (pointer: *anyopaque, target: i32, pname: i32, params: ?*FloatBuffer) void,
-    glGetTexParameterivFn: *const fn (pointer: *anyopaque, target: i32, pname: i32, params: []i32, offset: i32) void,
-    glGetTexParameterivFn: *const fn (pointer: *anyopaque, target: i32, pname: i32, params: ?*IntBuffer) void,
-    glIsBufferFn: *const fn (pointer: *anyopaque, buffer: i32) bool,
-    glIsEnabledFn: *const fn (pointer: *anyopaque, cap: i32) bool,
-    glIsTextureFn: *const fn (pointer: *anyopaque, texture: i32) bool,
-    glNormalPointerFn: *const fn (pointer: *anyopaque, @"type": i32, stride: i32, offset: i32) void,
-    glPointParameterfFn: *const fn (pointer: *anyopaque, pname: i32, param: f32) void,
-    glPointParameterfvFn: *const fn (pointer: *anyopaque, pname: i32, params: []f32, offset: i32) void,
-    glPointParameterfvFn: *const fn (pointer: *anyopaque, pname: i32, params: ?*FloatBuffer) void,
-    glTexCoordPointerFn: *const fn (pointer: *anyopaque, size: i32, @"type": i32, stride: i32, offset: i32) void,
-    glTexEnviFn: *const fn (pointer: *anyopaque, target: i32, pname: i32, param: i32) void,
-    glTexEnvivFn: *const fn (pointer: *anyopaque, target: i32, pname: i32, params: []i32, offset: i32) void,
-    glTexEnvivFn: *const fn (pointer: *anyopaque, target: i32, pname: i32, params: ?*IntBuffer) void,
-    glTexParameterfvFn: *const fn (pointer: *anyopaque, target: i32, pname: i32, params: []f32, offset: i32) void,
-    glTexParameterfvFn: *const fn (pointer: *anyopaque, target: i32, pname: i32, params: ?*FloatBuffer) void,
-    glTexParameterivFn: *const fn (pointer: *anyopaque, target: i32, pname: i32, params: []i32, offset: i32) void,
-    glTexParameterivFn: *const fn (pointer: *anyopaque, target: i32, pname: i32, params: ?*IntBuffer) void,
-    glVertexPointerFn: *const fn (pointer: *anyopaque, size: i32, @"type": i32, stride: i32, offset: i32) void,
+    glBindBufferFn: *const fn (interface_pointer: *anyopaque, target: i32, buffer: i32) void,
+    glBufferDataFn: *const fn (interface_pointer: *anyopaque, target: i32, size: i32, data: ?*Buffer, usage: i32) void,
+    glBufferSubDataFn: *const fn (interface_pointer: *anyopaque, target: i32, offset: i32, size: i32, data: ?*Buffer) void,
+    glClipPlanef3Fn: *const fn (interface_pointer: *anyopaque, plane: i32, equation: []f32, offset: i32) void,
+    glClipPlanefFn: *const fn (interface_pointer: *anyopaque, plane: i32, equation: ?*FloatBuffer) void,
+    glColor4ubFn: *const fn (interface_pointer: *anyopaque, red: i8, green: i8, blue: i8, alpha: i8) void,
+    glColorPointerFn: *const fn (interface_pointer: *anyopaque, size: i32, @"type": i32, stride: i32, offset: i32) void,
+    glDeleteBuffers3Fn: *const fn (interface_pointer: *anyopaque, n: i32, buffers: []i32, offset: i32) void,
+    glDeleteBuffersFn: *const fn (interface_pointer: *anyopaque, n: i32, buffers: ?*IntBuffer) void,
+    glDrawElementsFn: *const fn (interface_pointer: *anyopaque, mode: i32, count: i32, @"type": i32, offset: i32) void,
+    glGenBuffers3Fn: *const fn (interface_pointer: *anyopaque, n: i32, buffers: []i32, offset: i32) void,
+    glGenBuffersFn: *const fn (interface_pointer: *anyopaque, n: i32, buffers: ?*IntBuffer) void,
+    glGetBufferParameteriv4Fn: *const fn (interface_pointer: *anyopaque, target: i32, pname: i32, params: []i32, offset: i32) void,
+    glGetBufferParameterivFn: *const fn (interface_pointer: *anyopaque, target: i32, pname: i32, params: ?*IntBuffer) void,
+    glGetClipPlanef3Fn: *const fn (interface_pointer: *anyopaque, pname: i32, eqn: []f32, offset: i32) void,
+    glGetClipPlanefFn: *const fn (interface_pointer: *anyopaque, pname: i32, eqn: ?*FloatBuffer) void,
+    glGetFloatv3Fn: *const fn (interface_pointer: *anyopaque, pname: i32, params: []f32, offset: i32) void,
+    glGetFloatvFn: *const fn (interface_pointer: *anyopaque, pname: i32, params: ?*FloatBuffer) void,
+    glGetLightfv4Fn: *const fn (interface_pointer: *anyopaque, light: i32, pname: i32, params: []f32, offset: i32) void,
+    glGetLightfvFn: *const fn (interface_pointer: *anyopaque, light: i32, pname: i32, params: ?*FloatBuffer) void,
+    glGetMaterialfv4Fn: *const fn (interface_pointer: *anyopaque, face: i32, pname: i32, params: []f32, offset: i32) void,
+    glGetMaterialfvFn: *const fn (interface_pointer: *anyopaque, face: i32, pname: i32, params: ?*FloatBuffer) void,
+    glGetTexEnviv4Fn: *const fn (interface_pointer: *anyopaque, env: i32, pname: i32, params: []i32, offset: i32) void,
+    glGetTexEnvivFn: *const fn (interface_pointer: *anyopaque, env: i32, pname: i32, params: ?*IntBuffer) void,
+    glGetTexParameterfv4Fn: *const fn (interface_pointer: *anyopaque, target: i32, pname: i32, params: []f32, offset: i32) void,
+    glGetTexParameterfvFn: *const fn (interface_pointer: *anyopaque, target: i32, pname: i32, params: ?*FloatBuffer) void,
+    glGetTexParameteriv4Fn: *const fn (interface_pointer: *anyopaque, target: i32, pname: i32, params: []i32, offset: i32) void,
+    glGetTexParameterivFn: *const fn (interface_pointer: *anyopaque, target: i32, pname: i32, params: ?*IntBuffer) void,
+    glIsBufferFn: *const fn (interface_pointer: *anyopaque, buffer: i32) bool,
+    glIsEnabledFn: *const fn (interface_pointer: *anyopaque, cap: i32) bool,
+    glIsTextureFn: *const fn (interface_pointer: *anyopaque, texture: i32) bool,
+    glNormalPointerFn: *const fn (interface_pointer: *anyopaque, @"type": i32, stride: i32, offset: i32) void,
+    glPointParameterfFn: *const fn (interface_pointer: *anyopaque, pname: i32, param: f32) void,
+    glPointParameterfv3Fn: *const fn (interface_pointer: *anyopaque, pname: i32, params: []f32, offset: i32) void,
+    glPointParameterfvFn: *const fn (interface_pointer: *anyopaque, pname: i32, params: ?*FloatBuffer) void,
+    glTexCoordPointerFn: *const fn (interface_pointer: *anyopaque, size: i32, @"type": i32, stride: i32, offset: i32) void,
+    glTexEnviFn: *const fn (interface_pointer: *anyopaque, target: i32, pname: i32, param: i32) void,
+    glTexEnviv4Fn: *const fn (interface_pointer: *anyopaque, target: i32, pname: i32, params: []i32, offset: i32) void,
+    glTexEnvivFn: *const fn (interface_pointer: *anyopaque, target: i32, pname: i32, params: ?*IntBuffer) void,
+    glTexParameterfv4Fn: *const fn (interface_pointer: *anyopaque, target: i32, pname: i32, params: []f32, offset: i32) void,
+    glTexParameterfvFn: *const fn (interface_pointer: *anyopaque, target: i32, pname: i32, params: ?*FloatBuffer) void,
+    glTexParameteriv4Fn: *const fn (interface_pointer: *anyopaque, target: i32, pname: i32, params: []i32, offset: i32) void,
+    glTexParameterivFn: *const fn (interface_pointer: *anyopaque, target: i32, pname: i32, params: ?*IntBuffer) void,
+    glVertexPointerFn: *const fn (interface_pointer: *anyopaque, size: i32, @"type": i32, stride: i32, offset: i32) void,
 
     pub fn glBindBuffer(self: *Self, target: i32, buffer: i32) void {
         return self.glBindBufferFn(self.pointer, target, buffer);
@@ -76,8 +76,8 @@ pub const GL11 = struct {
         return self.glBufferSubDataFn(self.pointer, target, offset, size, data);
     }
 
-    pub fn glClipPlanef(self: *Self, plane: i32, equation: []f32, offset: i32) void {
-        return self.glClipPlanefFn(self.pointer, plane, equation, offset);
+    pub fn glClipPlanef3(self: *Self, plane: i32, equation: []f32, offset: i32) void {
+        return self.glClipPlanef3Fn(self.pointer, plane, equation, offset);
     }
 
     pub fn glClipPlanef(self: *Self, plane: i32, equation: ?*FloatBuffer) void {
@@ -92,8 +92,8 @@ pub const GL11 = struct {
         return self.glColorPointerFn(self.pointer, size, @"type", stride, offset);
     }
 
-    pub fn glDeleteBuffers(self: *Self, n: i32, buffers: []i32, offset: i32) void {
-        return self.glDeleteBuffersFn(self.pointer, n, buffers, offset);
+    pub fn glDeleteBuffers3(self: *Self, n: i32, buffers: []i32, offset: i32) void {
+        return self.glDeleteBuffers3Fn(self.pointer, n, buffers, offset);
     }
 
     pub fn glDeleteBuffers(self: *Self, n: i32, buffers: ?*IntBuffer) void {
@@ -104,72 +104,72 @@ pub const GL11 = struct {
         return self.glDrawElementsFn(self.pointer, mode, count, @"type", offset);
     }
 
-    pub fn glGenBuffers(self: *Self, n: i32, buffers: []i32, offset: i32) void {
-        return self.glGenBuffersFn(self.pointer, n, buffers, offset);
+    pub fn glGenBuffers3(self: *Self, n: i32, buffers: []i32, offset: i32) void {
+        return self.glGenBuffers3Fn(self.pointer, n, buffers, offset);
     }
 
     pub fn glGenBuffers(self: *Self, n: i32, buffers: ?*IntBuffer) void {
         return self.glGenBuffersFn(self.pointer, n, buffers);
     }
 
-    pub fn glGetBufferParameteriv(self: *Self, target: i32, pname: i32, params: []i32, offset: i32) void {
-        return self.glGetBufferParameterivFn(self.pointer, target, pname, params, offset);
+    pub fn glGetBufferParameteriv4(self: *Self, target: i32, pname: i32, params: []i32, offset: i32) void {
+        return self.glGetBufferParameteriv4Fn(self.pointer, target, pname, params, offset);
     }
 
     pub fn glGetBufferParameteriv(self: *Self, target: i32, pname: i32, params: ?*IntBuffer) void {
         return self.glGetBufferParameterivFn(self.pointer, target, pname, params);
     }
 
-    pub fn glGetClipPlanef(self: *Self, pname: i32, eqn: []f32, offset: i32) void {
-        return self.glGetClipPlanefFn(self.pointer, pname, eqn, offset);
+    pub fn glGetClipPlanef3(self: *Self, pname: i32, eqn: []f32, offset: i32) void {
+        return self.glGetClipPlanef3Fn(self.pointer, pname, eqn, offset);
     }
 
     pub fn glGetClipPlanef(self: *Self, pname: i32, eqn: ?*FloatBuffer) void {
         return self.glGetClipPlanefFn(self.pointer, pname, eqn);
     }
 
-    pub fn glGetFloatv(self: *Self, pname: i32, params: []f32, offset: i32) void {
-        return self.glGetFloatvFn(self.pointer, pname, params, offset);
+    pub fn glGetFloatv3(self: *Self, pname: i32, params: []f32, offset: i32) void {
+        return self.glGetFloatv3Fn(self.pointer, pname, params, offset);
     }
 
     pub fn glGetFloatv(self: *Self, pname: i32, params: ?*FloatBuffer) void {
         return self.glGetFloatvFn(self.pointer, pname, params);
     }
 
-    pub fn glGetLightfv(self: *Self, light: i32, pname: i32, params: []f32, offset: i32) void {
-        return self.glGetLightfvFn(self.pointer, light, pname, params, offset);
+    pub fn glGetLightfv4(self: *Self, light: i32, pname: i32, params: []f32, offset: i32) void {
+        return self.glGetLightfv4Fn(self.pointer, light, pname, params, offset);
     }
 
     pub fn glGetLightfv(self: *Self, light: i32, pname: i32, params: ?*FloatBuffer) void {
         return self.glGetLightfvFn(self.pointer, light, pname, params);
     }
 
-    pub fn glGetMaterialfv(self: *Self, face: i32, pname: i32, params: []f32, offset: i32) void {
-        return self.glGetMaterialfvFn(self.pointer, face, pname, params, offset);
+    pub fn glGetMaterialfv4(self: *Self, face: i32, pname: i32, params: []f32, offset: i32) void {
+        return self.glGetMaterialfv4Fn(self.pointer, face, pname, params, offset);
     }
 
     pub fn glGetMaterialfv(self: *Self, face: i32, pname: i32, params: ?*FloatBuffer) void {
         return self.glGetMaterialfvFn(self.pointer, face, pname, params);
     }
 
-    pub fn glGetTexEnviv(self: *Self, env: i32, pname: i32, params: []i32, offset: i32) void {
-        return self.glGetTexEnvivFn(self.pointer, env, pname, params, offset);
+    pub fn glGetTexEnviv4(self: *Self, env: i32, pname: i32, params: []i32, offset: i32) void {
+        return self.glGetTexEnviv4Fn(self.pointer, env, pname, params, offset);
     }
 
     pub fn glGetTexEnviv(self: *Self, env: i32, pname: i32, params: ?*IntBuffer) void {
         return self.glGetTexEnvivFn(self.pointer, env, pname, params);
     }
 
-    pub fn glGetTexParameterfv(self: *Self, target: i32, pname: i32, params: []f32, offset: i32) void {
-        return self.glGetTexParameterfvFn(self.pointer, target, pname, params, offset);
+    pub fn glGetTexParameterfv4(self: *Self, target: i32, pname: i32, params: []f32, offset: i32) void {
+        return self.glGetTexParameterfv4Fn(self.pointer, target, pname, params, offset);
     }
 
     pub fn glGetTexParameterfv(self: *Self, target: i32, pname: i32, params: ?*FloatBuffer) void {
         return self.glGetTexParameterfvFn(self.pointer, target, pname, params);
     }
 
-    pub fn glGetTexParameteriv(self: *Self, target: i32, pname: i32, params: []i32, offset: i32) void {
-        return self.glGetTexParameterivFn(self.pointer, target, pname, params, offset);
+    pub fn glGetTexParameteriv4(self: *Self, target: i32, pname: i32, params: []i32, offset: i32) void {
+        return self.glGetTexParameteriv4Fn(self.pointer, target, pname, params, offset);
     }
 
     pub fn glGetTexParameteriv(self: *Self, target: i32, pname: i32, params: ?*IntBuffer) void {
@@ -196,8 +196,8 @@ pub const GL11 = struct {
         return self.glPointParameterfFn(self.pointer, pname, param);
     }
 
-    pub fn glPointParameterfv(self: *Self, pname: i32, params: []f32, offset: i32) void {
-        return self.glPointParameterfvFn(self.pointer, pname, params, offset);
+    pub fn glPointParameterfv3(self: *Self, pname: i32, params: []f32, offset: i32) void {
+        return self.glPointParameterfv3Fn(self.pointer, pname, params, offset);
     }
 
     pub fn glPointParameterfv(self: *Self, pname: i32, params: ?*FloatBuffer) void {
@@ -212,24 +212,24 @@ pub const GL11 = struct {
         return self.glTexEnviFn(self.pointer, target, pname, param);
     }
 
-    pub fn glTexEnviv(self: *Self, target: i32, pname: i32, params: []i32, offset: i32) void {
-        return self.glTexEnvivFn(self.pointer, target, pname, params, offset);
+    pub fn glTexEnviv4(self: *Self, target: i32, pname: i32, params: []i32, offset: i32) void {
+        return self.glTexEnviv4Fn(self.pointer, target, pname, params, offset);
     }
 
     pub fn glTexEnviv(self: *Self, target: i32, pname: i32, params: ?*IntBuffer) void {
         return self.glTexEnvivFn(self.pointer, target, pname, params);
     }
 
-    pub fn glTexParameterfv(self: *Self, target: i32, pname: i32, params: []f32, offset: i32) void {
-        return self.glTexParameterfvFn(self.pointer, target, pname, params, offset);
+    pub fn glTexParameterfv4(self: *Self, target: i32, pname: i32, params: []f32, offset: i32) void {
+        return self.glTexParameterfv4Fn(self.pointer, target, pname, params, offset);
     }
 
     pub fn glTexParameterfv(self: *Self, target: i32, pname: i32, params: ?*FloatBuffer) void {
         return self.glTexParameterfvFn(self.pointer, target, pname, params);
     }
 
-    pub fn glTexParameteriv(self: *Self, target: i32, pname: i32, params: []i32, offset: i32) void {
-        return self.glTexParameterivFn(self.pointer, target, pname, params, offset);
+    pub fn glTexParameteriv4(self: *Self, target: i32, pname: i32, params: []i32, offset: i32) void {
+        return self.glTexParameteriv4Fn(self.pointer, target, pname, params, offset);
     }
 
     pub fn glTexParameteriv(self: *Self, target: i32, pname: i32, params: ?*IntBuffer) void {
@@ -246,191 +246,191 @@ pub const GL11 = struct {
 
     // The interface value of an object with the methods. Like a Java class a method can be declared by the object or a superclass.
     pub fn of(object: anytype) ?*Self {
-        const Implementation = @TypeOf(object);
+        const ImplementationType = @TypeOf(object);
         const Methods = struct {
             fn toString(pointer: *anyopaque) ?*String {
-                const implementation: Implementation = @ptrCast(@alignCast(pointer));
+                const implementation: ImplementationType = @ptrCast(@alignCast(pointer));
                 return String.valueOf(implementation);
             }
-            fn glBindBuffer(pointer: *anyopaque, target: i32, buffer: i32) void {
-                const implementation: Implementation = @ptrCast(@alignCast(pointer));
-                return Inheritance.receiver(implementation, "glBindBuffer").glBindBuffer(target, buffer);
+            fn glBindBuffer(interface_pointer: *anyopaque, target: i32, buffer: i32) void {
+                const implementation: ImplementationType = @ptrCast(@alignCast(interface_pointer));
+                return Inheritance.call(implementation, "glBindBuffer", .{ target, buffer });
             }
-            fn glBufferData(pointer: *anyopaque, target: i32, size: i32, data: ?*Buffer, usage: i32) void {
-                const implementation: Implementation = @ptrCast(@alignCast(pointer));
-                return Inheritance.receiver(implementation, "glBufferData").glBufferData(target, size, data, usage);
+            fn glBufferData(interface_pointer: *anyopaque, target: i32, size: i32, data: ?*Buffer, usage: i32) void {
+                const implementation: ImplementationType = @ptrCast(@alignCast(interface_pointer));
+                return Inheritance.call(implementation, "glBufferData", .{ target, size, data, usage });
             }
-            fn glBufferSubData(pointer: *anyopaque, target: i32, offset: i32, size: i32, data: ?*Buffer) void {
-                const implementation: Implementation = @ptrCast(@alignCast(pointer));
-                return Inheritance.receiver(implementation, "glBufferSubData").glBufferSubData(target, offset, size, data);
+            fn glBufferSubData(interface_pointer: *anyopaque, target: i32, offset: i32, size: i32, data: ?*Buffer) void {
+                const implementation: ImplementationType = @ptrCast(@alignCast(interface_pointer));
+                return Inheritance.call(implementation, "glBufferSubData", .{ target, offset, size, data });
             }
-            fn glClipPlanef(pointer: *anyopaque, plane: i32, equation: []f32, offset: i32) void {
-                const implementation: Implementation = @ptrCast(@alignCast(pointer));
-                return Inheritance.receiver(implementation, "glClipPlanef").glClipPlanef(plane, equation, offset);
+            fn glClipPlanef3(interface_pointer: *anyopaque, plane: i32, equation: []f32, offset: i32) void {
+                const implementation: ImplementationType = @ptrCast(@alignCast(interface_pointer));
+                return Inheritance.call(implementation, "glClipPlanef", .{ plane, equation, offset });
             }
-            fn glClipPlanef(pointer: *anyopaque, plane: i32, equation: ?*FloatBuffer) void {
-                const implementation: Implementation = @ptrCast(@alignCast(pointer));
-                return Inheritance.receiver(implementation, "glClipPlanef").glClipPlanef(plane, equation);
+            fn glClipPlanef(interface_pointer: *anyopaque, plane: i32, equation: ?*FloatBuffer) void {
+                const implementation: ImplementationType = @ptrCast(@alignCast(interface_pointer));
+                return Inheritance.call(implementation, "glClipPlanef", .{ plane, equation });
             }
-            fn glColor4ub(pointer: *anyopaque, red: i8, green: i8, blue: i8, alpha: i8) void {
-                const implementation: Implementation = @ptrCast(@alignCast(pointer));
-                return Inheritance.receiver(implementation, "glColor4ub").glColor4ub(red, green, blue, alpha);
+            fn glColor4ub(interface_pointer: *anyopaque, red: i8, green: i8, blue: i8, alpha: i8) void {
+                const implementation: ImplementationType = @ptrCast(@alignCast(interface_pointer));
+                return Inheritance.call(implementation, "glColor4ub", .{ red, green, blue, alpha });
             }
-            fn glColorPointer(pointer: *anyopaque, size: i32, @"type": i32, stride: i32, offset: i32) void {
-                const implementation: Implementation = @ptrCast(@alignCast(pointer));
-                return Inheritance.receiver(implementation, "glColorPointer").glColorPointer(size, @"type", stride, offset);
+            fn glColorPointer(interface_pointer: *anyopaque, size: i32, @"type": i32, stride: i32, offset: i32) void {
+                const implementation: ImplementationType = @ptrCast(@alignCast(interface_pointer));
+                return Inheritance.call(implementation, "glColorPointer", .{ size, @"type", stride, offset });
             }
-            fn glDeleteBuffers(pointer: *anyopaque, n: i32, buffers: []i32, offset: i32) void {
-                const implementation: Implementation = @ptrCast(@alignCast(pointer));
-                return Inheritance.receiver(implementation, "glDeleteBuffers").glDeleteBuffers(n, buffers, offset);
+            fn glDeleteBuffers3(interface_pointer: *anyopaque, n: i32, buffers: []i32, offset: i32) void {
+                const implementation: ImplementationType = @ptrCast(@alignCast(interface_pointer));
+                return Inheritance.call(implementation, "glDeleteBuffers", .{ n, buffers, offset });
             }
-            fn glDeleteBuffers(pointer: *anyopaque, n: i32, buffers: ?*IntBuffer) void {
-                const implementation: Implementation = @ptrCast(@alignCast(pointer));
-                return Inheritance.receiver(implementation, "glDeleteBuffers").glDeleteBuffers(n, buffers);
+            fn glDeleteBuffers(interface_pointer: *anyopaque, n: i32, buffers: ?*IntBuffer) void {
+                const implementation: ImplementationType = @ptrCast(@alignCast(interface_pointer));
+                return Inheritance.call(implementation, "glDeleteBuffers", .{ n, buffers });
             }
-            fn glDrawElements(pointer: *anyopaque, mode: i32, count: i32, @"type": i32, offset: i32) void {
-                const implementation: Implementation = @ptrCast(@alignCast(pointer));
-                return Inheritance.receiver(implementation, "glDrawElements").glDrawElements(mode, count, @"type", offset);
+            fn glDrawElements(interface_pointer: *anyopaque, mode: i32, count: i32, @"type": i32, offset: i32) void {
+                const implementation: ImplementationType = @ptrCast(@alignCast(interface_pointer));
+                return Inheritance.call(implementation, "glDrawElements", .{ mode, count, @"type", offset });
             }
-            fn glGenBuffers(pointer: *anyopaque, n: i32, buffers: []i32, offset: i32) void {
-                const implementation: Implementation = @ptrCast(@alignCast(pointer));
-                return Inheritance.receiver(implementation, "glGenBuffers").glGenBuffers(n, buffers, offset);
+            fn glGenBuffers3(interface_pointer: *anyopaque, n: i32, buffers: []i32, offset: i32) void {
+                const implementation: ImplementationType = @ptrCast(@alignCast(interface_pointer));
+                return Inheritance.call(implementation, "glGenBuffers", .{ n, buffers, offset });
             }
-            fn glGenBuffers(pointer: *anyopaque, n: i32, buffers: ?*IntBuffer) void {
-                const implementation: Implementation = @ptrCast(@alignCast(pointer));
-                return Inheritance.receiver(implementation, "glGenBuffers").glGenBuffers(n, buffers);
+            fn glGenBuffers(interface_pointer: *anyopaque, n: i32, buffers: ?*IntBuffer) void {
+                const implementation: ImplementationType = @ptrCast(@alignCast(interface_pointer));
+                return Inheritance.call(implementation, "glGenBuffers", .{ n, buffers });
             }
-            fn glGetBufferParameteriv(pointer: *anyopaque, target: i32, pname: i32, params: []i32, offset: i32) void {
-                const implementation: Implementation = @ptrCast(@alignCast(pointer));
-                return Inheritance.receiver(implementation, "glGetBufferParameteriv").glGetBufferParameteriv(target, pname, params, offset);
+            fn glGetBufferParameteriv4(interface_pointer: *anyopaque, target: i32, pname: i32, params: []i32, offset: i32) void {
+                const implementation: ImplementationType = @ptrCast(@alignCast(interface_pointer));
+                return Inheritance.call(implementation, "glGetBufferParameteriv", .{ target, pname, params, offset });
             }
-            fn glGetBufferParameteriv(pointer: *anyopaque, target: i32, pname: i32, params: ?*IntBuffer) void {
-                const implementation: Implementation = @ptrCast(@alignCast(pointer));
-                return Inheritance.receiver(implementation, "glGetBufferParameteriv").glGetBufferParameteriv(target, pname, params);
+            fn glGetBufferParameteriv(interface_pointer: *anyopaque, target: i32, pname: i32, params: ?*IntBuffer) void {
+                const implementation: ImplementationType = @ptrCast(@alignCast(interface_pointer));
+                return Inheritance.call(implementation, "glGetBufferParameteriv", .{ target, pname, params });
             }
-            fn glGetClipPlanef(pointer: *anyopaque, pname: i32, eqn: []f32, offset: i32) void {
-                const implementation: Implementation = @ptrCast(@alignCast(pointer));
-                return Inheritance.receiver(implementation, "glGetClipPlanef").glGetClipPlanef(pname, eqn, offset);
+            fn glGetClipPlanef3(interface_pointer: *anyopaque, pname: i32, eqn: []f32, offset: i32) void {
+                const implementation: ImplementationType = @ptrCast(@alignCast(interface_pointer));
+                return Inheritance.call(implementation, "glGetClipPlanef", .{ pname, eqn, offset });
             }
-            fn glGetClipPlanef(pointer: *anyopaque, pname: i32, eqn: ?*FloatBuffer) void {
-                const implementation: Implementation = @ptrCast(@alignCast(pointer));
-                return Inheritance.receiver(implementation, "glGetClipPlanef").glGetClipPlanef(pname, eqn);
+            fn glGetClipPlanef(interface_pointer: *anyopaque, pname: i32, eqn: ?*FloatBuffer) void {
+                const implementation: ImplementationType = @ptrCast(@alignCast(interface_pointer));
+                return Inheritance.call(implementation, "glGetClipPlanef", .{ pname, eqn });
             }
-            fn glGetFloatv(pointer: *anyopaque, pname: i32, params: []f32, offset: i32) void {
-                const implementation: Implementation = @ptrCast(@alignCast(pointer));
-                return Inheritance.receiver(implementation, "glGetFloatv").glGetFloatv(pname, params, offset);
+            fn glGetFloatv3(interface_pointer: *anyopaque, pname: i32, params: []f32, offset: i32) void {
+                const implementation: ImplementationType = @ptrCast(@alignCast(interface_pointer));
+                return Inheritance.call(implementation, "glGetFloatv", .{ pname, params, offset });
             }
-            fn glGetFloatv(pointer: *anyopaque, pname: i32, params: ?*FloatBuffer) void {
-                const implementation: Implementation = @ptrCast(@alignCast(pointer));
-                return Inheritance.receiver(implementation, "glGetFloatv").glGetFloatv(pname, params);
+            fn glGetFloatv(interface_pointer: *anyopaque, pname: i32, params: ?*FloatBuffer) void {
+                const implementation: ImplementationType = @ptrCast(@alignCast(interface_pointer));
+                return Inheritance.call(implementation, "glGetFloatv", .{ pname, params });
             }
-            fn glGetLightfv(pointer: *anyopaque, light: i32, pname: i32, params: []f32, offset: i32) void {
-                const implementation: Implementation = @ptrCast(@alignCast(pointer));
-                return Inheritance.receiver(implementation, "glGetLightfv").glGetLightfv(light, pname, params, offset);
+            fn glGetLightfv4(interface_pointer: *anyopaque, light: i32, pname: i32, params: []f32, offset: i32) void {
+                const implementation: ImplementationType = @ptrCast(@alignCast(interface_pointer));
+                return Inheritance.call(implementation, "glGetLightfv", .{ light, pname, params, offset });
             }
-            fn glGetLightfv(pointer: *anyopaque, light: i32, pname: i32, params: ?*FloatBuffer) void {
-                const implementation: Implementation = @ptrCast(@alignCast(pointer));
-                return Inheritance.receiver(implementation, "glGetLightfv").glGetLightfv(light, pname, params);
+            fn glGetLightfv(interface_pointer: *anyopaque, light: i32, pname: i32, params: ?*FloatBuffer) void {
+                const implementation: ImplementationType = @ptrCast(@alignCast(interface_pointer));
+                return Inheritance.call(implementation, "glGetLightfv", .{ light, pname, params });
             }
-            fn glGetMaterialfv(pointer: *anyopaque, face: i32, pname: i32, params: []f32, offset: i32) void {
-                const implementation: Implementation = @ptrCast(@alignCast(pointer));
-                return Inheritance.receiver(implementation, "glGetMaterialfv").glGetMaterialfv(face, pname, params, offset);
+            fn glGetMaterialfv4(interface_pointer: *anyopaque, face: i32, pname: i32, params: []f32, offset: i32) void {
+                const implementation: ImplementationType = @ptrCast(@alignCast(interface_pointer));
+                return Inheritance.call(implementation, "glGetMaterialfv", .{ face, pname, params, offset });
             }
-            fn glGetMaterialfv(pointer: *anyopaque, face: i32, pname: i32, params: ?*FloatBuffer) void {
-                const implementation: Implementation = @ptrCast(@alignCast(pointer));
-                return Inheritance.receiver(implementation, "glGetMaterialfv").glGetMaterialfv(face, pname, params);
+            fn glGetMaterialfv(interface_pointer: *anyopaque, face: i32, pname: i32, params: ?*FloatBuffer) void {
+                const implementation: ImplementationType = @ptrCast(@alignCast(interface_pointer));
+                return Inheritance.call(implementation, "glGetMaterialfv", .{ face, pname, params });
             }
-            fn glGetTexEnviv(pointer: *anyopaque, env: i32, pname: i32, params: []i32, offset: i32) void {
-                const implementation: Implementation = @ptrCast(@alignCast(pointer));
-                return Inheritance.receiver(implementation, "glGetTexEnviv").glGetTexEnviv(env, pname, params, offset);
+            fn glGetTexEnviv4(interface_pointer: *anyopaque, env: i32, pname: i32, params: []i32, offset: i32) void {
+                const implementation: ImplementationType = @ptrCast(@alignCast(interface_pointer));
+                return Inheritance.call(implementation, "glGetTexEnviv", .{ env, pname, params, offset });
             }
-            fn glGetTexEnviv(pointer: *anyopaque, env: i32, pname: i32, params: ?*IntBuffer) void {
-                const implementation: Implementation = @ptrCast(@alignCast(pointer));
-                return Inheritance.receiver(implementation, "glGetTexEnviv").glGetTexEnviv(env, pname, params);
+            fn glGetTexEnviv(interface_pointer: *anyopaque, env: i32, pname: i32, params: ?*IntBuffer) void {
+                const implementation: ImplementationType = @ptrCast(@alignCast(interface_pointer));
+                return Inheritance.call(implementation, "glGetTexEnviv", .{ env, pname, params });
             }
-            fn glGetTexParameterfv(pointer: *anyopaque, target: i32, pname: i32, params: []f32, offset: i32) void {
-                const implementation: Implementation = @ptrCast(@alignCast(pointer));
-                return Inheritance.receiver(implementation, "glGetTexParameterfv").glGetTexParameterfv(target, pname, params, offset);
+            fn glGetTexParameterfv4(interface_pointer: *anyopaque, target: i32, pname: i32, params: []f32, offset: i32) void {
+                const implementation: ImplementationType = @ptrCast(@alignCast(interface_pointer));
+                return Inheritance.call(implementation, "glGetTexParameterfv", .{ target, pname, params, offset });
             }
-            fn glGetTexParameterfv(pointer: *anyopaque, target: i32, pname: i32, params: ?*FloatBuffer) void {
-                const implementation: Implementation = @ptrCast(@alignCast(pointer));
-                return Inheritance.receiver(implementation, "glGetTexParameterfv").glGetTexParameterfv(target, pname, params);
+            fn glGetTexParameterfv(interface_pointer: *anyopaque, target: i32, pname: i32, params: ?*FloatBuffer) void {
+                const implementation: ImplementationType = @ptrCast(@alignCast(interface_pointer));
+                return Inheritance.call(implementation, "glGetTexParameterfv", .{ target, pname, params });
             }
-            fn glGetTexParameteriv(pointer: *anyopaque, target: i32, pname: i32, params: []i32, offset: i32) void {
-                const implementation: Implementation = @ptrCast(@alignCast(pointer));
-                return Inheritance.receiver(implementation, "glGetTexParameteriv").glGetTexParameteriv(target, pname, params, offset);
+            fn glGetTexParameteriv4(interface_pointer: *anyopaque, target: i32, pname: i32, params: []i32, offset: i32) void {
+                const implementation: ImplementationType = @ptrCast(@alignCast(interface_pointer));
+                return Inheritance.call(implementation, "glGetTexParameteriv", .{ target, pname, params, offset });
             }
-            fn glGetTexParameteriv(pointer: *anyopaque, target: i32, pname: i32, params: ?*IntBuffer) void {
-                const implementation: Implementation = @ptrCast(@alignCast(pointer));
-                return Inheritance.receiver(implementation, "glGetTexParameteriv").glGetTexParameteriv(target, pname, params);
+            fn glGetTexParameteriv(interface_pointer: *anyopaque, target: i32, pname: i32, params: ?*IntBuffer) void {
+                const implementation: ImplementationType = @ptrCast(@alignCast(interface_pointer));
+                return Inheritance.call(implementation, "glGetTexParameteriv", .{ target, pname, params });
             }
-            fn glIsBuffer(pointer: *anyopaque, buffer: i32) bool {
-                const implementation: Implementation = @ptrCast(@alignCast(pointer));
-                return Inheritance.receiver(implementation, "glIsBuffer").glIsBuffer(buffer);
+            fn glIsBuffer(interface_pointer: *anyopaque, buffer: i32) bool {
+                const implementation: ImplementationType = @ptrCast(@alignCast(interface_pointer));
+                return Inheritance.call(implementation, "glIsBuffer", .{ buffer });
             }
-            fn glIsEnabled(pointer: *anyopaque, cap: i32) bool {
-                const implementation: Implementation = @ptrCast(@alignCast(pointer));
-                return Inheritance.receiver(implementation, "glIsEnabled").glIsEnabled(cap);
+            fn glIsEnabled(interface_pointer: *anyopaque, cap: i32) bool {
+                const implementation: ImplementationType = @ptrCast(@alignCast(interface_pointer));
+                return Inheritance.call(implementation, "glIsEnabled", .{ cap });
             }
-            fn glIsTexture(pointer: *anyopaque, texture: i32) bool {
-                const implementation: Implementation = @ptrCast(@alignCast(pointer));
-                return Inheritance.receiver(implementation, "glIsTexture").glIsTexture(texture);
+            fn glIsTexture(interface_pointer: *anyopaque, texture: i32) bool {
+                const implementation: ImplementationType = @ptrCast(@alignCast(interface_pointer));
+                return Inheritance.call(implementation, "glIsTexture", .{ texture });
             }
-            fn glNormalPointer(pointer: *anyopaque, @"type": i32, stride: i32, offset: i32) void {
-                const implementation: Implementation = @ptrCast(@alignCast(pointer));
-                return Inheritance.receiver(implementation, "glNormalPointer").glNormalPointer(@"type", stride, offset);
+            fn glNormalPointer(interface_pointer: *anyopaque, @"type": i32, stride: i32, offset: i32) void {
+                const implementation: ImplementationType = @ptrCast(@alignCast(interface_pointer));
+                return Inheritance.call(implementation, "glNormalPointer", .{ @"type", stride, offset });
             }
-            fn glPointParameterf(pointer: *anyopaque, pname: i32, param: f32) void {
-                const implementation: Implementation = @ptrCast(@alignCast(pointer));
-                return Inheritance.receiver(implementation, "glPointParameterf").glPointParameterf(pname, param);
+            fn glPointParameterf(interface_pointer: *anyopaque, pname: i32, param: f32) void {
+                const implementation: ImplementationType = @ptrCast(@alignCast(interface_pointer));
+                return Inheritance.call(implementation, "glPointParameterf", .{ pname, param });
             }
-            fn glPointParameterfv(pointer: *anyopaque, pname: i32, params: []f32, offset: i32) void {
-                const implementation: Implementation = @ptrCast(@alignCast(pointer));
-                return Inheritance.receiver(implementation, "glPointParameterfv").glPointParameterfv(pname, params, offset);
+            fn glPointParameterfv3(interface_pointer: *anyopaque, pname: i32, params: []f32, offset: i32) void {
+                const implementation: ImplementationType = @ptrCast(@alignCast(interface_pointer));
+                return Inheritance.call(implementation, "glPointParameterfv", .{ pname, params, offset });
             }
-            fn glPointParameterfv(pointer: *anyopaque, pname: i32, params: ?*FloatBuffer) void {
-                const implementation: Implementation = @ptrCast(@alignCast(pointer));
-                return Inheritance.receiver(implementation, "glPointParameterfv").glPointParameterfv(pname, params);
+            fn glPointParameterfv(interface_pointer: *anyopaque, pname: i32, params: ?*FloatBuffer) void {
+                const implementation: ImplementationType = @ptrCast(@alignCast(interface_pointer));
+                return Inheritance.call(implementation, "glPointParameterfv", .{ pname, params });
             }
-            fn glTexCoordPointer(pointer: *anyopaque, size: i32, @"type": i32, stride: i32, offset: i32) void {
-                const implementation: Implementation = @ptrCast(@alignCast(pointer));
-                return Inheritance.receiver(implementation, "glTexCoordPointer").glTexCoordPointer(size, @"type", stride, offset);
+            fn glTexCoordPointer(interface_pointer: *anyopaque, size: i32, @"type": i32, stride: i32, offset: i32) void {
+                const implementation: ImplementationType = @ptrCast(@alignCast(interface_pointer));
+                return Inheritance.call(implementation, "glTexCoordPointer", .{ size, @"type", stride, offset });
             }
-            fn glTexEnvi(pointer: *anyopaque, target: i32, pname: i32, param: i32) void {
-                const implementation: Implementation = @ptrCast(@alignCast(pointer));
-                return Inheritance.receiver(implementation, "glTexEnvi").glTexEnvi(target, pname, param);
+            fn glTexEnvi(interface_pointer: *anyopaque, target: i32, pname: i32, param: i32) void {
+                const implementation: ImplementationType = @ptrCast(@alignCast(interface_pointer));
+                return Inheritance.call(implementation, "glTexEnvi", .{ target, pname, param });
             }
-            fn glTexEnviv(pointer: *anyopaque, target: i32, pname: i32, params: []i32, offset: i32) void {
-                const implementation: Implementation = @ptrCast(@alignCast(pointer));
-                return Inheritance.receiver(implementation, "glTexEnviv").glTexEnviv(target, pname, params, offset);
+            fn glTexEnviv4(interface_pointer: *anyopaque, target: i32, pname: i32, params: []i32, offset: i32) void {
+                const implementation: ImplementationType = @ptrCast(@alignCast(interface_pointer));
+                return Inheritance.call(implementation, "glTexEnviv", .{ target, pname, params, offset });
             }
-            fn glTexEnviv(pointer: *anyopaque, target: i32, pname: i32, params: ?*IntBuffer) void {
-                const implementation: Implementation = @ptrCast(@alignCast(pointer));
-                return Inheritance.receiver(implementation, "glTexEnviv").glTexEnviv(target, pname, params);
+            fn glTexEnviv(interface_pointer: *anyopaque, target: i32, pname: i32, params: ?*IntBuffer) void {
+                const implementation: ImplementationType = @ptrCast(@alignCast(interface_pointer));
+                return Inheritance.call(implementation, "glTexEnviv", .{ target, pname, params });
             }
-            fn glTexParameterfv(pointer: *anyopaque, target: i32, pname: i32, params: []f32, offset: i32) void {
-                const implementation: Implementation = @ptrCast(@alignCast(pointer));
-                return Inheritance.receiver(implementation, "glTexParameterfv").glTexParameterfv(target, pname, params, offset);
+            fn glTexParameterfv4(interface_pointer: *anyopaque, target: i32, pname: i32, params: []f32, offset: i32) void {
+                const implementation: ImplementationType = @ptrCast(@alignCast(interface_pointer));
+                return Inheritance.call(implementation, "glTexParameterfv", .{ target, pname, params, offset });
             }
-            fn glTexParameterfv(pointer: *anyopaque, target: i32, pname: i32, params: ?*FloatBuffer) void {
-                const implementation: Implementation = @ptrCast(@alignCast(pointer));
-                return Inheritance.receiver(implementation, "glTexParameterfv").glTexParameterfv(target, pname, params);
+            fn glTexParameterfv(interface_pointer: *anyopaque, target: i32, pname: i32, params: ?*FloatBuffer) void {
+                const implementation: ImplementationType = @ptrCast(@alignCast(interface_pointer));
+                return Inheritance.call(implementation, "glTexParameterfv", .{ target, pname, params });
             }
-            fn glTexParameteriv(pointer: *anyopaque, target: i32, pname: i32, params: []i32, offset: i32) void {
-                const implementation: Implementation = @ptrCast(@alignCast(pointer));
-                return Inheritance.receiver(implementation, "glTexParameteriv").glTexParameteriv(target, pname, params, offset);
+            fn glTexParameteriv4(interface_pointer: *anyopaque, target: i32, pname: i32, params: []i32, offset: i32) void {
+                const implementation: ImplementationType = @ptrCast(@alignCast(interface_pointer));
+                return Inheritance.call(implementation, "glTexParameteriv", .{ target, pname, params, offset });
             }
-            fn glTexParameteriv(pointer: *anyopaque, target: i32, pname: i32, params: ?*IntBuffer) void {
-                const implementation: Implementation = @ptrCast(@alignCast(pointer));
-                return Inheritance.receiver(implementation, "glTexParameteriv").glTexParameteriv(target, pname, params);
+            fn glTexParameteriv(interface_pointer: *anyopaque, target: i32, pname: i32, params: ?*IntBuffer) void {
+                const implementation: ImplementationType = @ptrCast(@alignCast(interface_pointer));
+                return Inheritance.call(implementation, "glTexParameteriv", .{ target, pname, params });
             }
-            fn glVertexPointer(pointer: *anyopaque, size: i32, @"type": i32, stride: i32, offset: i32) void {
-                const implementation: Implementation = @ptrCast(@alignCast(pointer));
-                return Inheritance.receiver(implementation, "glVertexPointer").glVertexPointer(size, @"type", stride, offset);
+            fn glVertexPointer(interface_pointer: *anyopaque, size: i32, @"type": i32, stride: i32, offset: i32) void {
+                const implementation: ImplementationType = @ptrCast(@alignCast(interface_pointer));
+                return Inheritance.call(implementation, "glVertexPointer", .{ size, @"type", stride, offset });
             }
         };
         const this = allocator.create(Self) catch unreachable;
-        this.* = .{ .pointer = object, .object = Object.of(object).?, .base = GL10.of(object).?.*, .toStringFn = Methods.toString, .glBindBufferFn = Methods.glBindBuffer, .glBufferDataFn = Methods.glBufferData, .glBufferSubDataFn = Methods.glBufferSubData, .glClipPlanefFn = Methods.glClipPlanef, .glClipPlanefFn = Methods.glClipPlanef, .glColor4ubFn = Methods.glColor4ub, .glColorPointerFn = Methods.glColorPointer, .glDeleteBuffersFn = Methods.glDeleteBuffers, .glDeleteBuffersFn = Methods.glDeleteBuffers, .glDrawElementsFn = Methods.glDrawElements, .glGenBuffersFn = Methods.glGenBuffers, .glGenBuffersFn = Methods.glGenBuffers, .glGetBufferParameterivFn = Methods.glGetBufferParameteriv, .glGetBufferParameterivFn = Methods.glGetBufferParameteriv, .glGetClipPlanefFn = Methods.glGetClipPlanef, .glGetClipPlanefFn = Methods.glGetClipPlanef, .glGetFloatvFn = Methods.glGetFloatv, .glGetFloatvFn = Methods.glGetFloatv, .glGetLightfvFn = Methods.glGetLightfv, .glGetLightfvFn = Methods.glGetLightfv, .glGetMaterialfvFn = Methods.glGetMaterialfv, .glGetMaterialfvFn = Methods.glGetMaterialfv, .glGetTexEnvivFn = Methods.glGetTexEnviv, .glGetTexEnvivFn = Methods.glGetTexEnviv, .glGetTexParameterfvFn = Methods.glGetTexParameterfv, .glGetTexParameterfvFn = Methods.glGetTexParameterfv, .glGetTexParameterivFn = Methods.glGetTexParameteriv, .glGetTexParameterivFn = Methods.glGetTexParameteriv, .glIsBufferFn = Methods.glIsBuffer, .glIsEnabledFn = Methods.glIsEnabled, .glIsTextureFn = Methods.glIsTexture, .glNormalPointerFn = Methods.glNormalPointer, .glPointParameterfFn = Methods.glPointParameterf, .glPointParameterfvFn = Methods.glPointParameterfv, .glPointParameterfvFn = Methods.glPointParameterfv, .glTexCoordPointerFn = Methods.glTexCoordPointer, .glTexEnviFn = Methods.glTexEnvi, .glTexEnvivFn = Methods.glTexEnviv, .glTexEnvivFn = Methods.glTexEnviv, .glTexParameterfvFn = Methods.glTexParameterfv, .glTexParameterfvFn = Methods.glTexParameterfv, .glTexParameterivFn = Methods.glTexParameteriv, .glTexParameterivFn = Methods.glTexParameteriv, .glVertexPointerFn = Methods.glVertexPointer };
+        this.* = .{ .pointer = object, .object = Object.of(object).?, .base = GL10.of(object).?.*, .toStringFn = Methods.toString, .glBindBufferFn = Methods.glBindBuffer, .glBufferDataFn = Methods.glBufferData, .glBufferSubDataFn = Methods.glBufferSubData, .glClipPlanef3Fn = Methods.glClipPlanef3, .glClipPlanefFn = Methods.glClipPlanef, .glColor4ubFn = Methods.glColor4ub, .glColorPointerFn = Methods.glColorPointer, .glDeleteBuffers3Fn = Methods.glDeleteBuffers3, .glDeleteBuffersFn = Methods.glDeleteBuffers, .glDrawElementsFn = Methods.glDrawElements, .glGenBuffers3Fn = Methods.glGenBuffers3, .glGenBuffersFn = Methods.glGenBuffers, .glGetBufferParameteriv4Fn = Methods.glGetBufferParameteriv4, .glGetBufferParameterivFn = Methods.glGetBufferParameteriv, .glGetClipPlanef3Fn = Methods.glGetClipPlanef3, .glGetClipPlanefFn = Methods.glGetClipPlanef, .glGetFloatv3Fn = Methods.glGetFloatv3, .glGetFloatvFn = Methods.glGetFloatv, .glGetLightfv4Fn = Methods.glGetLightfv4, .glGetLightfvFn = Methods.glGetLightfv, .glGetMaterialfv4Fn = Methods.glGetMaterialfv4, .glGetMaterialfvFn = Methods.glGetMaterialfv, .glGetTexEnviv4Fn = Methods.glGetTexEnviv4, .glGetTexEnvivFn = Methods.glGetTexEnviv, .glGetTexParameterfv4Fn = Methods.glGetTexParameterfv4, .glGetTexParameterfvFn = Methods.glGetTexParameterfv, .glGetTexParameteriv4Fn = Methods.glGetTexParameteriv4, .glGetTexParameterivFn = Methods.glGetTexParameteriv, .glIsBufferFn = Methods.glIsBuffer, .glIsEnabledFn = Methods.glIsEnabled, .glIsTextureFn = Methods.glIsTexture, .glNormalPointerFn = Methods.glNormalPointer, .glPointParameterfFn = Methods.glPointParameterf, .glPointParameterfv3Fn = Methods.glPointParameterfv3, .glPointParameterfvFn = Methods.glPointParameterfv, .glTexCoordPointerFn = Methods.glTexCoordPointer, .glTexEnviFn = Methods.glTexEnvi, .glTexEnviv4Fn = Methods.glTexEnviv4, .glTexEnvivFn = Methods.glTexEnviv, .glTexParameterfv4Fn = Methods.glTexParameterfv4, .glTexParameterfvFn = Methods.glTexParameterfv, .glTexParameteriv4Fn = Methods.glTexParameteriv4, .glTexParameterivFn = Methods.glTexParameteriv, .glVertexPointerFn = Methods.glVertexPointer };
         return this;
     }
     pub const GL_ACTIVE_TEXTURE: i32 = 34016;

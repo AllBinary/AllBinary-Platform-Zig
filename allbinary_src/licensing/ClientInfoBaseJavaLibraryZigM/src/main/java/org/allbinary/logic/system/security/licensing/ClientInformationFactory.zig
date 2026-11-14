@@ -37,9 +37,9 @@ pub const ClientInformationFactory = struct {
     pub fn getInstance(self: *Self) ?*ClientInformation {
         const logUtil: ?*LogUtil = Inheritance.upcast(?*LogUtil, LogUtil.getInstance());
         const commonStrings: ?*CommonStrings = Inheritance.upcast(?*CommonStrings, CommonStrings.getInstance());
-        _ = Inheritance.call(logUtil.?, "putF", .{ commonStrings.?.NOT_IMPLEMENTED, self, commonStrings.?.GET_INSTANCE });
+        _ = Inheritance.call(logUtil.?, "putF", .{ Inheritance.fieldPointer(commonStrings.?, "NOT_IMPLEMENTED").*, self, Inheritance.fieldPointer(commonStrings.?, "GET_INSTANCE").* });
         const stringUtil: ?*StringUtil = Inheritance.upcast(?*StringUtil, StringUtil.getInstance());
-        return Inheritance.callStatic(ClientInformation, "create4", .{ stringUtil.?.NULL_STRING, stringUtil.?.NULL_STRING, stringUtil.?.NULL_STRING, stringUtil.?.NULL_STRING });
+        return Inheritance.callStatic(ClientInformation, "create4", .{ Inheritance.fieldPointer(stringUtil.?, "NULL_STRING").*, Inheritance.fieldPointer(stringUtil.?, "NULL_STRING").*, Inheritance.fieldPointer(stringUtil.?, "NULL_STRING").*, Inheritance.fieldPointer(stringUtil.?, "NULL_STRING").* });
     }
 };
 

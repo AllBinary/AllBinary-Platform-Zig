@@ -25,6 +25,7 @@ const StringUtil = @import("org/allbinary/logic/string/StringUtil.zig").StringUt
 const CommonLabels = @import("org/allbinary/string/CommonLabels.zig").CommonLabels;
 const CommonSeps = @import("org/allbinary/string/CommonSeps.zig").CommonSeps;
 const TimeStampUtil = @import("org/allbinary/time/TimeStampUtil.zig").TimeStampUtil;
+const Throwable = @import("java/lang/Throwable.zig").Throwable;
 
 //ActualPlatform
 pub const LogFormatUtil = struct {
@@ -58,8 +59,8 @@ pub const LogFormatUtil = struct {
         this.EMPTY = String.literal("Empty");
         this.STACK_TRACE = String.literal("\nStack Trace: ");
         this.TIME = String.literal("Time: ");
-        this.CLASS_NAME = Inheritance.upcast(?*String, this.commonSeps.?.SPACE);
-        this.FUNCTION_CALL = Inheritance.upcast(?*String, CommonLabels.getInstance().?.COLON_SEP);
+        this.CLASS_NAME = Inheritance.upcast(?*String, Inheritance.fieldPointer(this.commonSeps.?, "SPACE").*);
+        this.FUNCTION_CALL = Inheritance.upcast(?*String, Inheritance.fieldPointer(CommonLabels.getInstance().?, "COLON_SEP").*);
         this.SPECIAL_MESSAGE = String.literal("> ");
         this.stringUtil = Inheritance.upcast(?*StringUtil, StringUtil.getInstance());
         this.exceptionUtil = Inheritance.upcast(?*ExceptionUtil, ExceptionUtil.getInstance());
@@ -85,7 +86,7 @@ pub const LogFormatUtil = struct {
         _ = Inheritance.call(stringBuffer.?, "append", .{ Inheritance.call(self, "getO", .{ exception }) });
         _ = Inheritance.call(stringBuffer.?, "append", .{ self.SPECIAL_MESSAGE });
         _ = Inheritance.call(stringBuffer.?, "append", .{ specialMessage });
-        _ = Inheritance.call(stringBuffer.?, "append", .{ self.commonSeps.?.NEW_LINE });
+        _ = Inheritance.call(stringBuffer.?, "append", .{ Inheritance.fieldPointer(self.commonSeps.?, "NEW_LINE").* });
         return Inheritance.upcast(?*String, Object.toString(Object.of(stringBuffer)));
     }
     
@@ -94,16 +95,12 @@ pub const LogFormatUtil = struct {
         const stringBuffer: ?*StringMaker = Inheritance.upcast(?*StringMaker, Inheritance.call(self, "getF", .{ className, functionName }));
         _ = Inheritance.call(stringBuffer.?, "append", .{ self.SPECIAL_MESSAGE });
         _ = Inheritance.call(stringBuffer.?, "append", .{ specialMessage });
-        _ = Inheritance.call(stringBuffer.?, "append", .{ self.commonSeps.?.NEW_LINE });
+        _ = Inheritance.call(stringBuffer.?, "append", .{ Inheritance.fieldPointer(self.commonSeps.?, "NEW_LINE").* });
         return Inheritance.upcast(?*String, Object.toString(Object.of(stringBuffer)));
     }
     
 
-    pub fn getF(self: *Self, className: ?*String, functionNameParameter: ?*String) ?*StringMaker {
-        var functionName = functionNameParameter;
-        if (functionName == null) {
-            functionName = self.NONE;
-        }
+    pub fn getF(self: *Self, className: ?*String, functionName: ?*String) ?*StringMaker {
         const stringBuffer: ?*StringMaker = StringMaker.create();
         _ = Inheritance.call(stringBuffer.?, "append", .{ self.TIME });
         _ = Inheritance.call(stringBuffer.?, "append", .{ self.timeStampUtil.?.getAsString() });
@@ -116,24 +113,20 @@ pub const LogFormatUtil = struct {
     
 
     pub fn getO(self: *Self, exception: ?Object) ?*String {
-        if (!Object.same(exception, self.nullUtil.?.NULL_OBJECT)) {
+        if (!Object.same(exception, Inheritance.fieldPointer(self.nullUtil.?, "NULL_OBJECT").*)) {
             const stringBuffer: ?*StringMaker = StringMaker.create();
             _ = Inheritance.call(stringBuffer.?, "append", .{ self.LOG_ERROR });
             const exceptionAsString: ?*String = Inheritance.upcast(?*String, Object.toString(Object.of(exception)));
-            if (exceptionAsString != null) {
-                _ = Inheritance.call(stringBuffer.?, "append", .{ exceptionAsString });
-            } else {
-                _ = Inheritance.call(stringBuffer.?, "append", .{ self.EMPTY });
-            }
+            _ = Inheritance.call(stringBuffer.?, "append", .{ exceptionAsString });
             _ = Inheritance.call(stringBuffer.?, "append", .{ self.STACK_TRACE });
-            if (!Object.same(exception, self.nullUtil.?.NULL_OBJECT)) {
+            if (!Object.same(exception, Inheritance.fieldPointer(self.nullUtil.?, "NULL_OBJECT").*)) {
                 _ = Inheritance.call(stringBuffer.?, "append", .{ Inheritance.call(self.exceptionUtil.?, "getStackTrace", .{ Inheritance.cast(?anyerror, exception) }) });
             } else {
-                _ = Inheritance.call(stringBuffer.?, "append", .{ self.stringUtil.?.NULL_STRING });
+                _ = Inheritance.call(stringBuffer.?, "append", .{ Inheritance.fieldPointer(self.stringUtil.?, "NULL_STRING").* });
             }
             return Inheritance.upcast(?*String, Object.toString(Object.of(stringBuffer)));
         } else {
-            return Inheritance.upcast(?*String, StringUtil.getInstance().?.EMPTY_STRING);
+            return Inheritance.upcast(?*String, Inheritance.fieldPointer(StringUtil.getInstance().?, "EMPTY_STRING").*);
         }
     }
 };

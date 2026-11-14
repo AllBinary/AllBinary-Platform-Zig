@@ -20,6 +20,7 @@ const Object = @import("java/lang/Object.zig").Object;
 const Inheritance = @import("zig/Inheritance.zig");
 const EventListenerInterface = @import("org/allbinary/logic/util/event/EventListenerInterface.zig").EventListenerInterface;
 const DestroyedEvent = @import("org/allbinary/game/combat/destroy/event/DestroyedEvent.zig").DestroyedEvent;
+const Exception = @import("java/lang/Exception.zig").Exception;
 
 // Java interface: an implementation is a pointer and a table of functions
 pub const DestroyedEventListenerInterface = struct {
@@ -29,7 +30,7 @@ pub const DestroyedEventListenerInterface = struct {
     object: Object,
     base: EventListenerInterface,
     toStringFn: *const fn (pointer: *anyopaque) ?*String,
-    onDestroyedFn: *const fn (pointer: *anyopaque, destroyedEvent: ?*DestroyedEvent) void,
+    onDestroyedFn: *const fn (interface_pointer: *anyopaque, destroyedEvent: ?*DestroyedEvent) void,
 
     pub fn onDestroyed(self: *Self, destroyedEvent: ?*DestroyedEvent) void {
         return self.onDestroyedFn(self.pointer, destroyedEvent);
@@ -41,15 +42,15 @@ pub const DestroyedEventListenerInterface = struct {
 
     // The interface value of an object with the methods. Like a Java class a method can be declared by the object or a superclass.
     pub fn of(object: anytype) ?*Self {
-        const Implementation = @TypeOf(object);
+        const ImplementationType = @TypeOf(object);
         const Methods = struct {
             fn toString(pointer: *anyopaque) ?*String {
-                const implementation: Implementation = @ptrCast(@alignCast(pointer));
+                const implementation: ImplementationType = @ptrCast(@alignCast(pointer));
                 return String.valueOf(implementation);
             }
-            fn onDestroyed(pointer: *anyopaque, destroyedEvent: ?*DestroyedEvent) void {
-                const implementation: Implementation = @ptrCast(@alignCast(pointer));
-                return Inheritance.receiver(implementation, "onDestroyed").onDestroyed(destroyedEvent);
+            fn onDestroyed(interface_pointer: *anyopaque, destroyedEvent: ?*DestroyedEvent) void {
+                const implementation: ImplementationType = @ptrCast(@alignCast(interface_pointer));
+                return Inheritance.call(implementation, "onDestroyed", .{ destroyedEvent });
             }
         };
         const this = allocator.create(Self) catch unreachable;

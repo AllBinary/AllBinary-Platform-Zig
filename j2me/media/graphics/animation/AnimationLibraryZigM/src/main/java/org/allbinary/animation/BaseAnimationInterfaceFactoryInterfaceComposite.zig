@@ -23,6 +23,7 @@ const Animation = @import("org/allbinary/animation/Animation.zig").Animation;
 const AnimationInterfaceFactoryInterface = @import("org/allbinary/animation/AnimationInterfaceFactoryInterface.zig").AnimationInterfaceFactoryInterface;
 const BasicAnimationInterfaceFactoryInterface = @import("org/allbinary/animation/BasicAnimationInterfaceFactoryInterface.zig").BasicAnimationInterfaceFactoryInterface;
 const NullAnimationFactory = @import("org/allbinary/animation/NullAnimationFactory.zig").NullAnimationFactory;
+const Exception = @import("java/lang/Exception.zig").Exception;
 
 pub const BaseAnimationInterfaceFactoryInterfaceComposite = struct {
     const Self = @This();

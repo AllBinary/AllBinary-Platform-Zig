@@ -24,6 +24,7 @@ const BasicArrayList = @import("org/allbinary/util/BasicArrayList.zig").BasicArr
 const BasicArrayListD = @import("org/allbinary/util/BasicArrayListD.zig").BasicArrayListD;
 const GameInputProcessorInterface = @import("org/allbinary/game/input/GameInputProcessorInterface.zig").GameInputProcessorInterface;
 const PlayerGameInput = @import("org/allbinary/game/input/PlayerGameInput.zig").PlayerGameInput;
+const Exception = @import("java/lang/Exception.zig").Exception;
 
 pub const GameInputProcessorComposite = struct {
     const Self = @This();
@@ -61,12 +62,12 @@ pub const GameInputProcessorComposite = struct {
             _ = Inheritance.call(self.gameInputProcessorInterface.?, "onInput", .{ list });
         }
         // catch (Exception e):
-//             _ = Inheritance.call(Inheritance.fieldPointer(self, "logUtil").*.?, "put", .{ Inheritance.fieldPointer(self, "commonStrings").*.?.EXCEPTION, self, Inheritance.fieldPointer(self, "commonStrings").*.?.UPDATE, e });
+//             _ = Inheritance.call(Inheritance.fieldPointer(self, "logUtil").*.?, "put", .{ Inheritance.fieldPointer(Inheritance.fieldPointer(self, "commonStrings").*.?, "EXCEPTION").*, self, Inheritance.fieldPointer(Inheritance.fieldPointer(self, "commonStrings").*.?, "UPDATE").*, e });
     }
     
 
     pub fn toString(self: *Self) ?*String {
-        return Inheritance.upcast(?*String, Object.toString(Object.of(Inheritance.call(Inheritance.call(Inheritance.call(StringMaker.create(), "append", .{ self.base.toString() }).?, "append", .{ self.NAME_LABEL }).?, "append", .{ self.name }))));
+        return Inheritance.upcast(?*String, Object.toString(Object.of(Inheritance.call(Inheritance.call(Inheritance.call(StringMaker.create(), "append", .{ String.valueOf(&self.base) }).?, "append", .{ self.NAME_LABEL }).?, "append", .{ self.name }))));
     }
 };
 

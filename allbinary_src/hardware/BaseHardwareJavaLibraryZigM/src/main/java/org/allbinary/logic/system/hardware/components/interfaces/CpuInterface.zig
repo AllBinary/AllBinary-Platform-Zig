@@ -26,15 +26,15 @@ pub const CpuInterface = struct {
     pointer: *anyopaque,
     object: Object,
     toStringFn: *const fn (pointer: *anyopaque) ?*String,
-    getProcessorFn: *const fn (pointer: *anyopaque) ?*String,
-    getVendorIdFn: *const fn (pointer: *anyopaque) ?*String,
-    getCpuFamilyFn: *const fn (pointer: *anyopaque) ?*String,
-    getModelFn: *const fn (pointer: *anyopaque) ?*String,
-    getModelNameFn: *const fn (pointer: *anyopaque) ?*String,
-    getSteppingFn: *const fn (pointer: *anyopaque) ?*String,
-    getCpuSpeedFn: *const fn (pointer: *anyopaque) ?*String,
-    getCacheSizeFn: *const fn (pointer: *anyopaque) ?*String,
-    compareToFn: *const fn (pointer: *anyopaque, cpuInterface: ?*CpuInterface) bool,
+    getProcessorFn: *const fn (interface_pointer: *anyopaque) ?*String,
+    getVendorIdFn: *const fn (interface_pointer: *anyopaque) ?*String,
+    getCpuFamilyFn: *const fn (interface_pointer: *anyopaque) ?*String,
+    getModelFn: *const fn (interface_pointer: *anyopaque) ?*String,
+    getModelNameFn: *const fn (interface_pointer: *anyopaque) ?*String,
+    getSteppingFn: *const fn (interface_pointer: *anyopaque) ?*String,
+    getCpuSpeedFn: *const fn (interface_pointer: *anyopaque) ?*String,
+    getCacheSizeFn: *const fn (interface_pointer: *anyopaque) ?*String,
+    compareToFn: *const fn (interface_pointer: *anyopaque, cpuInterface: ?*CpuInterface) bool,
 
     pub fn getProcessor(self: *Self) ?*String {
         return self.getProcessorFn(self.pointer);
@@ -78,47 +78,47 @@ pub const CpuInterface = struct {
 
     // The interface value of an object with the methods. Like a Java class a method can be declared by the object or a superclass.
     pub fn of(object: anytype) ?*Self {
-        const Implementation = @TypeOf(object);
+        const ImplementationType = @TypeOf(object);
         const Methods = struct {
             fn toString(pointer: *anyopaque) ?*String {
-                const implementation: Implementation = @ptrCast(@alignCast(pointer));
+                const implementation: ImplementationType = @ptrCast(@alignCast(pointer));
                 return String.valueOf(implementation);
             }
-            fn getProcessor(pointer: *anyopaque) ?*String {
-                const implementation: Implementation = @ptrCast(@alignCast(pointer));
+            fn getProcessor(interface_pointer: *anyopaque) ?*String {
+                const implementation: ImplementationType = @ptrCast(@alignCast(interface_pointer));
                 return Inheritance.upcast(?*String, Inheritance.receiver(implementation, "getProcessor").getProcessor());
             }
-            fn getVendorId(pointer: *anyopaque) ?*String {
-                const implementation: Implementation = @ptrCast(@alignCast(pointer));
+            fn getVendorId(interface_pointer: *anyopaque) ?*String {
+                const implementation: ImplementationType = @ptrCast(@alignCast(interface_pointer));
                 return Inheritance.upcast(?*String, Inheritance.receiver(implementation, "getVendorId").getVendorId());
             }
-            fn getCpuFamily(pointer: *anyopaque) ?*String {
-                const implementation: Implementation = @ptrCast(@alignCast(pointer));
+            fn getCpuFamily(interface_pointer: *anyopaque) ?*String {
+                const implementation: ImplementationType = @ptrCast(@alignCast(interface_pointer));
                 return Inheritance.upcast(?*String, Inheritance.receiver(implementation, "getCpuFamily").getCpuFamily());
             }
-            fn getModel(pointer: *anyopaque) ?*String {
-                const implementation: Implementation = @ptrCast(@alignCast(pointer));
+            fn getModel(interface_pointer: *anyopaque) ?*String {
+                const implementation: ImplementationType = @ptrCast(@alignCast(interface_pointer));
                 return Inheritance.upcast(?*String, Inheritance.receiver(implementation, "getModel").getModel());
             }
-            fn getModelName(pointer: *anyopaque) ?*String {
-                const implementation: Implementation = @ptrCast(@alignCast(pointer));
+            fn getModelName(interface_pointer: *anyopaque) ?*String {
+                const implementation: ImplementationType = @ptrCast(@alignCast(interface_pointer));
                 return Inheritance.upcast(?*String, Inheritance.receiver(implementation, "getModelName").getModelName());
             }
-            fn getStepping(pointer: *anyopaque) ?*String {
-                const implementation: Implementation = @ptrCast(@alignCast(pointer));
+            fn getStepping(interface_pointer: *anyopaque) ?*String {
+                const implementation: ImplementationType = @ptrCast(@alignCast(interface_pointer));
                 return Inheritance.upcast(?*String, Inheritance.receiver(implementation, "getStepping").getStepping());
             }
-            fn getCpuSpeed(pointer: *anyopaque) ?*String {
-                const implementation: Implementation = @ptrCast(@alignCast(pointer));
+            fn getCpuSpeed(interface_pointer: *anyopaque) ?*String {
+                const implementation: ImplementationType = @ptrCast(@alignCast(interface_pointer));
                 return Inheritance.upcast(?*String, Inheritance.receiver(implementation, "getCpuSpeed").getCpuSpeed());
             }
-            fn getCacheSize(pointer: *anyopaque) ?*String {
-                const implementation: Implementation = @ptrCast(@alignCast(pointer));
+            fn getCacheSize(interface_pointer: *anyopaque) ?*String {
+                const implementation: ImplementationType = @ptrCast(@alignCast(interface_pointer));
                 return Inheritance.upcast(?*String, Inheritance.receiver(implementation, "getCacheSize").getCacheSize());
             }
-            fn compareTo(pointer: *anyopaque, cpuInterface: ?*CpuInterface) bool {
-                const implementation: Implementation = @ptrCast(@alignCast(pointer));
-                return Inheritance.receiver(implementation, "compareTo").compareTo(cpuInterface);
+            fn compareTo(interface_pointer: *anyopaque, cpuInterface: ?*CpuInterface) bool {
+                const implementation: ImplementationType = @ptrCast(@alignCast(interface_pointer));
+                return Inheritance.call(implementation, "compareTo", .{ cpuInterface });
             }
         };
         const this = allocator.create(Self) catch unreachable;

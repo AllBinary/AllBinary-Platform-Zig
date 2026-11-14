@@ -32,6 +32,7 @@ const ABHashtable = @import("org/allbinary/util/ABHashtable.zig").ABHashtable;
 const MineLayerCircularStaticPool = @import("org/allbinary/game/ag/layer/weapon/mine/MineLayerCircularStaticPool.zig").MineLayerCircularStaticPool;
 const MineWeaponResources = @import("org/allbinary/game/ag/layer/weapon/mine/MineWeaponResources.zig").MineWeaponResources;
 const Integer = @import("java/lang/Integer.zig").Integer;
+const Exception = @import("java/lang/Exception.zig").Exception;
 
 pub const MineCountedPickedUpLayerInterfaceFactory = struct {
     const Self = @This();
@@ -63,7 +64,7 @@ pub const MineCountedPickedUpLayerInterfaceFactory = struct {
     pub fn create() *Self {
         const this = allocator.create(Self) catch unreachable;
         this.* = .{};
-        this.base = Inheritance.callStatic(CountedPickedUpLayerInterfaceFactory, "create3", .{ PickedUpLayerTypeFactory.getInstance().?.MINE, Inheritance.callStatic(IconLayerFactory, "getInstance", .{ Inheritance.call(Inheritance.call(FeaturedAnimationInterfaceFactoryInterfaceFactory.getInstance().?, "get", .{ MineWeaponResources.getInstance().?.DROP_ICON_RESOURCE }).?, "getInstance", .{ 0 }), 10, 10 }), Inheritance.call(Inheritance.call(FeaturedAnimationInterfaceFactoryInterfaceFactory.getInstance().?, "get", .{ MineWeaponResources.getInstance().?.DROP_RESOURCE }).?, "getInstance", .{ 0 }) }).*;
+        this.base = Inheritance.callStatic(CountedPickedUpLayerInterfaceFactory, "create3", .{ Inheritance.fieldPointer(PickedUpLayerTypeFactory.getInstance().?, "MINE").*, Inheritance.callStatic(IconLayerFactory, "getInstance", .{ Inheritance.call(Inheritance.call(FeaturedAnimationInterfaceFactoryInterfaceFactory.getInstance().?, "get", .{ Inheritance.fieldPointer(MineWeaponResources.getInstance().?, "DROP_ICON_RESOURCE").* }).?, "getInstance", .{ 0 }), 10, 10 }), Inheritance.call(Inheritance.call(FeaturedAnimationInterfaceFactoryInterfaceFactory.getInstance().?, "get", .{ Inheritance.fieldPointer(MineWeaponResources.getInstance().?, "DROP_RESOURCE").* }).?, "getInstance", .{ 0 }) }).*;
         this.initFields();
         Inheritance.bindOverrides(this);
         return this;
@@ -86,7 +87,7 @@ pub const MineCountedPickedUpLayerInterfaceFactory = struct {
         const sourceLayerInterface: ?*AllBinaryLayer = Inheritance.cast(?*AllBinaryLayer, Inheritance.call(hashtable.?, "get", .{ Inheritance.cast(?Object, Inheritance.call(self.smallIntegerSingletonFactory.?, "getAt", .{ 0 })) }));
         const angle: ?*Integer = Inheritance.cast(?*Integer, Inheritance.call(hashtable.?, "get", .{ Inheritance.cast(?Object, Inheritance.call(self.smallIntegerSingletonFactory.?, "getAt", .{ 1 })) }));
         const scoreableInterface: ?*ScoreableInterface = Inheritance.cast(?*ScoreableInterface, sourceLayerInterface);
-        return Inheritance.upcast(?*AllBinaryLayer, Inheritance.call(self.weaponLayerCircularStaticPool.?, "getInstanceWeaponLayer", .{ sourceLayerInterface, x, y, z, @as(i32, @intCast(angle.?.intValue())), 0, self.weaponProperties, scoreableInterface }));
+        return Inheritance.upcast(?*AllBinaryLayer, Inheritance.call(self.weaponLayerCircularStaticPool.?, "getInstanceWeaponLayer", .{ sourceLayerInterface, x, y, z, Inheritance.number(i32, angle.?.intValue()), 0, self.weaponProperties, scoreableInterface }));
     }
 };
 

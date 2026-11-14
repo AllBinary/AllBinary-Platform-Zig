@@ -30,6 +30,7 @@ const AllBinaryLayer = @import("org/allbinary/layer/AllBinaryLayer.zig").AllBina
 const PointsLayerCircularStaticPool = @import("org/allbinary/game/ag/layer/pickup/points/PointsLayerCircularStaticPool.zig").PointsLayerCircularStaticPool;
 const PointsLayerFactory = @import("org/allbinary/game/ag/layer/pickup/points/PointsLayerFactory.zig").PointsLayerFactory;
 const PointsResources = @import("org/allbinary/game/ag/layer/pickup/points/PointsResources.zig").PointsResources;
+const Exception = @import("java/lang/Exception.zig").Exception;
 
 pub const Points20kPickedUpLayerInterfaceFactory = struct {
     const Self = @This();
@@ -45,7 +46,7 @@ pub const Points20kPickedUpLayerInterfaceFactory = struct {
     }
 
     fn initFields(this: *Self) void {
-        this.pool = Inheritance.callStatic(PointsLayerCircularStaticPool, "create2", .{ Inheritance.callStatic(PointsLayerFactory, "create1", .{ Inheritance.receiverOf(GameConfigurationUtil.getInstance().?, "getCompetitionValue").getCompetitionValue() * 20000 }), 1 });
+        this.pool = Inheritance.callStatic(PointsLayerCircularStaticPool, "create2", .{ Inheritance.callStatic(PointsLayerFactory, "create1", .{ Inheritance.arithmetic(.multiply, Inheritance.receiverOf(GameConfigurationUtil.getInstance().?, "getCompetitionValue").getCompetitionValue(), 20000) }), 1 });
     }
     
 
@@ -58,7 +59,7 @@ pub const Points20kPickedUpLayerInterfaceFactory = struct {
     pub fn create() *Self {
         const this = allocator.create(Self) catch unreachable;
         this.* = .{};
-        this.base = Inheritance.callStatic(PickedUpLayerInterfaceFactory, "create3", .{ PickedUpLayerTypeFactory.getInstance().?.POINTS, Inheritance.callStatic(IconLayerFactory, "getInstance", .{ Inheritance.call(Inheritance.call(FeaturedAnimationInterfaceFactoryInterfaceFactory.getInstance().?, "get", .{ PointsResources.getInstance().?.RESOURCE_2 }).?, "getInstance", .{ 0 }), 10, 10 }), Inheritance.call(Inheritance.call(FeaturedAnimationInterfaceFactoryInterfaceFactory.getInstance().?, "get", .{ PointsResources.getInstance().?.RESOURCE_2 }).?, "getInstance", .{ 0 }) }).*;
+        this.base = Inheritance.callStatic(PickedUpLayerInterfaceFactory, "create3", .{ Inheritance.fieldPointer(PickedUpLayerTypeFactory.getInstance().?, "POINTS").*, Inheritance.callStatic(IconLayerFactory, "getInstance", .{ Inheritance.call(Inheritance.call(FeaturedAnimationInterfaceFactoryInterfaceFactory.getInstance().?, "get", .{ Inheritance.fieldPointer(PointsResources.getInstance().?, "RESOURCE_2").* }).?, "getInstance", .{ 0 }), 10, 10 }), Inheritance.call(Inheritance.call(FeaturedAnimationInterfaceFactoryInterfaceFactory.getInstance().?, "get", .{ Inheritance.fieldPointer(PointsResources.getInstance().?, "RESOURCE_2").* }).?, "getInstance", .{ 0 }) }).*;
         this.initFields();
         Inheritance.bindOverrides(this);
         return this;

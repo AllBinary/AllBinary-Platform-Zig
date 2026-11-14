@@ -17,6 +17,7 @@ const HighScoresHelperBaseInterface = @import("org/allbinary/game/score/HighScor
 const HighScoresResultsListener = @import("org/allbinary/game/score/HighScoresResultsListener.zig").HighScoresResultsListener;
 const RecordStoreHighScores = @import("org/allbinary/game/score/RecordStoreHighScores.zig").RecordStoreHighScores;
 const ScoreComparator = @import("org/allbinary/game/score/ScoreComparator.zig").ScoreComparator;
+const Exception = @import("java/lang/Exception.zig").Exception;
 
 pub const BasicHighScoresFactory = struct {
     const Self = @This();
@@ -66,7 +67,7 @@ pub const BasicHighScoresFactory = struct {
             _ = Inheritance.call(highScoresResultsListener.?, "setHighScoresArray", .{ self.highScoresArray });
         }
         // catch (Exception e):
-//             _ = Inheritance.call(self.logUtil.?, "put", .{ Inheritance.fieldPointer(self, "commonStrings").*.?.EXCEPTION, self, self.FETCH, e });
+//             _ = Inheritance.call(self.logUtil.?, "put", .{ Inheritance.fieldPointer(Inheritance.fieldPointer(self, "commonStrings").*.?, "EXCEPTION").*, self, self.FETCH, e });
     }
     
 

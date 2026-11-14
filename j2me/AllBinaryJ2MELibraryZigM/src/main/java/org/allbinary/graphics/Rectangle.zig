@@ -92,11 +92,11 @@ pub const Rectangle = struct {
     pub fn toString(self: *Self) ?*String {
         const stringBuffer: ?*StringMaker = StringMaker.create();
         _ = Inheritance.call(stringBuffer.?, "append", .{ Object.toString(Object.of(self.getPoint())) });
-        _ = Inheritance.call(stringBuffer.?, "append", .{ CommonSeps.getInstance().?.SPACE });
-        _ = Inheritance.call(stringBuffer.?, "append", .{ CommonLabels.getInstance().?.WIDTH_LABEL });
+        _ = Inheritance.call(stringBuffer.?, "append", .{ Inheritance.fieldPointer(CommonSeps.getInstance().?, "SPACE").* });
+        _ = Inheritance.call(stringBuffer.?, "append", .{ Inheritance.fieldPointer(CommonLabels.getInstance().?, "WIDTH_LABEL").* });
         _ = Inheritance.call(stringBuffer.?, "appendint", .{ self.getWidth() });
-        _ = Inheritance.call(stringBuffer.?, "append", .{ CommonSeps.getInstance().?.SPACE });
-        _ = Inheritance.call(stringBuffer.?, "append", .{ CommonLabels.getInstance().?.HEIGHT_LABEL });
+        _ = Inheritance.call(stringBuffer.?, "append", .{ Inheritance.fieldPointer(CommonSeps.getInstance().?, "SPACE").* });
+        _ = Inheritance.call(stringBuffer.?, "append", .{ Inheritance.fieldPointer(CommonLabels.getInstance().?, "HEIGHT_LABEL").* });
         _ = Inheritance.call(stringBuffer.?, "appendint", .{ self.getHeight() });
         _ = Inheritance.call(stringBuffer.?, "append", .{ String.literal(" MaxX: ") });
         _ = Inheritance.call(stringBuffer.?, "appendint", .{ self.getMaxX() });

@@ -18,7 +18,7 @@ const allocator = std.heap.page_allocator;
 const String = @import("java/lang/String.zig").String;
 const Object = @import("java/lang/Object.zig").Object;
 const Inheritance = @import("zig/Inheritance.zig");
-// const Graphics = @import("javax/microedition/lcdui/Graphics.zig").Graphics;
+const Graphics = @import("javax/microedition/lcdui/Graphics.zig").Graphics;
 const CharArrayFactory = @import("org/allbinary/logic/java/character/CharArrayFactory.zig").CharArrayFactory;
 const MyFontProcessor = @import("org/allbinary/graphics/font/MyFontProcessor.zig").MyFontProcessor;
 const UpdateMyFontInterface = @import("org/allbinary/graphics/font/UpdateMyFontInterface.zig").UpdateMyFontInterface;
@@ -56,7 +56,7 @@ pub const KeyValueDrawCharArray = struct {
     
 
     pub fn updateMeasurement(self: *Self, graphics: ?*Graphics) void {
-        const labelWidth: i32 = Inheritance.call(graphics.?.getFont().?, "stringWidth", .{ self.LABEL }) - self.LABEL.?.length();
+        const labelWidth: i32 = Inheritance.arithmetic(.subtract, Inheritance.call(graphics.?.getFont().?, "stringWidth", .{ self.LABEL }), self.LABEL.?.length());
         self.valueX = labelWidth + self.labelX;
         self.myFontProcessor = Inheritance.upcast(@TypeOf(self.myFontProcessor), MyFontProcessor.getInstance());
     }

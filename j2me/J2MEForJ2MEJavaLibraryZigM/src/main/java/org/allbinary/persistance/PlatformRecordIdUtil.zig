@@ -51,7 +51,7 @@ pub const PlatformRecordIdUtil = struct {
     
 
     pub fn getRecordId(self: *Self, abeClientInformation: ?*AbeClientInformationInterface, baseRecordId: ?*String) ?*String {
-        return Inheritance.upcast(?*String, Object.toString(Object.of(Inheritance.call(Inheritance.call(Inheritance.call(Inheritance.call(StringMaker.create(), "append", .{ abeClientInformation.?.toShortString() }).?, "append", .{ CommonSeps.getInstance().?.UNDERSCORE }).?, "append", .{ self.PLATFORM_SHORT_NAME }).?, "append", .{ baseRecordId }))));
+        return Inheritance.upcast(?*String, Object.toString(Object.of(Inheritance.call(Inheritance.call(Inheritance.call(Inheritance.call(StringMaker.create(), "append", .{ abeClientInformation.?.toShortString() }).?, "append", .{ Inheritance.fieldPointer(CommonSeps.getInstance().?, "UNDERSCORE").* }).?, "append", .{ self.PLATFORM_SHORT_NAME }).?, "append", .{ baseRecordId }))));
     }
 };
 

@@ -38,17 +38,17 @@ pub const OpenGLOptions = struct {
     pub fn init(self: *Self) void {
         _ = self;
         const openGLFeatureFactory: ?*OpenGLFeatureFactory = Inheritance.upcast(?*OpenGLFeatureFactory, OpenGLFeatureFactory.getInstance());
-        if (Inheritance.call(Features.getInstance().?, "isFeature", .{ openGLFeatureFactory.?.OPENGL_OPTIONS })) {
+        if (Inheritance.call(Features.getInstance().?, "isFeature", .{ Inheritance.fieldPointer(openGLFeatureFactory.?, "OPENGL_OPTIONS").* })) {
             const openGLMultipleList: ?*BasicArrayList = Inheritance.upcast(?*BasicArrayList, BasicArrayListD.create());
-            _ = Inheritance.call(openGLMultipleList.?, "add", .{ openGLFeatureFactory.?.OPENGL });
+            _ = Inheritance.call(openGLMultipleList.?, "add", .{ Inheritance.fieldPointer(openGLFeatureFactory.?, "OPENGL").* });
             _ = Inheritance.call(GameFeatureChoiceGroups.getMultipleInstance().?, "add", .{ String.literal("OpenGL (Complete Restart)"), openGLMultipleList });
             const openGLVersionSelectorMultipleList: ?*BasicArrayList = Inheritance.upcast(?*BasicArrayList, BasicArrayListD.create());
-            _ = Inheritance.call(openGLVersionSelectorMultipleList.?, "add", .{ openGLFeatureFactory.?.OPENGL_AUTO_SELECT });
-            _ = Inheritance.call(openGLVersionSelectorMultipleList.?, "add", .{ openGLFeatureFactory.?.OPENGL_MINIMUM });
+            _ = Inheritance.call(openGLVersionSelectorMultipleList.?, "add", .{ Inheritance.fieldPointer(openGLFeatureFactory.?, "OPENGL_AUTO_SELECT").* });
+            _ = Inheritance.call(openGLVersionSelectorMultipleList.?, "add", .{ Inheritance.fieldPointer(openGLFeatureFactory.?, "OPENGL_MINIMUM").* });
             _ = Inheritance.call(GameFeatureChoiceGroups.getExclusiveInstance().?, "add", .{ String.literal("OpenGL Version Selector"), openGLVersionSelectorMultipleList });
             const openGLImageColorMultipleList: ?*BasicArrayList = Inheritance.upcast(?*BasicArrayList, BasicArrayListD.create());
-            _ = Inheritance.call(openGLImageColorMultipleList.?, "add", .{ openGLFeatureFactory.?.IMAGE_COLOR_DEPTH_4444 });
-            _ = Inheritance.call(openGLImageColorMultipleList.?, "add", .{ openGLFeatureFactory.?.IMAGE_COLOR_DEPTH_8888 });
+            _ = Inheritance.call(openGLImageColorMultipleList.?, "add", .{ Inheritance.fieldPointer(openGLFeatureFactory.?, "IMAGE_COLOR_DEPTH_4444").* });
+            _ = Inheritance.call(openGLImageColorMultipleList.?, "add", .{ Inheritance.fieldPointer(openGLFeatureFactory.?, "IMAGE_COLOR_DEPTH_8888").* });
             _ = Inheritance.call(GameFeatureChoiceGroups.getExclusiveInstance().?, "add", .{ String.literal("OpenGL Image Color RGBA"), openGLImageColorMultipleList });
         }
     }

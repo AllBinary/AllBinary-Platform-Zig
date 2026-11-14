@@ -23,6 +23,7 @@ const AllBinaryLayerManager = @import("org/allbinary/layer/AllBinaryLayerManager
 const LayerProcessor = @import("org/allbinary/layer/LayerProcessor.zig").LayerProcessor;
 const GameInputInterface = @import("org/allbinary/game/input/GameInputInterface.zig").GameInputInterface;
 const GameInputLayerManager = @import("org/allbinary/game/input/GameInputLayerManager.zig").GameInputLayerManager;
+const Exception = @import("java/lang/Exception.zig").Exception;
 
 pub const GameInputLayerProcessor = struct {
     const Self = @This();

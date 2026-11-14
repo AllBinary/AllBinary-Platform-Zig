@@ -34,6 +34,7 @@ const BasicEventHandler = @import("org/allbinary/logic/util/event/handler/BasicE
 const CommonStrings = @import("org/allbinary/string/CommonStrings.zig").CommonStrings;
 const MotionGestureInput = @import("org/allbinary/input/motion/gesture/MotionGestureInput.zig").MotionGestureInput;
 const TouchMotionGestureFactory = @import("org/allbinary/input/motion/gesture/TouchMotionGestureFactory.zig").TouchMotionGestureFactory;
+const Exception = @import("java/lang/Exception.zig").Exception;
 
 pub const MotionGestureRecognizer = struct {
     const Self = @This();
@@ -52,7 +53,7 @@ pub const MotionGestureRecognizer = struct {
     fn initFields(this: *Self) void {
         this.logUtil = Inheritance.upcast(?*LogUtil, LogUtil.getInstance());
         this.j2seMath = Inheritance.upcast(?*J2SEMath, J2SEMath.getInstance());
-        this.origin = Inheritance.upcast(?*GPoint, PointFactory.getInstance().?.ZERO_ZERO);
+        this.origin = Inheritance.upcast(?*GPoint, Inheritance.fieldPointer(PointFactory.getInstance().?, "ZERO_ZERO").*);
         this.previous = this.origin;
         this.intermediate = this.origin;
         this.line = Inheritance.callStatic(Line, "create2", .{ this.origin, this.origin });
@@ -69,8 +70,8 @@ pub const MotionGestureRecognizer = struct {
         this.initFields();
         this.motionEventCircularPool = Inheritance.upcast(@TypeOf(this.motionEventCircularPool), Inheritance.callStatic(MotionEventCircularPool, "createPool", .{ id }));
         var motionGesturesHandler: ?*BasicEventHandler = BasicEventHandler.create();
-        var movedMotionGesturesHandler: ?*BasicEventHandler = Inheritance.upcast(?*BasicEventHandler, motionGesturesHandler);
-        var scrolledMotionGesturesHandler: ?*BasicEventHandler = Inheritance.upcast(?*BasicEventHandler, motionGesturesHandler);
+        var movedMotionGesturesHandler: ?*BasicEventHandler = motionGesturesHandler;
+        var scrolledMotionGesturesHandler: ?*BasicEventHandler = motionGesturesHandler;
         { // try
             motionGesturesHandler = Inheritance.upcast(@TypeOf(motionGesturesHandler), BasicMotionGesturesHandler.getInstance());
             movedMotionGesturesHandler = Inheritance.upcast(@TypeOf(movedMotionGesturesHandler), MovedMotionGesturesHandler.getInstance());
@@ -78,7 +79,7 @@ pub const MotionGestureRecognizer = struct {
         }
         // catch (Exception e):
 //             const commonStrings: ?*CommonStrings = Inheritance.upcast(?*CommonStrings, CommonStrings.getInstance()); _ = commonStrings;
-//             _ = Inheritance.call(this.logUtil.?, "put", .{ commonStrings.?.EXCEPTION, this, commonStrings.?.CONSTRUCTOR, e });
+//             _ = Inheritance.call(this.logUtil.?, "put", .{ Inheritance.fieldPointer(commonStrings.?, "EXCEPTION").*, this, Inheritance.fieldPointer(commonStrings.?, "CONSTRUCTOR").*, e });
         this.motionGesturesHandler = Inheritance.cast(?*BasicMotionGesturesHandler, motionGesturesHandler);
         this.movedMotionGesturesHandler = movedMotionGesturesHandler;
         this.scrolledMotionGesturesHandler = scrolledMotionGesturesHandler;
@@ -92,7 +93,7 @@ pub const MotionGestureRecognizer = struct {
         _ = button;
         self.intermediate = self.origin;
         self.previous = self.origin;
-        const event: ?*MotionGestureEvent = Inheritance.upcast(?*MotionGestureEvent, Inheritance.call(self.motionEventCircularPool.?, "getInstance", .{ TouchMotionGestureFactory.getInstance().?.PRESSED }));
+        const event: ?*MotionGestureEvent = Inheritance.upcast(?*MotionGestureEvent, Inheritance.call(self.motionEventCircularPool.?, "getInstance", .{ Inheritance.fieldPointer(TouchMotionGestureFactory.getInstance().?, "PRESSED").* }));
         _ = Inheritance.call(event.?, "setPreviousPoint", .{ self.previous });
         _ = Inheritance.call(event.?, "setCurrentPoint", .{ current });
         _ = Inheritance.call(self.motionGesturesHandler.?, "fireEvent", .{ event });
@@ -104,7 +105,7 @@ pub const MotionGestureRecognizer = struct {
     pub fn processReleasedMotionEvent(self: *Self, current: ?*GPoint, deviceId: i32, button: i32) bool {
         _ = deviceId;
         _ = button;
-        const event: ?*MotionGestureEvent = Inheritance.upcast(?*MotionGestureEvent, Inheritance.call(self.motionEventCircularPool.?, "getInstance", .{ TouchMotionGestureFactory.getInstance().?.RELEASED }));
+        const event: ?*MotionGestureEvent = Inheritance.upcast(?*MotionGestureEvent, Inheritance.call(self.motionEventCircularPool.?, "getInstance", .{ Inheritance.fieldPointer(TouchMotionGestureFactory.getInstance().?, "RELEASED").* }));
         _ = Inheritance.call(event.?, "setPreviousPoint", .{ self.previous });
         _ = Inheritance.call(event.?, "setCurrentPoint", .{ current });
         _ = Inheritance.call(self.motionGesturesHandler.?, "fireEvent", .{ event });
@@ -124,46 +125,46 @@ pub const MotionGestureRecognizer = struct {
         _ = Inheritance.call(self.line.?, "setP1", .{ self.previous });
         _ = Inheritance.call(self.line.?, "setP2", .{ current });
         const minimumMotionGesture: i32 = Inheritance.receiverOf(MotionGestureConfigurationFactory.getInstance().?, "getMinimumMotionGesture").getMinimumMotionGesture();
-        if (Inheritance.call(self.j2seMath.?, "abs", .{ @as(f32, @floatCast(self.line.?.getDeltaX())) }) < minimumMotionGesture and Inheritance.call(self.j2seMath.?, "abs", .{ @as(f32, @floatCast(self.line.?.getDeltaY())) }) < minimumMotionGesture) {
+        if (Inheritance.arithmetic(.less, Inheritance.call(self.j2seMath.?, "abs", .{ Inheritance.number(f32, self.line.?.getDeltaX()) }), minimumMotionGesture) and Inheritance.arithmetic(.less, Inheritance.call(self.j2seMath.?, "abs", .{ Inheritance.number(f32, self.line.?.getDeltaY()) }), minimumMotionGesture)) {
             self.intermediate = current;
             return;
         }
         const gradient: f64 = self.line.?.getGradient();
-        const absGradient: f64 = @as(f64, @floatCast(Inheritance.call(self.j2seMath.?, "abs", .{ @as(f32, @floatCast(gradient)) })));
+        const absGradient: f64 = Inheritance.number(f64, Inheritance.call(self.j2seMath.?, "abs", .{ @as(f32, @floatCast(gradient)) }));
         const conf: ?*MotionGestureConfiguration = Inheritance.upcast(?*MotionGestureConfiguration, MotionGestureConfigurationFactory.getInstance());
         const touchMotionGestureFactory: ?*TouchMotionGestureFactory = Inheritance.upcast(?*TouchMotionGestureFactory, TouchMotionGestureFactory.getInstance());
-        var newMotionGesture: ?*MotionGestureInput = Inheritance.upcast(?*MotionGestureInput, touchMotionGestureFactory.?.NO_MOTION);
+        var newMotionGesture: ?*MotionGestureInput = Inheritance.upcast(?*MotionGestureInput, Inheritance.fieldPointer(touchMotionGestureFactory.?, "NO_MOTION").*);
         var diagonalToleranceHigher: f64 = 12.0;
         var diagonalToleranceLower: f64 = 12.0;
         if (conf.?.isDiagonalMotionGestureAllowed()) {
-            diagonalToleranceHigher = @as(f64, @floatCast((90 - conf.?.getDiagonalTolerance())));
-            diagonalToleranceLower = @as(f64, @floatCast(conf.?.getDiagonalTolerance()));
+            diagonalToleranceHigher = Inheritance.number(f64, (Inheritance.arithmetic(.subtract, 90, conf.?.getDiagonalTolerance())));
+            diagonalToleranceLower = Inheritance.number(f64, conf.?.getDiagonalTolerance());
         }
-        if (absGradient > @tan(std.math.degreesToRadians(diagonalToleranceHigher))) {
-            if (self.line.?.getDeltaY() > 0) {
-                newMotionGesture = Inheritance.upcast(@TypeOf(newMotionGesture), touchMotionGestureFactory.?.UP);
+        if (absGradient > Inheritance.number(f64, @tan(std.math.degreesToRadians(diagonalToleranceHigher)))) {
+            if (Inheritance.arithmetic(.greater, self.line.?.getDeltaY(), 0)) {
+                newMotionGesture = Inheritance.upcast(@TypeOf(newMotionGesture), Inheritance.fieldPointer(touchMotionGestureFactory.?, "UP").*);
             } else {
-                newMotionGesture = Inheritance.upcast(@TypeOf(newMotionGesture), touchMotionGestureFactory.?.DOWN);
+                newMotionGesture = Inheritance.upcast(@TypeOf(newMotionGesture), Inheritance.fieldPointer(touchMotionGestureFactory.?, "DOWN").*);
             }
         } else {
-            if (absGradient < @tan(std.math.degreesToRadians(diagonalToleranceLower))) {
-                if (self.line.?.getDeltaX() > 0) {
-                    newMotionGesture = Inheritance.upcast(@TypeOf(newMotionGesture), touchMotionGestureFactory.?.LEFT);
+            if (absGradient < Inheritance.number(f64, @tan(std.math.degreesToRadians(diagonalToleranceLower)))) {
+                if (Inheritance.arithmetic(.greater, self.line.?.getDeltaX(), 0)) {
+                    newMotionGesture = Inheritance.upcast(@TypeOf(newMotionGesture), Inheritance.fieldPointer(touchMotionGestureFactory.?, "LEFT").*);
                 } else {
-                    newMotionGesture = Inheritance.upcast(@TypeOf(newMotionGesture), touchMotionGestureFactory.?.RIGHT);
+                    newMotionGesture = Inheritance.upcast(@TypeOf(newMotionGesture), Inheritance.fieldPointer(touchMotionGestureFactory.?, "RIGHT").*);
                 }
             } else {
                 if (gradient > 0.0) {
-                    if (self.line.?.getDeltaX() > 0) {
-                        newMotionGesture = Inheritance.upcast(@TypeOf(newMotionGesture), touchMotionGestureFactory.?.DIAGONAL_UP_LEFT);
+                    if (Inheritance.arithmetic(.greater, self.line.?.getDeltaX(), 0)) {
+                        newMotionGesture = Inheritance.upcast(@TypeOf(newMotionGesture), Inheritance.fieldPointer(touchMotionGestureFactory.?, "DIAGONAL_UP_LEFT").*);
                     } else {
-                        newMotionGesture = Inheritance.upcast(@TypeOf(newMotionGesture), touchMotionGestureFactory.?.DIAGONAL_DOWN_RIGHT);
+                        newMotionGesture = Inheritance.upcast(@TypeOf(newMotionGesture), Inheritance.fieldPointer(touchMotionGestureFactory.?, "DIAGONAL_DOWN_RIGHT").*);
                     }
                 } else {
-                    if (self.line.?.getDeltaX() > 0) {
-                        newMotionGesture = Inheritance.upcast(@TypeOf(newMotionGesture), touchMotionGestureFactory.?.DIAGONAL_DOWN_LEFT);
+                    if (Inheritance.arithmetic(.greater, self.line.?.getDeltaX(), 0)) {
+                        newMotionGesture = Inheritance.upcast(@TypeOf(newMotionGesture), Inheritance.fieldPointer(touchMotionGestureFactory.?, "DIAGONAL_DOWN_LEFT").*);
                     } else {
-                        newMotionGesture = Inheritance.upcast(@TypeOf(newMotionGesture), touchMotionGestureFactory.?.DIAGONAL_UP_RIGHT);
+                        newMotionGesture = Inheritance.upcast(@TypeOf(newMotionGesture), Inheritance.fieldPointer(touchMotionGestureFactory.?, "DIAGONAL_UP_RIGHT").*);
                     }
                 }
             }
@@ -182,7 +183,7 @@ pub const MotionGestureRecognizer = struct {
     pub fn processMovedMotionEvent(self: *Self, current: ?*GPoint, deviceId: i32, button: i32) bool {
         _ = deviceId;
         _ = button;
-        const event: ?*MotionGestureEvent = Inheritance.upcast(?*MotionGestureEvent, Inheritance.call(self.motionEventCircularPool.?, "getInstance", .{ TouchMotionGestureFactory.getInstance().?.NO_MOTION }));
+        const event: ?*MotionGestureEvent = Inheritance.upcast(?*MotionGestureEvent, Inheritance.call(self.motionEventCircularPool.?, "getInstance", .{ Inheritance.fieldPointer(TouchMotionGestureFactory.getInstance().?, "NO_MOTION").* }));
         _ = Inheritance.call(event.?, "setPreviousPoint", .{ self.previous });
         _ = Inheritance.call(event.?, "setCurrentPoint", .{ current });
         _ = Inheritance.call(self.movedMotionGesturesHandler.?, "fireEvent", .{ event });
@@ -194,11 +195,11 @@ pub const MotionGestureRecognizer = struct {
     pub fn processScrolledMotionEvent(self: *Self, current: ?*GPoint, deviceId: i32, button: i32) bool {
         _ = deviceId;
         const touchMotionGestureFactory: ?*TouchMotionGestureFactory = Inheritance.upcast(?*TouchMotionGestureFactory, TouchMotionGestureFactory.getInstance());
-        var newMotionGesture: ?*MotionGestureInput = Inheritance.upcast(?*MotionGestureInput, touchMotionGestureFactory.?.NO_MOTION);
+        var newMotionGesture: ?*MotionGestureInput = Inheritance.upcast(?*MotionGestureInput, Inheritance.fieldPointer(touchMotionGestureFactory.?, "NO_MOTION").*);
         if (button > 0) {
-            newMotionGesture = Inheritance.upcast(@TypeOf(newMotionGesture), touchMotionGestureFactory.?.SCROLL_UP);
+            newMotionGesture = Inheritance.upcast(@TypeOf(newMotionGesture), Inheritance.fieldPointer(touchMotionGestureFactory.?, "SCROLL_UP").*);
         } else if (button < 0) {
-            newMotionGesture = Inheritance.upcast(@TypeOf(newMotionGesture), touchMotionGestureFactory.?.SCROLL_DOWN);
+            newMotionGesture = Inheritance.upcast(@TypeOf(newMotionGesture), Inheritance.fieldPointer(touchMotionGestureFactory.?, "SCROLL_DOWN").*);
         }
         const event: ?*MotionGestureEvent = Inheritance.upcast(?*MotionGestureEvent, Inheritance.call(self.motionEventCircularPool.?, "getInstance", .{ newMotionGesture }));
         _ = Inheritance.call(event.?, "setPreviousPoint", .{ self.previous });

@@ -18,6 +18,7 @@ const allocator = std.heap.page_allocator;
 const String = @import("java/lang/String.zig").String;
 const Object = @import("java/lang/Object.zig").Object;
 const Inheritance = @import("zig/Inheritance.zig");
+const JsType = @import("jsinterop/annotations/JsType.zig").JsType;
 const ForcedLogUtil = @import("org/allbinary/logic/communication/log/ForcedLogUtil.zig").ForcedLogUtil;
 const BasicArrayListS = @import("org/allbinary/util/BasicArrayListS.zig").BasicArrayListS;
 

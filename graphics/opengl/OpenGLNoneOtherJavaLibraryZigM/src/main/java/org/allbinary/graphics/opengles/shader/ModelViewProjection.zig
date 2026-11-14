@@ -44,7 +44,7 @@ pub const ModelViewProjection = struct {
 
     pub fn get(self: *Self) []f32 {
         _ = self;
-        return NullUtil.getInstance().?.NULL_FLOAT_ARRAY;
+        return Inheritance.fieldPointer(NullUtil.getInstance().?, "NULL_FLOAT_ARRAY").*;
     }
 };
 

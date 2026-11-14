@@ -22,6 +22,7 @@ const LogUtil = @import("org/allbinary/logic/communication/log/LogUtil.zig").Log
 const CommonStrings = @import("org/allbinary/string/CommonStrings.zig").CommonStrings;
 const BasicArrayList = @import("org/allbinary/util/BasicArrayList.zig").BasicArrayList;
 const CompleteMotionGestureListenerInterface = @import("org/allbinary/input/motion/gesture/observer/CompleteMotionGestureListenerInterface.zig").CompleteMotionGestureListenerInterface;
+const Exception = @import("java/lang/Exception.zig").Exception;
 
 pub const NullCompleteMotionGestureReceiver = struct {
     const Self = @This();
@@ -40,7 +41,7 @@ pub const NullCompleteMotionGestureReceiver = struct {
         this.* = .{};
         this.initFields();
         const commonStrings: ?*CommonStrings = Inheritance.upcast(?*CommonStrings, CommonStrings.getInstance());
-        _ = Inheritance.call(this.logUtil.?, "putF", .{ String.literal("Null Gesture Reciever"), this, commonStrings.?.CONSTRUCTOR });
+        _ = Inheritance.call(this.logUtil.?, "putF", .{ String.literal("Null Gesture Reciever"), this, Inheritance.fieldPointer(commonStrings.?, "CONSTRUCTOR").* });
         return this;
     }
     

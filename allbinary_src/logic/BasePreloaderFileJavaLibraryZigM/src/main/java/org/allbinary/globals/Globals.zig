@@ -26,6 +26,7 @@ const CommonSeps = @import("org/allbinary/string/CommonSeps.zig").CommonSeps;
 const CommonStrings = @import("org/allbinary/string/CommonStrings.zig").CommonStrings;
 const AppUrlGlobals = @import("org/allbinary/globals/AppUrlGlobals.zig").AppUrlGlobals;
 const URLGLOBALS = @import("org/allbinary/globals/URLGLOBALS.zig").URLGLOBALS;
+const ClassLoader = @import("java/lang/ClassLoader.zig").ClassLoader;
 
 pub const Globals = struct {
     const Self = @This();
@@ -67,22 +68,22 @@ pub const Globals = struct {
         _ = Inheritance.call(stringBuffer.?, "append", .{ pathString });
         _ = Inheritance.call(stringBuffer.?, "append", .{ String.literal(" ClassLoader: ") });
         _ = Inheritance.call(stringBuffer.?, "append", .{ String.fromBytes(@as(*const Object.Class, @ptrCast(@alignCast(@as(?*anyopaque, @ptrCast(@constCast(Object.of(classLoader).?.class))).?))).name) });
-        _ = Inheritance.call(self.logUtil.?, "putF", .{ Object.toString(Object.of(stringBuffer)), self, commonStrings.?.INIT });
+        _ = Inheritance.call(self.logUtil.?, "putF", .{ Object.toString(Object.of(stringBuffer)), self, Inheritance.fieldPointer(commonStrings.?, "INIT").* });
         const stringValidationUtil: ?*StringValidationUtil = Inheritance.upcast(?*StringValidationUtil, StringValidationUtil.getInstance());
         if (Inheritance.call(stringValidationUtil.?, "isEmpty", .{ pathString })) {
             _ = Inheritance.call(stringBuffer.?, "delete", .{ 0, stringBuffer.?.length() });
             _ = Inheritance.call(stringBuffer.?, "append", .{ String.literal("No Path Provided. Using Process Path: ") });
             _ = Inheritance.call(stringBuffer.?, "append", .{ pathString });
-            _ = Inheritance.call(stringBuffer.?, "append", .{ CommonSeps.getInstance().?.SPACE });
-            _ = Inheritance.call(stringBuffer.?, "append", .{ CommonSeps.getInstance().?.EQUALS });
-            _ = Inheritance.call(stringBuffer.?, "append", .{ CommonSeps.getInstance().?.SPACE });
+            _ = Inheritance.call(stringBuffer.?, "append", .{ Inheritance.fieldPointer(CommonSeps.getInstance().?, "SPACE").* });
+            _ = Inheritance.call(stringBuffer.?, "append", .{ Inheritance.fieldPointer(CommonSeps.getInstance().?, "EQUALS").* });
+            _ = Inheritance.call(stringBuffer.?, "append", .{ Inheritance.fieldPointer(CommonSeps.getInstance().?, "SPACE").* });
             _ = Inheritance.call(stringBuffer.?, "append", .{ URLGLOBALS.getWebappPath() });
-            _ = Inheritance.call(self.logUtil.?, "putF", .{ Object.toString(Object.of(stringBuffer)), self, commonStrings.?.INIT });
+            _ = Inheritance.call(self.logUtil.?, "putF", .{ Object.toString(Object.of(stringBuffer)), self, Inheritance.fieldPointer(commonStrings.?, "INIT").* });
         }
         _ = Inheritance.call(stringBuffer.?, "delete", .{ 0, stringBuffer.?.length() });
         _ = Inheritance.call(stringBuffer.?, "append", .{ String.literal("Webapp Path Set To: ") });
         _ = Inheritance.call(stringBuffer.?, "append", .{ URLGLOBALS.getWebappPath() });
-        _ = Inheritance.call(self.logUtil.?, "putF", .{ Object.toString(Object.of(stringBuffer)), self, commonStrings.?.INIT });
+        _ = Inheritance.call(self.logUtil.?, "putF", .{ Object.toString(Object.of(stringBuffer)), self, Inheritance.fieldPointer(commonStrings.?, "INIT").* });
     }
 };
 

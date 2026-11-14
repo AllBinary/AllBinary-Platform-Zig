@@ -22,6 +22,7 @@ const LogUtil = @import("org/allbinary/logic/communication/log/LogUtil.zig").Log
 const CommonStrings = @import("org/allbinary/string/CommonStrings.zig").CommonStrings;
 const AllBinaryMediaManager = @import("org/allbinary/media/audio/AllBinaryMediaManager.zig").AllBinaryMediaManager;
 const SoundsFactoryInterface = @import("org/allbinary/media/audio/SoundsFactoryInterface.zig").SoundsFactoryInterface;
+const Exception = @import("java/lang/Exception.zig").Exception;
 
 pub const AllBinaryMediaManagerShutdown = struct {
     const Self = @This();
@@ -44,7 +45,7 @@ pub const AllBinaryMediaManagerShutdown = struct {
     pub fn shutdown(soundsFactoryInterface: ?*SoundsFactoryInterface) void {
         const logUtil: ?*LogUtil = Inheritance.upcast(?*LogUtil, LogUtil.getInstance());
         const commonStrings: ?*CommonStrings = Inheritance.upcast(?*CommonStrings, CommonStrings.getInstance());
-        _ = Inheritance.call(logUtil.?, "putF", .{ commonStrings.?.START, AllBinaryMediaManagerShutdown.instance, String.literal("shutdown") });
+        _ = Inheritance.call(logUtil.?, "putF", .{ Inheritance.fieldPointer(commonStrings.?, "START").*, AllBinaryMediaManagerShutdown.instance, String.literal("shutdown") });
         _ = Inheritance.callStatic(AllBinaryMediaManager, "shutdown", .{ soundsFactoryInterface });
     }
 };

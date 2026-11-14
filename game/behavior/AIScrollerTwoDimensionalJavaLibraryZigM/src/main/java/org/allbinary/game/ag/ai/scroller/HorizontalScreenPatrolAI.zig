@@ -18,7 +18,7 @@ const allocator = std.heap.page_allocator;
 const String = @import("java/lang/String.zig").String;
 const Object = @import("java/lang/Object.zig").Object;
 const Inheritance = @import("zig/Inheritance.zig");
-// const Canvas = @import("javax/microedition/lcdui/Canvas.zig").Canvas;
+const Canvas = @import("javax/microedition/lcdui/Canvas.zig").Canvas;
 const BasicAI = @import("org/allbinary/game/ai/BasicAI.zig").BasicAI;
 const GameInput = @import("org/allbinary/game/input/GameInput.zig").GameInput;
 const AllBinaryGameLayerManager = @import("org/allbinary/game/layer/AllBinaryGameLayerManager.zig").AllBinaryGameLayerManager;
@@ -33,6 +33,7 @@ const Sound = @import("org/allbinary/media/audio/Sound.zig").Sound;
 const TimeDelayHelper = @import("org/allbinary/time/TimeDelayHelper.zig").TimeDelayHelper;
 const ABHashtable = @import("org/allbinary/util/ABHashtable.zig").ABHashtable;
 const Integer = @import("java/lang/Integer.zig").Integer;
+const Exception = @import("java/lang/Exception.zig").Exception;
 
 pub const HorizontalScreenPatrolAI = struct {
     const Self = @This();
@@ -71,7 +72,7 @@ pub const HorizontalScreenPatrolAI = struct {
         this.base = Inheritance.callStatic(BasicAI, "create2", .{ ownerLayerInterface, gameInput }).*;
         this.initFields();
         this.sound = Inheritance.cast(?*Sound, Inheritance.call(hashtable.?, "get", .{ HorizontalScreenPatrolAI.SOUND }));
-        if (this.sound == null) {
+        if (Object.isNull(this.sound)) {
             std.debug.panic("{any}", .{exception: { _ = String.literal("No Sound Provided!!"); break :exception error.Exception; }});
         }
         Inheritance.bindOverrides(this);
@@ -85,14 +86,14 @@ pub const HorizontalScreenPatrolAI = struct {
         if (self.timeDelayHelper.?.isTimeTNT()) {
             const layerInterface: ?*AllBinaryLayer = Inheritance.upcast(?*AllBinaryLayer, Inheritance.receiver(self, "getOwnerLayerInterface").getOwnerLayerInterface());
             const currentOwnerLayerX: i32 = Inheritance.receiver(layerInterface.?, "getXP").getXP();
-            if (currentOwnerLayerX < -Inheritance.receiver(layerInterface.?, "getWidth").getWidth()) {
+            if (Inheritance.arithmetic(.less, currentOwnerLayerX, -Inheritance.receiver(layerInterface.?, "getWidth").getWidth())) {
                 const y: i32 = Inheritance.call(MyRandomFactory.getInstance().?, "getAbsoluteNextIntAllowZero", .{ 50 });
-                _ = Inheritance.call(layerInterface.?, "setPosition", .{ self.displayInfoSingleton.?.getLastWidth() + Inheritance.receiver(layerInterface.?, "getWidth").getWidth() + 50, y, Inheritance.receiver(layerInterface.?, "getZP").getZP() });
+                _ = Inheritance.call(layerInterface.?, "setPosition", .{ Inheritance.plus(self.displayInfoSingleton.?.getLastWidth(), Inheritance.receiver(layerInterface.?, "getWidth").getWidth()) + 50, y, Inheritance.receiver(layerInterface.?, "getZP").getZP() });
                 self.firedIndex = 0;
-                self.firingX = self.displayInfoSingleton.?.getLastHalfWidth() + Inheritance.call(MyRandomFactory.getInstance().?, "getNextInt", .{ self.displayInfoSingleton.?.getLastHalfWidth() });
+                self.firingX = Inheritance.plus(self.displayInfoSingleton.?.getLastHalfWidth(), Inheritance.call(MyRandomFactory.getInstance().?, "getNextInt", .{ self.displayInfoSingleton.?.getLastHalfWidth() }));
                 _ = Inheritance.call(self.secondaryPlayerQueue.?, "add", .{ self.sound });
             }
-            if (currentOwnerLayerX < self.firingX and currentOwnerLayerX > -Inheritance.receiver(layerInterface.?, "getWidth").getWidth()) {
+            if (currentOwnerLayerX < self.firingX and Inheritance.arithmetic(.greater, currentOwnerLayerX, -Inheritance.receiver(layerInterface.?, "getWidth").getWidth())) {
                 _ = Inheritance.call(&self.base, "processKeyAI", .{ Canvas.KEY_NUM1 });
                 const gameLayerManager: ?*AllBinaryGameLayerManager = Inheritance.cast(?*AllBinaryGameLayerManager, allBinaryLayerManager);
                 var FIRE: i32 = (Inheritance.receiverOf(Inheritance.receiver(gameLayerManager.?, "getGameInfo").getGameInfo().?, "getCurrentLevel").getCurrentLevel() + 12) >> @intCast(2);

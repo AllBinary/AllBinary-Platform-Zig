@@ -18,7 +18,7 @@ const allocator = std.heap.page_allocator;
 const String = @import("java/lang/String.zig").String;
 const Object = @import("java/lang/Object.zig").Object;
 const Inheritance = @import("zig/Inheritance.zig");
-// const Graphics = @import("javax/microedition/lcdui/Graphics.zig").Graphics;
+const Graphics = @import("javax/microedition/lcdui/Graphics.zig").Graphics;
 const Animation = @import("org/allbinary/animation/Animation.zig").Animation;
 const BasicColor = @import("org/allbinary/graphics/color/BasicColor.zig").BasicColor;
 const ColorCompositeInterface = @import("org/allbinary/graphics/color/ColorCompositeInterface.zig").ColorCompositeInterface;
@@ -57,8 +57,18 @@ pub const CircleFilledAnimation = struct {
     
 
     pub fn paintXY(self: *Self, graphics: ?*Graphics, x: i32, y: i32) void {
-        _ = Inheritance.call(Inheritance.fieldPointer(self, "basicSetColorUtil").*.?, "setBasicColorP3", .{ graphics, Inheritance.receiver(self, "getBasicColorP").getBasicColorP(), Inheritance.receiver(self, "getColor").getColor() });
+        _ = Inheritance.call(Inheritance.fieldPointer(self, "basicSetColorUtil").*.?, "setBasicColorP3", .{ graphics, self.getBasicColorP(), Inheritance.receiver(self, "getColor").getColor() });
         _ = Inheritance.call(graphics.?, "fillRect", .{ x, y, self.width, self.height });
+    }
+    
+
+    pub fn getBasicColorP(self: *Self) ?*BasicColor {
+        return Inheritance.upcast(?*BasicColor, Inheritance.receiver(&self.base, "getBasicColorP").getBasicColorP());
+    }
+    
+
+    pub fn setBasicColorP(self: *Self, basicColor: ?*BasicColor) void {
+        _ = Inheritance.call(&self.base, "setBasicColorP", .{ basicColor });
     }
 };
 

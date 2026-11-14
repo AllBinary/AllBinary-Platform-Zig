@@ -22,6 +22,7 @@ const Processor = @import("org/allbinary/canvas/Processor.zig").Processor;
 const AccelerometerSensorUpdateProcessor = @import("org/allbinary/input/gyro/AccelerometerSensorUpdateProcessor.zig").AccelerometerSensorUpdateProcessor;
 const GyroSensorUpdateProcessor = @import("org/allbinary/input/gyro/GyroSensorUpdateProcessor.zig").GyroSensorUpdateProcessor;
 const SensorGameUpdateProcessor = @import("org/allbinary/input/gyro/SensorGameUpdateProcessor.zig").SensorGameUpdateProcessor;
+const Exception = @import("java/lang/Exception.zig").Exception;
 
 pub const SingleSensorGameUpdateProcessor = struct {
     const Self = @This();

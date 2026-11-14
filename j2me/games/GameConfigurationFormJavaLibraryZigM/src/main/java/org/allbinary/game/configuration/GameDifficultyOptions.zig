@@ -18,10 +18,10 @@ const allocator = std.heap.page_allocator;
 const String = @import("java/lang/String.zig").String;
 const Object = @import("java/lang/Object.zig").Object;
 const Inheritance = @import("zig/Inheritance.zig");
-// const Choice = @import("javax/microedition/lcdui/Choice.zig").Choice;
-// const ChoiceGroup = @import("javax/microedition/lcdui/ChoiceGroup.zig").ChoiceGroup;
-// const CommandListener = @import("javax/microedition/lcdui/CommandListener.zig").CommandListener;
-// const NullImage = @import("javax/microedition/lcdui/NullImage.zig").NullImage;
+const Choice = @import("javax/microedition/lcdui/Choice.zig").Choice;
+const ChoiceGroup = @import("javax/microedition/lcdui/ChoiceGroup.zig").ChoiceGroup;
+const CommandListener = @import("javax/microedition/lcdui/CommandListener.zig").CommandListener;
+const NullImage = @import("javax/microedition/lcdui/NullImage.zig").NullImage;
 const GameCommandsFactory = @import("org/allbinary/game/commands/GameCommandsFactory.zig").GameCommandsFactory;
 const GameDifficultyFactory = @import("org/allbinary/game/configuration/persistance/GameDifficultyFactory.zig").GameDifficultyFactory;
 const BasicColor = @import("org/allbinary/graphics/color/BasicColor.zig").BasicColor;
@@ -31,6 +31,7 @@ const StringMaker = @import("org/allbinary/logic/string/StringMaker.zig").String
 const StringUtil = @import("org/allbinary/logic/string/StringUtil.zig").StringUtil;
 const BasicArrayList = @import("org/allbinary/util/BasicArrayList.zig").BasicArrayList;
 const Integer = @import("java/lang/Integer.zig").Integer;
+const Exception = @import("java/lang/Exception.zig").Exception;
 
 pub const GameDifficultyOptions = struct {
     const Self = @This();
@@ -50,7 +51,7 @@ pub const GameDifficultyOptions = struct {
         this.* = .{};
         this.base = Inheritance.callStatic(CommandForm, "create4", .{ commandListener, title, backgrounBasicColor, foregroundBasicColor }).*;
         this.initFields();
-        _ = Inheritance.call(Inheritance.fieldPointer(this, "logUtil").*.?, "putF", .{ Inheritance.fieldPointer(this, "commonStrings").*.?.START, this, Inheritance.fieldPointer(this, "commonStrings").*.?.CONSTRUCTOR });
+        _ = Inheritance.call(Inheritance.fieldPointer(this, "logUtil").*.?, "putF", .{ Inheritance.fieldPointer(Inheritance.fieldPointer(this, "commonStrings").*.?, "START").*, this, Inheritance.fieldPointer(Inheritance.fieldPointer(this, "commonStrings").*.?, "CONSTRUCTOR").* });
         this.list = list;
         _ = this.update();
         _ = Inheritance.call(this, "initCommands", .{ commandListener });
@@ -62,13 +63,13 @@ pub const GameDifficultyOptions = struct {
     
 
     pub fn open(self: *Self) void {
-        _ = self.base.open();
+        _ = Inheritance.receiver(&self.base, "open").open();
     }
     
 
     // throws Exception
     pub fn close(self: *Self) void {
-        _ = self.base.close();
+        _ = Inheritance.receiver(&self.base, "close").close();
         _ = self.save();
     }
     
@@ -83,7 +84,7 @@ pub const GameDifficultyOptions = struct {
     pub fn initCommands(self: *Self, cmdListener: ?*CommandListener) void {
         const gameCommandsFactory: ?*GameCommandsFactory = Inheritance.upcast(?*GameCommandsFactory, GameCommandsFactory.getInstance());
         _ = Inheritance.receiver(self, "removeAllCommands").removeAllCommands();
-        _ = Inheritance.call(self, "addCommand", .{ gameCommandsFactory.?.CLOSE_AND_SHOW_GAME_CANVAS });
+        _ = Inheritance.call(self, "addCommand", .{ Inheritance.fieldPointer(gameCommandsFactory.?, "CLOSE_AND_SHOW_GAME_CANVAS").* });
         _ = Inheritance.call(self, "setCommandListener", .{ cmdListener });
     }
     
@@ -92,7 +93,7 @@ pub const GameDifficultyOptions = struct {
     pub fn update(self: *Self) void {
         _ = Inheritance.receiver(self, "deleteAll").deleteAll();
         _ = Inheritance.call(self, "add", .{ self.list, String.literal("Difficulty"), Choice.EXCLUSIVE });
-        _ = self.base.update();
+        _ = Inheritance.receiver(&self.base, "update").update();
     }
     
 
@@ -114,7 +115,7 @@ pub const GameDifficultyOptions = struct {
         {
             var index: i32 = 0;
             while (index < size) : (index += 1) {
-            anyType = Inheritance.upcast(@TypeOf(anyType), list.?.objectArray[@intCast(index)]);
+            anyType = Inheritance.upcast(@TypeOf(anyType), Inheritance.fieldPointer(list.?, "objectArray").*[@intCast(index)]);
             _ = Inheritance.call(Inheritance.fieldPointer(self, "logUtil").*.?, "putF", .{ Object.toString(Object.of(Inheritance.call(Inheritance.call(StringMaker.create(), "append", .{ NAME }).?, "append", .{ Object.toString(Object.of(anyType)) }))), self, METHOD_NAME });
             _ = Inheritance.call(choiceGroup.?, "append", .{ Object.toString(Object.of(anyType)), NullImage.NULL_IMAGE });
             }
@@ -131,13 +132,13 @@ pub const GameDifficultyOptions = struct {
 
     pub fn getSelectedId(self: *Self) i32 {
         const choiceGroup: ?*ChoiceGroup = Inheritance.cast(?*ChoiceGroup, Inheritance.call(self, "get", .{ 0 }));
-        return choiceGroup.?.getSelectedIndex();
+        return Inheritance.receiver(choiceGroup.?, "getSelectedIndex").getSelectedIndex();
     }
     
 
     pub fn getSelectedText(self: *Self) i32 {
         const choiceGroup: ?*ChoiceGroup = Inheritance.cast(?*ChoiceGroup, Inheritance.call(self, "get", .{ 0 }));
-        const value: i32 = Inheritance.receiverOf(Inheritance.callStatic(Integer, "valueOf", .{ Inheritance.call(choiceGroup.?, "getString", .{ choiceGroup.?.getSelectedIndex() }) }).?, "intValue").intValue();
+        const value: i32 = Inheritance.receiverOf(Inheritance.callStatic(Integer, "valueOf", .{ Inheritance.call(choiceGroup.?, "getString", .{ Inheritance.receiver(choiceGroup.?, "getSelectedIndex").getSelectedIndex() }) }).?, "intValue").intValue();
         return value;
     }
 };

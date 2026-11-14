@@ -6,9 +6,9 @@ const allocator = std.heap.page_allocator;
 const String = @import("java/lang/String.zig").String;
 const Object = @import("java/lang/Object.zig").Object;
 const Inheritance = @import("zig/Inheritance.zig");
-// const Closeable = @import("java/io/Closeable.zig").Closeable;
-// const InputStream = @import("java/io/InputStream.zig").InputStream;
-// const OutputStream = @import("java/io/OutputStream.zig").OutputStream;
+const Closeable = @import("java/io/Closeable.zig").Closeable;
+const InputStream = @import("java/io/InputStream.zig").InputStream;
+const OutputStream = @import("java/io/OutputStream.zig").OutputStream;
 const Feature = @import("org/allbinary/game/configuration/feature/Feature.zig").Feature;
 const Features = @import("org/allbinary/game/configuration/feature/Features.zig").Features;
 const MainFeatureFactory = @import("org/allbinary/game/configuration/feature/MainFeatureFactory.zig").MainFeatureFactory;
@@ -23,6 +23,7 @@ const FileFactory = @import("org/allbinary/logic/io/file/FileFactory.zig").FileF
 const StringMaker = @import("org/allbinary/logic/string/StringMaker.zig").StringMaker;
 const StringUtil = @import("org/allbinary/logic/string/StringUtil.zig").StringUtil;
 const CommonStrings = @import("org/allbinary/string/CommonStrings.zig").CommonStrings;
+const Exception = @import("java/lang/Exception.zig").Exception;
 
 pub const ApplicationConfiguration = struct {
     const Self = @This();
@@ -36,7 +37,7 @@ pub const ApplicationConfiguration = struct {
 
     // Static fields with runtime initializers: call staticInit once at startup
     pub fn staticInit() void {
-        instance = Inheritance.upcast(?Object, NullUtil.getInstance().?.NULL_OBJECT);
+        instance = Inheritance.upcast(?Object, Inheritance.fieldPointer(NullUtil.getInstance().?, "NULL_OBJECT").*);
     }
 
     fn initFields(this: *Self) void {
@@ -49,7 +50,7 @@ pub const ApplicationConfiguration = struct {
     
 
     pub fn getInstance() ?*ApplicationConfiguration {
-        if (Object.same(ApplicationConfiguration.instance, NullUtil.getInstance().?.NULL_OBJECT)) {
+        if (Object.same(ApplicationConfiguration.instance, Inheritance.fieldPointer(NullUtil.getInstance().?, "NULL_OBJECT").*)) {
             ApplicationConfiguration.instance = Inheritance.upcast(@TypeOf(ApplicationConfiguration.instance), ApplicationConfiguration.create());
         }
         return Inheritance.cast(?*ApplicationConfiguration, ApplicationConfiguration.instance);
@@ -69,7 +70,7 @@ pub const ApplicationConfiguration = struct {
         }
         // catch (Exception e):
 //             const commonStrings: ?*CommonStrings = Inheritance.upcast(?*CommonStrings, CommonStrings.getInstance()); _ = commonStrings;
-//             _ = Inheritance.call(this.logUtil.?, "put", .{ commonStrings.?.EXCEPTION, this, commonStrings.?.CONSTRUCTOR, e });
+//             _ = Inheritance.call(this.logUtil.?, "put", .{ Inheritance.fieldPointer(commonStrings.?, "EXCEPTION").*, this, Inheritance.fieldPointer(commonStrings.?, "CONSTRUCTOR").*, e });
         return this;
     }
     
@@ -77,9 +78,9 @@ pub const ApplicationConfiguration = struct {
     // throws Exception
     pub fn read(self: *Self) void {
         const fileInputStreamFactory: ?*FileStreamFactory = Inheritance.upcast(?*FileStreamFactory, FileStreamFactory.getInstance());
-        const fileInputStream: ?*InputStream = Inheritance.upcast(?*InputStream, Inheritance.call(fileInputStreamFactory.?, "getFileInputStreamInstance", .{ StringUtil.getInstance().?.EMPTY_STRING, self.FILE }));
+        const fileInputStream: ?*InputStream = Inheritance.upcast(?*InputStream, Inheritance.call(fileInputStreamFactory.?, "getFileInputStreamInstance", .{ Inheritance.fieldPointer(StringUtil.getInstance().?, "EMPTY_STRING").*, self.FILE }));
         const dataInputStream: ?*AbDataInputStream = Inheritance.callStatic(AbDataInputStream, "create1", .{ fileInputStream });
-        const fullScreen: i32 = dataInputStream.?.readInt();
+        const fullScreen: i32 = Inheritance.receiver(dataInputStream.?, "readInt").readInt();
         if (fullScreen == 0) {
             _ = Inheritance.call(self, "setFullscreen", .{ false });
         } else if (fullScreen == 1) {
@@ -87,7 +88,7 @@ pub const ApplicationConfiguration = struct {
         } else {
             std.debug.panic("{any}", .{exception: { _ = String.literal("Invalid FullScreen ActivityConfiguration"); break :exception error.Exception; }});
         }
-        const progressBarView: i32 = dataInputStream.?.readInt();
+        const progressBarView: i32 = Inheritance.receiver(dataInputStream.?, "readInt").readInt();
         if (progressBarView == 0) {
             _ = Inheritance.call(self, "setProgressBarView", .{ false });
         } else if (progressBarView == 1) {
@@ -95,7 +96,7 @@ pub const ApplicationConfiguration = struct {
         } else {
             std.debug.panic("{any}", .{exception: { _ = String.literal("Invalid ProgressBarView ActivityConfiguration"); break :exception error.Exception; }});
         }
-        const showTitleBar: i32 = dataInputStream.?.readInt();
+        const showTitleBar: i32 = Inheritance.receiver(dataInputStream.?, "readInt").readInt();
         if (showTitleBar == 0) {
             _ = Inheritance.call(self, "setShowTitleBar", .{ false });
         } else if (showTitleBar == 1) {
@@ -113,7 +114,7 @@ pub const ApplicationConfiguration = struct {
         { // try
             _ = Inheritance.call(self.logUtil.?, "putF", .{ String.plus(String.literal("Write Configuration: "), Object.toString(Object.of(self))), self, String.literal("write") });
             const fileInputStreamFactory: ?*FileStreamFactory = Inheritance.upcast(?*FileStreamFactory, FileStreamFactory.getInstance());
-            const fileOutputStream: ?*OutputStream = Inheritance.upcast(?*OutputStream, Inheritance.call(fileInputStreamFactory.?, "getFileOutputStreamInstance", .{ StringUtil.getInstance().?.EMPTY_STRING, self.FILE }));
+            const fileOutputStream: ?*OutputStream = Inheritance.upcast(?*OutputStream, Inheritance.call(fileInputStreamFactory.?, "getFileOutputStreamInstance", .{ Inheritance.fieldPointer(StringUtil.getInstance().?, "EMPTY_STRING").*, self.FILE }));
             const dataOutputStream: ?*AbDataOutputStream = Inheritance.callStatic(AbDataOutputStream, "create1", .{ fileOutputStream });
             closeable = Inheritance.upcast(@TypeOf(closeable), dataOutputStream);
             if (self.isFullscreen()) {
@@ -131,7 +132,7 @@ pub const ApplicationConfiguration = struct {
             } else {
                 _ = Inheritance.call(dataOutputStream.?, "writeInt", .{ 0 });
             }
-            _ = dataOutputStream.?.flush();
+            _ = Inheritance.receiver(dataOutputStream.?, "flush").flush();
         }
         // catch (Exception e):
 //             std.debug.panic("{any}", .{e});
@@ -143,7 +144,7 @@ pub const ApplicationConfiguration = struct {
 
     // throws Exception
     pub fn update(self: *Self, gameFeature: ?*Feature) void {
-        if (Object.same(gameFeature, MainFeatureFactory.getInstance().?.FULL_SCREEN)) {
+        if (Object.same(gameFeature, Inheritance.fieldPointer(MainFeatureFactory.getInstance().?, "FULL_SCREEN").*)) {
             const features: ?*Features = Inheritance.upcast(?*Features, Features.getInstance());
             if (Inheritance.call(features.?, "isFeature", .{ gameFeature })) {
                 if (!self.isFullscreen()) {

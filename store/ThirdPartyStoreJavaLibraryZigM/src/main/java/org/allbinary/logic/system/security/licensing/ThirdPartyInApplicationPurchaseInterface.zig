@@ -27,18 +27,18 @@ pub const ThirdPartyInApplicationPurchaseInterface = struct {
     pointer: *anyopaque,
     object: Object,
     toStringFn: *const fn (pointer: *anyopaque) ?*String,
-    isPurchasedFn: *const fn (pointer: *anyopaque, lockableFeature: ?*LockableFeature) bool,
-    onCreateFn: *const fn (pointer: *anyopaque, anyType: ?Object, stateObject: ?Object) void,
-    onDestroyFn: *const fn (pointer: *anyopaque) void,
-    onStartFn: *const fn (pointer: *anyopaque) void,
-    onActivityResultFn: *const fn (pointer: *anyopaque, requestCode: i32, resultCode: i32, dataObject: ?Object) void,
-    onSaveInstanceStateFn: *const fn (pointer: *anyopaque, anyType: ?Object) void,
-    onStopFn: *const fn (pointer: *anyopaque) void,
-    requestPurchaseFn: *const fn (pointer: *anyopaque, lockableFeature: ?*LockableFeature) void,
-    requestReceiptsFn: *const fn (pointer: *anyopaque) void,
-    addFn: *const fn (pointer: *anyopaque, lockableFeature: ?*LockableFeature) void,
-    getUserNameFn: *const fn (pointer: *anyopaque) ?*String,
-    isEnabledFn: *const fn (pointer: *anyopaque) bool,
+    isPurchasedFn: *const fn (interface_pointer: *anyopaque, lockableFeature: ?*LockableFeature) bool,
+    onCreateFn: *const fn (interface_pointer: *anyopaque, anyType: ?Object, stateObject: ?Object) void,
+    onDestroyFn: *const fn (interface_pointer: *anyopaque) void,
+    onStartFn: *const fn (interface_pointer: *anyopaque) void,
+    onActivityResultFn: *const fn (interface_pointer: *anyopaque, requestCode: i32, resultCode: i32, dataObject: ?Object) void,
+    onSaveInstanceStateFn: *const fn (interface_pointer: *anyopaque, anyType: ?Object) void,
+    onStopFn: *const fn (interface_pointer: *anyopaque) void,
+    requestPurchaseFn: *const fn (interface_pointer: *anyopaque, lockableFeature: ?*LockableFeature) void,
+    requestReceiptsFn: *const fn (interface_pointer: *anyopaque) void,
+    addFn: *const fn (interface_pointer: *anyopaque, lockableFeature: ?*LockableFeature) void,
+    getUserNameFn: *const fn (interface_pointer: *anyopaque) ?*String,
+    isEnabledFn: *const fn (interface_pointer: *anyopaque) bool,
 
     pub fn isPurchased(self: *Self, lockableFeature: ?*LockableFeature) bool {
         return self.isPurchasedFn(self.pointer, lockableFeature);
@@ -94,58 +94,58 @@ pub const ThirdPartyInApplicationPurchaseInterface = struct {
 
     // The interface value of an object with the methods. Like a Java class a method can be declared by the object or a superclass.
     pub fn of(object: anytype) ?*Self {
-        const Implementation = @TypeOf(object);
+        const ImplementationType = @TypeOf(object);
         const Methods = struct {
             fn toString(pointer: *anyopaque) ?*String {
-                const implementation: Implementation = @ptrCast(@alignCast(pointer));
+                const implementation: ImplementationType = @ptrCast(@alignCast(pointer));
                 return String.valueOf(implementation);
             }
-            fn isPurchased(pointer: *anyopaque, lockableFeature: ?*LockableFeature) bool {
-                const implementation: Implementation = @ptrCast(@alignCast(pointer));
-                return Inheritance.receiver(implementation, "isPurchased").isPurchased(lockableFeature);
+            fn isPurchased(interface_pointer: *anyopaque, lockableFeature: ?*LockableFeature) bool {
+                const implementation: ImplementationType = @ptrCast(@alignCast(interface_pointer));
+                return Inheritance.call(implementation, "isPurchased", .{ lockableFeature });
             }
-            fn onCreate(pointer: *anyopaque, anyType: ?Object, stateObject: ?Object) void {
-                const implementation: Implementation = @ptrCast(@alignCast(pointer));
-                return Inheritance.receiver(implementation, "onCreate").onCreate(anyType, stateObject);
+            fn onCreate(interface_pointer: *anyopaque, anyType: ?Object, stateObject: ?Object) void {
+                const implementation: ImplementationType = @ptrCast(@alignCast(interface_pointer));
+                return Inheritance.call(implementation, "onCreate", .{ anyType, stateObject });
             }
-            fn onDestroy(pointer: *anyopaque) void {
-                const implementation: Implementation = @ptrCast(@alignCast(pointer));
+            fn onDestroy(interface_pointer: *anyopaque) void {
+                const implementation: ImplementationType = @ptrCast(@alignCast(interface_pointer));
                 return Inheritance.receiver(implementation, "onDestroy").onDestroy();
             }
-            fn onStart(pointer: *anyopaque) void {
-                const implementation: Implementation = @ptrCast(@alignCast(pointer));
+            fn onStart(interface_pointer: *anyopaque) void {
+                const implementation: ImplementationType = @ptrCast(@alignCast(interface_pointer));
                 return Inheritance.receiver(implementation, "onStart").onStart();
             }
-            fn onActivityResult(pointer: *anyopaque, requestCode: i32, resultCode: i32, dataObject: ?Object) void {
-                const implementation: Implementation = @ptrCast(@alignCast(pointer));
-                return Inheritance.receiver(implementation, "onActivityResult").onActivityResult(requestCode, resultCode, dataObject);
+            fn onActivityResult(interface_pointer: *anyopaque, requestCode: i32, resultCode: i32, dataObject: ?Object) void {
+                const implementation: ImplementationType = @ptrCast(@alignCast(interface_pointer));
+                return Inheritance.call(implementation, "onActivityResult", .{ requestCode, resultCode, dataObject });
             }
-            fn onSaveInstanceState(pointer: *anyopaque, anyType: ?Object) void {
-                const implementation: Implementation = @ptrCast(@alignCast(pointer));
-                return Inheritance.receiver(implementation, "onSaveInstanceState").onSaveInstanceState(anyType);
+            fn onSaveInstanceState(interface_pointer: *anyopaque, anyType: ?Object) void {
+                const implementation: ImplementationType = @ptrCast(@alignCast(interface_pointer));
+                return Inheritance.call(implementation, "onSaveInstanceState", .{ anyType });
             }
-            fn onStop(pointer: *anyopaque) void {
-                const implementation: Implementation = @ptrCast(@alignCast(pointer));
+            fn onStop(interface_pointer: *anyopaque) void {
+                const implementation: ImplementationType = @ptrCast(@alignCast(interface_pointer));
                 return Inheritance.receiver(implementation, "onStop").onStop();
             }
-            fn requestPurchase(pointer: *anyopaque, lockableFeature: ?*LockableFeature) void {
-                const implementation: Implementation = @ptrCast(@alignCast(pointer));
-                return Inheritance.receiver(implementation, "requestPurchase").requestPurchase(lockableFeature);
+            fn requestPurchase(interface_pointer: *anyopaque, lockableFeature: ?*LockableFeature) void {
+                const implementation: ImplementationType = @ptrCast(@alignCast(interface_pointer));
+                return Inheritance.call(implementation, "requestPurchase", .{ lockableFeature });
             }
-            fn requestReceipts(pointer: *anyopaque) void {
-                const implementation: Implementation = @ptrCast(@alignCast(pointer));
+            fn requestReceipts(interface_pointer: *anyopaque) void {
+                const implementation: ImplementationType = @ptrCast(@alignCast(interface_pointer));
                 return Inheritance.receiver(implementation, "requestReceipts").requestReceipts();
             }
-            fn add(pointer: *anyopaque, lockableFeature: ?*LockableFeature) void {
-                const implementation: Implementation = @ptrCast(@alignCast(pointer));
-                return Inheritance.receiver(implementation, "add").add(lockableFeature);
+            fn add(interface_pointer: *anyopaque, lockableFeature: ?*LockableFeature) void {
+                const implementation: ImplementationType = @ptrCast(@alignCast(interface_pointer));
+                return Inheritance.call(implementation, "add", .{ lockableFeature });
             }
-            fn getUserName(pointer: *anyopaque) ?*String {
-                const implementation: Implementation = @ptrCast(@alignCast(pointer));
+            fn getUserName(interface_pointer: *anyopaque) ?*String {
+                const implementation: ImplementationType = @ptrCast(@alignCast(interface_pointer));
                 return Inheritance.upcast(?*String, Inheritance.receiver(implementation, "getUserName").getUserName());
             }
-            fn isEnabled(pointer: *anyopaque) bool {
-                const implementation: Implementation = @ptrCast(@alignCast(pointer));
+            fn isEnabled(interface_pointer: *anyopaque) bool {
+                const implementation: ImplementationType = @ptrCast(@alignCast(interface_pointer));
                 return Inheritance.receiver(implementation, "isEnabled").isEnabled();
             }
         };

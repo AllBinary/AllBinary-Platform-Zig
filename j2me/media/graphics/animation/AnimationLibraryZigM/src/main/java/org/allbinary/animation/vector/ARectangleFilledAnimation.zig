@@ -6,7 +6,7 @@ const allocator = std.heap.page_allocator;
 const String = @import("java/lang/String.zig").String;
 const Object = @import("java/lang/Object.zig").Object;
 const Inheritance = @import("zig/Inheritance.zig");
-// const Graphics = @import("javax/microedition/lcdui/Graphics.zig").Graphics;
+const Graphics = @import("javax/microedition/lcdui/Graphics.zig").Graphics;
 const BasicColorFactory = @import("org/allbinary/graphics/color/BasicColorFactory.zig").BasicColorFactory;
 const RectangleFilledAnimation = @import("org/allbinary/animation/vector/RectangleFilledAnimation.zig").RectangleFilledAnimation;
 
@@ -26,7 +26,7 @@ pub const ARectangleFilledAnimation = struct {
     pub fn create() *Self {
         const this = allocator.create(Self) catch unreachable;
         this.* = .{};
-        this.base = Inheritance.callStatic(RectangleFilledAnimation, "create3", .{ 0, 0, BasicColorFactory.getInstance().?.BLACK }).*;
+        this.base = Inheritance.callStatic(RectangleFilledAnimation, "create3", .{ 0, 0, Inheritance.fieldPointer(BasicColorFactory.getInstance().?, "BLACK").* }).*;
         this.initFields();
         Inheritance.bindOverrides(this);
         return this;

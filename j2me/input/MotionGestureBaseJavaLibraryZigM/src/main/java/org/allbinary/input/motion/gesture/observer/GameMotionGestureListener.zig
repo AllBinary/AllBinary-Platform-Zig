@@ -31,6 +31,7 @@ const BasicArrayListD = @import("org/allbinary/util/BasicArrayListD.zig").BasicA
 const CompleteMotionGestureListenerInterface = @import("org/allbinary/input/motion/gesture/observer/CompleteMotionGestureListenerInterface.zig").CompleteMotionGestureListenerInterface;
 const MotionGestureEvent = @import("org/allbinary/input/motion/gesture/observer/MotionGestureEvent.zig").MotionGestureEvent;
 const MotionGestureEventListener = @import("org/allbinary/input/motion/gesture/observer/MotionGestureEventListener.zig").MotionGestureEventListener;
+const Exception = @import("java/lang/Exception.zig").Exception;
 
 pub const GameMotionGestureListener = struct {
     const Self = @This();
@@ -56,7 +57,7 @@ pub const GameMotionGestureListener = struct {
         const this = allocator.create(Self) catch unreachable;
         this.* = .{};
         this.initFields();
-        _ = Inheritance.call(this.logUtil.?, "putF", .{ this.commonStrings.?.START, this, this.commonStrings.?.CONSTRUCTOR });
+        _ = Inheritance.call(this.logUtil.?, "putF", .{ Inheritance.fieldPointer(this.commonStrings.?, "START").*, this, Inheritance.fieldPointer(this.commonStrings.?, "CONSTRUCTOR").* });
         this.signed = signed;
         return this;
     }
@@ -64,7 +65,7 @@ pub const GameMotionGestureListener = struct {
 
     pub fn onEvent(self: *Self, eventObject: ?*AllBinaryEventObject) void {
         _ = eventObject;
-        _ = Inheritance.callStatic(ForcedLogUtil, "log", .{ self.commonStrings.?.NOT_IMPLEMENTED, self });
+        _ = Inheritance.callStatic(ForcedLogUtil, "log", .{ Inheritance.fieldPointer(self.commonStrings.?, "NOT_IMPLEMENTED").*, self });
     }
     
 
@@ -121,7 +122,7 @@ pub const GameMotionGestureListener = struct {
         }
         // catch (Exception e):
 //             const stringBuffer: ?*StringMaker = StringMaker.create(); _ = stringBuffer;
-//             _ = Inheritance.call(stringBuffer.?, "append", .{ self.commonStrings.?.EXCEPTION_LABEL });
+//             _ = Inheritance.call(stringBuffer.?, "append", .{ Inheritance.fieldPointer(self.commonStrings.?, "EXCEPTION_LABEL").* });
 //             _ = Inheritance.call(stringBuffer.?, "append", .{ Inheritance.call(StringUtil.getInstance().?, "toString", .{ Inheritance.receiver(ev.?, "getMotionGesture").getMotionGesture() }) });
 //             _ = Inheritance.call(self.logUtil.?, "put", .{ Object.toString(Object.of(stringBuffer)), self, String.literal("release"), e });
     }
@@ -136,9 +137,9 @@ pub const GameMotionGestureListener = struct {
     pub fn onMotionGestureEvent(self: *Self, ev: ?*MotionGestureEvent) void {
         { // try
             const motionGestureInput: ?*MotionGestureInput = Inheritance.upcast(?*MotionGestureInput, Inheritance.receiver(ev.?, "getMotionGesture").getMotionGesture());
-            if (Object.same(motionGestureInput, TouchMotionGestureFactory.getInstance().?.PRESSED)) {
+            if (Object.same(motionGestureInput, Inheritance.fieldPointer(TouchMotionGestureFactory.getInstance().?, "PRESSED").*)) {
                 _ = Inheritance.call(self, "onPressedMotionGestureEvent", .{ ev });
-            } else if (Object.same(motionGestureInput, TouchMotionGestureFactory.getInstance().?.RELEASED)) {
+            } else if (Object.same(motionGestureInput, Inheritance.fieldPointer(TouchMotionGestureFactory.getInstance().?, "RELEASED").*)) {
                 _ = Inheritance.call(self, "released", .{ ev });
             } else {
                 _ = Inheritance.call(self.motionGestureCollection.?, "add", .{ motionGestureInput });
@@ -149,7 +150,7 @@ pub const GameMotionGestureListener = struct {
         }
         // catch (Exception e):
 //             const stringBuffer: ?*StringMaker = StringMaker.create(); _ = stringBuffer;
-//             _ = Inheritance.call(stringBuffer.?, "append", .{ self.commonStrings.?.EXCEPTION_LABEL });
+//             _ = Inheritance.call(stringBuffer.?, "append", .{ Inheritance.fieldPointer(self.commonStrings.?, "EXCEPTION_LABEL").* });
 //             _ = Inheritance.call(stringBuffer.?, "append", .{ Inheritance.call(StringUtil.getInstance().?, "toString", .{ Inheritance.receiver(ev.?, "getMotionGesture").getMotionGesture() }) });
 //             _ = Inheritance.call(self.logUtil.?, "put", .{ Object.toString(Object.of(stringBuffer)), self, String.literal("onMotionGestureEvent"), e });
     }

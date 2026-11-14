@@ -44,7 +44,7 @@ pub const CollidableCompositeLayer = struct {
 
     // Static fields with runtime initializers: call staticInit once at startup
     pub fn staticInit() void {
-        NULL_COLLIDABLE_COMPOSITE_LAYER = Inheritance.upcast(?Object, NullUtil.getInstance().?.NULL_OBJECT);
+        NULL_COLLIDABLE_COMPOSITE_LAYER = Inheritance.upcast(?Object, Inheritance.fieldPointer(NullUtil.getInstance().?, "NULL_OBJECT").*);
     }
 
     fn initFields(this: *Self) void {
@@ -53,8 +53,8 @@ pub const CollidableCompositeLayer = struct {
     
 
     pub fn getNullInstance() ?*CollidableCompositeLayer {
-        if (Object.same(CollidableCompositeLayer.NULL_COLLIDABLE_COMPOSITE_LAYER, NullUtil.getInstance().?.NULL_OBJECT)) {
-            CollidableCompositeLayer.NULL_COLLIDABLE_COMPOSITE_LAYER = Inheritance.upcast(@TypeOf(CollidableCompositeLayer.NULL_COLLIDABLE_COMPOSITE_LAYER), Inheritance.callStatic(CollidableCompositeLayer, "create4", .{ StringUtil.getInstance().?.EMPTY_STRING, RectangleFactory.SINGLETON, ViewPositionBase.NULL_VIEW_POSITION, CollidableNeverCollideBehaviorFactory.getInstance() }));
+        if (Object.same(CollidableCompositeLayer.NULL_COLLIDABLE_COMPOSITE_LAYER, Inheritance.fieldPointer(NullUtil.getInstance().?, "NULL_OBJECT").*)) {
+            CollidableCompositeLayer.NULL_COLLIDABLE_COMPOSITE_LAYER = Inheritance.upcast(@TypeOf(CollidableCompositeLayer.NULL_COLLIDABLE_COMPOSITE_LAYER), Inheritance.callStatic(CollidableCompositeLayer, "create4", .{ Inheritance.fieldPointer(StringUtil.getInstance().?, "EMPTY_STRING").*, RectangleFactory.SINGLETON, ViewPositionBase.NULL_VIEW_POSITION, CollidableNeverCollideBehaviorFactory.getInstance() }));
         }
         return Inheritance.cast(?*CollidableCompositeLayer, CollidableCompositeLayer.NULL_COLLIDABLE_COMPOSITE_LAYER);
     }
@@ -74,7 +74,7 @@ pub const CollidableCompositeLayer = struct {
     
 
     pub fn getArtificialIntelligenceInterface(self: *Self) ?*ArtificialIntelligenceInterface {
-        _ = Inheritance.callStatic(ForcedLogUtil, "log", .{ Inheritance.fieldPointer(self, "commonStrings").*.?.NOT_IMPLEMENTED, self });
+        _ = Inheritance.callStatic(ForcedLogUtil, "log", .{ Inheritance.fieldPointer(Inheritance.fieldPointer(self, "commonStrings").*.?, "NOT_IMPLEMENTED").*, self });
         return Inheritance.upcast(?*ArtificialIntelligenceInterface, ArtificialIntelligence.getInstance());
     }
     
@@ -98,7 +98,7 @@ pub const CollidableCompositeLayer = struct {
     pub fn toStringAppend(self: *Self, stringBuffer: ?*StringMaker) void {
         const commonSeps: ?*CommonSeps = Inheritance.upcast(?*CommonSeps, CommonSeps.getInstance());
         _ = Inheritance.call(&self.base, "toStringAppend", .{ stringBuffer });
-        _ = Inheritance.call(stringBuffer.?, "append", .{ commonSeps.?.NEW_LINE });
+        _ = Inheritance.call(stringBuffer.?, "append", .{ Inheritance.fieldPointer(commonSeps.?, "NEW_LINE").* });
         _ = Inheritance.call(stringBuffer.?, "append", .{ Object.toString(Object.of(self.getCollidableInferface())) });
     }
     

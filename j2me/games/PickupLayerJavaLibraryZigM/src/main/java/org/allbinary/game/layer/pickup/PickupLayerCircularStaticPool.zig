@@ -22,6 +22,7 @@ const AllBinaryLayerCircularPool = @import("org/allbinary/layer/AllBinaryLayerCi
 const PickedUpLayerInterface = @import("org/allbinary/game/layer/pickup/PickedUpLayerInterface.zig").PickedUpLayerInterface;
 const PickedUpLayerInterfaceFactoryInterface = @import("org/allbinary/game/layer/pickup/PickedUpLayerInterfaceFactoryInterface.zig").PickedUpLayerInterfaceFactoryInterface;
 const PickupLayer = @import("org/allbinary/game/layer/pickup/PickupLayer.zig").PickupLayer;
+const Exception = @import("java/lang/Exception.zig").Exception;
 
 pub const PickupLayerCircularStaticPool = struct {
     const Self = @This();

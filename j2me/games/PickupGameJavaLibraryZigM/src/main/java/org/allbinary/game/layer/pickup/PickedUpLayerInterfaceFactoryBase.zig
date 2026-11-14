@@ -22,6 +22,7 @@ const Animation = @import("org/allbinary/animation/Animation.zig").Animation;
 const AllBinaryLayer = @import("org/allbinary/layer/AllBinaryLayer.zig").AllBinaryLayer;
 const PickedUpLayerInterfaceFactoryInterface = @import("org/allbinary/game/layer/pickup/PickedUpLayerInterfaceFactoryInterface.zig").PickedUpLayerInterfaceFactoryInterface;
 const PickedUpLayerType = @import("org/allbinary/game/layer/pickup/PickedUpLayerType.zig").PickedUpLayerType;
+const RuntimeException = @import("java/lang/RuntimeException.zig").RuntimeException;
 
 pub const PickedUpLayerInterfaceFactoryBase = struct {
     const Self = @This();

@@ -25,6 +25,7 @@ const BasicEventHandler = @import("org/allbinary/logic/util/event/handler/BasicE
 const VirtualKeyboardEvent = @import("org/allbinary/input/event/VirtualKeyboardEvent.zig").VirtualKeyboardEvent;
 const VirtualKeyboardEventListenerInterface = @import("org/allbinary/input/event/VirtualKeyboardEventListenerInterface.zig").VirtualKeyboardEventListenerInterface;
 const Thread = @import("java/lang/Thread.zig").Thread;
+const Exception = @import("java/lang/Exception.zig").Exception;
 
 pub const VirtualKeyboardEventHandler = struct {
     const Self = @This();
@@ -40,8 +41,8 @@ pub const VirtualKeyboardEventHandler = struct {
     }
 
     fn initFields(this: *Self) void {
-        this.SHOW_EVENT = Inheritance.callStatic(VirtualKeyboardEvent, "create1", .{ BooleanFactory.getInstance().?.TRUE });
-        this.HIDE_EVENT = Inheritance.callStatic(VirtualKeyboardEvent, "create1", .{ BooleanFactory.getInstance().?.FALSE });
+        this.SHOW_EVENT = Inheritance.callStatic(VirtualKeyboardEvent, "create1", .{ Inheritance.fieldPointer(BooleanFactory.getInstance().?, "TRUE").* });
+        this.HIDE_EVENT = Inheritance.callStatic(VirtualKeyboardEvent, "create1", .{ Inheritance.fieldPointer(BooleanFactory.getInstance().?, "FALSE").* });
     }
     
 
@@ -74,7 +75,7 @@ pub const VirtualKeyboardEventHandler = struct {
             _ = Inheritance.call(self, "fireEvent", .{ self.SHOW_EVENT });
         }
         // catch (Exception e):
-//             _ = Inheritance.call(Inheritance.fieldPointer(self, "logUtil").*.?, "put", .{ Inheritance.fieldPointer(self, "commonStrings").*.?.EXCEPTION, self, String.literal("open"), e });
+//             _ = Inheritance.call(Inheritance.fieldPointer(self, "logUtil").*.?, "put", .{ Inheritance.fieldPointer(Inheritance.fieldPointer(self, "commonStrings").*.?, "EXCEPTION").*, self, String.literal("open"), e });
     }
     
 
@@ -85,7 +86,7 @@ pub const VirtualKeyboardEventHandler = struct {
             _ = Inheritance.call(self, "fireEvent", .{ self.HIDE_EVENT });
         }
         // catch (Exception e):
-//             _ = Inheritance.call(Inheritance.fieldPointer(self, "logUtil").*.?, "put", .{ Inheritance.fieldPointer(self, "commonStrings").*.?.EXCEPTION, self, Inheritance.fieldPointer(self, "commonStrings").*.?.CLOSE, e });
+//             _ = Inheritance.call(Inheritance.fieldPointer(self, "logUtil").*.?, "put", .{ Inheritance.fieldPointer(Inheritance.fieldPointer(self, "commonStrings").*.?, "EXCEPTION").*, self, Inheritance.fieldPointer(Inheritance.fieldPointer(self, "commonStrings").*.?, "CLOSE").*, e });
     }
 };
 

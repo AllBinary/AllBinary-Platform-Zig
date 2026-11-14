@@ -114,7 +114,7 @@ pub const RotationAnimation = struct {
     
 
     pub fn adjustFrame(self: *Self, angle: i16) void {
-        _ = Inheritance.call(self, "setFrame", .{ Inheritance.call(self.frameUtil.?, "getFrameForAngle", .{ angle, @as(i32, @intCast(Inheritance.receiverOf(self.angleInfo.?.getAngleIncrementInfo().?, "getAngleIncrement").getAngleIncrement())) }) });
+        _ = Inheritance.call(self, "setFrame", .{ Inheritance.call(self.frameUtil.?, "getFrameForAngle", .{ angle, Inheritance.number(i32, Inheritance.receiverOf(self.angleInfo.?.getAngleIncrementInfo().?, "getAngleIncrement").getAngleIncrement()) }) });
     }
     
 
@@ -134,7 +134,7 @@ pub const RotationAnimation = struct {
     
 
     pub fn toString(self: *Self) ?*String {
-        return Inheritance.upcast(?*String, Object.toString(Object.of(Inheritance.call(Inheritance.call(Inheritance.call(Inheritance.call(Inheritance.call(StringMaker.create(), "append", .{ self.base.toString() }).?, "append", .{ String.literal("circularIndexUtil: ") }).?, "append", .{ Object.toString(Object.of(self.circularIndexUtil)) }).?, "append", .{ String.literal("angleInfo: ") }).?, "append", .{ Object.toString(Object.of(self.angleInfo)) }))));
+        return Inheritance.upcast(?*String, Object.toString(Object.of(Inheritance.call(Inheritance.call(Inheritance.call(Inheritance.call(Inheritance.call(StringMaker.create(), "append", .{ String.valueOf(&self.base) }).?, "append", .{ String.literal("circularIndexUtil: ") }).?, "append", .{ Object.toString(Object.of(self.circularIndexUtil)) }).?, "append", .{ String.literal("angleInfo: ") }).?, "append", .{ Object.toString(Object.of(self.angleInfo)) }))));
     }
 };
 

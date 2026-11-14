@@ -64,7 +64,7 @@ pub const GameLevelDisplayChangeEventListenersFactory = struct {
         {
             var index: i32 = self.list.?.size();
             while (value_N66206: { index -= 1; break :value_N66206 index; } >= 0) {
-            displayChangeEventListener = Inheritance.cast(?*DisplayChangeEventListener, self.list.?.objectArray[@intCast(index)]);
+            displayChangeEventListener = Inheritance.cast(?*DisplayChangeEventListener, Inheritance.fieldPointer(self.list.?, "objectArray").*[@intCast(index)]);
             _ = Inheritance.call(displayChangeEventHandler.?, "removeListener", .{ displayChangeEventListener });
             }
         }

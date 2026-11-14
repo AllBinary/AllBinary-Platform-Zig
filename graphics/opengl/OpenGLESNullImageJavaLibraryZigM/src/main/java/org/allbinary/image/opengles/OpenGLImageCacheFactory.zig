@@ -44,7 +44,7 @@ pub const OpenGLImageCacheFactory = struct {
     
 
     pub fn init() void {
-        if (OpenGLImageCacheFactory.IMAGE_CACHE == null) {
+        if (Object.isNull(OpenGLImageCacheFactory.IMAGE_CACHE)) {
         }
     }
 };

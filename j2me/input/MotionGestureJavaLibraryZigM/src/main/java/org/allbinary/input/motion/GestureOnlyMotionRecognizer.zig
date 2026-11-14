@@ -22,6 +22,7 @@ const CustomGPoint = @import("org/allbinary/graphics/CustomGPoint.zig").CustomGP
 const GPointCircularPool = @import("org/allbinary/graphics/GPointCircularPool.zig").GPointCircularPool;
 const MotionGestureRecognizer = @import("org/allbinary/input/motion/gesture/MotionGestureRecognizer.zig").MotionGestureRecognizer;
 const MotionRecognizer = @import("org/allbinary/input/motion/MotionRecognizer.zig").MotionRecognizer;
+const Exception = @import("java/lang/Exception.zig").Exception;
 
 pub const GestureOnlyMotionRecognizer = struct {
     const Self = @This();

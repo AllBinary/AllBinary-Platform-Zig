@@ -28,6 +28,7 @@ const CommonStrings = @import("org/allbinary/string/CommonStrings.zig").CommonSt
 const BasicArrayList = @import("org/allbinary/util/BasicArrayList.zig").BasicArrayList;
 const BasicArrayListD = @import("org/allbinary/util/BasicArrayListD.zig").BasicArrayListD;
 const BasicEventHandlerInterface = @import("org/allbinary/logic/util/event/handler/BasicEventHandlerInterface.zig").BasicEventHandlerInterface;
+const Exception = @import("java/lang/Exception.zig").Exception;
 
 pub const BasicEventHandler = struct {
     const Self = @This();
@@ -62,13 +63,13 @@ pub const BasicEventHandler = struct {
         var index: i32 = 0;
         while (index < self.eventListenerInterfaceList.?.size()) {
             { // try
-                eventListenerInterface = Inheritance.cast(?*EventListenerInterface, self.eventListenerInterfaceList.?.objectArray[@intCast(index)]);
+                eventListenerInterface = Inheritance.cast(?*EventListenerInterface, Inheritance.fieldPointer(self.eventListenerInterfaceList.?, "objectArray").*[@intCast(index)]);
                 _ = Inheritance.call(stringBuffer.?, "append", .{ LISTENER });
                 _ = Inheritance.call(stringBuffer.?, "append", .{ Inheritance.call(StringUtil.getInstance().?, "toString", .{ eventListenerInterface }) });
             }
             // catch (Exception e):
 //                 const commonStrings: ?*CommonStrings = Inheritance.upcast(?*CommonStrings, CommonStrings.getInstance()); _ = commonStrings;
-//                 _ = Inheritance.call(self.logUtil.?, "put", .{ commonStrings.?.EXCEPTION, self, commonStrings.?.TOSTRING, e });
+//                 _ = Inheritance.call(self.logUtil.?, "put", .{ Inheritance.fieldPointer(commonStrings.?, "EXCEPTION").*, self, Inheritance.fieldPointer(commonStrings.?, "TOSTRING").*, e });
             index += 1;
         }
         return Inheritance.upcast(?*String, Object.toString(Object.of(stringBuffer)));
@@ -122,12 +123,12 @@ pub const BasicEventHandler = struct {
         var eventListenerInterface: ?*EventListenerInterface = null;
         while (index < self.eventListenerInterfaceList.?.size()) {
             { // try
-                eventListenerInterface = Inheritance.cast(?*EventListenerInterface, self.eventListenerInterfaceList.?.objectArray[@intCast(index)]);
+                eventListenerInterface = Inheritance.cast(?*EventListenerInterface, Inheritance.fieldPointer(self.eventListenerInterfaceList.?, "objectArray").*[@intCast(index)]);
                 _ = Inheritance.call(self, "process", .{ eventObject, eventListenerInterface });
             }
             // catch (Exception e):
 //                 const commonStrings: ?*CommonStrings = Inheritance.upcast(?*CommonStrings, CommonStrings.getInstance()); _ = commonStrings;
-//                 _ = Inheritance.call(self.logUtil.?, "put", .{ commonStrings.?.EXCEPTION, self, EventStrings.getInstance().?.FIRE_EVENT, e });
+//                 _ = Inheritance.call(self.logUtil.?, "put", .{ Inheritance.fieldPointer(commonStrings.?, "EXCEPTION").*, self, Inheritance.fieldPointer(EventStrings.getInstance().?, "FIRE_EVENT").*, e });
             index += 1;
         }
     }

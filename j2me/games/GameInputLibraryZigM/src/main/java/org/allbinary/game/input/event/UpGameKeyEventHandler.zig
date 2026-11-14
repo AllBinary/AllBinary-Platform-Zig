@@ -33,7 +33,7 @@ pub const UpGameKeyEventHandler = struct {
     // Static fields with runtime initializers: call staticInit once at startup
     pub fn staticInit() void {
         instance = UpGameKeyEventHandler.create();
-        instanceArray = @constCast(&[_]?*UpGameKeyEventHandlerBase{ UpGameKeyEventHandlerBase.create(), UpGameKeyEventHandlerBase.create(), UpGameKeyEventHandlerBase.create(), UpGameKeyEventHandlerBase.create(), UpGameKeyEventHandlerBase.create(), UpGameKeyEventHandlerBase.create() })[0..];
+        instanceArray = @constCast(&[_]?*UpGameKeyEventHandlerBase{ Inheritance.upcast(?*UpGameKeyEventHandlerBase, UpGameKeyEventHandlerBase.create()), Inheritance.upcast(?*UpGameKeyEventHandlerBase, UpGameKeyEventHandlerBase.create()), Inheritance.upcast(?*UpGameKeyEventHandlerBase, UpGameKeyEventHandlerBase.create()), Inheritance.upcast(?*UpGameKeyEventHandlerBase, UpGameKeyEventHandlerBase.create()), Inheritance.upcast(?*UpGameKeyEventHandlerBase, UpGameKeyEventHandlerBase.create()), Inheritance.upcast(?*UpGameKeyEventHandlerBase, UpGameKeyEventHandlerBase.create()) })[0..];
     }
 
     fn initFields(this: *Self) void {
@@ -69,7 +69,7 @@ pub const UpGameKeyEventHandler = struct {
     
 
     pub fn removeAllListeners(self: *Self) void {
-        _ = self.base.removeAllListeners();
+        _ = Inheritance.receiver(&self.base, "removeAllListeners").removeAllListeners();
         {
             var index: i32 = @as(i32, @intCast(UpGameKeyEventHandler.instanceArray.len)) - 1;
             while (index >= 0) : (index -= 1) {

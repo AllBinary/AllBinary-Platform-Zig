@@ -18,7 +18,7 @@ const allocator = std.heap.page_allocator;
 const String = @import("java/lang/String.zig").String;
 const Object = @import("java/lang/Object.zig").Object;
 const Inheritance = @import("zig/Inheritance.zig");
-// const NullCanvas = @import("javax/microedition/lcdui/NullCanvas.zig").NullCanvas;
+const NullCanvas = @import("javax/microedition/lcdui/NullCanvas.zig").NullCanvas;
 const RunnableCanvas = @import("org/allbinary/canvas/RunnableCanvas.zig").RunnableCanvas;
 const GameCommandsFactory = @import("org/allbinary/game/commands/GameCommandsFactory.zig").GameCommandsFactory;
 const GameInputStrings = @import("org/allbinary/game/input/GameInputStrings.zig").GameInputStrings;
@@ -27,6 +27,7 @@ const StringMaker = @import("org/allbinary/logic/string/StringMaker.zig").String
 const StringUtil = @import("org/allbinary/logic/string/StringUtil.zig").StringUtil;
 const BasicArrayList = @import("org/allbinary/util/BasicArrayList.zig").BasicArrayList;
 const BasicMenuInputProcessor = @import("org/allbinary/game/displayable/canvas/BasicMenuInputProcessor.zig").BasicMenuInputProcessor;
+const Exception = @import("java/lang/Exception.zig").Exception;
 
 pub const DemoCanvasBasicStartInputProcessor = struct {
     const Self = @This();
@@ -51,11 +52,11 @@ pub const DemoCanvasBasicStartInputProcessor = struct {
         {
             var index: i32 = 0;
             while (index < size) : (index += 1) {
-            gameKeyEvent = Inheritance.cast(?*GameKeyEvent, list.?.objectArray[@intCast(index)]);
-            _ = Inheritance.call(Inheritance.fieldPointer(self, "logUtil").*.?, "putF", .{ Object.toString(Object.of(Inheritance.call(Inheritance.call(StringMaker.create(), "append", .{ String.literal("Start GameKey: ") }).?, "append", .{ Inheritance.call(StringUtil.getInstance().?, "toString", .{ gameKeyEvent }) }))), self, GameInputStrings.getInstance().?.PROCESS_INPUT });
+            gameKeyEvent = Inheritance.cast(?*GameKeyEvent, Inheritance.fieldPointer(list.?, "objectArray").*[@intCast(index)]);
+            _ = Inheritance.call(Inheritance.fieldPointer(self, "logUtil").*.?, "putF", .{ Object.toString(Object.of(Inheritance.call(Inheritance.call(StringMaker.create(), "append", .{ String.literal("Start GameKey: ") }).?, "append", .{ Inheritance.call(StringUtil.getInstance().?, "toString", .{ gameKeyEvent }) }))), self, Inheritance.fieldPointer(GameInputStrings.getInstance().?, "PROCESS_INPUT").* });
             }
         }
-        _ = Inheritance.call(Inheritance.receiverOf(Inheritance.receiver(self, "getCanvas").getCanvas().?, "getCustomCommandListener").getCustomCommandListener().?, "commandAction", .{ GameCommandsFactory.getInstance().?.START_COMMAND, NullCanvas.NULL_CANVAS });
+        _ = Inheritance.call(Inheritance.receiverOf(Inheritance.receiver(self, "getCanvas").getCanvas().?, "getCustomCommandListener").getCustomCommandListener().?, "commandAction", .{ Inheritance.fieldPointer(GameCommandsFactory.getInstance().?, "START_COMMAND").*, NullCanvas.NULL_CANVAS });
         return size;
     }
 };

@@ -18,7 +18,7 @@ const allocator = std.heap.page_allocator;
 const String = @import("java/lang/String.zig").String;
 const Object = @import("java/lang/Object.zig").Object;
 const Inheritance = @import("zig/Inheritance.zig");
-// const Font = @import("javax/microedition/lcdui/Font.zig").Font;
+const Font = @import("javax/microedition/lcdui/Font.zig").Font;
 const AvianUtil = @import("org/allbinary/AvianUtil.zig").AvianUtil;
 const StringUtil = @import("org/allbinary/logic/string/StringUtil.zig").StringUtil;
 
@@ -66,7 +66,7 @@ pub const TrueTypeFontUtilBase = struct {
         const this = allocator.create(Self) catch unreachable;
         this.* = .{};
         this.initFields();
-        var shortPattern: ?*String = Inheritance.upcast(?*String, StringUtil.getInstance().?.EMPTY_STRING);
+        var shortPattern: ?*String = Inheritance.upcast(?*String, Inheritance.fieldPointer(StringUtil.getInstance().?, "EMPTY_STRING").*);
         if (AvianUtil.isAvian()) {
             const shortPatterAsByteArray: []i8 = @constCast(&[_]i8{ 32, 48, 49, 50, 51, 52, 53, 54, 55, 56, 57, 65, 66, 67, 68, 69, 70, 71, 72, 73, 74, 75, 76, 77, 78, 79, 80, 81, 82, 83, 84, 85, 86, 87, 88, 89, 90, 97, 98, 99, 100, 101, 102, 103, 104, 105, 106, 107, 108, 109, 110, 111, 112, 113, 114, 115, 116, 117, 118, 119, 120, 121, 122, 46, 63, 33, 36, 37, 96, @as(i8, @intCast(-62)), @as(i8, @intCast(-84)), @as(i8, @intCast(-62)), @as(i8, @intCast(-84)), 34, @as(i8, @intCast(-62)), @as(i8, @intCast(-93)), @as(i8, @intCast(-62)), @as(i8, @intCast(-93)), 94, 38, 42, 40, 41, 95, 43, 45, 61, 91, 93, 123, 125, 59, 39, 35, 58, 64, 126, 44, 47, 60, 62, 92, 124, @as(i8, @intCast(-62)), @as(i8, @intCast(-82)), @as(i8, @intCast(-62)), @as(i8, @intCast(-82)), @as(i8, @intCast(-62)), @as(i8, @intCast(-87)), @as(i8, @intCast(-62)), @as(i8, @intCast(-87)) })[0..];
             shortPattern = Inheritance.callStatic(String, "create1", .{ shortPatterAsByteArray });
@@ -88,6 +88,7 @@ pub const TrueTypeFontUtilBase = struct {
 
     pub fn getAsTextureSize(self: *Self, textureSizeParameter: i32) i32 {
         var textureSize = textureSizeParameter;
+        _ = self;
         if (textureSize <= 64) {
             textureSize = 64;
         } else if (textureSize <= 128) {
@@ -105,6 +106,7 @@ pub const TrueTypeFontUtilBase = struct {
 
     pub fn getCellSize(self: *Self, cellSizeParameter: i32) i32 {
         var cellSize = cellSizeParameter;
+        _ = self;
         if (cellSize <= 16) {
             cellSize = 16;
         } else if (cellSize <= 32) {

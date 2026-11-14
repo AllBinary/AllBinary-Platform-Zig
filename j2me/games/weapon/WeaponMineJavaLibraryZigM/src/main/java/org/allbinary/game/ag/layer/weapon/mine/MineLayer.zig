@@ -30,6 +30,7 @@ const NoMovementFactory = @import("org/allbinary/physics/movement/NoMovementFact
 const ViewPositionBase = @import("org/allbinary/view/ViewPositionBase.zig").ViewPositionBase;
 const ViewPositionEventHandler = @import("org/allbinary/view/event/ViewPositionEventHandler.zig").ViewPositionEventHandler;
 const MineWeaponResources = @import("org/allbinary/game/ag/layer/weapon/mine/MineWeaponResources.zig").MineWeaponResources;
+const Exception = @import("java/lang/Exception.zig").Exception;
 
 pub const MineLayer = struct {
     const Self = @This();
@@ -46,7 +47,7 @@ pub const MineLayer = struct {
     pub fn create1(viewPosition: ?*ViewPositionBase) *Self {
         const this = allocator.create(Self) catch unreachable;
         this.* = .{};
-        this.base = Inheritance.callStatic(SimpleWeaponLayer, "create8", .{ MineLayer.NAME, RemoteInfo.REMOTE_INFO, -1, Inheritance.receiverOf(NoMovementFactory.getInstance().?, "getMovmentInstance").getMovmentInstance(), Inheritance.call(Inheritance.call(FeaturedAnimationInterfaceFactoryInterfaceFactory.getInstance().?, "get", .{ MineWeaponResources.getInstance().?.RESOURCE }).?, "getInstance", .{ 0 }), SimpleWeaponLayer.createDestroyed(), Inheritance.callStatic(Rectangle, "create3", .{ PointFactory.getInstance().?.ZERO_ZERO, 10, 10 }), viewPosition }).*;
+        this.base = Inheritance.callStatic(SimpleWeaponLayer, "create8", .{ MineLayer.NAME, RemoteInfo.REMOTE_INFO, -1, Inheritance.receiverOf(NoMovementFactory.getInstance().?, "getMovmentInstance").getMovmentInstance(), Inheritance.call(Inheritance.call(FeaturedAnimationInterfaceFactoryInterfaceFactory.getInstance().?, "get", .{ Inheritance.fieldPointer(MineWeaponResources.getInstance().?, "RESOURCE").* }).?, "getInstance", .{ 0 }), SimpleWeaponLayer.createDestroyed(), Inheritance.callStatic(Rectangle, "create3", .{ Inheritance.fieldPointer(PointFactory.getInstance().?, "ZERO_ZERO").*, 10, 10 }), viewPosition }).*;
         this.initFields();
         Inheritance.bindOverrides(this);
         return this;

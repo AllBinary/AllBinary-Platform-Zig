@@ -20,6 +20,7 @@ const Object = @import("java/lang/Object.zig").Object;
 const Inheritance = @import("zig/Inheritance.zig");
 const TouchButtonRecognizer = @import("org/allbinary/input/motion/button/TouchButtonRecognizer.zig").TouchButtonRecognizer;
 const MotionRecognizer = @import("org/allbinary/input/motion/MotionRecognizer.zig").MotionRecognizer;
+const Exception = @import("java/lang/Exception.zig").Exception;
 
 pub const OnlyTouchButtonRecognizer = struct {
     const Self = @This();

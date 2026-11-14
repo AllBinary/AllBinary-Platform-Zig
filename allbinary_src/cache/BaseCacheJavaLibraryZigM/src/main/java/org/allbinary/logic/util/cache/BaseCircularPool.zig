@@ -24,6 +24,7 @@ const CircularIndexUtil = @import("org/allbinary/util/CircularIndexUtil.zig").Ci
 const JsMethod = @import("jsinterop/annotations/JsMethod.zig").JsMethod;
 const JsProperty = @import("jsinterop/annotations/JsProperty.zig").JsProperty;
 const AllBinaryObjectFactoryInterface = @import("org/allbinary/logic/util/cache/AllBinaryObjectFactoryInterface.zig").AllBinaryObjectFactoryInterface;
+const Exception = @import("java/lang/Exception.zig").Exception;
 
 pub const BaseCircularPool = struct {
     const Self = @This();
@@ -33,7 +34,7 @@ pub const BaseCircularPool = struct {
 
     fn initFields(this: *Self) void {
         this.circularIndexUtil = Inheritance.upcast(?*CircularIndexUtil, CircularIndexUtil.NULL_CIRCULAR_INDEX_UTIL);
-        this.OBJECT_ARRAY = NullUtil.getInstance().?.NULL_OBJECT_ARRAY;
+        this.OBJECT_ARRAY = Inheritance.fieldPointer(NullUtil.getInstance().?, "NULL_OBJECT_ARRAY").*;
     }
 
     pub fn create() *Self {

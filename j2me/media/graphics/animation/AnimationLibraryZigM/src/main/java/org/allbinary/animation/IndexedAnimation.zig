@@ -24,6 +24,7 @@ const CommonStrings = @import("org/allbinary/string/CommonStrings.zig").CommonSt
 const Animation = @import("org/allbinary/animation/Animation.zig").Animation;
 const AnimationBehavior = @import("org/allbinary/animation/AnimationBehavior.zig").AnimationBehavior;
 const IndexedAnimationInterface = @import("org/allbinary/animation/IndexedAnimationInterface.zig").IndexedAnimationInterface;
+const Exception = @import("java/lang/Exception.zig").Exception;
 
 pub const IndexedAnimation = struct {
     const Self = @This();
@@ -78,7 +79,7 @@ pub const IndexedAnimation = struct {
 
     // throws Exception
     pub fn getAnimationSize(self: *Self) i32 {
-        std.debug.panic("{any}", .{exception: { _ = self.commonStrings.?.NOT_IMPLEMENTED; break :exception error.Exception; }});
+        std.debug.panic("{any}", .{exception: { _ = Inheritance.fieldPointer(self.commonStrings.?, "NOT_IMPLEMENTED").*; break :exception error.Exception; }});
     }
     
 

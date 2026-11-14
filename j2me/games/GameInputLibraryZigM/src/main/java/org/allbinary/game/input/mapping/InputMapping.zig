@@ -29,6 +29,7 @@ const BasicArrayListD = @import("org/allbinary/util/BasicArrayListD.zig").BasicA
 const StdUtil = @import("org/allbinary/logic/StdUtil.zig").StdUtil;
 const ABHashtable = @import("org/allbinary/util/ABHashtable.zig").ABHashtable;
 const InputToGameKeyMapping = @import("org/allbinary/game/input/mapping/InputToGameKeyMapping.zig").InputToGameKeyMapping;
+const Exception = @import("java/lang/Exception.zig").Exception;
 
 pub const InputMapping = struct {
     const Self = @This();
@@ -80,7 +81,7 @@ pub const InputMapping = struct {
     pub fn remove(self: *Self, input: ?*Input, mappedToInput: ?*Input) void {
         const stringBuffer: ?*StringMaker = StringMaker.create();
         const stringUtil: ?*StringUtil = Inheritance.upcast(?*StringUtil, StringUtil.getInstance());
-        _ = Inheritance.call(stringBuffer.?, "append", .{ CommonLabels.getInstance().?.START_LABEL });
+        _ = Inheritance.call(stringBuffer.?, "append", .{ Inheritance.fieldPointer(CommonLabels.getInstance().?, "START_LABEL").* });
         _ = Inheritance.call(stringBuffer.?, "append", .{ Inheritance.call(stringUtil.?, "toString", .{ input }) });
         _ = Inheritance.call(stringBuffer.?, "append", .{ String.literal(" == ") });
         _ = Inheritance.call(stringBuffer.?, "append", .{ Inheritance.call(stringUtil.?, "toString", .{ mappedToInput }) });
@@ -109,7 +110,7 @@ pub const InputMapping = struct {
     // throws Exception
     pub fn addMapping(self: *Self, inputToGameKeyMapping: ?*InputToGameKeyMapping) void {
         _ = inputToGameKeyMapping;
-        std.debug.panic("{any}", .{exception: { _ = self.commonStrings.?.NOT_IMPLEMENTED; break :exception error.Exception; }});
+        std.debug.panic("{any}", .{exception: { _ = Inheritance.fieldPointer(self.commonStrings.?, "NOT_IMPLEMENTED").*; break :exception error.Exception; }});
     }
     
 
@@ -129,7 +130,7 @@ pub const InputMapping = struct {
 
     pub fn getMappedInput(self: *Self, id: ?*Input) ?*BasicArrayList {
         const mappingInputCanBeNullList: ?Object = Inheritance.upcast(?Object, Inheritance.call(self.hashtable.?, "get", .{ id }));
-        if (mappingInputCanBeNullList == null) {
+        if (Object.isNull(mappingInputCanBeNullList)) {
             const list: ?*BasicArrayList = Inheritance.upcast(?*BasicArrayList, BasicArrayListD.create());
             _ = Inheritance.call(self.hashtable.?, "put", .{ id, list });
             return list;

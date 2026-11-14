@@ -18,11 +18,12 @@ const allocator = std.heap.page_allocator;
 const String = @import("java/lang/String.zig").String;
 const Object = @import("java/lang/Object.zig").Object;
 const Inheritance = @import("zig/Inheritance.zig");
-// const Canvas = @import("javax/microedition/lcdui/Canvas.zig").Canvas;
+const Canvas = @import("javax/microedition/lcdui/Canvas.zig").Canvas;
 const BasicAI = @import("org/allbinary/game/ai/BasicAI.zig").BasicAI;
 const GameInput = @import("org/allbinary/game/input/GameInput.zig").GameInput;
 const AllBinaryLayer = @import("org/allbinary/layer/AllBinaryLayer.zig").AllBinaryLayer;
 const AllBinaryLayerManager = @import("org/allbinary/layer/AllBinaryLayerManager.zig").AllBinaryLayerManager;
+const Exception = @import("java/lang/Exception.zig").Exception;
 
 pub const SpinnerAI = struct {
     const Self = @This();

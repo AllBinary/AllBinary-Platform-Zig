@@ -35,7 +35,7 @@ pub const AboutPaintableFactory = struct {
     }
 
     fn initFields(this: *Self) void {
-        this.paintableArray = @constCast(&[_]?*Paintable{ NullPaintable.getInstance() })[0..];
+        this.paintableArray = @constCast(&[_]?*Paintable{ Inheritance.upcast(?*Paintable, NullPaintable.getInstance()) })[0..];
     }
     
 
@@ -48,8 +48,8 @@ pub const AboutPaintableFactory = struct {
         const this = allocator.create(Self) catch unreachable;
         this.* = .{};
         this.initFields();
-        const INFO: []?*String = @constCast(&[_]?*String{ String.literal("Built with the"), String.literal("AllBinary Platform"), StringUtil.getInstance().?.EMPTY_STRING, String.literal("Comments or Questions:"), String.literal("support@allbinary.com") })[0..];
-        const DEVELOPERS: []?*String = @constCast(&[_]?*String{ String.literal("Developed By:"), String.literal("Travis Berthelot") })[0..];
+        const INFO: []?*String = @constCast(&[_]?*String{ Inheritance.upcast(?*String, String.literal("Built with the")), Inheritance.upcast(?*String, String.literal("AllBinary Platform")), Inheritance.upcast(?*String, Inheritance.fieldPointer(StringUtil.getInstance().?, "EMPTY_STRING").*), Inheritance.upcast(?*String, String.literal("Comments or Questions:")), Inheritance.upcast(?*String, String.literal("support@allbinary.com")) })[0..];
+        const DEVELOPERS: []?*String = @constCast(&[_]?*String{ Inheritance.upcast(?*String, String.literal("Developed By:")), Inheritance.upcast(?*String, String.literal("Travis Berthelot")) })[0..];
         this.paintableArray = Inheritance.upcast(@TypeOf(this.paintableArray), Inheritance.receiverOf(Inheritance.callStatic(AboutPaintable, "getInstance", .{ INFO, DEVELOPERS }).?, "getPaintableArrayInstance").getPaintableArrayInstance());
         return this;
     }

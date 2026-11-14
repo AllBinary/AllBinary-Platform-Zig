@@ -39,7 +39,7 @@ pub const FormTypeFactory = struct {
 
     fn initFields(this: *Self) void {
         this.UNK = String.literal("Unknown FormType");
-        this.NULL_FORM_TYPE = Inheritance.callStatic(FormType, "create1", .{ StringUtil.getInstance().?.NULL_STRING });
+        this.NULL_FORM_TYPE = Inheritance.callStatic(FormType, "create1", .{ Inheritance.fieldPointer(StringUtil.getInstance().?, "NULL_STRING").* });
         this.TEMP_HORIZONTAL_FORM = Inheritance.callStatic(FormType, "create1", .{ String.literal("TempHorizontal") });
         this.HORIZONTAL_FORM = Inheritance.callStatic(FormType, "create1", .{ String.literal("Horizontal") });
         this.VERTICAL_CENTER_FORM = Inheritance.callStatic(FormType, "create1", .{ String.literal("Vertical") });

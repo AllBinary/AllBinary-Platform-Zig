@@ -18,8 +18,8 @@ const allocator = std.heap.page_allocator;
 const String = @import("java/lang/String.zig").String;
 const Object = @import("java/lang/Object.zig").Object;
 const Inheritance = @import("zig/Inheritance.zig");
-// const Font = @import("javax/microedition/lcdui/Font.zig").Font;
-// const Graphics = @import("javax/microedition/lcdui/Graphics.zig").Graphics;
+const Font = @import("javax/microedition/lcdui/Font.zig").Font;
+const Graphics = @import("javax/microedition/lcdui/Graphics.zig").Graphics;
 const Anchor = @import("org/allbinary/graphics/Anchor.zig").Anchor;
 const BasicColor = @import("org/allbinary/graphics/color/BasicColor.zig").BasicColor;
 const BasicColorFactory = @import("org/allbinary/graphics/color/BasicColorFactory.zig").BasicColorFactory;
@@ -52,7 +52,7 @@ pub const HighScoresPaintable = struct {
     fn initFields(this: *Self) void {
         this.displayInfoSingleton = Inheritance.upcast(?*DisplayInfoSingleton, DisplayInfoSingleton.getInstance());
         this.myFontProcessor = Inheritance.upcast(?*MyFontProcessor, Inheritance.callStatic(UpdateMyFontProcessor, "create1", .{ this }));
-        this.basicColor = Inheritance.upcast(?*BasicColor, BasicColorFactory.getInstance().?.WHITE);
+        this.basicColor = Inheritance.upcast(?*BasicColor, Inheritance.fieldPointer(BasicColorFactory.getInstance().?, "WHITE").*);
         this.highScores = Inheritance.upcast(?*HighScores, NullHighScoresSingletonFactory.getInstance());
         this.anchor = Anchor.TOP_LEFT;
         this.charHeight = 0;
@@ -102,7 +102,7 @@ pub const HighScoresPaintable = struct {
         var vectorIndex: i32 = 0;
         var highScore: ?*HighScore = null;
         while (vectorIndex < size and charHeight * index < height - (charHeight * 2)) {
-            highScore = Inheritance.cast(?*HighScore, list.?.objectArray[@intCast(vectorIndex)]);
+            highScore = Inheritance.cast(?*HighScore, Inheritance.fieldPointer(list.?, "objectArray").*[@intCast(vectorIndex)]);
             const nextScoreWidth: i32 = Inheritance.call(graphics.?.getFont().?, "stringWidth", .{ highScore.?.getScoreString() });
             if (nextScoreWidth > largestSecondColumnWidth) {
                 largestSecondColumnWidth = nextScoreWidth;
@@ -111,7 +111,7 @@ pub const HighScoresPaintable = struct {
         }
         vectorIndex = 0;
         while (vectorIndex < size and charHeight * index < height - (charHeight * 2)) {
-            highScore = Inheritance.cast(?*HighScore, list.?.objectArray[@intCast(vectorIndex)]);
+            highScore = Inheritance.cast(?*HighScore, Inheritance.fieldPointer(list.?, "objectArray").*[@intCast(vectorIndex)]);
             _ = Inheritance.call(graphics.?, "drawString", .{ highScore.?.getName(), 10, charHeight * index, self.anchor });
             _ = Inheritance.call(graphics.?, "drawString", .{ highScore.?.getScoreString(), width - 10 - largestSecondColumnWidth, charHeight * index, self.anchor });
             index += 1;

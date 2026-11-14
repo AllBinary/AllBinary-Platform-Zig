@@ -33,7 +33,7 @@ pub const GameStateFactory = struct {
 
     // Static fields with runtime initializers: call staticInit once at startup
     pub fn staticInit() void {
-        instance = Inheritance.upcast(?Object, NullUtil.getInstance().?.NULL_OBJECT);
+        instance = Inheritance.upcast(?Object, Inheritance.fieldPointer(NullUtil.getInstance().?, "NULL_OBJECT").*);
     }
 
     fn initFields(this: *Self) void {
@@ -46,7 +46,7 @@ pub const GameStateFactory = struct {
     
 
     pub fn getInstance() ?*GameStateFactory {
-        if (Object.same(GameStateFactory.instance, NullUtil.getInstance().?.NULL_OBJECT)) {
+        if (Object.same(GameStateFactory.instance, Inheritance.fieldPointer(NullUtil.getInstance().?, "NULL_OBJECT").*)) {
             GameStateFactory.instance = Inheritance.upcast(@TypeOf(GameStateFactory.instance), GameStateFactory.create());
         }
         return Inheritance.cast(?*GameStateFactory, GameStateFactory.instance);

@@ -63,7 +63,7 @@ pub const LayerManagerEvent = struct {
         _ = Inheritance.call(stringBuffer.?, "append", .{ String.literal("LayerInterface: ") });
         _ = Inheritance.call(stringBuffer.?, "append", .{ Object.toString(Object.of(self.getLayerInterface())) });
         _ = Inheritance.call(stringBuffer.?, "append", .{ String.literal("\nCRUD: ") });
-        _ = Inheritance.call(stringBuffer.?, "append", .{ self.crud.?.toString() });
+        _ = Inheritance.call(stringBuffer.?, "append", .{ self.crud });
         return Inheritance.upcast(?*String, Object.toString(Object.of(stringBuffer)));
     }
 };

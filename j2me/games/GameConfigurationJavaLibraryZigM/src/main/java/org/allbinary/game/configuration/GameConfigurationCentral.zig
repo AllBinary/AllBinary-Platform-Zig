@@ -31,6 +31,7 @@ const ABHashtable = @import("org/allbinary/util/ABHashtable.zig").ABHashtable;
 const BasicArrayList = @import("org/allbinary/util/BasicArrayList.zig").BasicArrayList;
 const GameConfiguration = @import("org/allbinary/game/configuration/GameConfiguration.zig").GameConfiguration;
 const Integer = @import("java/lang/Integer.zig").Integer;
+const Exception = @import("java/lang/Exception.zig").Exception;
 
 pub const GameConfigurationCentral = struct {
     const Self = @This();
@@ -56,7 +57,7 @@ pub const GameConfigurationCentral = struct {
 
     // Static fields with runtime initializers: call staticInit once at startup
     pub fn staticInit() void {
-        SINGLETON = Inheritance.upcast(?Object, NullUtil.getInstance().?.NULL_OBJECT);
+        SINGLETON = Inheritance.upcast(?Object, Inheritance.fieldPointer(NullUtil.getInstance().?, "NULL_OBJECT").*);
     }
 
     fn initFields(this: *Self) void {
@@ -81,7 +82,7 @@ pub const GameConfigurationCentral = struct {
     
 
     pub fn getInstance() ?*GameConfigurationCentral {
-        if (Object.same(GameConfigurationCentral.SINGLETON, NullUtil.getInstance().?.NULL_OBJECT)) {
+        if (Object.same(GameConfigurationCentral.SINGLETON, Inheritance.fieldPointer(NullUtil.getInstance().?, "NULL_OBJECT").*)) {
             GameConfigurationCentral.SINGLETON = Inheritance.upcast(@TypeOf(GameConfigurationCentral.SINGLETON), GameConfigurationCentral.create());
         }
         return Inheritance.cast(?*GameConfigurationCentral, GameConfigurationCentral.SINGLETON);
@@ -126,11 +127,11 @@ pub const GameConfigurationCentral = struct {
                 const value: ?*String = Inheritance.cast(?*String, Inheritance.call(hashtable.?, "get", .{ anyType }));
                 _ = Inheritance.call(self.SCALE.?, "setValue", .{ Inheritance.call(smallIntegerSingletonFactory.?, "getAt", .{ Inheritance.receiverOf(Inheritance.callStatic(Integer, "valueOf", .{ value }).?, "intValue").intValue() }) });
             } else {
-                _ = Inheritance.call(self.logUtil.?, "putF", .{ String.literal("No Game Configuration To Load"), self, commonStrings.?.LOAD });
+                _ = Inheritance.call(self.logUtil.?, "putF", .{ String.literal("No Game Configuration To Load"), self, Inheritance.fieldPointer(commonStrings.?, "LOAD").* });
             }
         }
         // catch (Exception e):
-//             _ = Inheritance.call(self.logUtil.?, "put", .{ commonStrings.?.EXCEPTION, self, commonStrings.?.LOAD, e });
+//             _ = Inheritance.call(self.logUtil.?, "put", .{ Inheritance.fieldPointer(commonStrings.?, "EXCEPTION").*, self, Inheritance.fieldPointer(commonStrings.?, "LOAD").*, e });
     }
     
 
@@ -147,58 +148,58 @@ pub const GameConfigurationCentral = struct {
     pub fn toString(self: *Self) ?*String {
         const stringBuffer: ?*StringMaker = StringMaker.create();
         const commonStrings: ?*CommonSeps = Inheritance.upcast(?*CommonSeps, CommonSeps.getInstance());
-        _ = Inheritance.call(stringBuffer.?, "append", .{ commonStrings.?.COMMA_SEP });
+        _ = Inheritance.call(stringBuffer.?, "append", .{ Inheritance.fieldPointer(commonStrings.?, "COMMA_SEP").* });
         _ = Inheritance.call(stringBuffer.?, "append", .{ self.SCALE.?.getName() });
-        _ = Inheritance.call(stringBuffer.?, "append", .{ commonStrings.?.EQUALS });
-        _ = Inheritance.call(stringBuffer.?, "appendint", .{ @as(i32, @intCast(Inheritance.receiverOf(self.SCALE.?.getValue().?, "intValue").intValue())) });
-        _ = Inheritance.call(stringBuffer.?, "append", .{ commonStrings.?.COMMA_SEP });
+        _ = Inheritance.call(stringBuffer.?, "append", .{ Inheritance.fieldPointer(commonStrings.?, "EQUALS").* });
+        _ = Inheritance.call(stringBuffer.?, "appendint", .{ Inheritance.number(i32, Inheritance.receiverOf(self.SCALE.?.getValue().?, "intValue").intValue()) });
+        _ = Inheritance.call(stringBuffer.?, "append", .{ Inheritance.fieldPointer(commonStrings.?, "COMMA_SEP").* });
         _ = Inheritance.call(stringBuffer.?, "append", .{ self.ORIENTATION.?.getName() });
-        _ = Inheritance.call(stringBuffer.?, "append", .{ commonStrings.?.EQUALS });
-        _ = Inheritance.call(stringBuffer.?, "appendint", .{ @as(i32, @intCast(Inheritance.receiverOf(self.ORIENTATION.?.getValue().?, "intValue").intValue())) });
-        _ = Inheritance.call(stringBuffer.?, "append", .{ commonStrings.?.COMMA_SEP });
+        _ = Inheritance.call(stringBuffer.?, "append", .{ Inheritance.fieldPointer(commonStrings.?, "EQUALS").* });
+        _ = Inheritance.call(stringBuffer.?, "appendint", .{ Inheritance.number(i32, Inheritance.receiverOf(self.ORIENTATION.?.getValue().?, "intValue").intValue()) });
+        _ = Inheritance.call(stringBuffer.?, "append", .{ Inheritance.fieldPointer(commonStrings.?, "COMMA_SEP").* });
         _ = Inheritance.call(stringBuffer.?, "append", .{ self.SENSOR_UPDATE_RATE.?.getName() });
-        _ = Inheritance.call(stringBuffer.?, "append", .{ commonStrings.?.EQUALS });
-        _ = Inheritance.call(stringBuffer.?, "appendint", .{ @as(i32, @intCast(Inheritance.receiverOf(self.SENSOR_UPDATE_RATE.?.getValue().?, "intValue").intValue())) });
-        _ = Inheritance.call(stringBuffer.?, "append", .{ commonStrings.?.COMMA_SEP });
+        _ = Inheritance.call(stringBuffer.?, "append", .{ Inheritance.fieldPointer(commonStrings.?, "EQUALS").* });
+        _ = Inheritance.call(stringBuffer.?, "appendint", .{ Inheritance.number(i32, Inheritance.receiverOf(self.SENSOR_UPDATE_RATE.?.getValue().?, "intValue").intValue()) });
+        _ = Inheritance.call(stringBuffer.?, "append", .{ Inheritance.fieldPointer(commonStrings.?, "COMMA_SEP").* });
         _ = Inheritance.call(stringBuffer.?, "append", .{ self.VIBRATION.?.getName() });
-        _ = Inheritance.call(stringBuffer.?, "append", .{ commonStrings.?.EQUALS });
-        _ = Inheritance.call(stringBuffer.?, "appendint", .{ @as(i32, @intCast(Inheritance.receiverOf(self.VIBRATION.?.getValue().?, "intValue").intValue())) });
-        _ = Inheritance.call(stringBuffer.?, "append", .{ commonStrings.?.COMMA_SEP });
+        _ = Inheritance.call(stringBuffer.?, "append", .{ Inheritance.fieldPointer(commonStrings.?, "EQUALS").* });
+        _ = Inheritance.call(stringBuffer.?, "appendint", .{ Inheritance.number(i32, Inheritance.receiverOf(self.VIBRATION.?.getValue().?, "intValue").intValue()) });
+        _ = Inheritance.call(stringBuffer.?, "append", .{ Inheritance.fieldPointer(commonStrings.?, "COMMA_SEP").* });
         _ = Inheritance.call(stringBuffer.?, "append", .{ self.CHALLENGE_LEVEL.?.getName() });
-        _ = Inheritance.call(stringBuffer.?, "append", .{ commonStrings.?.EQUALS });
-        _ = Inheritance.call(stringBuffer.?, "appendint", .{ @as(i32, @intCast(Inheritance.receiverOf(self.CHALLENGE_LEVEL.?.getValue().?, "intValue").intValue())) });
-        _ = Inheritance.call(stringBuffer.?, "append", .{ commonStrings.?.COMMA_SEP });
+        _ = Inheritance.call(stringBuffer.?, "append", .{ Inheritance.fieldPointer(commonStrings.?, "EQUALS").* });
+        _ = Inheritance.call(stringBuffer.?, "appendint", .{ Inheritance.number(i32, Inheritance.receiverOf(self.CHALLENGE_LEVEL.?.getValue().?, "intValue").intValue()) });
+        _ = Inheritance.call(stringBuffer.?, "append", .{ Inheritance.fieldPointer(commonStrings.?, "COMMA_SEP").* });
         _ = Inheritance.call(stringBuffer.?, "append", .{ self.COLLIDE_DAMAGE.?.getName() });
-        _ = Inheritance.call(stringBuffer.?, "append", .{ commonStrings.?.EQUALS });
-        _ = Inheritance.call(stringBuffer.?, "appendint", .{ @as(i32, @intCast(Inheritance.receiverOf(self.COLLIDE_DAMAGE.?.getValue().?, "intValue").intValue())) });
-        _ = Inheritance.call(stringBuffer.?, "append", .{ commonStrings.?.COMMA_SEP });
+        _ = Inheritance.call(stringBuffer.?, "append", .{ Inheritance.fieldPointer(commonStrings.?, "EQUALS").* });
+        _ = Inheritance.call(stringBuffer.?, "appendint", .{ Inheritance.number(i32, Inheritance.receiverOf(self.COLLIDE_DAMAGE.?.getValue().?, "intValue").intValue()) });
+        _ = Inheritance.call(stringBuffer.?, "append", .{ Inheritance.fieldPointer(commonStrings.?, "COMMA_SEP").* });
         _ = Inheritance.call(stringBuffer.?, "append", .{ self.DURABILITY_CHALLENGE_LEVEL.?.getName() });
-        _ = Inheritance.call(stringBuffer.?, "append", .{ commonStrings.?.EQUALS });
-        _ = Inheritance.call(stringBuffer.?, "appendint", .{ @as(i32, @intCast(Inheritance.receiverOf(self.DURABILITY_CHALLENGE_LEVEL.?.getValue().?, "intValue").intValue())) });
-        _ = Inheritance.call(stringBuffer.?, "append", .{ commonStrings.?.COMMA_SEP });
+        _ = Inheritance.call(stringBuffer.?, "append", .{ Inheritance.fieldPointer(commonStrings.?, "EQUALS").* });
+        _ = Inheritance.call(stringBuffer.?, "appendint", .{ Inheritance.number(i32, Inheritance.receiverOf(self.DURABILITY_CHALLENGE_LEVEL.?.getValue().?, "intValue").intValue()) });
+        _ = Inheritance.call(stringBuffer.?, "append", .{ Inheritance.fieldPointer(commonStrings.?, "COMMA_SEP").* });
         _ = Inheritance.call(stringBuffer.?, "append", .{ self.SPEED_CHALLENGE_LEVEL.?.getName() });
-        _ = Inheritance.call(stringBuffer.?, "append", .{ commonStrings.?.EQUALS });
-        _ = Inheritance.call(stringBuffer.?, "appendint", .{ @as(i32, @intCast(Inheritance.receiverOf(self.SPEED_CHALLENGE_LEVEL.?.getValue().?, "intValue").intValue())) });
-        _ = Inheritance.call(stringBuffer.?, "append", .{ commonStrings.?.COMMA_SEP });
+        _ = Inheritance.call(stringBuffer.?, "append", .{ Inheritance.fieldPointer(commonStrings.?, "EQUALS").* });
+        _ = Inheritance.call(stringBuffer.?, "appendint", .{ Inheritance.number(i32, Inheritance.receiverOf(self.SPEED_CHALLENGE_LEVEL.?.getValue().?, "intValue").intValue()) });
+        _ = Inheritance.call(stringBuffer.?, "append", .{ Inheritance.fieldPointer(commonStrings.?, "COMMA_SEP").* });
         _ = Inheritance.call(stringBuffer.?, "append", .{ self.ATTACK_CHALLENGE_LEVEL.?.getName() });
-        _ = Inheritance.call(stringBuffer.?, "append", .{ commonStrings.?.EQUALS });
-        _ = Inheritance.call(stringBuffer.?, "appendint", .{ @as(i32, @intCast(Inheritance.receiverOf(self.ATTACK_CHALLENGE_LEVEL.?.getValue().?, "intValue").intValue())) });
-        _ = Inheritance.call(stringBuffer.?, "append", .{ commonStrings.?.COMMA_SEP });
+        _ = Inheritance.call(stringBuffer.?, "append", .{ Inheritance.fieldPointer(commonStrings.?, "EQUALS").* });
+        _ = Inheritance.call(stringBuffer.?, "appendint", .{ Inheritance.number(i32, Inheritance.receiverOf(self.ATTACK_CHALLENGE_LEVEL.?.getValue().?, "intValue").intValue()) });
+        _ = Inheritance.call(stringBuffer.?, "append", .{ Inheritance.fieldPointer(commonStrings.?, "COMMA_SEP").* });
         _ = Inheritance.call(stringBuffer.?, "append", .{ self.CONTROL_LEVEL.?.getName() });
-        _ = Inheritance.call(stringBuffer.?, "append", .{ commonStrings.?.EQUALS });
-        _ = Inheritance.call(stringBuffer.?, "appendint", .{ @as(i32, @intCast(Inheritance.receiverOf(self.CONTROL_LEVEL.?.getValue().?, "intValue").intValue())) });
-        _ = Inheritance.call(stringBuffer.?, "append", .{ commonStrings.?.COMMA_SEP });
+        _ = Inheritance.call(stringBuffer.?, "append", .{ Inheritance.fieldPointer(commonStrings.?, "EQUALS").* });
+        _ = Inheritance.call(stringBuffer.?, "appendint", .{ Inheritance.number(i32, Inheritance.receiverOf(self.CONTROL_LEVEL.?.getValue().?, "intValue").intValue()) });
+        _ = Inheritance.call(stringBuffer.?, "append", .{ Inheritance.fieldPointer(commonStrings.?, "COMMA_SEP").* });
         _ = Inheritance.call(stringBuffer.?, "append", .{ self.SPEED.?.getName() });
-        _ = Inheritance.call(stringBuffer.?, "append", .{ commonStrings.?.EQUALS });
-        _ = Inheritance.call(stringBuffer.?, "appendint", .{ @as(i32, @intCast(Inheritance.receiverOf(self.SPEED.?.getValue().?, "intValue").intValue())) });
-        _ = Inheritance.call(stringBuffer.?, "append", .{ commonStrings.?.COMMA_SEP });
+        _ = Inheritance.call(stringBuffer.?, "append", .{ Inheritance.fieldPointer(commonStrings.?, "EQUALS").* });
+        _ = Inheritance.call(stringBuffer.?, "appendint", .{ Inheritance.number(i32, Inheritance.receiverOf(self.SPEED.?.getValue().?, "intValue").intValue()) });
+        _ = Inheritance.call(stringBuffer.?, "append", .{ Inheritance.fieldPointer(commonStrings.?, "COMMA_SEP").* });
         _ = Inheritance.call(stringBuffer.?, "append", .{ self.MAX_GAME_OBJECTS.?.getName() });
-        _ = Inheritance.call(stringBuffer.?, "append", .{ commonStrings.?.EQUALS });
-        _ = Inheritance.call(stringBuffer.?, "appendint", .{ @as(i32, @intCast(Inheritance.receiverOf(self.MAX_GAME_OBJECTS.?.getValue().?, "intValue").intValue())) });
-        _ = Inheritance.call(stringBuffer.?, "append", .{ commonStrings.?.COMMA_SEP });
+        _ = Inheritance.call(stringBuffer.?, "append", .{ Inheritance.fieldPointer(commonStrings.?, "EQUALS").* });
+        _ = Inheritance.call(stringBuffer.?, "appendint", .{ Inheritance.number(i32, Inheritance.receiverOf(self.MAX_GAME_OBJECTS.?.getValue().?, "intValue").intValue()) });
+        _ = Inheritance.call(stringBuffer.?, "append", .{ Inheritance.fieldPointer(commonStrings.?, "COMMA_SEP").* });
         _ = Inheritance.call(stringBuffer.?, "append", .{ self.MAX_LAYERS.?.getName() });
-        _ = Inheritance.call(stringBuffer.?, "append", .{ commonStrings.?.EQUALS });
-        _ = Inheritance.call(stringBuffer.?, "appendint", .{ @as(i32, @intCast(Inheritance.receiverOf(self.MAX_LAYERS.?.getValue().?, "intValue").intValue())) });
+        _ = Inheritance.call(stringBuffer.?, "append", .{ Inheritance.fieldPointer(commonStrings.?, "EQUALS").* });
+        _ = Inheritance.call(stringBuffer.?, "appendint", .{ Inheritance.number(i32, Inheritance.receiverOf(self.MAX_LAYERS.?.getValue().?, "intValue").intValue()) });
         return Inheritance.upcast(?*String, Object.toString(Object.of(stringBuffer)));
     }
 };

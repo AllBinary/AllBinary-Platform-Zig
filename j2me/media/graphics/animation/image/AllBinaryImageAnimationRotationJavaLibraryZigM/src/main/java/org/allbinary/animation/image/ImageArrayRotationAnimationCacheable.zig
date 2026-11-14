@@ -24,6 +24,7 @@ const StringUtil = @import("org/allbinary/logic/string/StringUtil.zig").StringUt
 const CacheableInterface = @import("org/allbinary/logic/util/cache/CacheableInterface.zig").CacheableInterface;
 const AdjustedImageArrayRotationAnimation = @import("org/allbinary/animation/image/AdjustedImageArrayRotationAnimation.zig").AdjustedImageArrayRotationAnimation;
 const ImageArrayRotationAnimationInfo = @import("org/allbinary/animation/image/ImageArrayRotationAnimationInfo.zig").ImageArrayRotationAnimationInfo;
+const Exception = @import("java/lang/Exception.zig").Exception;
 
 pub const ImageArrayRotationAnimationCacheable = struct {
     const Self = @This();
@@ -43,13 +44,13 @@ pub const ImageArrayRotationAnimationCacheable = struct {
 
     pub fn getKey(self: *Self) ?Object {
         _ = self;
-        return Inheritance.upcast(?Object, NullUtil.getInstance().?.NULL_OBJECT);
+        return Inheritance.upcast(?Object, Inheritance.fieldPointer(NullUtil.getInstance().?, "NULL_OBJECT").*);
     }
     
 
     pub fn toString(self: *Self) ?*String {
         _ = self;
-        return Inheritance.upcast(?*String, StringUtil.getInstance().?.EMPTY_STRING);
+        return Inheritance.upcast(?*String, Inheritance.fieldPointer(StringUtil.getInstance().?, "EMPTY_STRING").*);
     }
 };
 

@@ -40,7 +40,7 @@ pub const BasicArrayListCacheable = struct {
 
     pub fn getKey(self: *Self) ?Object {
         _ = self;
-        return Inheritance.upcast(?Object, StringUtil.getInstance().?.EMPTY_STRING);
+        return Inheritance.upcast(?Object, Inheritance.fieldPointer(StringUtil.getInstance().?, "EMPTY_STRING").*);
     }
 };
 

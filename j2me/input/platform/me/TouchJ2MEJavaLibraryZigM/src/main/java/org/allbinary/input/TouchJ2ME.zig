@@ -24,6 +24,7 @@ const GameMotionGestureListener = @import("org/allbinary/input/motion/gesture/ob
 const MotionGestureReceiveInterfaceFactory = @import("org/allbinary/input/motion/gesture/observer/MotionGestureReceiveInterfaceFactory.zig").MotionGestureReceiveInterfaceFactory;
 const LogUtil = @import("org/allbinary/logic/communication/log/LogUtil.zig").LogUtil;
 const CommonStrings = @import("org/allbinary/string/CommonStrings.zig").CommonStrings;
+const Exception = @import("java/lang/Exception.zig").Exception;
 
 //TouchJ2ME
 pub const TouchJ2ME = struct {
@@ -44,7 +45,7 @@ pub const TouchJ2ME = struct {
         const this = allocator.create(Self) catch unreachable;
         this.* = .{};
         this.initFields();
-        const motionGesturesHandler: ?*BasicMotionGesturesHandler = Inheritance.upcast(?*BasicMotionGesturesHandler, Inheritance.receiverOf(this.motionRecognizer.?.getMotionGestureRecognizer().?, "getMotionGesturesHandler").getMotionGesturesHandler());
+        const motionGesturesHandler: ?*BasicMotionGesturesHandler = Inheritance.upcast(?*BasicMotionGesturesHandler, Inheritance.receiverOf(Inheritance.receiver(this.motionRecognizer.?, "getMotionGestureRecognizer").getMotionGestureRecognizer().?, "getMotionGesturesHandler").getMotionGesturesHandler());
         _ = Inheritance.call(motionGesturesHandler.?, "addListenerInterface", .{ Inheritance.callStatic(GameMotionGestureListener, "create1", .{ MotionGestureReceiveInterfaceFactory.getInstance() }) });
         return this;
     }
@@ -56,7 +57,7 @@ pub const TouchJ2ME = struct {
         }
         // catch (Exception e):
 //             const commonStrings: ?*CommonStrings = Inheritance.upcast(?*CommonStrings, CommonStrings.getInstance()); _ = commonStrings;
-//             _ = Inheritance.call(self.logUtil.?, "put", .{ commonStrings.?.EXCEPTION, self, String.literal("pointerDragged"), e });
+//             _ = Inheritance.call(self.logUtil.?, "put", .{ Inheritance.fieldPointer(commonStrings.?, "EXCEPTION").*, self, String.literal("pointerDragged"), e });
     }
     
 
@@ -66,7 +67,7 @@ pub const TouchJ2ME = struct {
         }
         // catch (Exception e):
 //             const commonStrings: ?*CommonStrings = Inheritance.upcast(?*CommonStrings, CommonStrings.getInstance()); _ = commonStrings;
-//             _ = Inheritance.call(self.logUtil.?, "put", .{ commonStrings.?.EXCEPTION, self, String.literal("pointerPressed"), e });
+//             _ = Inheritance.call(self.logUtil.?, "put", .{ Inheritance.fieldPointer(commonStrings.?, "EXCEPTION").*, self, String.literal("pointerPressed"), e });
     }
     
 
@@ -76,7 +77,7 @@ pub const TouchJ2ME = struct {
         }
         // catch (Exception e):
 //             const commonStrings: ?*CommonStrings = Inheritance.upcast(?*CommonStrings, CommonStrings.getInstance()); _ = commonStrings;
-//             _ = Inheritance.call(self.logUtil.?, "put", .{ commonStrings.?.EXCEPTION, self, String.literal("pointerReleased"), e });
+//             _ = Inheritance.call(self.logUtil.?, "put", .{ Inheritance.fieldPointer(commonStrings.?, "EXCEPTION").*, self, String.literal("pointerReleased"), e });
     }
 };
 

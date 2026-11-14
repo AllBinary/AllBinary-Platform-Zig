@@ -47,7 +47,7 @@ pub const MotionEventFactory = struct {
         this.initFields();
         this.source = source;
         this.id = id;
-        MotionEventFactory.index = Inheritance.upcast(@TypeOf(MotionEventFactory.index), Inheritance.receiverOf(TouchMotionGestureFactory.getInstance().?.LAST_MOTION.?, "getId").getId());
+        MotionEventFactory.index = Inheritance.upcast(@TypeOf(MotionEventFactory.index), Inheritance.receiverOf(Inheritance.fieldPointer(TouchMotionGestureFactory.getInstance().?, "LAST_MOTION").*.?, "getId").getId());
         return this;
     }
     
@@ -55,8 +55,8 @@ pub const MotionEventFactory = struct {
     pub fn getInstance(self: *Self) ?*AllBinaryEventObject {
         const inputFactory: ?*InputFactory = Inheritance.upcast(?*InputFactory, InputFactory.getInstance());
         const input: ?*Input = Inheritance.upcast(?*Input, Inheritance.call(inputFactory.?, "getInstanceById", .{ value_N66167: { const value_N66167_value = MotionEventFactory.index; MotionEventFactory.index += 1; break :value_N66167 value_N66167_value; } }));
-        if (Object.same(input, inputFactory.?.NO_INPUT)) {
-            return Inheritance.upcast(?*AllBinaryEventObject, Inheritance.callStatic(MotionGestureEvent, "create3", .{ self.source, self.id, Inheritance.cast(?*MotionGestureInput, TouchMotionGestureFactory.getInstance().?.NO_MOTION) }));
+        if (Object.same(input, Inheritance.fieldPointer(inputFactory.?, "NO_INPUT").*)) {
+            return Inheritance.upcast(?*AllBinaryEventObject, Inheritance.callStatic(MotionGestureEvent, "create3", .{ self.source, self.id, Inheritance.cast(?*MotionGestureInput, Inheritance.fieldPointer(TouchMotionGestureFactory.getInstance().?, "NO_MOTION").*) }));
         } else {
             return Inheritance.upcast(?*AllBinaryEventObject, Inheritance.callStatic(MotionGestureEvent, "create3", .{ self.source, self.id, Inheritance.cast(?*MotionGestureInput, input) }));
         }

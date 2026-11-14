@@ -27,12 +27,14 @@ const LogUtil = @import("org/allbinary/logic/communication/log/LogUtil.zig").Log
 const RectangleCollisionUtil = @import("org/allbinary/math/RectangleCollisionUtil.zig").RectangleCollisionUtil;
 const BasicArrayList = @import("org/allbinary/util/BasicArrayList.zig").BasicArrayList;
 const BasicTouchInputFactory = @import("org/allbinary/input/motion/button/BasicTouchInputFactory.zig").BasicTouchInputFactory;
-const CancelTouchButtonInputFactory = @import("org/allbinary/input/motion/button/CancelTouchButtonInputFactory.zig").CancelTouchButtonInputFactory;
 const CurrentlyPressedTouchButtonSingleton = @import("org/allbinary/input/motion/button/CurrentlyPressedTouchButtonSingleton.zig").CurrentlyPressedTouchButtonSingleton;
+const MultitouchReleaseHelper = @import("org/allbinary/input/motion/button/MultitouchReleaseHelper.zig").MultitouchReleaseHelper;
+const ReleaseHelper = @import("org/allbinary/input/motion/button/ReleaseHelper.zig").ReleaseHelper;
 const TouchButton = @import("org/allbinary/input/motion/button/TouchButton.zig").TouchButton;
 const TouchButtonFactory = @import("org/allbinary/input/motion/button/TouchButtonFactory.zig").TouchButtonFactory;
 const TouchButtonInput = @import("org/allbinary/input/motion/button/TouchButtonInput.zig").TouchButtonInput;
 const TouchScreenFactory = @import("org/allbinary/input/motion/button/TouchScreenFactory.zig").TouchScreenFactory;
+const Exception = @import("java/lang/Exception.zig").Exception;
 
 pub const TouchButtonRecognizer = struct {
     const Self = @This();
@@ -50,7 +52,7 @@ pub const TouchButtonRecognizer = struct {
         this.rectangleCollisionUtil = Inheritance.upcast(?*RectangleCollisionUtil, RectangleCollisionUtil.getInstance());
         this.upGameKeyEventHandler = Inheritance.upcast(?*UpGameKeyEventHandler, UpGameKeyEventHandler.getInstance());
         this.downGameKeyEventHandler = Inheritance.upcast(?*DownGameKeyEventHandler, DownGameKeyEventHandler.getInstance());
-        this.lastPressedTouchButtonInput = Inheritance.upcast(?*TouchButtonInput, BasicTouchInputFactory.getInstance().?.NONE);
+        this.lastPressedTouchButtonInput = Inheritance.upcast(?*TouchButtonInput, Inheritance.fieldPointer(BasicTouchInputFactory.getInstance().?, "NONE").*);
         this.currentlyPressedTouchButtonSingleton = Inheritance.upcast(?*CurrentlyPressedTouchButtonSingleton, CurrentlyPressedTouchButtonSingleton.getInstance());
         this.releaseHelper = null;
     }
@@ -86,7 +88,7 @@ pub const TouchButtonRecognizer = struct {
         defer javaMonitor.exit();
         var touchButtonInput: ?*TouchButtonInput = self.lastPressedTouchButtonInput;
         if (Inheritance.call(self.currentlyPressedTouchButtonSingleton.?, "contains", .{ touchButtonInput })) {
-            self.lastPressedTouchButtonInput = Inheritance.upcast(@TypeOf(self.lastPressedTouchButtonInput), BasicTouchInputFactory.getInstance().?.NONE);
+            self.lastPressedTouchButtonInput = Inheritance.upcast(@TypeOf(self.lastPressedTouchButtonInput), Inheritance.fieldPointer(BasicTouchInputFactory.getInstance().?, "NONE").*);
             _ = Inheritance.call(self, "processRelease", .{ touchButtonInput, deviceId });
             return true;
         } else {
@@ -97,10 +99,10 @@ pub const TouchButtonRecognizer = struct {
             {
                 var index: i32 = list.?.size() - 1;
                 while (index >= 0) : (index -= 1) {
-                touchButton = Inheritance.cast(?*TouchButton, list.?.objectArray[@intCast(index)]);
+                touchButton = Inheritance.cast(?*TouchButton, Inheritance.fieldPointer(list.?, "objectArray").*[@intCast(index)]);
                 rectangle = Inheritance.upcast(@TypeOf(rectangle), Inheritance.receiver(touchButton.?, "getRectangle").getRectangle());
-                point = Inheritance.upcast(@TypeOf(point), rectangle.?.getPoint());
-                if (Inheritance.call(self.rectangleCollisionUtil.?, "isInside", .{ point.?.getX(), point.?.getY(), rectangle.?.getMaxX(), rectangle.?.getMaxY(), x, y })) {
+                point = Inheritance.upcast(@TypeOf(point), Inheritance.receiver(rectangle.?, "getPoint").getPoint());
+                if (Inheritance.call(self.rectangleCollisionUtil.?, "isInside", .{ point.?.getX(), point.?.getY(), Inheritance.receiver(rectangle.?, "getMaxX").getMaxX(), Inheritance.receiver(rectangle.?, "getMaxY").getMaxY(), x, y })) {
                     touchButtonInput = Inheritance.upcast(@TypeOf(touchButtonInput), Inheritance.receiver(touchButton.?, "getTouchButtonInput").getTouchButtonInput());
                     _ = Inheritance.call(self, "processRelease", .{ touchButtonInput, deviceId });
                     return true;
@@ -126,10 +128,10 @@ pub const TouchButtonRecognizer = struct {
         {
             var index: i32 = list.?.size() - 1;
             while (index >= 0) : (index -= 1) {
-            touchButton = Inheritance.cast(?*TouchButton, list.?.objectArray[@intCast(index)]);
+            touchButton = Inheritance.cast(?*TouchButton, Inheritance.fieldPointer(list.?, "objectArray").*[@intCast(index)]);
             rectangle = Inheritance.upcast(@TypeOf(rectangle), Inheritance.receiver(touchButton.?, "getRectangle").getRectangle());
-            point = Inheritance.upcast(@TypeOf(point), rectangle.?.getPoint());
-            if (Inheritance.call(self.rectangleCollisionUtil.?, "isInside", .{ point.?.getX(), point.?.getY(), rectangle.?.getMaxX(), rectangle.?.getMaxY(), x, y })) {
+            point = Inheritance.upcast(@TypeOf(point), Inheritance.receiver(rectangle.?, "getPoint").getPoint());
+            if (Inheritance.call(self.rectangleCollisionUtil.?, "isInside", .{ point.?.getX(), point.?.getY(), Inheritance.receiver(rectangle.?, "getMaxX").getMaxX(), Inheritance.receiver(rectangle.?, "getMaxY").getMaxY(), x, y })) {
                 touchButtonInput = Inheritance.upcast(@TypeOf(touchButtonInput), Inheritance.receiver(touchButton.?, "getTouchButtonInput").getTouchButtonInput());
                 if (!Inheritance.call(self.currentlyPressedTouchButtonSingleton.?, "contains", .{ touchButtonInput })) {
                     _ = Inheritance.call(self.releaseHelper.?, "release", .{ touchButtonInput, deviceId });
@@ -145,77 +147,5 @@ pub const TouchButtonRecognizer = struct {
         }
         return false;
     }
-    //CurrentlyPressedTouchButtonSingletonDebug.getInstance();
-    pub const ReleaseHelper = struct {
-        const Self = @This();
-        pub const java_name = "org.allbinary.input.motion.button.ReleaseHelper";
-        touchButtonRecognizer: ?*TouchButtonRecognizer = null,
-
-    fn initFields(this: *Self) void {
-        _ = this;
-            
-    }
-        
-
-        pub fn create1(touchButtonRecognizer: ?*TouchButtonRecognizer) *Self {
-            const this = allocator.create(Self) catch unreachable;
-            this.* = .{};
-            this.initFields();
-            this.touchButtonRecognizer = touchButtonRecognizer;
-            return this;
-        }
-        
-
-        // throws Exception
-        pub fn release(self: *Self, touchButtonInput: ?*TouchButtonInput, deviceId: i32) void {
-            _ = touchButtonInput;
-            var nextTouchButtonInput: ?*TouchButtonInput = null;
-            var gameKeyEvent: ?*GameKeyEvent = null;
-            {
-                var index: i32 = Inheritance.receiverOf(self.touchButtonRecognizer.?.currentlyPressedTouchButtonSingleton.?, "size").size() - 1;
-                while (index >= 0) : (index -= 1) {
-                nextTouchButtonInput = Inheritance.upcast(@TypeOf(nextTouchButtonInput), Inheritance.call(self.touchButtonRecognizer.?.currentlyPressedTouchButtonSingleton.?, "get", .{ index }));
-                gameKeyEvent = Inheritance.upcast(@TypeOf(gameKeyEvent), Inheritance.receiver(nextTouchButtonInput.?, "getGameKeyEvent").getGameKeyEvent());
-                _ = Inheritance.call(self.touchButtonRecognizer.?.upGameKeyEventHandler.?, "fireEvent", .{ gameKeyEvent });
-                _ = Inheritance.call(Inheritance.call(self.touchButtonRecognizer.?.upGameKeyEventHandler.?, "getInstanceForDevice", .{ deviceId }).?, "fireEvent", .{ gameKeyEvent });
-                _ = Inheritance.call(self.touchButtonRecognizer.?.currentlyPressedTouchButtonSingleton.?, "removeAt", .{ index });
-                }
-            }
-        }
-    };
-    pub const MultitouchReleaseHelper = struct {
-        const Self = @This();
-        pub const java_name = "org.allbinary.input.motion.button.MultitouchReleaseHelper";
-        base: ReleaseHelper = undefined,
-        
-
-        pub fn create1(touchButtonRecognizer: ?*TouchButtonRecognizer) *Self {
-            const this = allocator.create(Self) catch unreachable;
-            this.* = .{};
-            
-            Inheritance.bindOverrides(this);
-            return this;
-        }
-        
-
-        // throws Exception
-        pub fn release(self: *Self, touchButtonInput: ?*TouchButtonInput, deviceId: i32) void {
-            const cancelTouchButtonInput: ?*TouchButtonInput = Inheritance.upcast(?*TouchButtonInput, Inheritance.call(CancelTouchButtonInputFactory.getInstance().?, "getCancel", .{ touchButtonInput }));
-            var nextTouchButtonInput: ?*TouchButtonInput = null;
-            var gameKeyEvent: ?*GameKeyEvent = null;
-            {
-                var index: i32 = Inheritance.receiverOf(self.touchButtonRecognizer.?.currentlyPressedTouchButtonSingleton.?, "size").size() - 1;
-                while (index >= 0) : (index -= 1) {
-                nextTouchButtonInput = Inheritance.upcast(@TypeOf(nextTouchButtonInput), Inheritance.call(self.touchButtonRecognizer.?.currentlyPressedTouchButtonSingleton.?, "get", .{ index }));
-                if (Object.same(cancelTouchButtonInput, nextTouchButtonInput)) {
-                    gameKeyEvent = Inheritance.upcast(@TypeOf(gameKeyEvent), Inheritance.receiver(nextTouchButtonInput.?, "getGameKeyEvent").getGameKeyEvent());
-                    _ = Inheritance.call(self.touchButtonRecognizer.?.upGameKeyEventHandler.?, "fireEvent", .{ gameKeyEvent });
-                    _ = Inheritance.call(Inheritance.call(self.touchButtonRecognizer.?.upGameKeyEventHandler.?, "getInstanceForDevice", .{ deviceId }).?, "fireEvent", .{ gameKeyEvent });
-                    _ = Inheritance.call(self.touchButtonRecognizer.?.currentlyPressedTouchButtonSingleton.?, "removeAt", .{ index });
-                }
-                }
-            }
-        }
-    };
 };
 

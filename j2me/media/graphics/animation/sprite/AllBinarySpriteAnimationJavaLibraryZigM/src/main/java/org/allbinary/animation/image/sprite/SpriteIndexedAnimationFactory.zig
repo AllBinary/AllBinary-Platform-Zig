@@ -18,8 +18,8 @@ const allocator = std.heap.page_allocator;
 const String = @import("java/lang/String.zig").String;
 const Object = @import("java/lang/Object.zig").Object;
 const Inheritance = @import("zig/Inheritance.zig");
-// const Image = @import("javax/microedition/lcdui/Image.zig").Image;
-// const Sprite = @import("javax/microedition/lcdui/game/Sprite.zig").Sprite;
+const Image = @import("javax/microedition/lcdui/Image.zig").Image;
+const Sprite = @import("javax/microedition/lcdui/game/Sprite.zig").Sprite;
 const AndroidUtil = @import("org/allbinary/AndroidUtil.zig").AndroidUtil;
 const Animation = @import("org/allbinary/animation/Animation.zig").Animation;
 const AnimationBehaviorFactory = @import("org/allbinary/animation/AnimationBehaviorFactory.zig").AnimationBehaviorFactory;
@@ -31,6 +31,7 @@ const AnimationFactorySpriteScaleUtil = @import("org/allbinary/image/sprite/Anim
 const PrimitiveIntUtil = @import("org/allbinary/logic/math/PrimitiveIntUtil.zig").PrimitiveIntUtil;
 const AdjustedSpriteIndexedAnimation = @import("org/allbinary/animation/image/sprite/AdjustedSpriteIndexedAnimation.zig").AdjustedSpriteIndexedAnimation;
 const SpriteIndexedAnimation = @import("org/allbinary/animation/image/sprite/SpriteIndexedAnimation.zig").SpriteIndexedAnimation;
+const Exception = @import("java/lang/Exception.zig").Exception;
 
 pub const SpriteIndexedAnimationFactory = struct {
     const Self = @This();
@@ -42,7 +43,7 @@ pub const SpriteIndexedAnimationFactory = struct {
 
     fn initFields(this: *Self) void {
         this.animationFactorySpriteScaleUtil = Inheritance.upcast(?*AnimationFactorySpriteScaleUtil, AnimationFactorySpriteScaleUtil.getInstance());
-        this.basicColorArray = BasicColorUtil.getInstance().?.ZERO_ARRAY;
+        this.basicColorArray = Inheritance.fieldPointer(BasicColorUtil.getInstance().?, "ZERO_ARRAY").*;
     }
     
 
@@ -62,7 +63,7 @@ pub const SpriteIndexedAnimationFactory = struct {
 
     // throws Exception
     pub fn createWH(image: ?*Image, width: i32, height: i32, animationBehaviorFactory: ?*AnimationBehaviorFactory) ?*SpriteIndexedAnimationFactory {
-        return Inheritance.callStatic(SpriteIndexedAnimationFactory, "create8", .{ image, BasicColorUtil.getInstance().?.ZERO_ARRAY, PrimitiveIntUtil.getArrayInstance(), width, height, 0, 0, animationBehaviorFactory });
+        return Inheritance.callStatic(SpriteIndexedAnimationFactory, "create8", .{ image, Inheritance.fieldPointer(BasicColorUtil.getInstance().?, "ZERO_ARRAY").*, PrimitiveIntUtil.getArrayInstance(), width, height, 0, 0, animationBehaviorFactory });
     }
     
 
@@ -78,10 +79,10 @@ pub const SpriteIndexedAnimationFactory = struct {
     
 
     pub fn initHWH(self: *Self) void {
-        Inheritance.fieldPointer(self, "animationFactoryInitializationVisitor").*.?.dx = Inheritance.upcast(@TypeOf(Inheritance.fieldPointer(self, "animationFactoryInitializationVisitor").*.?.dx), -(Inheritance.fieldPointer(self, "animationFactoryInitializationVisitor").*.?.width >> @intCast(2)));
-        Inheritance.fieldPointer(self, "animationFactoryInitializationVisitor").*.?.dy = Inheritance.upcast(@TypeOf(Inheritance.fieldPointer(self, "animationFactoryInitializationVisitor").*.?.dy), -(Inheritance.fieldPointer(self, "animationFactoryInitializationVisitor").*.?.height >> @intCast(2)));
+        Inheritance.fieldPointer(Inheritance.fieldPointer(self, "animationFactoryInitializationVisitor").*.?, "dx").* = Inheritance.upcast(@TypeOf(Inheritance.fieldPointer(Inheritance.fieldPointer(self, "animationFactoryInitializationVisitor").*.?, "dx").*), -(Inheritance.fieldPointer(Inheritance.fieldPointer(self, "animationFactoryInitializationVisitor").*.?, "width").* >> @intCast(2)));
+        Inheritance.fieldPointer(Inheritance.fieldPointer(self, "animationFactoryInitializationVisitor").*.?, "dy").* = Inheritance.upcast(@TypeOf(Inheritance.fieldPointer(Inheritance.fieldPointer(self, "animationFactoryInitializationVisitor").*.?, "dy").*), -(Inheritance.fieldPointer(Inheritance.fieldPointer(self, "animationFactoryInitializationVisitor").*.?, "height").* >> @intCast(2)));
         if (AndroidUtil.isAndroid()) {
-            Inheritance.fieldPointer(self, "animationFactoryInitializationVisitor").*.?.dx += 3;
+            Inheritance.fieldPointer(Inheritance.fieldPointer(self, "animationFactoryInitializationVisitor").*.?, "dx").* += 3;
         }
     }
     
@@ -89,9 +90,9 @@ pub const SpriteIndexedAnimationFactory = struct {
     // throws Exception
     pub fn getInstance(self: *Self, instanceId: i32) ?*Animation {
         _ = instanceId;
-        const sprite: ?*Sprite = Inheritance.upcast(?*Sprite, Inheritance.call(self.animationFactorySpriteScaleUtil.?, "createImage", .{ Inheritance.receiver(self, "getImage").getImage(), Inheritance.fieldPointer(self, "animationFactoryInitializationVisitor").*.?.width, Inheritance.fieldPointer(self, "animationFactoryInitializationVisitor").*.?.height, Inheritance.fieldPointer(self, "scaleProperties").*.?.scaleWidth, Inheritance.fieldPointer(self, "scaleProperties").*.?.scaleHeight }));
-        if (Inheritance.fieldPointer(self, "animationFactoryInitializationVisitor").*.?.dx != 0 or Inheritance.fieldPointer(self, "animationFactoryInitializationVisitor").*.?.dy != 0) {
-            return Inheritance.upcast(?*Animation, Inheritance.callStatic(AdjustedSpriteIndexedAnimation, "create6", .{ sprite, Inheritance.receiver(self, "getImage").getImage(), self.basicColorArray, Inheritance.fieldPointer(self, "animationFactoryInitializationVisitor").*.?.dx, Inheritance.fieldPointer(self, "animationFactoryInitializationVisitor").*.?.dy, Inheritance.fieldPointer(self, "animationBehaviorFactory").*.?.getOrCreateInstance() }));
+        const sprite: ?*Sprite = Inheritance.upcast(?*Sprite, Inheritance.call(self.animationFactorySpriteScaleUtil.?, "createImage", .{ Inheritance.receiver(self, "getImage").getImage(), Inheritance.fieldPointer(Inheritance.fieldPointer(self, "animationFactoryInitializationVisitor").*.?, "width").*, Inheritance.fieldPointer(Inheritance.fieldPointer(self, "animationFactoryInitializationVisitor").*.?, "height").*, Inheritance.fieldPointer(Inheritance.fieldPointer(self, "scaleProperties").*.?, "scaleWidth").*, Inheritance.fieldPointer(Inheritance.fieldPointer(self, "scaleProperties").*.?, "scaleHeight").* }));
+        if (Inheritance.fieldPointer(Inheritance.fieldPointer(self, "animationFactoryInitializationVisitor").*.?, "dx").* != 0 or Inheritance.fieldPointer(Inheritance.fieldPointer(self, "animationFactoryInitializationVisitor").*.?, "dy").* != 0) {
+            return Inheritance.upcast(?*Animation, Inheritance.callStatic(AdjustedSpriteIndexedAnimation, "create6", .{ sprite, Inheritance.receiver(self, "getImage").getImage(), self.basicColorArray, Inheritance.fieldPointer(Inheritance.fieldPointer(self, "animationFactoryInitializationVisitor").*.?, "dx").*, Inheritance.fieldPointer(Inheritance.fieldPointer(self, "animationFactoryInitializationVisitor").*.?, "dy").*, Inheritance.fieldPointer(self, "animationBehaviorFactory").*.?.getOrCreateInstance() }));
         } else {
             return Inheritance.upcast(?*Animation, Inheritance.callStatic(SpriteIndexedAnimation, "create4", .{ sprite, Inheritance.receiver(self, "getImage").getImage(), self.basicColorArray, Inheritance.fieldPointer(self, "animationBehaviorFactory").*.?.getOrCreateInstance() }));
         }

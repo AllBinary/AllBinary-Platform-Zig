@@ -18,7 +18,7 @@ const allocator = std.heap.page_allocator;
 const String = @import("java/lang/String.zig").String;
 const Object = @import("java/lang/Object.zig").Object;
 const Inheritance = @import("zig/Inheritance.zig");
-// const Image = @import("javax/microedition/lcdui/Image.zig").Image;
+const Image = @import("javax/microedition/lcdui/Image.zig").Image;
 const Animation = @import("org/allbinary/animation/Animation.zig").Animation;
 const AnimationBehaviorFactory = @import("org/allbinary/animation/AnimationBehaviorFactory.zig").AnimationBehaviorFactory;
 const AnimationInterfaceFactoryInterface = @import("org/allbinary/animation/AnimationInterfaceFactoryInterface.zig").AnimationInterfaceFactoryInterface;
@@ -29,6 +29,7 @@ const ScaleProperties = @import("org/allbinary/media/ScaleProperties.zig").Scale
 const ImageToRotationImageArrayUtil = @import("org/allbinary/media/image/ImageToRotationImageArrayUtil.zig").ImageToRotationImageArrayUtil;
 const AdjustedImageArrayRotationAnimation = @import("org/allbinary/animation/image/AdjustedImageArrayRotationAnimation.zig").AdjustedImageArrayRotationAnimation;
 const ImageArrayRotationAnimationInfo = @import("org/allbinary/animation/image/ImageArrayRotationAnimationInfo.zig").ImageArrayRotationAnimationInfo;
+const Exception = @import("java/lang/Exception.zig").Exception;
 
 //TWB - Adjustments should be done in the resource creation and not at the animation level
 pub const PooledImageArrayRotationAnimationFactory = struct {
@@ -39,14 +40,14 @@ pub const PooledImageArrayRotationAnimationFactory = struct {
     // Implements AnimationInterfaceFactoryInterface
 
     fn initFields(this: *Self) void {
-        this.allBinaryImageRotationAnimationInfo = Inheritance.upcast(?Object, NullUtil.getInstance().?.NULL_OBJECT);
+        this.allBinaryImageRotationAnimationInfo = Inheritance.upcast(?Object, Inheritance.fieldPointer(NullUtil.getInstance().?, "NULL_OBJECT").*);
         
     }
     
 
     // throws Exception
     pub fn createFactory(image: ?*Image, animationBehaviorFactory: ?*AnimationBehaviorFactory) ?*PooledImageArrayRotationAnimationFactory {
-        const totalAngle: i32 = @as(i32, @intCast(AngleFactory.getInstance().?.TOTAL_ANGLE));
+        const totalAngle: i32 = Inheritance.number(i32, Inheritance.fieldPointer(AngleFactory.getInstance().?, "TOTAL_ANGLE").*);
         const angleIncrement: i32 = (@divTrunc(totalAngle, Inheritance.receiverOf(GameConfigurationCentral.getInstance().?, "getGameControlFidelity").getGameControlFidelity()));
         return Inheritance.callStatic(PooledImageArrayRotationAnimationFactory, "create7", .{ image, image.?.getWidth(), image.?.getHeight(), -(image.?.getWidth() >> @intCast(2)), -(image.?.getHeight() >> @intCast(2)), angleIncrement, animationBehaviorFactory });
     }
@@ -54,7 +55,7 @@ pub const PooledImageArrayRotationAnimationFactory = struct {
 
     // throws Exception
     pub fn createDXY(image: ?*Image, dx: i32, dy: i32, animationBehaviorFactory: ?*AnimationBehaviorFactory) ?*PooledImageArrayRotationAnimationFactory {
-        const totalAngle: i32 = @as(i32, @intCast(AngleFactory.getInstance().?.TOTAL_ANGLE));
+        const totalAngle: i32 = Inheritance.number(i32, Inheritance.fieldPointer(AngleFactory.getInstance().?, "TOTAL_ANGLE").*);
         const angleIncrement: i32 = (@divTrunc(totalAngle, Inheritance.receiverOf(GameConfigurationCentral.getInstance().?, "getGameControlFidelity").getGameControlFidelity()));
         return Inheritance.callStatic(PooledImageArrayRotationAnimationFactory, "create7", .{ image, image.?.getWidth(), image.?.getHeight(), dx, dy, angleIncrement, animationBehaviorFactory });
     }
@@ -67,7 +68,7 @@ pub const PooledImageArrayRotationAnimationFactory = struct {
         this.* = .{};
         this.initFields();
         this.animationBehaviorFactory = animationBehaviorFactory;
-        const totalAngle: i32 = @as(i32, @intCast(AngleFactory.getInstance().?.TOTAL_ANGLE));
+        const totalAngle: i32 = Inheritance.number(i32, Inheritance.fieldPointer(AngleFactory.getInstance().?, "TOTAL_ANGLE").*);
         const imageArray: []?*Image = Inheritance.call(ImageToRotationImageArrayUtil.getInstance().?, "generate", .{ image, angleIncrement, totalAngle });
         this.allBinaryImageRotationAnimationInfo = Inheritance.upcast(@TypeOf(this.allBinaryImageRotationAnimationInfo), Inheritance.callStatic(ImageArrayRotationAnimationInfo, "create5", .{ imageArray, angleIncrement, totalAngle, dx, dy }));
         return this;

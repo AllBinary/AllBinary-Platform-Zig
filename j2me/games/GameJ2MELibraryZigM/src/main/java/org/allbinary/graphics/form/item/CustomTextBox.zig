@@ -18,9 +18,9 @@ const allocator = std.heap.page_allocator;
 const String = @import("java/lang/String.zig").String;
 const Object = @import("java/lang/Object.zig").Object;
 const Inheritance = @import("zig/Inheritance.zig");
-// const CommandListener = @import("javax/microedition/lcdui/CommandListener.zig").CommandListener;
-// const Font = @import("javax/microedition/lcdui/Font.zig").Font;
-// const Graphics = @import("javax/microedition/lcdui/Graphics.zig").Graphics;
+const CommandListener = @import("javax/microedition/lcdui/CommandListener.zig").CommandListener;
+const Font = @import("javax/microedition/lcdui/Font.zig").Font;
+const Graphics = @import("javax/microedition/lcdui/Graphics.zig").Graphics;
 const J2MEUtil = @import("org/allbinary/J2MEUtil.zig").J2MEUtil;
 const GameCommandCanvas = @import("org/allbinary/game/displayable/canvas/GameCommandCanvas.zig").GameCommandCanvas;
 const Input = @import("org/allbinary/game/input/Input.zig").Input;
@@ -33,6 +33,7 @@ const StringMaker = @import("org/allbinary/logic/string/StringMaker.zig").String
 const StringUtil = @import("org/allbinary/logic/string/StringUtil.zig").StringUtil;
 const CommonSeps = @import("org/allbinary/string/CommonSeps.zig").CommonSeps;
 const ABTextFieldItem = @import("org/allbinary/graphics/form/item/ABTextFieldItem.zig").ABTextFieldItem;
+const Exception = @import("java/lang/Exception.zig").Exception;
 
 pub const CustomTextBox = struct {
     const Self = @This();
@@ -55,7 +56,7 @@ pub const CustomTextBox = struct {
         this.base = Inheritance.callStatic(GameCommandCanvas, "create4", .{ cmdListener, label, backgroundBasicColor, foregroundBasicColor }).*;
         this.initFields();
         const stringUtil: ?*StringUtil = Inheritance.upcast(?*StringUtil, StringUtil.getInstance());
-        const textFieldItem: ?*ABTextFieldItem = Inheritance.callStatic(ABTextFieldItem, "create10", .{ this, TextItemVisitor.create(), stringUtil.?.EMPTY_STRING, stringUtil.?.EMPTY_STRING, maxSize, 0, stringUtil.?.EMPTY_STRING, font, backgroundBasicColor, foregroundBasicColor });
+        const textFieldItem: ?*ABTextFieldItem = Inheritance.callStatic(ABTextFieldItem, "create10", .{ this, TextItemVisitor.create(), Inheritance.fieldPointer(stringUtil.?, "EMPTY_STRING").*, Inheritance.fieldPointer(stringUtil.?, "EMPTY_STRING").*, maxSize, 0, Inheritance.fieldPointer(stringUtil.?, "EMPTY_STRING").*, font, backgroundBasicColor, foregroundBasicColor });
         _ = Inheritance.call(textFieldItem.?, "setString", .{ text });
         this.textFieldItem = textFieldItem;
         _ = Inheritance.call(this, "setTitle", .{ label });
@@ -71,7 +72,7 @@ pub const CustomTextBox = struct {
 
     pub fn onEventRaw(self: *Self, keyCode: i32, deviceId: i32, repeated: bool) void {
         _ = repeated;
-        _ = Inheritance.call(Inheritance.fieldPointer(self, "logUtil").*.?, "putF", .{ Object.toString(Object.of(Inheritance.call(Inheritance.call(StringMaker.create(), "append", .{ Inheritance.fieldPointer(self, "commonStrings").*.?.START }).?, "appendint", .{ keyCode }))), self, String.literal("onEvent") });
+        _ = Inheritance.call(Inheritance.fieldPointer(self, "logUtil").*.?, "putF", .{ Object.toString(Object.of(Inheritance.call(Inheritance.call(StringMaker.create(), "append", .{ Inheritance.fieldPointer(Inheritance.fieldPointer(self, "commonStrings").*.?, "START").* }).?, "appendint", .{ keyCode }))), self, String.literal("onEvent") });
         _ = Inheritance.call(self, "keyPressedByDevice", .{ keyCode, deviceId });
     }
     
@@ -94,7 +95,7 @@ pub const CustomTextBox = struct {
     pub fn keyPressedByDevice(self: *Self, keyCode: i32, deviceId: i32) void {
         _ = deviceId;
         { // try
-            _ = Inheritance.call(Inheritance.fieldPointer(self, "logUtil").*.?, "putF", .{ Object.toString(Object.of(Inheritance.call(Inheritance.call(StringMaker.create(), "append", .{ CommonSeps.getInstance().?.SPACE }).?, "appendint", .{ keyCode }))), self, Inheritance.fieldPointer(self, "gameInputStrings").*.?.KEY_PRESSED });
+            _ = Inheritance.call(Inheritance.fieldPointer(self, "logUtil").*.?, "putF", .{ Object.toString(Object.of(Inheritance.call(Inheritance.call(StringMaker.create(), "append", .{ Inheritance.fieldPointer(CommonSeps.getInstance().?, "SPACE").* }).?, "appendint", .{ keyCode }))), self, Inheritance.fieldPointer(Inheritance.fieldPointer(self, "gameInputStrings").*.?, "KEY_PRESSED").* });
             const platformKeyFactory: ?*PlatformKeyFactory = Inheritance.upcast(?*PlatformKeyFactory, PlatformKeyFactory.getInstance());
             const input: ?*Input = Inheritance.upcast(?*Input, Inheritance.call(self.inputFactory.?, "getInstanceById", .{ keyCode }));
             if (Inheritance.call(platformKeyFactory.?, "isSubmission", .{ input })) {
@@ -104,7 +105,7 @@ pub const CustomTextBox = struct {
             }
         }
         // catch (Exception e):
-//             _ = Inheritance.call(Inheritance.fieldPointer(self, "logUtil").*.?, "put", .{ Inheritance.fieldPointer(self, "commonStrings").*.?.EXCEPTION, self, Inheritance.fieldPointer(self, "gameInputStrings").*.?.KEY_PRESSED, e });
+//             _ = Inheritance.call(Inheritance.fieldPointer(self, "logUtil").*.?, "put", .{ Inheritance.fieldPointer(Inheritance.fieldPointer(self, "commonStrings").*.?, "EXCEPTION").*, self, Inheritance.fieldPointer(Inheritance.fieldPointer(self, "gameInputStrings").*.?, "KEY_PRESSED").*, e });
     }
     
 

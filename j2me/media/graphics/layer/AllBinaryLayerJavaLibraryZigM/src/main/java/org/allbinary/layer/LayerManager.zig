@@ -6,7 +6,7 @@ const allocator = std.heap.page_allocator;
 const String = @import("java/lang/String.zig").String;
 const Object = @import("java/lang/Object.zig").Object;
 const Inheritance = @import("zig/Inheritance.zig");
-// const Graphics = @import("javax/microedition/lcdui/Graphics.zig").Graphics;
+const Graphics = @import("javax/microedition/lcdui/Graphics.zig").Graphics;
 const TsUtil = @import("org/allbinary/TsUtil.zig").TsUtil;
 const LogUtil = @import("org/allbinary/logic/communication/log/LogUtil.zig").LogUtil;
 const CommonStrings = @import("org/allbinary/string/CommonStrings.zig").CommonStrings;
@@ -17,6 +17,7 @@ const ABSystemWrapper = @import("org/allbinary/logic/ABSystemWrapper.zig").ABSys
 const AllBinaryLayer = @import("org/allbinary/layer/AllBinaryLayer.zig").AllBinaryLayer;
 const Layer = @import("org/allbinary/layer/Layer.zig").Layer;
 const LayerManagerLoggingBase = @import("org/allbinary/layer/LayerManagerLoggingBase.zig").LayerManagerLoggingBase;
+const Exception = @import("java/lang/Exception.zig").Exception;
 
 pub const LayerManager = struct {
     const Self = @This();
@@ -44,7 +45,7 @@ pub const LayerManager = struct {
         const this = allocator.create(Self) catch unreachable;
         this.* = .{};
         this.initFields();
-        _ = Inheritance.call(this.logUtil.?, "putF", .{ this.commonStrings.?.START, this, this.commonStrings.?.CONSTRUCTOR });
+        _ = Inheritance.call(this.logUtil.?, "putF", .{ Inheritance.fieldPointer(this.commonStrings.?, "START").*, this, Inheritance.fieldPointer(this.commonStrings.?, "CONSTRUCTOR").* });
         this.layerManagerLogging = layerManagerLogging;
         return this;
     }
@@ -65,7 +66,7 @@ pub const LayerManager = struct {
                 var index: i32 = 0;
                 while (index < size) : (index += 1) {
                 nextLayerInterface = Inheritance.cast(?*AllBinaryLayer, Inheritance.call(self.list.?, "get", .{ index }));
-                if (Inheritance.receiver(layerInterface.?, "getZP").getZP() > Inheritance.receiver(nextLayerInterface.?, "getZP").getZP()) {
+                if (Inheritance.arithmetic(.greater, Inheritance.receiver(layerInterface.?, "getZP").getZP(), Inheritance.receiver(nextLayerInterface.?, "getZP").getZP())) {
                     _ = Inheritance.call(self.list.?, "addAt", .{ index, layerInterface });
                     return;
                 }
@@ -84,7 +85,7 @@ pub const LayerManager = struct {
             var index: i32 = 0;
             while (index < size) : (index += 1) {
             nextLayerInterface = Inheritance.cast(?*AllBinaryLayer, Inheritance.call(self.list.?, "get", .{ index }));
-            if (Inheritance.receiver(layerInterface.?, "getZP").getZP() > Inheritance.receiver(nextLayerInterface.?, "getZP").getZP()) {
+            if (Inheritance.arithmetic(.greater, Inheritance.receiver(layerInterface.?, "getZP").getZP(), Inheritance.receiver(nextLayerInterface.?, "getZP").getZP())) {
                 _ = Inheritance.call(self, "appendAt", .{ layerInterface, index });
                 return;
             }
@@ -121,7 +122,7 @@ pub const LayerManager = struct {
     
 
     pub fn getLayerAt(self: *Self, index: i32) ?*Layer {
-        return Inheritance.cast(?*Layer, self.list.?.objectArray[@intCast(index)]);
+        return Inheritance.cast(?*Layer, Inheritance.fieldPointer(self.list.?, "objectArray").*[@intCast(index)]);
     }
     
 
@@ -153,8 +154,8 @@ pub const LayerManager = struct {
             {
                 var index: i32 = self.list.?.size();
                 while (value_N68215: { index -= 1; break :value_N68215 index; } >= 0) {
-                comp = Inheritance.cast(?*Layer, self.list.?.objectArray[@intCast(index)]);
-                if (comp != null and comp.?.isVisible()) {
+                comp = Inheritance.cast(?*Layer, Inheritance.fieldPointer(self.list.?, "objectArray").*[@intCast(index)]);
+                if (!Object.isNull(comp) and comp.?.isVisible()) {
                     _ = Inheritance.call(comp.?, "paint", .{ g });
                 }
                 }

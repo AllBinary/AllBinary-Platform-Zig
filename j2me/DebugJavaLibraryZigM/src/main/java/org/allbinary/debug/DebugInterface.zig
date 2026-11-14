@@ -26,11 +26,11 @@ pub const DebugInterface = struct {
     pointer: *anyopaque,
     object: Object,
     toStringFn: *const fn (pointer: *anyopaque) ?*String,
-    startFn: *const fn (pointer: *anyopaque) void,
-    stopFn: *const fn (pointer: *anyopaque) void,
-    getStartTimeFn: *const fn (pointer: *anyopaque) i64,
-    getMaxTimeFn: *const fn (pointer: *anyopaque) i64,
-    isRunningFn: *const fn (pointer: *anyopaque) bool,
+    startFn: *const fn (interface_pointer: *anyopaque) void,
+    stopFn: *const fn (interface_pointer: *anyopaque) void,
+    getStartTimeFn: *const fn (interface_pointer: *anyopaque) i64,
+    getMaxTimeFn: *const fn (interface_pointer: *anyopaque) i64,
+    isRunningFn: *const fn (interface_pointer: *anyopaque) bool,
 
     pub fn start(self: *Self) void {
         return self.startFn(self.pointer);
@@ -58,30 +58,30 @@ pub const DebugInterface = struct {
 
     // The interface value of an object with the methods. Like a Java class a method can be declared by the object or a superclass.
     pub fn of(object: anytype) ?*Self {
-        const Implementation = @TypeOf(object);
+        const ImplementationType = @TypeOf(object);
         const Methods = struct {
             fn toString(pointer: *anyopaque) ?*String {
-                const implementation: Implementation = @ptrCast(@alignCast(pointer));
+                const implementation: ImplementationType = @ptrCast(@alignCast(pointer));
                 return String.valueOf(implementation);
             }
-            fn start(pointer: *anyopaque) void {
-                const implementation: Implementation = @ptrCast(@alignCast(pointer));
+            fn start(interface_pointer: *anyopaque) void {
+                const implementation: ImplementationType = @ptrCast(@alignCast(interface_pointer));
                 return Inheritance.receiver(implementation, "start").start();
             }
-            fn stop(pointer: *anyopaque) void {
-                const implementation: Implementation = @ptrCast(@alignCast(pointer));
+            fn stop(interface_pointer: *anyopaque) void {
+                const implementation: ImplementationType = @ptrCast(@alignCast(interface_pointer));
                 return Inheritance.receiver(implementation, "stop").stop();
             }
-            fn getStartTime(pointer: *anyopaque) i64 {
-                const implementation: Implementation = @ptrCast(@alignCast(pointer));
+            fn getStartTime(interface_pointer: *anyopaque) i64 {
+                const implementation: ImplementationType = @ptrCast(@alignCast(interface_pointer));
                 return Inheritance.receiver(implementation, "getStartTime").getStartTime();
             }
-            fn getMaxTime(pointer: *anyopaque) i64 {
-                const implementation: Implementation = @ptrCast(@alignCast(pointer));
+            fn getMaxTime(interface_pointer: *anyopaque) i64 {
+                const implementation: ImplementationType = @ptrCast(@alignCast(interface_pointer));
                 return Inheritance.receiver(implementation, "getMaxTime").getMaxTime();
             }
-            fn isRunning(pointer: *anyopaque) bool {
-                const implementation: Implementation = @ptrCast(@alignCast(pointer));
+            fn isRunning(interface_pointer: *anyopaque) bool {
+                const implementation: ImplementationType = @ptrCast(@alignCast(interface_pointer));
                 return Inheritance.receiver(implementation, "isRunning").isRunning();
             }
         };

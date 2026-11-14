@@ -28,6 +28,7 @@ const AllBinaryEventObject = @import("org/allbinary/logic/util/event/AllBinaryEv
 const EventStrings = @import("org/allbinary/logic/util/event/EventStrings.zig").EventStrings;
 const CommonStrings = @import("org/allbinary/string/CommonStrings.zig").CommonStrings;
 const GameKeyCompleteMotionGestureInputEvent = @import("org/allbinary/game/input/motion/action/GameKeyCompleteMotionGestureInputEvent.zig").GameKeyCompleteMotionGestureInputEvent;
+const Exception = @import("java/lang/Exception.zig").Exception;
 
 pub const SingleKeyPressGameKeyFromMotionGestureEventListener = struct {
     const Self = @This();
@@ -51,7 +52,7 @@ pub const SingleKeyPressGameKeyFromMotionGestureEventListener = struct {
 
     pub fn onEvent(self: *Self, eventObject: ?*AllBinaryEventObject) void {
         _ = eventObject;
-        _ = Inheritance.callStatic(ForcedLogUtil, "log", .{ EventStrings.getInstance().?.PERFORMANCE_MESSAGE, self });
+        _ = Inheritance.callStatic(ForcedLogUtil, "log", .{ Inheritance.fieldPointer(EventStrings.getInstance().?, "PERFORMANCE_MESSAGE").*, self });
     }
     
 
@@ -64,7 +65,7 @@ pub const SingleKeyPressGameKeyFromMotionGestureEventListener = struct {
         }
         // catch (Exception e):
 //             const commonStrings: ?*CommonStrings = Inheritance.upcast(?*CommonStrings, CommonStrings.getInstance()); _ = commonStrings;
-//             _ = Inheritance.call(self.logUtil.?, "put", .{ commonStrings.?.EXCEPTION, self, String.literal("onCompleteMotionGestureInputEvent"), e });
+//             _ = Inheritance.call(self.logUtil.?, "put", .{ Inheritance.fieldPointer(commonStrings.?, "EXCEPTION").*, self, String.literal("onCompleteMotionGestureInputEvent"), e });
     }
 };
 

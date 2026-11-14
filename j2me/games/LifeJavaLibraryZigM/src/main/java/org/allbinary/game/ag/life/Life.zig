@@ -19,6 +19,8 @@ const String = @import("java/lang/String.zig").String;
 const Object = @import("java/lang/Object.zig").Object;
 const Inheritance = @import("zig/Inheritance.zig");
 const LifeInterface = @import("org/allbinary/game/ag/life/LifeInterface.zig").LifeInterface;
+const Exception = @import("java/lang/Exception.zig").Exception;
+const RuntimeException = @import("java/lang/RuntimeException.zig").RuntimeException;
 
 pub const Life = struct {
     const Self = @This();

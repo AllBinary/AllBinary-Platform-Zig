@@ -30,6 +30,7 @@ pub const StringUtil = struct {
     NULL_STRING: ?*String = null,
     EMPTY_STRING: ?*String = null,
     ONE_EMPTY_STRING_ARRAY: []?*String = &.{},
+    ONE_EMPTY_STRING_ARRAY_OF_ARRAYS: [][]?*String = &.{},
     stringArray: []?*String = &.{},
     var instance: ?*StringUtil = undefined;
 
@@ -42,8 +43,9 @@ pub const StringUtil = struct {
         this.INIT_STRING = Inheritance.callStatic(String, "create1", .{ String.literal("") });
         this.NULL_STRING = String.literal("null");
         this.EMPTY_STRING = String.literal("");
-        this.ONE_EMPTY_STRING_ARRAY = @constCast(&[_]?*String{ this.EMPTY_STRING })[0..];
-        this.stringArray = array_N66023: { const array_N66023_array = allocator.alloc(?*String, @intCast(0)) catch unreachable; @memset(array_N66023_array, null); break :array_N66023 array_N66023_array; };
+        this.ONE_EMPTY_STRING_ARRAY = @constCast(&[_]?*String{ Inheritance.upcast(?*String, this.EMPTY_STRING) })[0..];
+        this.ONE_EMPTY_STRING_ARRAY_OF_ARRAYS = array_N66019: { const array_N66019_array = allocator.alloc([]?*String, @intCast(0)) catch unreachable; for (array_N66019_array) |*array_N66019_row| { array_N66019_row.* = allocator.alloc(?*String, @intCast(0)) catch unreachable; @memset(array_N66019_row.*, null); } break :array_N66019 array_N66019_array; };
+        this.stringArray = array_N66105: { const array_N66105_array = allocator.alloc(?*String, @intCast(0)) catch unreachable; @memset(array_N66105_array, null); break :array_N66105 array_N66105_array; };
     }
     
 
@@ -61,11 +63,8 @@ pub const StringUtil = struct {
     
 
     pub fn getNonNull(self: *Self, string: ?*String) ?*String {
-        if (string == null) {
-            return self.EMPTY_STRING;
-        } else {
-            return string;
-        }
+        _ = self;
+        return string;
     }
     
 
@@ -91,7 +90,7 @@ pub const StringUtil = struct {
     
 
     pub fn toString(self: *Self, anyType: ?Object) ?*String {
-        if (anyType != null) {
+        if (!Object.isNull(anyType)) {
             return Inheritance.upcast(?*String, Object.toString(Object.of(anyType)));
         } else {
             return self.NULL_STRING;

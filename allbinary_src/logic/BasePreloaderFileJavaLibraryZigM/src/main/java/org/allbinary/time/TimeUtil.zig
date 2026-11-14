@@ -55,7 +55,7 @@ pub const TimeUtil = struct {
     }
     
 
-    pub fn setCalendar7(self: *Self, calendar_: ?*Calendar, yearString: ?*String, monthString: ?*String, dayString: ?*String, hourString: ?*String, minuteString: ?*String, secondString: ?*String) void {
+    pub fn setCalendarWithTime(self: *Self, calendar_: ?*Calendar, yearString: ?*String, monthString: ?*String, dayString: ?*String, hourString: ?*String, minuteString: ?*String, secondString: ?*String) void {
         _ = self;
         const year: i32 = Inheritance.callStatic(Integer, "create1", .{ yearString }).intValue();
         const month: i32 = Inheritance.callStatic(Integer, "create1", .{ monthString }).intValue();
@@ -69,12 +69,12 @@ pub const TimeUtil = struct {
 
     pub fn setExpirationCalendar(self: *Self, calendar_: ?*Calendar, yearsString: ?*String, monthsString: ?*String, daysString: ?*String, hoursString: ?*String, minutesString: ?*String, secondsString: ?*String) void {
         _ = self;
-        const year: i32 = Inheritance.call(calendar_.?, "get", .{ Calendar.YEAR }) + Inheritance.callStatic(Integer, "create1", .{ yearsString }).intValue();
-        const month: i32 = Inheritance.call(calendar_.?, "get", .{ Calendar.MONTH }) + Inheritance.callStatic(Integer, "create1", .{ monthsString }).intValue();
-        const day: i32 = Inheritance.call(calendar_.?, "get", .{ Calendar.DAY_OF_MONTH }) + Inheritance.callStatic(Integer, "create1", .{ daysString }).intValue();
-        const hour: i32 = Inheritance.call(calendar_.?, "get", .{ Calendar.HOUR }) + Inheritance.callStatic(Integer, "create1", .{ hoursString }).intValue();
-        const minute: i32 = Inheritance.call(calendar_.?, "get", .{ Calendar.MINUTE }) + Inheritance.callStatic(Integer, "create1", .{ minutesString }).intValue();
-        const second: i32 = Inheritance.call(calendar_.?, "get", .{ Calendar.SECOND }) + Inheritance.callStatic(Integer, "create1", .{ secondsString }).intValue();
+        const year: i32 = Inheritance.plus(Inheritance.call(calendar_.?, "get", .{ Calendar.YEAR }), Inheritance.callStatic(Integer, "create1", .{ yearsString }).intValue());
+        const month: i32 = Inheritance.plus(Inheritance.call(calendar_.?, "get", .{ Calendar.MONTH }), Inheritance.callStatic(Integer, "create1", .{ monthsString }).intValue());
+        const day: i32 = Inheritance.plus(Inheritance.call(calendar_.?, "get", .{ Calendar.DAY_OF_MONTH }), Inheritance.callStatic(Integer, "create1", .{ daysString }).intValue());
+        const hour: i32 = Inheritance.plus(Inheritance.call(calendar_.?, "get", .{ Calendar.HOUR }), Inheritance.callStatic(Integer, "create1", .{ hoursString }).intValue());
+        const minute: i32 = Inheritance.plus(Inheritance.call(calendar_.?, "get", .{ Calendar.MINUTE }), Inheritance.callStatic(Integer, "create1", .{ minutesString }).intValue());
+        const second: i32 = Inheritance.plus(Inheritance.call(calendar_.?, "get", .{ Calendar.SECOND }), Inheritance.callStatic(Integer, "create1", .{ secondsString }).intValue());
         _ = Inheritance.call(calendar_.?, "set", .{ year, month, day, hour, minute, second });
     }
     

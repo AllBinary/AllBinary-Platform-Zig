@@ -29,6 +29,7 @@ const BasicArrayList = @import("org/allbinary/util/BasicArrayList.zig").BasicArr
 const BasicArrayListS = @import("org/allbinary/util/BasicArrayListS.zig").BasicArrayListS;
 const VectorInfo = @import("org/allbinary/vector/VectorInfo.zig").VectorInfo;
 const VectorAnimationUtil = @import("org/allbinary/animation/VectorAnimationUtil.zig").VectorAnimationUtil;
+const Exception = @import("java/lang/Exception.zig").Exception;
 
 pub const VectorRotationGenerator = struct {
     const Self = @This();
@@ -70,7 +71,7 @@ pub const VectorRotationGenerator = struct {
 
     pub fn getInstanceFrames(self: *Self, width: i32, height: i32, points: [][]i32, frames: i32) [][][]i32 {
         { // try
-            const totalAngle: i16 = self.angleFactory.?.TOTAL_ANGLE;
+            const totalAngle: i16 = Inheritance.fieldPointer(self.angleFactory.?, "TOTAL_ANGLE").*;
             const angleIncrement: i32 = @divTrunc(@as(i32, @intCast(totalAngle)), frames);
             const pointsBasicArrayList: ?*BasicArrayList = Inheritance.upcast(?*BasicArrayList, Inheritance.callStatic(BasicArrayListS, "create1", .{ @divTrunc(@as(i32, @intCast(totalAngle)), angleIncrement) }));
             const pointBasicArrayList: ?*BasicArrayList = Inheritance.upcast(?*BasicArrayList, Inheritance.callStatic(BasicArrayListS, "create1", .{ @as(i32, @intCast(points.len)) }));
@@ -92,8 +93,8 @@ pub const VectorRotationGenerator = struct {
         }
         // catch (Exception e):
 //             const commonStrings: ?*CommonStrings = Inheritance.upcast(?*CommonStrings, CommonStrings.getInstance()); _ = commonStrings;
-//             _ = Inheritance.call(self.logUtil.?, "put", .{ commonStrings.?.EXCEPTION, self, commonStrings.?.GET_INSTANCE, e });
-//             return NullUtil.getInstance().?.NULL_INT_ARRAY_ARRAY_ARRAY;
+//             _ = Inheritance.call(self.logUtil.?, "put", .{ Inheritance.fieldPointer(commonStrings.?, "EXCEPTION").*, self, Inheritance.fieldPointer(commonStrings.?, "GET_INSTANCE").*, e });
+//             return Inheritance.fieldPointer(NullUtil.getInstance().?, "NULL_INT_ARRAY_ARRAY_ARRAY").*;
     }
     
 

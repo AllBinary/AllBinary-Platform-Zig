@@ -27,6 +27,7 @@ const InputToGameKeyMapping = @import("org/allbinary/game/input/mapping/InputToG
 const MotionGestureInput = @import("org/allbinary/input/motion/gesture/MotionGestureInput.zig").MotionGestureInput;
 const CommonStrings = @import("org/allbinary/string/CommonStrings.zig").CommonStrings;
 const GameKeyCompleteMotionGestureInputEventFactory = @import("org/allbinary/game/input/motion/action/GameKeyCompleteMotionGestureInputEventFactory.zig").GameKeyCompleteMotionGestureInputEventFactory;
+const Exception = @import("java/lang/Exception.zig").Exception;
 
 pub const GameKeyCompleteMotionGestureInputEvent = struct {
     const Self = @This();
@@ -41,7 +42,7 @@ pub const GameKeyCompleteMotionGestureInputEvent = struct {
 
     fn initFields(this: *Self) void {
         this.gameKeyEventFactory = Inheritance.upcast(?*GameKeyEventFactory, GameKeyEventFactory.getInstance());
-        this.SOURCE_ID = this.gameKeyEventFactory.?.MOTION_GESTURE_SOURCE_ID;
+        this.SOURCE_ID = Inheritance.fieldPointer(this.gameKeyEventFactory.?, "MOTION_GESTURE_SOURCE_ID").*;
         this.gameKey = Inheritance.upcast(?*GameKey, GameKey.NULL_GAME_KEY);
         this.gameKeyEvent = Inheritance.upcast(?*GameKeyEvent, GameKeyEvent.NONE);
         
@@ -73,7 +74,7 @@ pub const GameKeyCompleteMotionGestureInputEvent = struct {
         }
         // catch (Exception e):
 //             const commonStrings: ?*CommonStrings = Inheritance.upcast(?*CommonStrings, CommonStrings.getInstance()); _ = commonStrings;
-//             _ = Inheritance.call(Inheritance.fieldPointer(self, "logUtil").*.?, "put", .{ commonStrings.?.EXCEPTION, self, commonStrings.?.UPDATE, e });
+//             _ = Inheritance.call(Inheritance.fieldPointer(self, "logUtil").*.?, "put", .{ Inheritance.fieldPointer(commonStrings.?, "EXCEPTION").*, self, Inheritance.fieldPointer(commonStrings.?, "UPDATE").*, e });
     }
     
 

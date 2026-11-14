@@ -18,12 +18,13 @@ const allocator = std.heap.page_allocator;
 const String = @import("java/lang/String.zig").String;
 const Object = @import("java/lang/Object.zig").Object;
 const Inheritance = @import("zig/Inheritance.zig");
-// const Player = @import("javax/microedition/media/Player.zig").Player;
+const Player = @import("javax/microedition/media/Player.zig").Player;
 const PreLogUtil = @import("org/allbinary/logic/communication/log/PreLogUtil.zig").PreLogUtil;
 const CommonStrings = @import("org/allbinary/string/CommonStrings.zig").CommonStrings;
 const NoPlayer = @import("org/allbinary/media/audio/NoPlayer.zig").NoPlayer;
 const SoundInterface = @import("org/allbinary/media/audio/SoundInterface.zig").SoundInterface;
 const Runnable = @import("java/lang/Runnable.zig").Runnable;
+const Exception = @import("java/lang/Exception.zig").Exception;
 
 pub const Sound = struct {
     const Self = @This();
@@ -78,11 +79,11 @@ pub const Sound = struct {
 
     pub fn run(self: *Self) void {
         { // try
-            _ = self.player.?.start();
+            _ = Inheritance.receiver(self.player.?, "start").start();
         }
         // catch (Exception e):
 //             const commonStrings: ?*CommonStrings = Inheritance.upcast(?*CommonStrings, CommonStrings.getInstance()); _ = commonStrings;
-//             _ = Inheritance.callStatic(PreLogUtil, "put", .{ commonStrings.?.EXCEPTION, self, commonStrings.?.RUN });
+//             _ = Inheritance.callStatic(PreLogUtil, "put", .{ Inheritance.fieldPointer(commonStrings.?, "EXCEPTION").*, self, Inheritance.fieldPointer(commonStrings.?, "RUN").* });
     }
 };
 

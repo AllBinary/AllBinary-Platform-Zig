@@ -28,9 +28,10 @@ pub const CountedPickedUpLayerInterfaceFactoryInterface = struct {
     pointer: *anyopaque,
     object: Object,
     base: PickedUpLayerInterfaceFactoryInterface,
+    base2: LayerInterfaceFactoryInterface,
     toStringFn: *const fn (pointer: *anyopaque) ?*String,
-    getIdFn: *const fn (pointer: *anyopaque) i32,
-    getTotalFn: *const fn (pointer: *anyopaque) i32,
+    getIdFn: *const fn (interface_pointer: *anyopaque) i32,
+    getTotalFn: *const fn (interface_pointer: *anyopaque) i32,
 
     pub fn getId(self: *Self) i32 {
         return self.getIdFn(self.pointer);
@@ -46,23 +47,23 @@ pub const CountedPickedUpLayerInterfaceFactoryInterface = struct {
 
     // The interface value of an object with the methods. Like a Java class a method can be declared by the object or a superclass.
     pub fn of(object: anytype) ?*Self {
-        const Implementation = @TypeOf(object);
+        const ImplementationType = @TypeOf(object);
         const Methods = struct {
             fn toString(pointer: *anyopaque) ?*String {
-                const implementation: Implementation = @ptrCast(@alignCast(pointer));
+                const implementation: ImplementationType = @ptrCast(@alignCast(pointer));
                 return String.valueOf(implementation);
             }
-            fn getId(pointer: *anyopaque) i32 {
-                const implementation: Implementation = @ptrCast(@alignCast(pointer));
+            fn getId(interface_pointer: *anyopaque) i32 {
+                const implementation: ImplementationType = @ptrCast(@alignCast(interface_pointer));
                 return Inheritance.receiver(implementation, "getId").getId();
             }
-            fn getTotal(pointer: *anyopaque) i32 {
-                const implementation: Implementation = @ptrCast(@alignCast(pointer));
+            fn getTotal(interface_pointer: *anyopaque) i32 {
+                const implementation: ImplementationType = @ptrCast(@alignCast(interface_pointer));
                 return Inheritance.receiver(implementation, "getTotal").getTotal();
             }
         };
         const this = allocator.create(Self) catch unreachable;
-        this.* = .{ .pointer = object, .object = Object.of(object).?, .base = PickedUpLayerInterfaceFactoryInterface.of(object).?.*, .toStringFn = Methods.toString, .getIdFn = Methods.getId, .getTotalFn = Methods.getTotal };
+        this.* = .{ .pointer = object, .object = Object.of(object).?, .base = PickedUpLayerInterfaceFactoryInterface.of(object).?.*, .base2 = LayerInterfaceFactoryInterface.of(object).?.*, .toStringFn = Methods.toString, .getIdFn = Methods.getId, .getTotalFn = Methods.getTotal };
         return this;
     }
 };

@@ -18,10 +18,11 @@ const allocator = std.heap.page_allocator;
 const String = @import("java/lang/String.zig").String;
 const Object = @import("java/lang/Object.zig").Object;
 const Inheritance = @import("zig/Inheritance.zig");
-// const InputStream = @import("java/io/InputStream.zig").InputStream;
-// const Manager = @import("javax/microedition/media/Manager.zig").Manager;
-// const MediaException = @import("javax/microedition/media/MediaException.zig").MediaException;
-// const Player = @import("javax/microedition/media/Player.zig").Player;
+const InputStream = @import("java/io/InputStream.zig").InputStream;
+const Manager = @import("javax/microedition/media/Manager.zig").Manager;
+const MediaException = @import("javax/microedition/media/MediaException.zig").MediaException;
+const Player = @import("javax/microedition/media/Player.zig").Player;
+const MIDPUtil = @import("org/allbinary/MIDPUtil.zig").MIDPUtil;
 const TsUtil = @import("org/allbinary/TsUtil.zig").TsUtil;
 const AudioContentTypeDataFactory = @import("org/allbinary/audio/AudioContentTypeDataFactory.zig").AudioContentTypeDataFactory;
 const ResourceUtil = @import("org/allbinary/data/resource/ResourceUtil.zig").ResourceUtil;
@@ -33,6 +34,7 @@ const CommonStrings = @import("org/allbinary/string/CommonStrings.zig").CommonSt
 const NoPlayer = @import("org/allbinary/media/audio/NoPlayer.zig").NoPlayer;
 const Sounds = @import("org/allbinary/media/audio/Sounds.zig").Sounds;
 const SoundsFactoryInterface = @import("org/allbinary/media/audio/SoundsFactoryInterface.zig").SoundsFactoryInterface;
+const Exception = @import("java/lang/Exception.zig").Exception;
 
 //NotDeviceSpecificMIDP2JavaLibrary
 pub const AllBinaryMediaManager = struct {
@@ -67,7 +69,7 @@ pub const AllBinaryMediaManager = struct {
     pub fn init(soundsFactoryInterface: ?*SoundsFactoryInterface) void {
         const logUtil: ?*LogUtil = Inheritance.upcast(?*LogUtil, LogUtil.getInstance());
         const commonString: ?*CommonStrings = Inheritance.upcast(?*CommonStrings, CommonStrings.getInstance());
-        _ = Inheritance.call(logUtil.?, "putF", .{ commonString.?.START, AllBinaryMediaManager.THIS, commonString.?.INIT });
+        _ = Inheritance.call(logUtil.?, "putF", .{ Inheritance.fieldPointer(commonString.?, "START").*, AllBinaryMediaManager.THIS, Inheritance.fieldPointer(commonString.?, "INIT").* });
         _ = Inheritance.call(ProgressCanvasFactory.getInstance().?, "addNormalPortion", .{ 50, String.literal("Media Manager") });
         _ = Inheritance.callStatic(Sounds, "create1", .{ soundsFactoryInterface }).init();
     }
@@ -83,12 +85,12 @@ pub const AllBinaryMediaManager = struct {
 
     // throws Exception
     pub fn createPlayer(resource: ?*String) ?*Player {
-        if (Inheritance.call(Features.getInstance().?, "isFeature", .{ GameFeatureFactory.getInstance().?.SOUND })) {
+        if (Inheritance.call(Features.getInstance().?, "isFeature", .{ Inheritance.fieldPointer(GameFeatureFactory.getInstance().?, "SOUND").* })) {
             if (Inheritance.call(TsUtil.getInstance().?, "compareTo", .{ resource, Manager.TONE_DEVICE_LOCATOR }) == 0) {
                 return Inheritance.upcast(?*Player, Inheritance.callStatic(Manager, "createPlayer", .{ resource }));
             } else {
                 const inputStream: ?*InputStream = Inheritance.upcast(?*InputStream, Inheritance.call(ResourceUtil.getInstance().?, "getResourceAsStream", .{ resource }));
-                return Inheritance.upcast(?*Player, Inheritance.callStatic(Manager, "createPlayer", .{ inputStream, Inheritance.receiverOf(AudioContentTypeDataFactory.getInstance().?.MIME_AUDIO_WAV.?, "getName").getName() }));
+                return Inheritance.upcast(?*Player, Inheritance.call(MIDPUtil.getInstance().?, "createPlayerFromInputStream", .{ inputStream, Inheritance.receiverOf(Inheritance.fieldPointer(AudioContentTypeDataFactory.getInstance().?, "MIME_AUDIO_WAV").*.?, "getName").getName() }));
             }
         } else {
             return Inheritance.upcast(?*Player, NoPlayer.NO_PLAYER);
@@ -101,7 +103,7 @@ pub const AllBinaryMediaManager = struct {
         // Java synchronized method
         const javaMonitor = Object.classMonitor(Self).enter();
         defer javaMonitor.exit();
-        if (Inheritance.call(Features.getInstance().?, "isFeature", .{ GameFeatureFactory.getInstance().?.SOUND })) {
+        if (Inheritance.call(Features.getInstance().?, "isFeature", .{ Inheritance.fieldPointer(GameFeatureFactory.getInstance().?, "SOUND").* })) {
             _ = Inheritance.callStatic(Manager, "playTone", .{ frequency, time, volume });
         }
     }

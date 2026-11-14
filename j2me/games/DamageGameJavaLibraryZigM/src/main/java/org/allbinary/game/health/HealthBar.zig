@@ -18,13 +18,14 @@ const allocator = std.heap.page_allocator;
 const String = @import("java/lang/String.zig").String;
 const Object = @import("java/lang/Object.zig").Object;
 const Inheritance = @import("zig/Inheritance.zig");
-// const Graphics = @import("javax/microedition/lcdui/Graphics.zig").Graphics;
+const Graphics = @import("javax/microedition/lcdui/Graphics.zig").Graphics;
 const Paintable = @import("org/allbinary/graphics/paint/Paintable.zig").Paintable;
 const AllBinaryLayer = @import("org/allbinary/layer/AllBinaryLayer.zig").AllBinaryLayer;
 const Health = @import("org/allbinary/game/health/Health.zig").Health;
 const HealthBarAnimation = @import("org/allbinary/game/health/HealthBarAnimation.zig").HealthBarAnimation;
 const HealthInterface = @import("org/allbinary/game/health/HealthInterface.zig").HealthInterface;
 const HealthListenerInterface = @import("org/allbinary/game/health/HealthListenerInterface.zig").HealthListenerInterface;
+const Exception = @import("java/lang/Exception.zig").Exception;
 
 pub const HealthBar = struct {
     const Self = @This();
@@ -52,7 +53,7 @@ pub const HealthBar = struct {
         this.initFields();
         this.allbinaryLayer = layerInterface;
         this.animationInterface = animationInterface;
-        this.healthInterface = healthInterface;
+        this.healthInterface = Inheritance.upcast(@TypeOf(this.healthInterface), healthInterface);
         _ = Inheritance.call(this.healthInterface.?, "addListener", .{ this });
         _ = this.onHealthChange();
         Inheritance.bindOverrides(this);
@@ -61,7 +62,7 @@ pub const HealthBar = struct {
     
 
     pub fn onHealthChange(self: *Self) void {
-        _ = Inheritance.call(self.animationInterface.?, "onHealthChange", .{ (divide_N66050: { const left_N66050 = self.healthInterface.?.getHealth() * Inheritance.receiver(self.allbinaryLayer.?, "getWidth").getWidth(); const right_N66050 = self.healthInterface.?.getMaxHealth(); break :divide_N66050 if (comptime @typeInfo(@TypeOf(left_N66050)) == .int or @TypeOf(left_N66050) == comptime_int) @divTrunc(left_N66050, right_N66050) else left_N66050 / right_N66050; }) });
+        _ = Inheritance.call(self.animationInterface.?, "onHealthChange", .{ (divide_N66050: { const left_N66050 = Inheritance.arithmetic(.multiply, self.healthInterface.?.getHealth(), Inheritance.receiver(self.allbinaryLayer.?, "getWidth").getWidth()); const right_N66050 = self.healthInterface.?.getMaxHealth(); break :divide_N66050 if (comptime @typeInfo(@TypeOf(left_N66050)) == .int or @TypeOf(left_N66050) == comptime_int) @divTrunc(left_N66050, right_N66050) else left_N66050 / right_N66050; }) });
     }
     
 

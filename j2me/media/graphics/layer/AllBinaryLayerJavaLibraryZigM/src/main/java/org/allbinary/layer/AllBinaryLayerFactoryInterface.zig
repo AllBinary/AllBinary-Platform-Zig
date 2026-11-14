@@ -19,6 +19,7 @@ const String = @import("java/lang/String.zig").String;
 const Object = @import("java/lang/Object.zig").Object;
 const Inheritance = @import("zig/Inheritance.zig");
 const AllBinaryLayer = @import("org/allbinary/layer/AllBinaryLayer.zig").AllBinaryLayer;
+const Exception = @import("java/lang/Exception.zig").Exception;
 
 // Java interface: an implementation is a pointer and a table of functions
 pub const AllBinaryLayerFactoryInterface = struct {
@@ -27,7 +28,7 @@ pub const AllBinaryLayerFactoryInterface = struct {
     pointer: *anyopaque,
     object: Object,
     toStringFn: *const fn (pointer: *anyopaque) ?*String,
-    getInstanceFn: *const fn (pointer: *anyopaque) ?*AllBinaryLayer,
+    getInstanceFn: *const fn (interface_pointer: *anyopaque) ?*AllBinaryLayer,
 
     pub fn getInstance(self: *Self) ?*AllBinaryLayer {
         return self.getInstanceFn(self.pointer);
@@ -39,14 +40,14 @@ pub const AllBinaryLayerFactoryInterface = struct {
 
     // The interface value of an object with the methods. Like a Java class a method can be declared by the object or a superclass.
     pub fn of(object: anytype) ?*Self {
-        const Implementation = @TypeOf(object);
+        const ImplementationType = @TypeOf(object);
         const Methods = struct {
             fn toString(pointer: *anyopaque) ?*String {
-                const implementation: Implementation = @ptrCast(@alignCast(pointer));
+                const implementation: ImplementationType = @ptrCast(@alignCast(pointer));
                 return String.valueOf(implementation);
             }
-            fn getInstance(pointer: *anyopaque) ?*AllBinaryLayer {
-                const implementation: Implementation = @ptrCast(@alignCast(pointer));
+            fn getInstance(interface_pointer: *anyopaque) ?*AllBinaryLayer {
+                const implementation: ImplementationType = @ptrCast(@alignCast(interface_pointer));
                 return Inheritance.upcast(?*AllBinaryLayer, Inheritance.receiver(implementation, "getInstance").getInstance());
             }
         };

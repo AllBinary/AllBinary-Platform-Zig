@@ -35,6 +35,7 @@ const PreLogUtil = @import("org/allbinary/logic/communication/log/PreLogUtil.zig
 const CommonStrings = @import("org/allbinary/string/CommonStrings.zig").CommonStrings;
 const BasicArrayList = @import("org/allbinary/util/BasicArrayList.zig").BasicArrayList;
 const BasicArrayListD = @import("org/allbinary/util/BasicArrayListD.zig").BasicArrayListD;
+const Exception = @import("java/lang/Exception.zig").Exception;
 
 pub const CompleteMotionGestureInputToGameMotionGestureInput = struct {
     const Self = @This();
@@ -67,39 +68,39 @@ pub const CompleteMotionGestureInputToGameMotionGestureInput = struct {
     pub fn init(self: *Self) void {
         const commonStrings: ?*CommonStrings = Inheritance.upcast(?*CommonStrings, CommonStrings.getInstance());
         { // try
-            _ = Inheritance.callStatic(PreLogUtil, "put", .{ String.literal("Compound Motion Gestures"), self, commonStrings.?.INIT });
+            _ = Inheritance.callStatic(PreLogUtil, "put", .{ String.literal("Compound Motion Gestures"), self, Inheritance.fieldPointer(commonStrings.?, "INIT").* });
             const motionGestureConfiguration: ?*MotionGestureConfiguration = Inheritance.upcast(?*MotionGestureConfiguration, MotionGestureConfigurationFactory.getInstance());
             const touchMotionGestureFactory: ?*TouchMotionGestureFactory = Inheritance.upcast(?*TouchMotionGestureFactory, TouchMotionGestureFactory.getInstance());
             var list: ?*BasicArrayList = Inheritance.upcast(?*BasicArrayList, BasicArrayListD.create());
-            _ = Inheritance.call(list.?, "add", .{ touchMotionGestureFactory.?.DIAGONAL_DOWN_LEFT });
+            _ = Inheritance.call(list.?, "add", .{ Inheritance.fieldPointer(touchMotionGestureFactory.?, "DIAGONAL_DOWN_LEFT").* });
             _ = Inheritance.call(motionGestureConfiguration.?, "addMotionGestureAction", .{ list, DiagonalDownLeftTouchInputToGameKeyEventAction.getInstance() });
             list = Inheritance.upcast(@TypeOf(list), BasicArrayListD.create());
-            _ = Inheritance.call(list.?, "add", .{ touchMotionGestureFactory.?.DIAGONAL_DOWN_RIGHT });
+            _ = Inheritance.call(list.?, "add", .{ Inheritance.fieldPointer(touchMotionGestureFactory.?, "DIAGONAL_DOWN_RIGHT").* });
             _ = Inheritance.call(motionGestureConfiguration.?, "addMotionGestureAction", .{ list, DiagonalDownRightTouchInputToGameKeyEventAction.getInstance() });
             list = Inheritance.upcast(@TypeOf(list), BasicArrayListD.create());
-            _ = Inheritance.call(list.?, "add", .{ touchMotionGestureFactory.?.DIAGONAL_UP_LEFT });
+            _ = Inheritance.call(list.?, "add", .{ Inheritance.fieldPointer(touchMotionGestureFactory.?, "DIAGONAL_UP_LEFT").* });
             _ = Inheritance.call(motionGestureConfiguration.?, "addMotionGestureAction", .{ list, DiagonalUpLeftTouchInputToGameKeyEventAction.getInstance() });
             list = Inheritance.upcast(@TypeOf(list), BasicArrayListD.create());
-            _ = Inheritance.call(list.?, "add", .{ touchMotionGestureFactory.?.DIAGONAL_UP_RIGHT });
+            _ = Inheritance.call(list.?, "add", .{ Inheritance.fieldPointer(touchMotionGestureFactory.?, "DIAGONAL_UP_RIGHT").* });
             _ = Inheritance.call(motionGestureConfiguration.?, "addMotionGestureAction", .{ list, DiagonalUpRightTouchInputToGameKeyEventAction.getInstance() });
             list = Inheritance.upcast(@TypeOf(list), BasicArrayListD.create());
-            _ = Inheritance.call(list.?, "add", .{ touchMotionGestureFactory.?.LEFT });
+            _ = Inheritance.call(list.?, "add", .{ Inheritance.fieldPointer(touchMotionGestureFactory.?, "LEFT").* });
             _ = Inheritance.call(motionGestureConfiguration.?, "addMotionGestureAction", .{ list, LeftTouchInputToGameKeyEventAction.getInstance() });
             list = Inheritance.upcast(@TypeOf(list), BasicArrayListD.create());
-            _ = Inheritance.call(list.?, "add", .{ touchMotionGestureFactory.?.RIGHT });
+            _ = Inheritance.call(list.?, "add", .{ Inheritance.fieldPointer(touchMotionGestureFactory.?, "RIGHT").* });
             _ = Inheritance.call(motionGestureConfiguration.?, "addMotionGestureAction", .{ list, RightTouchInputToGameKeyEventAction.getInstance() });
             list = Inheritance.upcast(@TypeOf(list), BasicArrayListD.create());
-            _ = Inheritance.call(list.?, "add", .{ touchMotionGestureFactory.?.DOWN });
+            _ = Inheritance.call(list.?, "add", .{ Inheritance.fieldPointer(touchMotionGestureFactory.?, "DOWN").* });
             _ = Inheritance.call(motionGestureConfiguration.?, "addMotionGestureAction", .{ list, DownTouchInputToGameKeyEventAction.getInstance() });
             list = Inheritance.upcast(@TypeOf(list), BasicArrayListD.create());
-            _ = Inheritance.call(list.?, "add", .{ touchMotionGestureFactory.?.UP });
+            _ = Inheritance.call(list.?, "add", .{ Inheritance.fieldPointer(touchMotionGestureFactory.?, "UP").* });
             _ = Inheritance.call(motionGestureConfiguration.?, "addMotionGestureAction", .{ list, UpTouchInputToGameKeyEventAction.getInstance() });
             list = Inheritance.upcast(@TypeOf(list), BasicArrayListD.create());
-            _ = Inheritance.call(list.?, "add", .{ touchMotionGestureFactory.?.RELEASED });
+            _ = Inheritance.call(list.?, "add", .{ Inheritance.fieldPointer(touchMotionGestureFactory.?, "RELEASED").* });
             _ = Inheritance.call(motionGestureConfiguration.?, "addMotionGestureAction", .{ list, ReleaseTouchInputToGameKeyEventAction.getInstance() });
         }
         // catch (Exception e):
-//             _ = Inheritance.call(self.logUtil.?, "put", .{ commonStrings.?.EXCEPTION, self, commonStrings.?.INIT, e });
+//             _ = Inheritance.call(self.logUtil.?, "put", .{ Inheritance.fieldPointer(commonStrings.?, "EXCEPTION").*, self, Inheritance.fieldPointer(commonStrings.?, "INIT").*, e });
     }
 };
 

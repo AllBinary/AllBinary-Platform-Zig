@@ -18,8 +18,8 @@ const allocator = std.heap.page_allocator;
 const String = @import("java/lang/String.zig").String;
 const Object = @import("java/lang/Object.zig").Object;
 const Inheritance = @import("zig/Inheritance.zig");
-// const Font = @import("javax/microedition/lcdui/Font.zig").Font;
-// const Graphics = @import("javax/microedition/lcdui/Graphics.zig").Graphics;
+const Font = @import("javax/microedition/lcdui/Font.zig").Font;
+const Graphics = @import("javax/microedition/lcdui/Graphics.zig").Graphics;
 const GameKey = @import("org/allbinary/game/input/GameKey.zig").GameKey;
 const GameKeyFactory = @import("org/allbinary/game/input/GameKeyFactory.zig").GameKeyFactory;
 const Input = @import("org/allbinary/game/input/Input.zig").Input;
@@ -38,6 +38,7 @@ const CommonSeps = @import("org/allbinary/string/CommonSeps.zig").CommonSeps;
 const CommonStrings = @import("org/allbinary/string/CommonStrings.zig").CommonStrings;
 const BasicArrayList = @import("org/allbinary/util/BasicArrayList.zig").BasicArrayList;
 const HelpPaintable = @import("org/allbinary/game/paint/help/HelpPaintable.zig").HelpPaintable;
+const UpdateMyFontProperties = @import("org/allbinary/game/paint/help/UpdateMyFontProperties.zig").UpdateMyFontProperties;
 
 pub const InputMappingHelpPaintable = struct {
     const Self = @This();
@@ -70,7 +71,7 @@ pub const InputMappingHelpPaintable = struct {
         this.EMPTY_STRING = Inheritance.upcast(?*String, StringUtil.getInstance().?.EMPTY_STRING);
         
         this.keyMappingArray = array_N66691: { const array_N66691_array = allocator.alloc(?*BasicArrayList, @intCast(0)) catch unreachable; @memset(array_N66691_array, null); break :array_N66691 array_N66691_array; };
-        this.actionBasicColor = BasicColorUtil.getInstance().?.ZERO_ARRAY;
+        this.actionBasicColor = Inheritance.fieldPointer(BasicColorUtil.getInstance().?, "ZERO_ARRAY").*;
         this.inputBasicColorArray = array_N66808: { const array_N66808_array = allocator.alloc([]?*BasicColor, @intCast(0)) catch unreachable; for (array_N66808_array) |*array_N66808_row| { array_N66808_row.* = allocator.alloc(?*BasicColor, @intCast(0)) catch unreachable; @memset(array_N66808_row.*, null); } break :array_N66808 array_N66808_array; };
         this.selectedBasicColor = null;
         this.updateMyFontProperties = UpdateMyFontProperties.create();
@@ -84,10 +85,10 @@ pub const InputMappingHelpPaintable = struct {
         this.initFields();
         this.gameInputMappingArray = gameInputMappingArray;
         _ = Inheritance.call(this, "update", .{ this.NONE, this.NONE });
-        if (Object.same(backgroundBasicColor, this.basicColorFactory.?.WHITE) or Object.same(basicColor, this.basicColorFactory.?.WHITE)) {
-            this.selectedBasicColor = Inheritance.upcast(@TypeOf(this.selectedBasicColor), this.basicColorFactory.?.RED);
+        if (Object.same(backgroundBasicColor, Inheritance.fieldPointer(this.basicColorFactory.?, "WHITE").*) or Object.same(basicColor, Inheritance.fieldPointer(this.basicColorFactory.?, "WHITE").*)) {
+            this.selectedBasicColor = Inheritance.upcast(@TypeOf(this.selectedBasicColor), Inheritance.fieldPointer(this.basicColorFactory.?, "RED").*);
         } else {
-            this.selectedBasicColor = Inheritance.upcast(@TypeOf(this.selectedBasicColor), this.basicColorFactory.?.WHITE);
+            this.selectedBasicColor = Inheritance.upcast(@TypeOf(this.selectedBasicColor), Inheritance.fieldPointer(this.basicColorFactory.?, "WHITE").*);
         }
         Inheritance.bindOverrides(this);
         return this;
@@ -97,16 +98,16 @@ pub const InputMappingHelpPaintable = struct {
     pub fn updateMeasurement(self: *Self, graphics: ?*Graphics) void {
         const font: ?*Font = Inheritance.upcast(?*Font, graphics.?.getFont());
         const updateMyFontProperties: ?*UpdateMyFontProperties = UpdateMyFontProperties.create();
-        updateMyFontProperties.?.charHeight = Inheritance.upcast(@TypeOf(updateMyFontProperties.?.charHeight), font.?.getHeight());
+        Inheritance.fieldPointer(updateMyFontProperties.?, "charHeight").* = Inheritance.upcast(@TypeOf(Inheritance.fieldPointer(updateMyFontProperties.?, "charHeight").*), font.?.getHeight());
         const stringMaker: ?*StringMaker = StringMaker.create();
         const inputInfo: []?*String = Inheritance.fieldPointer(self, "inputInfo").*;
         const size: i32 = @as(i32, @intCast(inputInfo.len));
-        updateMyFontProperties.?.actionStringArray = Inheritance.upcast(@TypeOf(updateMyFontProperties.?.actionStringArray), array_N67965: { const array_N67965_array = allocator.alloc(?*String, @intCast(size)) catch unreachable; @memset(array_N67965_array, null); break :array_N67965 array_N67965_array; });
-        updateMyFontProperties.?.keymappingBeginWidthArray = Inheritance.upcast(@TypeOf(updateMyFontProperties.?.keymappingBeginWidthArray), array_N68017: { const array_N68017_array = allocator.alloc(i32, @intCast(size)) catch unreachable; @memset(array_N68017_array, 0); break :array_N68017 array_N68017_array; });
-        updateMyFontProperties.?.actionStringDeltaXArray = Inheritance.upcast(@TypeOf(updateMyFontProperties.?.actionStringDeltaXArray), array_N68065: { const array_N68065_array = allocator.alloc(i32, @intCast(size)) catch unreachable; @memset(array_N68065_array, 0); break :array_N68065 array_N68065_array; });
-        updateMyFontProperties.?.inputDeltaXArray = Inheritance.upcast(@TypeOf(updateMyFontProperties.?.inputDeltaXArray), array_N68113: { const array_N68113_array = allocator.alloc([]i32, @intCast(size)) catch unreachable; for (array_N68113_array) |*array_N68113_row| { array_N68113_row.* = allocator.alloc(i32, @intCast(0)) catch unreachable; @memset(array_N68113_row.*, 0); } break :array_N68113 array_N68113_array; });
-        updateMyFontProperties.?.sepArray = Inheritance.upcast(@TypeOf(updateMyFontProperties.?.sepArray), array_N68169: { const array_N68169_array = allocator.alloc([]?*String, @intCast(size)) catch unreachable; for (array_N68169_array) |*array_N68169_row| { array_N68169_row.* = allocator.alloc(?*String, @intCast(0)) catch unreachable; @memset(array_N68169_row.*, null); } break :array_N68169 array_N68169_array; });
-        updateMyFontProperties.?.sepWidthArray = Inheritance.upcast(@TypeOf(updateMyFontProperties.?.sepWidthArray), array_N68229: { const array_N68229_array = allocator.alloc([]i32, @intCast(size)) catch unreachable; for (array_N68229_array) |*array_N68229_row| { array_N68229_row.* = allocator.alloc(i32, @intCast(0)) catch unreachable; @memset(array_N68229_row.*, 0); } break :array_N68229 array_N68229_array; });
+        Inheritance.fieldPointer(updateMyFontProperties.?, "actionStringArray").* = Inheritance.upcast(@TypeOf(Inheritance.fieldPointer(updateMyFontProperties.?, "actionStringArray").*), array_N67609: { const array_N67609_array = allocator.alloc(?*String, @intCast(size)) catch unreachable; @memset(array_N67609_array, null); break :array_N67609 array_N67609_array; });
+        Inheritance.fieldPointer(updateMyFontProperties.?, "keymappingBeginWidthArray").* = Inheritance.upcast(@TypeOf(Inheritance.fieldPointer(updateMyFontProperties.?, "keymappingBeginWidthArray").*), array_N67661: { const array_N67661_array = allocator.alloc(i32, @intCast(size)) catch unreachable; @memset(array_N67661_array, 0); break :array_N67661 array_N67661_array; });
+        Inheritance.fieldPointer(updateMyFontProperties.?, "actionStringDeltaXArray").* = Inheritance.upcast(@TypeOf(Inheritance.fieldPointer(updateMyFontProperties.?, "actionStringDeltaXArray").*), array_N67709: { const array_N67709_array = allocator.alloc(i32, @intCast(size)) catch unreachable; @memset(array_N67709_array, 0); break :array_N67709 array_N67709_array; });
+        Inheritance.fieldPointer(updateMyFontProperties.?, "inputDeltaXArray").* = Inheritance.upcast(@TypeOf(Inheritance.fieldPointer(updateMyFontProperties.?, "inputDeltaXArray").*), array_N67757: { const array_N67757_array = allocator.alloc([]i32, @intCast(size)) catch unreachable; for (array_N67757_array) |*array_N67757_row| { array_N67757_row.* = allocator.alloc(i32, @intCast(0)) catch unreachable; @memset(array_N67757_row.*, 0); } break :array_N67757 array_N67757_array; });
+        Inheritance.fieldPointer(updateMyFontProperties.?, "sepArray").* = Inheritance.upcast(@TypeOf(Inheritance.fieldPointer(updateMyFontProperties.?, "sepArray").*), array_N67813: { const array_N67813_array = allocator.alloc([]?*String, @intCast(size)) catch unreachable; for (array_N67813_array) |*array_N67813_row| { array_N67813_row.* = allocator.alloc(?*String, @intCast(0)) catch unreachable; @memset(array_N67813_row.*, null); } break :array_N67813 array_N67813_array; });
+        Inheritance.fieldPointer(updateMyFontProperties.?, "sepWidthArray").* = Inheritance.upcast(@TypeOf(Inheritance.fieldPointer(updateMyFontProperties.?, "sepWidthArray").*), array_N67873: { const array_N67873_array = allocator.alloc([]i32, @intCast(size)) catch unreachable; for (array_N67873_array) |*array_N67873_row| { array_N67873_row.* = allocator.alloc(i32, @intCast(0)) catch unreachable; @memset(array_N67873_row.*, 0); } break :array_N67873 array_N67873_array; });
         var list: ?*BasicArrayList = null;
         var keyMappings: ?*String = null;
         var actionString: ?*String = null;
@@ -118,34 +119,34 @@ pub const InputMappingHelpPaintable = struct {
             list = Inheritance.upcast(@TypeOf(list), self.keyMappingArray[@intCast(index)]);
             keyMappings = Inheritance.upcast(@TypeOf(keyMappings), Inheritance.call(self, "get", .{ list }));
             _ = Inheritance.call(stringMaker.?, "delete", .{ 0, stringMaker.?.length() });
-            actionString = Inheritance.upcast(@TypeOf(actionString), Object.toString(Object.of(Inheritance.call(Inheritance.call(Inheritance.call(Inheritance.call(stringMaker.?, "append", .{ inputInfo[@intCast(index)] }).?, "append", .{ self.commonSeps.?.COLON }).?, "append", .{ self.commonSeps.?.SPACE }).?, "append", .{ self.commonSeps.?.SPACE }))));
-            updateMyFontProperties.?.actionStringArray[@intCast(index)] = Inheritance.upcast(@TypeOf(updateMyFontProperties.?.actionStringArray[@intCast(index)]), actionString);
+            actionString = Inheritance.upcast(@TypeOf(actionString), Object.toString(Object.of(Inheritance.call(Inheritance.call(Inheritance.call(Inheritance.call(stringMaker.?, "append", .{ inputInfo[@intCast(index)] }).?, "append", .{ Inheritance.fieldPointer(self.commonSeps.?, "COLON").* }).?, "append", .{ Inheritance.fieldPointer(self.commonSeps.?, "SPACE").* }).?, "append", .{ Inheritance.fieldPointer(self.commonSeps.?, "SPACE").* }))));
+            Inheritance.fieldPointer(updateMyFontProperties.?, "actionStringArray").*[@intCast(index)] = Inheritance.upcast(@TypeOf(Inheritance.fieldPointer(updateMyFontProperties.?, "actionStringArray").*[@intCast(index)]), actionString);
             _ = Inheritance.call(stringMaker.?, "delete", .{ 0, stringMaker.?.length() });
-            updateMyFontProperties.?.keymappingBeginWidthArray[@intCast(index)] = Inheritance.upcast(@TypeOf(updateMyFontProperties.?.keymappingBeginWidthArray[@intCast(index)]), (Inheritance.call(font.?, "stringWidth", .{ Object.toString(Object.of(Inheritance.call(Inheritance.call(stringMaker.?, "append", .{ updateMyFontProperties.?.actionStringArray[@intCast(index)] }).?, "append", .{ keyMappings }))) }) >> @intCast(1)));
-            updateMyFontProperties.?.actionStringDeltaXArray[@intCast(index)] = Inheritance.upcast(@TypeOf(updateMyFontProperties.?.actionStringDeltaXArray[@intCast(index)]), Inheritance.call(font.?, "stringWidth", .{ actionString }));
+            Inheritance.fieldPointer(updateMyFontProperties.?, "keymappingBeginWidthArray").*[@intCast(index)] = Inheritance.upcast(@TypeOf(Inheritance.fieldPointer(updateMyFontProperties.?, "keymappingBeginWidthArray").*[@intCast(index)]), (Inheritance.call(font.?, "stringWidth", .{ Object.toString(Object.of(Inheritance.call(Inheritance.call(stringMaker.?, "append", .{ Inheritance.fieldPointer(updateMyFontProperties.?, "actionStringArray").*[@intCast(index)] }).?, "append", .{ keyMappings }))) }) >> @intCast(1)));
+            Inheritance.fieldPointer(updateMyFontProperties.?, "actionStringDeltaXArray").*[@intCast(index)] = Inheritance.upcast(@TypeOf(Inheritance.fieldPointer(updateMyFontProperties.?, "actionStringDeltaXArray").*[@intCast(index)]), Inheritance.call(font.?, "stringWidth", .{ actionString }));
             size2 = list.?.size();
-            updateMyFontProperties.?.inputDeltaXArray[@intCast(index)] = Inheritance.upcast(@TypeOf(updateMyFontProperties.?.inputDeltaXArray[@intCast(index)]), array_N69043: { const array_N69043_array = allocator.alloc(i32, @intCast(size2)) catch unreachable; @memset(array_N69043_array, 0); break :array_N69043 array_N69043_array; });
-            updateMyFontProperties.?.sepArray[@intCast(index)] = Inheritance.upcast(@TypeOf(updateMyFontProperties.?.sepArray[@intCast(index)]), array_N69103: { const array_N69103_array = allocator.alloc(?*String, @intCast(size2)) catch unreachable; @memset(array_N69103_array, null); break :array_N69103 array_N69103_array; });
-            updateMyFontProperties.?.sepWidthArray[@intCast(index)] = Inheritance.upcast(@TypeOf(updateMyFontProperties.?.sepWidthArray[@intCast(index)]), array_N69167: { const array_N69167_array = allocator.alloc(i32, @intCast(size2)) catch unreachable; @memset(array_N69167_array, 0); break :array_N69167 array_N69167_array; });
+            Inheritance.fieldPointer(updateMyFontProperties.?, "inputDeltaXArray").*[@intCast(index)] = Inheritance.upcast(@TypeOf(Inheritance.fieldPointer(updateMyFontProperties.?, "inputDeltaXArray").*[@intCast(index)]), array_N68687: { const array_N68687_array = allocator.alloc(i32, @intCast(size2)) catch unreachable; @memset(array_N68687_array, 0); break :array_N68687 array_N68687_array; });
+            Inheritance.fieldPointer(updateMyFontProperties.?, "sepArray").*[@intCast(index)] = Inheritance.upcast(@TypeOf(Inheritance.fieldPointer(updateMyFontProperties.?, "sepArray").*[@intCast(index)]), array_N68747: { const array_N68747_array = allocator.alloc(?*String, @intCast(size2)) catch unreachable; @memset(array_N68747_array, null); break :array_N68747 array_N68747_array; });
+            Inheritance.fieldPointer(updateMyFontProperties.?, "sepWidthArray").*[@intCast(index)] = Inheritance.upcast(@TypeOf(Inheritance.fieldPointer(updateMyFontProperties.?, "sepWidthArray").*[@intCast(index)]), array_N68811: { const array_N68811_array = allocator.alloc(i32, @intCast(size2)) catch unreachable; @memset(array_N68811_array, 0); break :array_N68811 array_N68811_array; });
             {
                 var index2: i32 = 0;
                 while (index2 < size2) : (index2 += 1) {
-                input = Inheritance.cast(?*Input, list.?.objectArray[@intCast(index2)]);
-                updateMyFontProperties.?.inputDeltaXArray[@intCast(index)][@intCast(index2)] = Inheritance.upcast(@TypeOf(updateMyFontProperties.?.inputDeltaXArray[@intCast(index)][@intCast(index2)]), Inheritance.call(font.?, "stringWidth", .{ input.?.getName() }));
-                updateMyFontProperties.?.sepArray[@intCast(index)][@intCast(index2)] = Inheritance.upcast(@TypeOf(updateMyFontProperties.?.sepArray[@intCast(index)][@intCast(index2)]), self.EMPTY_STRING);
+                input = Inheritance.cast(?*Input, Inheritance.fieldPointer(list.?, "objectArray").*[@intCast(index2)]);
+                Inheritance.fieldPointer(updateMyFontProperties.?, "inputDeltaXArray").*[@intCast(index)][@intCast(index2)] = Inheritance.upcast(@TypeOf(Inheritance.fieldPointer(updateMyFontProperties.?, "inputDeltaXArray").*[@intCast(index)][@intCast(index2)]), Inheritance.call(font.?, "stringWidth", .{ input.?.getName() }));
+                Inheritance.fieldPointer(updateMyFontProperties.?, "sepArray").*[@intCast(index)][@intCast(index2)] = Inheritance.upcast(@TypeOf(Inheritance.fieldPointer(updateMyFontProperties.?, "sepArray").*[@intCast(index)][@intCast(index2)]), self.EMPTY_STRING);
                 if (index2 + 1 < list.?.size()) {
                     if (list.?.size() == 2) {
-                        updateMyFontProperties.?.sepArray[@intCast(index)][@intCast(index2)] = Inheritance.upcast(@TypeOf(updateMyFontProperties.?.sepArray[@intCast(index)][@intCast(index2)]), InputMappingHelpPaintable.AND);
+                        Inheritance.fieldPointer(updateMyFontProperties.?, "sepArray").*[@intCast(index)][@intCast(index2)] = Inheritance.upcast(@TypeOf(Inheritance.fieldPointer(updateMyFontProperties.?, "sepArray").*[@intCast(index)][@intCast(index2)]), InputMappingHelpPaintable.AND);
                     } else {
                         if (index2 + 2 == list.?.size()) {
-                            updateMyFontProperties.?.sepArray[@intCast(index)][@intCast(index2)] = Inheritance.upcast(@TypeOf(updateMyFontProperties.?.sepArray[@intCast(index)][@intCast(index2)]), InputMappingHelpPaintable.MORE_THAN_TWO_IN_LIST_AND);
+                            Inheritance.fieldPointer(updateMyFontProperties.?, "sepArray").*[@intCast(index)][@intCast(index2)] = Inheritance.upcast(@TypeOf(Inheritance.fieldPointer(updateMyFontProperties.?, "sepArray").*[@intCast(index)][@intCast(index2)]), InputMappingHelpPaintable.MORE_THAN_TWO_IN_LIST_AND);
                         } else {
-                            updateMyFontProperties.?.sepArray[@intCast(index)][@intCast(index2)] = Inheritance.upcast(@TypeOf(updateMyFontProperties.?.sepArray[@intCast(index)][@intCast(index2)]), InputMappingHelpPaintable.SEP);
+                            Inheritance.fieldPointer(updateMyFontProperties.?, "sepArray").*[@intCast(index)][@intCast(index2)] = Inheritance.upcast(@TypeOf(Inheritance.fieldPointer(updateMyFontProperties.?, "sepArray").*[@intCast(index)][@intCast(index2)]), InputMappingHelpPaintable.SEP);
                         }
                     }
                 }
-                if (!Object.same(updateMyFontProperties.?.sepArray[@intCast(index)][@intCast(index2)], self.EMPTY_STRING)) {
-                    updateMyFontProperties.?.sepWidthArray[@intCast(index)][@intCast(index2)] = Inheritance.upcast(@TypeOf(updateMyFontProperties.?.sepWidthArray[@intCast(index)][@intCast(index2)]), Inheritance.call(font.?, "stringWidth", .{ updateMyFontProperties.?.sepArray[@intCast(index)][@intCast(index2)] }));
+                if (!Object.same(Inheritance.fieldPointer(updateMyFontProperties.?, "sepArray").*[@intCast(index)][@intCast(index2)], self.EMPTY_STRING)) {
+                    Inheritance.fieldPointer(updateMyFontProperties.?, "sepWidthArray").*[@intCast(index)][@intCast(index2)] = Inheritance.upcast(@TypeOf(Inheritance.fieldPointer(updateMyFontProperties.?, "sepWidthArray").*[@intCast(index)][@intCast(index2)]), Inheritance.call(font.?, "stringWidth", .{ Inheritance.fieldPointer(updateMyFontProperties.?, "sepArray").*[@intCast(index)][@intCast(index2)] }));
                 }
                 }
             }
@@ -158,13 +159,13 @@ pub const InputMappingHelpPaintable = struct {
 
     pub fn update(self: *Self, selectedGameKey: ?*GameKey, selectedInput: ?*Input) void {
         const stringMaker: ?*StringMaker = StringMaker.create();
-        _ = Inheritance.call(self.logUtil.?, "putF", .{ Object.toString(Object.of(Inheritance.call(Inheritance.call(Inheritance.call(Inheritance.call(Inheritance.call(stringMaker.?, "append", .{ CommonLabels.getInstance().?.START_LABEL }).?, "append", .{ String.literal("selected GameKey: ") }).?, "append", .{ Inheritance.call(self.stringUtil.?, "toString", .{ selectedGameKey }) }).?, "append", .{ String.literal(" Input: ") }).?, "append", .{ Inheritance.call(self.stringUtil.?, "toString", .{ selectedInput }) }))), self, self.commonStrings.?.UPDATE });
+        _ = Inheritance.call(self.logUtil.?, "putF", .{ Object.toString(Object.of(Inheritance.call(Inheritance.call(Inheritance.call(Inheritance.call(Inheritance.call(stringMaker.?, "append", .{ Inheritance.fieldPointer(CommonLabels.getInstance().?, "START_LABEL").* }).?, "append", .{ String.literal("selected GameKey: ") }).?, "append", .{ Inheritance.call(self.stringUtil.?, "toString", .{ selectedGameKey }) }).?, "append", .{ String.literal(" Input: ") }).?, "append", .{ Inheritance.call(self.stringUtil.?, "toString", .{ selectedInput }) }))), self, Inheritance.fieldPointer(self.commonStrings.?, "UPDATE").* });
         const gameKeyMapping: ?*PersistentInputMapping = Inheritance.upcast(?*PersistentInputMapping, Inheritance.receiverOf(PlatformInputMappingFactory.getInstance().?, "getPersistentInputMappingInstance").getPersistentInputMappingInstance());
         const size: i32 = @as(i32, @intCast(self.gameInputMappingArray.len));
-        const keyInfo: []?*String = array_N70544: { const array_N70544_array = allocator.alloc(?*String, @intCast(size)) catch unreachable; @memset(array_N70544_array, null); break :array_N70544 array_N70544_array; };
-        const keyMappingArray: []?*BasicArrayList = array_N70610: { const array_N70610_array = allocator.alloc(?*BasicArrayList, @intCast(size)) catch unreachable; @memset(array_N70610_array, null); break :array_N70610 array_N70610_array; };
-        const actionBasicColor: []?*BasicColor = array_N70676: { const array_N70676_array = allocator.alloc(?*BasicColor, @intCast(size)) catch unreachable; @memset(array_N70676_array, null); break :array_N70676 array_N70676_array; };
-        const inputBasicColorArray: [][]?*BasicColor = array_N70742: { const array_N70742_array = allocator.alloc([]?*BasicColor, @intCast(size)) catch unreachable; @memset(array_N70742_array, &.{}); break :array_N70742 array_N70742_array; };
+        const keyInfo: []?*String = array_N70188: { const array_N70188_array = allocator.alloc(?*String, @intCast(size)) catch unreachable; @memset(array_N70188_array, null); break :array_N70188 array_N70188_array; };
+        const keyMappingArray: []?*BasicArrayList = array_N70254: { const array_N70254_array = allocator.alloc(?*BasicArrayList, @intCast(size)) catch unreachable; @memset(array_N70254_array, null); break :array_N70254 array_N70254_array; };
+        const actionBasicColor: []?*BasicColor = array_N70320: { const array_N70320_array = allocator.alloc(?*BasicColor, @intCast(size)) catch unreachable; @memset(array_N70320_array, null); break :array_N70320 array_N70320_array; };
+        const inputBasicColorArray: [][]?*BasicColor = array_N70386: { const array_N70386_array = allocator.alloc([]?*BasicColor, @intCast(size)) catch unreachable; @memset(array_N70386_array, &.{}); break :array_N70386 array_N70386_array; };
         var gameInputMapping: ?*GameInputMapping = null;
         var gameKey: ?*GameKey = null;
         var list: ?*BasicArrayList = null;
@@ -175,7 +176,7 @@ pub const InputMappingHelpPaintable = struct {
             gameKey = Inheritance.upcast(@TypeOf(gameKey), gameInputMapping.?.getGameKey());
             list = Inheritance.upcast(@TypeOf(list), Inheritance.call(gameKeyMapping.?.getInputMapping().?, "getMappedInput", .{ gameKey }));
             const size2: i32 = list.?.size();
-            inputBasicColorArray[@intCast(index)] = Inheritance.upcast(@TypeOf(inputBasicColorArray[@intCast(index)]), array_N71078: { const array_N71078_array = allocator.alloc(?*BasicColor, @intCast(size2)) catch unreachable; @memset(array_N71078_array, null); break :array_N71078 array_N71078_array; });
+            inputBasicColorArray[@intCast(index)] = Inheritance.upcast(@TypeOf(inputBasicColorArray[@intCast(index)]), array_N70722: { const array_N70722_array = allocator.alloc(?*BasicColor, @intCast(size2)) catch unreachable; @memset(array_N70722_array, null); break :array_N70722 array_N70722_array; });
             {
                 var index2: i32 = 0;
                 while (index2 < size2) : (index2 += 1) {
@@ -184,12 +185,12 @@ pub const InputMappingHelpPaintable = struct {
             }
             if (Object.same(gameKey, selectedGameKey)) {
                 _ = Inheritance.call(stringMaker.?, "delete", .{ 0, stringMaker.?.length() });
-                _ = Inheritance.call(self.logUtil.?, "putF", .{ Object.toString(Object.of(Inheritance.call(Inheritance.call(stringMaker.?, "append", .{ String.literal("Found: selected GameKey: ") }).?, "append", .{ Inheritance.call(self.stringUtil.?, "toString", .{ selectedGameKey }) }))), self, self.commonStrings.?.UPDATE });
+                _ = Inheritance.call(self.logUtil.?, "putF", .{ Object.toString(Object.of(Inheritance.call(Inheritance.call(stringMaker.?, "append", .{ String.literal("Found: selected GameKey: ") }).?, "append", .{ Inheritance.call(self.stringUtil.?, "toString", .{ selectedGameKey }) }))), self, Inheritance.fieldPointer(self.commonStrings.?, "UPDATE").* });
                 actionBasicColor[@intCast(index)] = Inheritance.upcast(@TypeOf(actionBasicColor[@intCast(index)]), self.selectedBasicColor);
                 const indexOfSelectedInput: i32 = Inheritance.call(list.?, "indexOf", .{ selectedInput });
                 if (indexOfSelectedInput >= 0) {
                     _ = Inheritance.call(stringMaker.?, "delete", .{ 0, stringMaker.?.length() });
-                    _ = Inheritance.call(self.logUtil.?, "putF", .{ Object.toString(Object.of(Inheritance.call(Inheritance.call(stringMaker.?, "append", .{ String.literal("Found: selected Input: ") }).?, "append", .{ Inheritance.call(self.stringUtil.?, "toString", .{ selectedInput }) }))), self, self.commonStrings.?.UPDATE });
+                    _ = Inheritance.call(self.logUtil.?, "putF", .{ Object.toString(Object.of(Inheritance.call(Inheritance.call(stringMaker.?, "append", .{ String.literal("Found: selected Input: ") }).?, "append", .{ Inheritance.call(self.stringUtil.?, "toString", .{ selectedInput }) }))), self, Inheritance.fieldPointer(self.commonStrings.?, "UPDATE").* });
                     inputBasicColorArray[@intCast(index)][@intCast(indexOfSelectedInput)] = Inheritance.upcast(@TypeOf(inputBasicColorArray[@intCast(index)][@intCast(indexOfSelectedInput)]), self.selectedBasicColor);
                 }
             } else {
@@ -215,7 +216,7 @@ pub const InputMappingHelpPaintable = struct {
         {
             var index: i32 = 0;
             while (index < size) : (index += 1) {
-            key = Inheritance.cast(?*Input, keyList.?.objectArray[@intCast(index)]);
+            key = Inheritance.cast(?*Input, Inheritance.fieldPointer(keyList.?, "objectArray").*[@intCast(index)]);
             _ = Inheritance.call(stringBuffer.?, "append", .{ key.?.getName() });
             if (index + 1 < keyList.?.size()) {
                 if (keyList.?.size() == 2) {
@@ -238,7 +239,7 @@ pub const InputMappingHelpPaintable = struct {
         _ = Inheritance.call(Inheritance.fieldPointer(self, "myFontProcessor").*.?, "process", .{ graphics });
         const halfWidth: i32 = Inheritance.receiverOf(Inheritance.fieldPointer(self, "displayInfo").*.?, "getLastHalfWidth").getLastHalfWidth();
         _ = Inheritance.call(graphics.?, "setColor", .{ Inheritance.fieldPointer(self, "basicColor").*.?.intValue() });
-        _ = Inheritance.call(graphics.?, "drawString", .{ Inheritance.fieldPointer(self, "title").*, halfWidth - Inheritance.fieldPointer(self, "titleBeginWidth").*, self.updateMyFontProperties.?.charHeight, Inheritance.fieldPointer(self, "anchor").* });
+        _ = Inheritance.call(graphics.?, "drawString", .{ Inheritance.fieldPointer(self, "title").*, Inheritance.arithmetic(.subtract, halfWidth, Inheritance.fieldPointer(self, "titleBeginWidth").*), Inheritance.fieldPointer(self.updateMyFontProperties.?, "charHeight").*, Inheritance.fieldPointer(self, "anchor").* });
         const inputInfo: []?*String = Inheritance.fieldPointer(self, "inputInfo").*;
         const size: i32 = @as(i32, @intCast(inputInfo.len));
         var y: i32 = 0;
@@ -252,58 +253,30 @@ pub const InputMappingHelpPaintable = struct {
         {
             var index: i32 = 0;
             while (index < size) : (index += 1) {
-            y = (index + 3) * self.updateMyFontProperties.?.charHeight;
+            y = Inheritance.arithmetic(.multiply, (index + 3), Inheritance.fieldPointer(self.updateMyFontProperties.?, "charHeight").*);
             deltaX = 0;
             list = Inheritance.upcast(@TypeOf(list), self.keyMappingArray[@intCast(index)]);
             size2 = list.?.size();
-            beginWidth = self.updateMyFontProperties.?.keymappingBeginWidthArray[@intCast(index)];
+            beginWidth = Inheritance.fieldPointer(self.updateMyFontProperties.?, "keymappingBeginWidthArray").*[@intCast(index)];
             _ = Inheritance.call(graphics.?, "setColor", .{ self.actionBasicColor[@intCast(index)].?.intValue() });
-            actionString = Inheritance.upcast(@TypeOf(actionString), self.updateMyFontProperties.?.actionStringArray[@intCast(index)]);
+            actionString = Inheritance.upcast(@TypeOf(actionString), Inheritance.fieldPointer(self.updateMyFontProperties.?, "actionStringArray").*[@intCast(index)]);
             _ = Inheritance.call(graphics.?, "drawString", .{ actionString, halfWidth - beginWidth + deltaX, y, Inheritance.fieldPointer(self, "anchor").* });
-            deltaX += self.updateMyFontProperties.?.actionStringDeltaXArray[@intCast(index)];
+            deltaX += Inheritance.fieldPointer(self.updateMyFontProperties.?, "actionStringDeltaXArray").*[@intCast(index)];
             {
                 var index2: i32 = 0;
                 while (index2 < size2) : (index2 += 1) {
-                input = Inheritance.cast(?*Input, list.?.objectArray[@intCast(index2)]);
+                input = Inheritance.cast(?*Input, Inheritance.fieldPointer(list.?, "objectArray").*[@intCast(index2)]);
                 _ = Inheritance.call(graphics.?, "setColor", .{ Inheritance.receiverOf(self.inputBasicColorArray[@intCast(index)][@intCast(index2)].?, "intValue").intValue() });
                 _ = Inheritance.call(graphics.?, "drawString", .{ input.?.getName(), halfWidth - beginWidth + deltaX, y, Inheritance.fieldPointer(self, "anchor").* });
-                deltaX += self.updateMyFontProperties.?.inputDeltaXArray[@intCast(index)][@intCast(index2)];
-                sep = Inheritance.upcast(@TypeOf(sep), self.updateMyFontProperties.?.sepArray[@intCast(index)][@intCast(index2)]);
+                deltaX += Inheritance.fieldPointer(self.updateMyFontProperties.?, "inputDeltaXArray").*[@intCast(index)][@intCast(index2)];
+                sep = Inheritance.upcast(@TypeOf(sep), Inheritance.fieldPointer(self.updateMyFontProperties.?, "sepArray").*[@intCast(index)][@intCast(index2)]);
                 _ = Inheritance.call(graphics.?, "setColor", .{ Inheritance.fieldPointer(self, "basicColor").*.?.intValue() });
                 _ = Inheritance.call(graphics.?, "drawString", .{ sep, halfWidth - beginWidth + deltaX, y, Inheritance.fieldPointer(self, "anchor").* });
-                deltaX += self.updateMyFontProperties.?.sepWidthArray[@intCast(index)][@intCast(index2)];
+                deltaX += Inheritance.fieldPointer(self.updateMyFontProperties.?, "sepWidthArray").*[@intCast(index)][@intCast(index2)];
                 }
             }
             }
         }
     }
-    pub const UpdateMyFontProperties = struct {
-        const Self = @This();
-        pub const java_name = "org.allbinary.game.paint.help.UpdateMyFontProperties";
-        actionStringArray: []?*String = &.{},
-        keymappingBeginWidthArray: []i32 = &.{},
-        actionStringDeltaXArray: []i32 = &.{},
-        inputDeltaXArray: [][]i32 = &.{},
-        sepArray: [][]?*String = &.{},
-        sepWidthArray: [][]i32 = &.{},
-        charHeight: i32 = 0,
-
-    fn initFields(this: *Self) void {
-            this.actionStringArray = Inheritance.receiverOf(StringUtil.getInstance().?, "getArrayInstance").getArrayInstance();
-            this.keymappingBeginWidthArray = NullUtil.getInstance().?.NULL_INT_ARRAY;
-            this.actionStringDeltaXArray = NullUtil.getInstance().?.NULL_INT_ARRAY;
-            this.inputDeltaXArray = NullUtil.getInstance().?.NULL_INT_ARRAY_ARRAY;
-            this.sepArray = array_N67113: { const array_N67113_array = allocator.alloc([]?*String, @intCast(0)) catch unreachable; for (array_N67113_array) |*array_N67113_row| { array_N67113_row.* = allocator.alloc(?*String, @intCast(0)) catch unreachable; @memset(array_N67113_row.*, null); } break :array_N67113 array_N67113_array; };
-            this.sepWidthArray = NullUtil.getInstance().?.NULL_INT_ARRAY_ARRAY;
-            this.charHeight = 0;
-    }
-
-    pub fn create() *Self {
-        const this = allocator.create(Self) catch unreachable;
-        this.* = .{};
-        this.initFields();
-        return this;
-    }
-    };
 };
 

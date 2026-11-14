@@ -18,7 +18,7 @@ const allocator = std.heap.page_allocator;
 const String = @import("java/lang/String.zig").String;
 const Object = @import("java/lang/Object.zig").Object;
 const Inheritance = @import("zig/Inheritance.zig");
-// const Graphics = @import("javax/microedition/lcdui/Graphics.zig").Graphics;
+const Graphics = @import("javax/microedition/lcdui/Graphics.zig").Graphics;
 const Animation = @import("org/allbinary/animation/Animation.zig").Animation;
 const BasicHud = @import("org/allbinary/game/graphics/hud/BasicHud.zig").BasicHud;
 const Health = @import("org/allbinary/game/health/Health.zig").Health;
@@ -29,6 +29,7 @@ const GameTickTimeDelayHelper = @import("org/allbinary/time/GameTickTimeDelayHel
 const GameTickTimeDelayHelperFactory = @import("org/allbinary/time/GameTickTimeDelayHelperFactory.zig").GameTickTimeDelayHelperFactory;
 const NoTimeDelayHelper = @import("org/allbinary/time/NoTimeDelayHelper.zig").NoTimeDelayHelper;
 const TimeDelayHelper = @import("org/allbinary/time/TimeDelayHelper.zig").TimeDelayHelper;
+const Exception = @import("java/lang/Exception.zig").Exception;
 
 pub const HealthHudWidget = struct {
     const Self = @This();
@@ -64,14 +65,14 @@ pub const HealthHudWidget = struct {
     pub fn create4(animationInterface: ?*Animation, healthInterface: ?*Health, location: i32, direction: i32) *Self {
         const this = allocator.create(Self) catch unreachable;
         this.* = .{};
-        this.base = Inheritance.callStatic(BasicHud, "create4", .{ location, direction, 2, BasicColorFactory.getInstance().?.WHITE }).*;
+        this.base = Inheritance.callStatic(BasicHud, "create4", .{ location, direction, 2, Inheritance.fieldPointer(BasicColorFactory.getInstance().?, "WHITE").* }).*;
         this.initFields();
         this.animationInterface = animationInterface;
         this.healthInterface = healthInterface;
         _ = Inheritance.call(this.healthInterface.?, "addListener", .{ this });
         this.healthScale = ((divide_N66298: { const left_N66298 = this.healthInterface.?.getMaxHealth(); const right_N66298 = 6; break :divide_N66298 if (comptime @typeInfo(@TypeOf(left_N66298)) == .int or @TypeOf(left_N66298) == comptime_int) @divTrunc(left_N66298, right_N66298) else left_N66298 / right_N66298; })) + 1;
         _ = this.onHealthChange();
-        Inheritance.fieldPointer(this, "updateMaxWidth").* = Inheritance.upcast(@TypeOf(Inheritance.fieldPointer(this, "updateMaxWidth").*), healthInterface.?.getMaxHealth() * 16);
+        Inheritance.fieldPointer(this, "updateMaxWidth").* = Inheritance.upcast(@TypeOf(Inheritance.fieldPointer(this, "updateMaxWidth").*), Inheritance.arithmetic(.multiply, healthInterface.?.getMaxHealth(), 16));
         Inheritance.fieldPointer(this, "updateMaxHeight").* = 16;
         this.xArray = Inheritance.upcast(@TypeOf(this.xArray), array_N66436: { const array_N66436_array = allocator.alloc(i32, @intCast(30)) catch unreachable; @memset(array_N66436_array, 0); break :array_N66436 array_N66436_array; });
         _ = this.update();
@@ -81,7 +82,7 @@ pub const HealthHudWidget = struct {
     
 
     pub fn update(self: *Self) void {
-        if (self.xArray != null) {
+        if (!Object.isNull(self.xArray)) {
             {
                 var index: i32 = 0;
                 while (index < @as(i32, @intCast(self.xArray.len))) : (index += 1) {
@@ -103,9 +104,9 @@ pub const HealthHudWidget = struct {
         self.timeDelayHelper = Inheritance.upcast(@TypeOf(self.timeDelayHelper), NoTimeDelayHelper.SINGLETON);
         if (self.max <= 1 and self.healthInterface.?.isAlive()) {
             self.max = 1;
-            if (self.healthScale - self.healthInterface.?.getHealth() > @divTrunc((self.healthScale * 2), 3)) {
+            if (Inheritance.arithmetic(.greater, Inheritance.arithmetic(.subtract, self.healthScale, self.healthInterface.?.getHealth()), @divTrunc((self.healthScale * 2), 3))) {
                 self.timeDelayHelper = self.slowBeatTimeDelayHelper;
-            } else if (self.healthScale - self.healthInterface.?.getHealth() > @divTrunc(self.healthScale, 3)) {
+            } else if (Inheritance.arithmetic(.greater, Inheritance.arithmetic(.subtract, self.healthScale, self.healthInterface.?.getHealth()), @divTrunc(self.healthScale, 3))) {
                 self.timeDelayHelper = self.mediumBeatTimeDelayHelper;
             } else {
                 self.timeDelayHelper = self.fastBeatTimeDelayHelper;
@@ -119,7 +120,7 @@ pub const HealthHudWidget = struct {
         {
             var index: i32 = 0;
             while (index < self.max) : (index += 1) {
-            if (Inheritance.call(self.timeDelayHelper.?, "isTime", .{ self.gameTickTimeDelayHelper.?.startTime })) {
+            if (Inheritance.call(self.timeDelayHelper.?, "isTime", .{ Inheritance.fieldPointer(self.gameTickTimeDelayHelper.?, "startTime").* })) {
                 _ = Inheritance.call(self.animationInterface.?, "paintXY", .{ graphics, self.xArray[@intCast(index)], Inheritance.receiver(self, "getY").getY() });
             }
             }

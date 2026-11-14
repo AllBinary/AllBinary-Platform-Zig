@@ -29,6 +29,7 @@ const AllBinaryLayer = @import("org/allbinary/layer/AllBinaryLayer.zig").AllBina
 const AllBinaryLayerManager = @import("org/allbinary/layer/AllBinaryLayerManager.zig").AllBinaryLayerManager;
 const NoDecimalTrigTable = @import("org/allbinary/math/NoDecimalTrigTable.zig").NoDecimalTrigTable;
 const BasicWeaponPart = @import("org/allbinary/game/part/weapon/BasicWeaponPart.zig").BasicWeaponPart;
+const Exception = @import("java/lang/Exception.zig").Exception;
 
 pub const StraightMultiProjectileWeaponPart = struct {
     const Self = @This();
@@ -65,7 +66,7 @@ pub const StraightMultiProjectileWeaponPart = struct {
     // throws Exception
     pub fn processScore(self: *Self, allbinaryLayerManager: ?*AllBinaryLayerManager, angle: i16, otherAngle: i16, weaponProperties: ?*WeaponProperties, scoreableInterface: ?*ScoreableInterface) void {
         const sourceLayerInterface: ?*AllBinaryLayer = Inheritance.upcast(?*AllBinaryLayer, Inheritance.receiver(self, "getOwnerLayerInterface").getOwnerLayerInterface());
-        const reducedWidth: i32 = ((divide_N66558: { const left_N66558 = Inheritance.receiver(sourceLayerInterface.?, "getWidth").getWidth() * 8; const right_N66558 = 10; break :divide_N66558 if (comptime @typeInfo(@TypeOf(left_N66558)) == .int or @TypeOf(left_N66558) == comptime_int) @divTrunc(left_N66558, right_N66558) else left_N66558 / right_N66558; }));
+        const reducedWidth: i32 = ((divide_N66558: { const left_N66558 = Inheritance.arithmetic(.multiply, Inheritance.receiver(sourceLayerInterface.?, "getWidth").getWidth(), 8); const right_N66558 = 10; break :divide_N66558 if (comptime @typeInfo(@TypeOf(left_N66558)) == .int or @TypeOf(left_N66558) == comptime_int) @divTrunc(left_N66558, right_N66558) else left_N66558 / right_N66558; }));
         const halfWidth: i32 = (reducedWidth >> @intCast(1));
         const x: i32 = Inheritance.fieldPointer(self, "relativeRelationship").*.?.getX();
         const y: i32 = Inheritance.fieldPointer(self, "relativeRelationship").*.?.getY();
@@ -79,10 +80,10 @@ pub const StraightMultiProjectileWeaponPart = struct {
         {
             var index: i32 = 0;
             while (index < self.total) : (index += 1) {
-            sine = @as(i64, @intCast((next * Inheritance.call(self.noDecimalTrigTable.?, "sin", .{ @as(i32, @intCast(angle)) }))));
-            beamX = @as(i32, @intCast((@divTrunc(sine, self.noDecimalTrigTable.?.SCALE))));
-            cosine = @as(i64, @intCast((next * Inheritance.call(self.noDecimalTrigTable.?, "cos", .{ @as(i32, @intCast(angle)) }))));
-            beamY = -@as(i32, @intCast((@divTrunc(cosine, self.noDecimalTrigTable.?.SCALE))));
+            sine = Inheritance.number(i64, (Inheritance.arithmetic(.multiply, next, Inheritance.call(self.noDecimalTrigTable.?, "sin", .{ @as(i32, @intCast(angle)) }))));
+            beamX = Inheritance.number(i32, (@divTrunc(sine, Inheritance.fieldPointer(self.noDecimalTrigTable.?, "SCALE").*)));
+            cosine = Inheritance.number(i64, (Inheritance.arithmetic(.multiply, next, Inheritance.call(self.noDecimalTrigTable.?, "cos", .{ @as(i32, @intCast(angle)) }))));
+            beamY = -Inheritance.number(i32, (@divTrunc(cosine, Inheritance.fieldPointer(self.noDecimalTrigTable.?, "SCALE").*)));
             weaponLayer = Inheritance.upcast(@TypeOf(weaponLayer), Inheritance.call(self.weaponLayerCircularStaticPool.?, "getInstanceWeaponLayer", .{ sourceLayerInterface, x + beamX, y + beamY, 0, @as(i32, @intCast(angle)), @as(i32, @intCast(otherAngle)), weaponProperties, scoreableInterface }));
             _ = Inheritance.call(allbinaryLayerManager.?, "append", .{ weaponLayer });
             next += increment;

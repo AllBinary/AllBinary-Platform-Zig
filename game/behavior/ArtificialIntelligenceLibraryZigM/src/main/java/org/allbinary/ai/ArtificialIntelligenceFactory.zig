@@ -20,6 +20,8 @@ const Object = @import("java/lang/Object.zig").Object;
 const Inheritance = @import("zig/Inheritance.zig");
 const ArtificialIntelligence = @import("org/allbinary/ai/ArtificialIntelligence.zig").ArtificialIntelligence;
 const ArtificialIntelligenceFactoryInterface = @import("org/allbinary/ai/ArtificialIntelligenceFactoryInterface.zig").ArtificialIntelligenceFactoryInterface;
+const Exception = @import("java/lang/Exception.zig").Exception;
+const RuntimeException = @import("java/lang/RuntimeException.zig").RuntimeException;
 
 pub const ArtificialIntelligenceFactory = struct {
     const Self = @This();

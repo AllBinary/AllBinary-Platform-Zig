@@ -28,7 +28,7 @@ pub const NullHighScoresSingletonFactory = struct {
 
     // Static fields with runtime initializers: call staticInit once at startup
     pub fn staticInit() void {
-        SINGLETON = Inheritance.callStatic(HighScores, "create3", .{ CommonStrings.getInstance().?.LOADING, String.literal("High Scores Not Loaded"), CommonStrings.getInstance().?.PERIODS });
+        SINGLETON = Inheritance.callStatic(HighScores, "create3", .{ Inheritance.fieldPointer(CommonStrings.getInstance().?, "LOADING").*, String.literal("High Scores Not Loaded"), Inheritance.fieldPointer(CommonStrings.getInstance().?, "PERIODS").* });
     }
 
     pub fn create() *Self {

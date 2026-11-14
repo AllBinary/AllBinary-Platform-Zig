@@ -29,7 +29,7 @@ pub const CompleteMotionGestureInputEventListenerInterface = struct {
     object: Object,
     base: EventListenerInterface,
     toStringFn: *const fn (pointer: *anyopaque) ?*String,
-    onCompleteMotionGestureInputEventFn: *const fn (pointer: *anyopaque, completeMotionGestureInputEvent: ?*CompleteMotionGestureInputEvent) void,
+    onCompleteMotionGestureInputEventFn: *const fn (interface_pointer: *anyopaque, completeMotionGestureInputEvent: ?*CompleteMotionGestureInputEvent) void,
 
     pub fn onCompleteMotionGestureInputEvent(self: *Self, completeMotionGestureInputEvent: ?*CompleteMotionGestureInputEvent) void {
         return self.onCompleteMotionGestureInputEventFn(self.pointer, completeMotionGestureInputEvent);
@@ -41,15 +41,15 @@ pub const CompleteMotionGestureInputEventListenerInterface = struct {
 
     // The interface value of an object with the methods. Like a Java class a method can be declared by the object or a superclass.
     pub fn of(object: anytype) ?*Self {
-        const Implementation = @TypeOf(object);
+        const ImplementationType = @TypeOf(object);
         const Methods = struct {
             fn toString(pointer: *anyopaque) ?*String {
-                const implementation: Implementation = @ptrCast(@alignCast(pointer));
+                const implementation: ImplementationType = @ptrCast(@alignCast(pointer));
                 return String.valueOf(implementation);
             }
-            fn onCompleteMotionGestureInputEvent(pointer: *anyopaque, completeMotionGestureInputEvent: ?*CompleteMotionGestureInputEvent) void {
-                const implementation: Implementation = @ptrCast(@alignCast(pointer));
-                return Inheritance.receiver(implementation, "onCompleteMotionGestureInputEvent").onCompleteMotionGestureInputEvent(completeMotionGestureInputEvent);
+            fn onCompleteMotionGestureInputEvent(interface_pointer: *anyopaque, completeMotionGestureInputEvent: ?*CompleteMotionGestureInputEvent) void {
+                const implementation: ImplementationType = @ptrCast(@alignCast(interface_pointer));
+                return Inheritance.call(implementation, "onCompleteMotionGestureInputEvent", .{ completeMotionGestureInputEvent });
             }
         };
         const this = allocator.create(Self) catch unreachable;

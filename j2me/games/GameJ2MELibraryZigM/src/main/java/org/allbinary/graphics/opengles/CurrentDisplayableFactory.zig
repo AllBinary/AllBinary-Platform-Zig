@@ -18,7 +18,7 @@ const allocator = std.heap.page_allocator;
 const String = @import("java/lang/String.zig").String;
 const Object = @import("java/lang/Object.zig").Object;
 const Inheritance = @import("zig/Inheritance.zig");
-// const Displayable = @import("javax/microedition/lcdui/Displayable.zig").Displayable;
+const Displayable = @import("javax/microedition/lcdui/Displayable.zig").Displayable;
 const J2MEUtil = @import("org/allbinary/J2MEUtil.zig").J2MEUtil;
 const Features = @import("org/allbinary/game/configuration/feature/Features.zig").Features;
 const AllBinaryGameCanvas = @import("org/allbinary/game/displayable/canvas/AllBinaryGameCanvas.zig").AllBinaryGameCanvas;
@@ -94,8 +94,8 @@ pub const CurrentDisplayableFactory = struct {
         const this = allocator.create(Self) catch unreachable;
         this.* = .{};
         this.initFields();
-        _ = Inheritance.call(this.DEFAULT_CHILD_NAME_LIST.?, "add", .{ this.canvasStrings.?.ABOUT });
-        _ = Inheritance.call(this.DEFAULT_CHILD_NAME_LIST.?, "add", .{ this.canvasStrings.?.OPTIONS });
+        _ = Inheritance.call(this.DEFAULT_CHILD_NAME_LIST.?, "add", .{ Inheritance.fieldPointer(this.canvasStrings.?, "ABOUT").* });
+        _ = Inheritance.call(this.DEFAULT_CHILD_NAME_LIST.?, "add", .{ Inheritance.fieldPointer(this.canvasStrings.?, "OPTIONS").* });
         _ = Inheritance.call(this.DEFAULT_CHILD_NAME_LIST.?, "add", .{ GameInputMappingCanvas.NAME });
         _ = Inheritance.call(this.DEFAULT_CHILD_NAME_LIST.?, "add", .{ GameInputMappingInstructionsCanvas.NAME });
         _ = Inheritance.call(this.DEFAULT_CHILD_NAME_LIST.?, "add", .{ HighScoresCanvas.NAME });
@@ -156,17 +156,17 @@ pub const CurrentDisplayableFactory = struct {
             const features: ?*Features = Inheritance.upcast(?*Features, Features.getInstance());
             const stringMaker: ?*StringMaker = StringMaker.create();
             _ = Inheritance.call(stringMaker.?, "append", .{ Inheritance.call(self.stringUtil.?, "toString", .{ self.openGlReadydisplayable }) });
-            if (SWTUtil.isSWT and !Inheritance.call(features.?, "isDefault", .{ OpenGLFeatureFactory.getInstance().?.OPENGL })) {
-                _ = Inheritance.callStatic(PreLogUtil, "put", .{ Object.toString(Object.of(Inheritance.call(Inheritance.call(Inheritance.call(Inheritance.call(Inheritance.call(stringMaker.?, "append", .{ commonSeps.?.SPACE }).?, "append", .{ SWTUtil.SWT }).?, "append", .{ commonSeps.?.SPACE }).?, "append", .{ self.RUNNABLE }).?, "append", .{ Inheritance.call(self.stringUtil.?, "toString", .{ NullRunnable.getInstance() }) }))), self, self.commonStrings.?.UPDATE });
+            if (SWTUtil.isSWT and !Inheritance.call(features.?, "isDefault", .{ Inheritance.fieldPointer(OpenGLFeatureFactory.getInstance().?, "OPENGL").* })) {
+                _ = Inheritance.callStatic(PreLogUtil, "put", .{ Object.toString(Object.of(Inheritance.call(Inheritance.call(Inheritance.call(Inheritance.call(Inheritance.call(stringMaker.?, "append", .{ Inheritance.fieldPointer(commonSeps.?, "SPACE").* }).?, "append", .{ SWTUtil.SWT }).?, "append", .{ Inheritance.fieldPointer(commonSeps.?, "SPACE").* }).?, "append", .{ self.RUNNABLE }).?, "append", .{ Inheritance.call(self.stringUtil.?, "toString", .{ NullRunnable.getInstance() }) }))), self, Inheritance.fieldPointer(self.commonStrings.?, "UPDATE").* });
                 _ = Inheritance.call(self, "setUsedRunnable", .{ NullWaitGameRunnable.getInstance() });
             } else if (J2MEUtil.isHTML()) {
-                _ = Inheritance.callStatic(PreLogUtil, "put", .{ Object.toString(Object.of(Inheritance.call(Inheritance.call(Inheritance.call(Inheritance.call(Inheritance.call(stringMaker.?, "append", .{ commonSeps.?.SPACE }).?, "append", .{ GraphicsStrings.getInstance().?.HTML }).?, "append", .{ commonSeps.?.SPACE }).?, "append", .{ self.RUNNABLE }).?, "append", .{ Inheritance.call(self.stringUtil.?, "toString", .{ self.runnable }) }))), self, self.commonStrings.?.UPDATE });
+                _ = Inheritance.callStatic(PreLogUtil, "put", .{ Object.toString(Object.of(Inheritance.call(Inheritance.call(Inheritance.call(Inheritance.call(Inheritance.call(stringMaker.?, "append", .{ Inheritance.fieldPointer(commonSeps.?, "SPACE").* }).?, "append", .{ Inheritance.fieldPointer(GraphicsStrings.getInstance().?, "HTML").* }).?, "append", .{ Inheritance.fieldPointer(commonSeps.?, "SPACE").* }).?, "append", .{ self.RUNNABLE }).?, "append", .{ Inheritance.call(self.stringUtil.?, "toString", .{ self.runnable }) }))), self, Inheritance.fieldPointer(self.commonStrings.?, "UPDATE").* });
                 _ = Inheritance.call(self, "setUsedRunnable", .{ self.runnable });
-            } else if (Object.instanceOf(Object.of(self.openGlReadydisplayable), DemoCanvas) or Object.instanceOf(Object.of(self.openGlReadydisplayable), AllBinaryGameCanvas) or Inheritance.call(features.?, "isDefault", .{ OpenGLFeatureFactory.getInstance().?.OPENGL })) {
-                _ = Inheritance.callStatic(PreLogUtil, "put", .{ Object.toString(Object.of(Inheritance.call(Inheritance.call(Inheritance.call(Inheritance.call(Inheritance.call(stringMaker.?, "append", .{ commonSeps.?.SPACE }).?, "append", .{ Object.toString(Object.of(OpenGLFeatureFactory.getInstance().?.OPENGL)) }).?, "append", .{ commonSeps.?.SPACE }).?, "append", .{ self.RUNNABLE }).?, "append", .{ Inheritance.call(self.stringUtil.?, "toString", .{ self.runnable }) }))), self, self.commonStrings.?.UPDATE });
+            } else if (Object.instanceOf(Object.of(self.openGlReadydisplayable), DemoCanvas) or Object.instanceOf(Object.of(self.openGlReadydisplayable), AllBinaryGameCanvas) or Inheritance.call(features.?, "isDefault", .{ Inheritance.fieldPointer(OpenGLFeatureFactory.getInstance().?, "OPENGL").* })) {
+                _ = Inheritance.callStatic(PreLogUtil, "put", .{ Object.toString(Object.of(Inheritance.call(Inheritance.call(Inheritance.call(Inheritance.call(Inheritance.call(stringMaker.?, "append", .{ Inheritance.fieldPointer(commonSeps.?, "SPACE").* }).?, "append", .{ Object.toString(Object.of(Inheritance.fieldPointer(OpenGLFeatureFactory.getInstance().?, "OPENGL").*)) }).?, "append", .{ Inheritance.fieldPointer(commonSeps.?, "SPACE").* }).?, "append", .{ self.RUNNABLE }).?, "append", .{ Inheritance.call(self.stringUtil.?, "toString", .{ self.runnable }) }))), self, Inheritance.fieldPointer(self.commonStrings.?, "UPDATE").* });
                 _ = Inheritance.call(self, "setUsedRunnable", .{ self.runnable });
             } else {
-                _ = Inheritance.callStatic(PreLogUtil, "put", .{ Object.toString(Object.of(Inheritance.call(Inheritance.call(stringMaker.?, "append", .{ self.RUNNABLE }).?, "append", .{ Inheritance.call(self.stringUtil.?, "toString", .{ NullRunnable.getInstance() }) }))), self, self.commonStrings.?.UPDATE });
+                _ = Inheritance.callStatic(PreLogUtil, "put", .{ Object.toString(Object.of(Inheritance.call(Inheritance.call(stringMaker.?, "append", .{ self.RUNNABLE }).?, "append", .{ Inheritance.call(self.stringUtil.?, "toString", .{ NullRunnable.getInstance() }) }))), self, Inheritance.fieldPointer(self.commonStrings.?, "UPDATE").* });
                 _ = Inheritance.call(self, "setUsedRunnable", .{ NullWaitGameRunnable.getInstance() });
             }
         }
@@ -184,7 +184,7 @@ pub const CurrentDisplayableFactory = struct {
     
 
     pub fn setUsedRunnable(self: *Self, usedRunnable: ?*GameRunnable) void {
-        _ = Inheritance.callStatic(PreLogUtil, "put", .{ Object.toString(Object.of(Inheritance.call(Inheritance.call(Inheritance.call(Inheritance.call(StringMaker.create(), "append", .{ self.RUNNABLE }).?, "append", .{ Inheritance.call(self.stringUtil.?, "toString", .{ self.runnable }) }).?, "append", .{ CommonSeps.getInstance().?.COLON_SEP }).?, "append", .{ Inheritance.call(self.stringUtil.?, "toString", .{ usedRunnable }) }))), self, self.SET_USED_RUNNABLE });
+        _ = Inheritance.callStatic(PreLogUtil, "put", .{ Object.toString(Object.of(Inheritance.call(Inheritance.call(Inheritance.call(Inheritance.call(StringMaker.create(), "append", .{ self.RUNNABLE }).?, "append", .{ Inheritance.call(self.stringUtil.?, "toString", .{ self.runnable }) }).?, "append", .{ Inheritance.fieldPointer(CommonSeps.getInstance().?, "COLON_SEP").* }).?, "append", .{ Inheritance.call(self.stringUtil.?, "toString", .{ usedRunnable }) }))), self, self.SET_USED_RUNNABLE });
         self.usedRunnable = usedRunnable;
     }
 };

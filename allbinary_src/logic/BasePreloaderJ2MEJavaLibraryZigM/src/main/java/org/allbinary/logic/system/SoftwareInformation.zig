@@ -69,7 +69,7 @@ pub const SoftwareInformation = struct {
         const stringBuffer: ?*StringMaker = StringMaker.create();
         _ = Inheritance.call(stringBuffer.?, "append", .{ NAME });
         _ = Inheritance.call(stringBuffer.?, "append", .{ self.getName() });
-        _ = Inheritance.call(stringBuffer.?, "append", .{ CommonSeps.getInstance().?.SPACE });
+        _ = Inheritance.call(stringBuffer.?, "append", .{ Inheritance.fieldPointer(CommonSeps.getInstance().?, "SPACE").* });
         _ = Inheritance.call(stringBuffer.?, "append", .{ VERSION });
         _ = Inheritance.call(stringBuffer.?, "append", .{ self.getVersion() });
         return Inheritance.upcast(?*String, Object.toString(Object.of(stringBuffer)));

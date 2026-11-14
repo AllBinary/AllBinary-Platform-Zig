@@ -25,7 +25,7 @@ pub const KotlinUtil = struct {
     
 
     pub fn getShortName() ?*String {
-        return Inheritance.upcast(?*String, StringUtil.getInstance().?.EMPTY_STRING);
+        return Inheritance.upcast(?*String, Inheritance.fieldPointer(StringUtil.getInstance().?, "EMPTY_STRING").*);
     }
 };
 

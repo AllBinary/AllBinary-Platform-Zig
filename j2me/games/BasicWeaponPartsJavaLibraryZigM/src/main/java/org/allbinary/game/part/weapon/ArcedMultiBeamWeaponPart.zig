@@ -28,6 +28,7 @@ const AllBinaryLayer = @import("org/allbinary/layer/AllBinaryLayer.zig").AllBina
 const AllBinaryLayerManager = @import("org/allbinary/layer/AllBinaryLayerManager.zig").AllBinaryLayerManager;
 const AngleFactory = @import("org/allbinary/math/AngleFactory.zig").AngleFactory;
 const BasicWeaponPart = @import("org/allbinary/game/part/weapon/BasicWeaponPart.zig").BasicWeaponPart;
+const Exception = @import("java/lang/Exception.zig").Exception;
 
 pub const ArcedMultiBeamWeaponPart = struct {
     const Self = @This();
@@ -40,7 +41,7 @@ pub const ArcedMultiBeamWeaponPart = struct {
     fn initFields(this: *Self) void {
         
         
-        this.TOTAL_ANGLE = @as(i32, @intCast(AngleFactory.getInstance().?.TOTAL_ANGLE));
+        this.TOTAL_ANGLE = Inheritance.number(i32, AngleFactory.getInstance().?.TOTAL_ANGLE);
     }
     
 

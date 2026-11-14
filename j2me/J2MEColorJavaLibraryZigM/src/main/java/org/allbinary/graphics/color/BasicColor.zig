@@ -61,8 +61,8 @@ pub const BasicColor = struct {
         this.name = name;
         var tempValue: i32 = 0;
         const basicColorUtil: ?*BasicColorUtil = Inheritance.upcast(?*BasicColorUtil, BasicColorUtil.getInstance());
-        if (basicColorUtil.?.isAlpha) {
-            if (basicColorUtil.?.ffOpaque) {
+        if (Inheritance.fieldPointer(basicColorUtil.?, "isAlpha").*) {
+            if (Inheritance.fieldPointer(basicColorUtil.?, "ffOpaque").*) {
                 tempValue = alphaValue | value;
             } else {
                 tempValue = 0x00000000 | value;

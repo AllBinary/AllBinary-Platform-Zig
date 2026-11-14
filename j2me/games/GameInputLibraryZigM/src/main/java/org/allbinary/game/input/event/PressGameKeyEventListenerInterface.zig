@@ -20,6 +20,7 @@ const Object = @import("java/lang/Object.zig").Object;
 const Inheritance = @import("zig/Inheritance.zig");
 const EventListenerInterface = @import("org/allbinary/logic/util/event/EventListenerInterface.zig").EventListenerInterface;
 const GameKeyEvent = @import("org/allbinary/game/input/event/GameKeyEvent.zig").GameKeyEvent;
+const Exception = @import("java/lang/Exception.zig").Exception;
 
 // Java interface: an implementation is a pointer and a table of functions
 pub const PressGameKeyEventListenerInterface = struct {
@@ -29,7 +30,7 @@ pub const PressGameKeyEventListenerInterface = struct {
     object: Object,
     base: EventListenerInterface,
     toStringFn: *const fn (pointer: *anyopaque) ?*String,
-    onPressGameKeyEventFn: *const fn (pointer: *anyopaque, gameKeyEvent: ?*GameKeyEvent) void,
+    onPressGameKeyEventFn: *const fn (interface_pointer: *anyopaque, gameKeyEvent: ?*GameKeyEvent) void,
 
     pub fn onPressGameKeyEvent(self: *Self, gameKeyEvent: ?*GameKeyEvent) void {
         return self.onPressGameKeyEventFn(self.pointer, gameKeyEvent);
@@ -41,15 +42,15 @@ pub const PressGameKeyEventListenerInterface = struct {
 
     // The interface value of an object with the methods. Like a Java class a method can be declared by the object or a superclass.
     pub fn of(object: anytype) ?*Self {
-        const Implementation = @TypeOf(object);
+        const ImplementationType = @TypeOf(object);
         const Methods = struct {
             fn toString(pointer: *anyopaque) ?*String {
-                const implementation: Implementation = @ptrCast(@alignCast(pointer));
+                const implementation: ImplementationType = @ptrCast(@alignCast(pointer));
                 return String.valueOf(implementation);
             }
-            fn onPressGameKeyEvent(pointer: *anyopaque, gameKeyEvent: ?*GameKeyEvent) void {
-                const implementation: Implementation = @ptrCast(@alignCast(pointer));
-                return Inheritance.receiver(implementation, "onPressGameKeyEvent").onPressGameKeyEvent(gameKeyEvent);
+            fn onPressGameKeyEvent(interface_pointer: *anyopaque, gameKeyEvent: ?*GameKeyEvent) void {
+                const implementation: ImplementationType = @ptrCast(@alignCast(interface_pointer));
+                return Inheritance.call(implementation, "onPressGameKeyEvent", .{ gameKeyEvent });
             }
         };
         const this = allocator.create(Self) catch unreachable;

@@ -18,7 +18,7 @@ const allocator = std.heap.page_allocator;
 const String = @import("java/lang/String.zig").String;
 const Object = @import("java/lang/Object.zig").Object;
 const Inheritance = @import("zig/Inheritance.zig");
-// const Graphics = @import("javax/microedition/lcdui/Graphics.zig").Graphics;
+const Graphics = @import("javax/microedition/lcdui/Graphics.zig").Graphics;
 const CollidableNeverCollideBehaviorFactory = @import("org/allbinary/game/collision/CollidableNeverCollideBehaviorFactory.zig").CollidableNeverCollideBehaviorFactory;
 const DamageableInterface = @import("org/allbinary/game/combat/damage/DamageableInterface.zig").DamageableInterface;
 const DestroyableInterface = @import("org/allbinary/game/combat/destroy/DestroyableInterface.zig").DestroyableInterface;
@@ -43,6 +43,8 @@ const PositionStrings = @import("org/allbinary/math/PositionStrings.zig").Positi
 const CommonSeps = @import("org/allbinary/string/CommonSeps.zig").CommonSeps;
 const ViewPositionBase = @import("org/allbinary/view/ViewPositionBase.zig").ViewPositionBase;
 const SpecialGameInputInterface = @import("org/allbinary/game/layer/special/SpecialGameInputInterface.zig").SpecialGameInputInterface;
+const Exception = @import("java/lang/Exception.zig").Exception;
+const RuntimeException = @import("java/lang/RuntimeException.zig").RuntimeException;
 
 pub const CollidableDestroyableDamageableLayer = struct {
     const Self = @This();
@@ -71,7 +73,7 @@ pub const CollidableDestroyableDamageableLayer = struct {
 
     // Static fields with runtime initializers: call staticInit once at startup
     pub fn staticInit() void {
-        NULL_COLLIDABLE_DESTROYABLE_DAMAGE_LAYER = Inheritance.upcast(?Object, NullUtil.getInstance().?.NULL_OBJECT);
+        NULL_COLLIDABLE_DESTROYABLE_DAMAGE_LAYER = Inheritance.upcast(?Object, Inheritance.fieldPointer(NullUtil.getInstance().?, "NULL_OBJECT").*);
     }
 
     fn initFields(this: *Self) void {
@@ -92,8 +94,8 @@ pub const CollidableDestroyableDamageableLayer = struct {
     
 
     pub fn getNullInstance() ?*CollidableDestroyableDamageableLayer {
-        if (Object.same(CollidableDestroyableDamageableLayer.NULL_COLLIDABLE_DESTROYABLE_DAMAGE_LAYER, NullUtil.getInstance().?.NULL_OBJECT)) {
-            CollidableDestroyableDamageableLayer.NULL_COLLIDABLE_DESTROYABLE_DAMAGE_LAYER = Inheritance.upcast(@TypeOf(CollidableDestroyableDamageableLayer.NULL_COLLIDABLE_DESTROYABLE_DAMAGE_LAYER), Inheritance.callStatic(CollidableDestroyableDamageableLayer, "create4", .{ BasicGroupFactory.getInstance().?.NONE_ARRAY, StringUtil.getInstance().?.EMPTY_STRING, RectangleFactory.SINGLETON, ViewPositionBase.NULL_VIEW_POSITION }));
+        if (Object.same(CollidableDestroyableDamageableLayer.NULL_COLLIDABLE_DESTROYABLE_DAMAGE_LAYER, Inheritance.fieldPointer(NullUtil.getInstance().?, "NULL_OBJECT").*)) {
+            CollidableDestroyableDamageableLayer.NULL_COLLIDABLE_DESTROYABLE_DAMAGE_LAYER = Inheritance.upcast(@TypeOf(CollidableDestroyableDamageableLayer.NULL_COLLIDABLE_DESTROYABLE_DAMAGE_LAYER), Inheritance.callStatic(CollidableDestroyableDamageableLayer, "create4", .{ Inheritance.fieldPointer(BasicGroupFactory.getInstance().?, "NONE_ARRAY").*, Inheritance.fieldPointer(StringUtil.getInstance().?, "EMPTY_STRING").*, RectangleFactory.SINGLETON, ViewPositionBase.NULL_VIEW_POSITION }));
         }
         return Inheritance.cast(?*CollidableDestroyableDamageableLayer, CollidableDestroyableDamageableLayer.NULL_COLLIDABLE_DESTROYABLE_DAMAGE_LAYER);
     }
@@ -104,8 +106,8 @@ pub const CollidableDestroyableDamageableLayer = struct {
         this.* = .{};
         this.base = Inheritance.callStatic(CollidableCompositeLayer, "create4", .{ name, layerInfo, viewPosition, CollidableNeverCollideBehaviorFactory.getInstance() }).*;
         this.initFields();
-        this.initWidth = layerInfo.?.getWidth();
-        this.initHeight = layerInfo.?.getHeight();
+        this.initWidth = Inheritance.receiver(layerInfo.?, "getWidth").getWidth();
+        this.initHeight = Inheritance.receiver(layerInfo.?, "getHeight").getHeight();
         this.groupInterface = groupInterface;
         this.pickupBehavior = Inheritance.upcast(@TypeOf(this.pickupBehavior), PickupBehavior.getNullInstance());
         Inheritance.bindOverrides(this);
@@ -136,20 +138,20 @@ pub const CollidableDestroyableDamageableLayer = struct {
     pub fn damage(self: *Self, damage_: i32, damageType: i32) void {
         _ = damage_;
         _ = damageType;
-        std.debug.panic("{any}", .{exception: { _ = Inheritance.fieldPointer(self, "commonStrings").*.?.NOT_IMPLEMENTED; break :exception error.Exception; }});
+        std.debug.panic("{any}", .{exception: { _ = Inheritance.fieldPointer(Inheritance.fieldPointer(self, "commonStrings").*.?, "NOT_IMPLEMENTED").*; break :exception error.Exception; }});
     }
     
 
     // throws Exception
     pub fn getDamage(self: *Self, damageType: i32) i32 {
         _ = damageType;
-        std.debug.panic("{any}", .{exception: { _ = Inheritance.fieldPointer(self, "commonStrings").*.?.NOT_IMPLEMENTED; break :exception error.Exception; }});
+        std.debug.panic("{any}", .{exception: { _ = Inheritance.fieldPointer(Inheritance.fieldPointer(self, "commonStrings").*.?, "NOT_IMPLEMENTED").*; break :exception error.Exception; }});
     }
     
 
     // throws Exception
     pub fn isDestroyed(self: *Self) bool {
-        std.debug.panic("{any}", .{exception: { _ = Inheritance.fieldPointer(self, "commonStrings").*.?.NOT_IMPLEMENTED; break :exception error.Exception; }});
+        std.debug.panic("{any}", .{exception: { _ = Inheritance.fieldPointer(Inheritance.fieldPointer(self, "commonStrings").*.?, "NOT_IMPLEMENTED").*; break :exception error.Exception; }});
     }
     
 
@@ -166,7 +168,7 @@ pub const CollidableDestroyableDamageableLayer = struct {
     // throws Exception
     pub fn setAllBinaryGameLayerManager(self: *Self, allBinaryGameLayerManager: ?*AllBinaryGameLayerManager) void {
         self.allBinaryGameLayerManagerP = allBinaryGameLayerManager;
-        if (self.allBinaryGameLayerManagerP == null) {
+        if (Object.isNull(self.allBinaryGameLayerManagerP)) {
             std.debug.panic("{any}", .{error.RuntimeException});
         }
     }
@@ -369,32 +371,32 @@ pub const CollidableDestroyableDamageableLayer = struct {
         const commonSeps: ?*CommonSeps = Inheritance.upcast(?*CommonSeps, CommonSeps.getInstance());
         const positionStrings: ?*PositionStrings = Inheritance.upcast(?*PositionStrings, PositionStrings.getInstance());
         _ = Inheritance.call(&self.base, "toStringAppend", .{ stringBuffer });
-        _ = Inheritance.call(stringBuffer.?, "append", .{ commonSeps.?.NEW_LINE });
+        _ = Inheritance.call(stringBuffer.?, "append", .{ Inheritance.fieldPointer(commonSeps.?, "NEW_LINE").* });
         const groupInterfaceArray: []?*Group = self.getGroupInterface();
         const size: i32 = @as(i32, @intCast(groupInterfaceArray.len));
         {
             var index: i32 = 0;
             while (index < size) : (index += 1) {
             _ = Inheritance.call(stringBuffer.?, "append", .{ Object.toString(Object.of(groupInterfaceArray[@intCast(index)])) });
-            _ = Inheritance.call(stringBuffer.?, "append", .{ commonSeps.?.COMMA });
+            _ = Inheritance.call(stringBuffer.?, "append", .{ Inheritance.fieldPointer(commonSeps.?, "COMMA").* });
             }
         }
         const pickupBehavior: ?*PickupBehavior = Inheritance.upcast(?*PickupBehavior, self.getPickupBehavior());
-        if (pickupBehavior != null) {
-            _ = Inheritance.call(stringBuffer.?, "append", .{ commonSeps.?.NEW_LINE });
+        if (!Object.isNull(pickupBehavior)) {
+            _ = Inheritance.call(stringBuffer.?, "append", .{ Inheritance.fieldPointer(commonSeps.?, "NEW_LINE").* });
             _ = Inheritance.call(stringBuffer.?, "append", .{ Object.toString(Object.of(pickupBehavior)) });
         }
-        _ = Inheritance.call(stringBuffer.?, "append", .{ commonSeps.?.NEW_LINE });
+        _ = Inheritance.call(stringBuffer.?, "append", .{ Inheritance.fieldPointer(commonSeps.?, "NEW_LINE").* });
         _ = Inheritance.call(stringBuffer.?, "append", .{ CollidableDestroyableDamageableLayer.READYFOREXPLOSION });
         _ = Inheritance.call(stringBuffer.?, "appendboolean", .{ self.readyForExplosion });
-        _ = Inheritance.call(stringBuffer.?, "append", .{ commonSeps.?.NEW_LINE });
-        _ = Inheritance.call(stringBuffer.?, "append", .{ Inheritance.fieldPointer(self, "commonStrings").*.?.INIT });
-        _ = Inheritance.call(stringBuffer.?, "append", .{ commonSeps.?.SPACE });
-        _ = Inheritance.call(stringBuffer.?, "append", .{ positionStrings.?.X_LABEL });
+        _ = Inheritance.call(stringBuffer.?, "append", .{ Inheritance.fieldPointer(commonSeps.?, "NEW_LINE").* });
+        _ = Inheritance.call(stringBuffer.?, "append", .{ Inheritance.fieldPointer(Inheritance.fieldPointer(self, "commonStrings").*.?, "INIT").* });
+        _ = Inheritance.call(stringBuffer.?, "append", .{ Inheritance.fieldPointer(commonSeps.?, "SPACE").* });
+        _ = Inheritance.call(stringBuffer.?, "append", .{ Inheritance.fieldPointer(positionStrings.?, "X_LABEL").* });
         _ = Inheritance.call(stringBuffer.?, "appendint", .{ self.initX });
-        _ = Inheritance.call(stringBuffer.?, "append", .{ positionStrings.?.Y_LABEL });
+        _ = Inheritance.call(stringBuffer.?, "append", .{ Inheritance.fieldPointer(positionStrings.?, "Y_LABEL").* });
         _ = Inheritance.call(stringBuffer.?, "appendint", .{ self.initX });
-        _ = Inheritance.call(stringBuffer.?, "append", .{ positionStrings.?.Z_LABEL });
+        _ = Inheritance.call(stringBuffer.?, "append", .{ Inheritance.fieldPointer(positionStrings.?, "Z_LABEL").* });
         _ = Inheritance.call(stringBuffer.?, "appendint", .{ self.initZ });
     }
     

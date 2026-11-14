@@ -31,9 +31,9 @@ pub const Shader = struct {
     shaderHandle: i32 = 0,
 
     fn initFields(this: *Self) void {
-        this.shaderName = Inheritance.upcast(?*String, StringUtil.getInstance().?.EMPTY_STRING);
+        this.shaderName = Inheritance.upcast(?*String, Inheritance.fieldPointer(StringUtil.getInstance().?, "EMPTY_STRING").*);
         this.shaderStringList = Inheritance.upcast(?*BasicArrayList, Inheritance.receiverOf(BasicArrayListUtil.getInstance().?, "getImmutableInstance").getImmutableInstance());
-        this.shaderAsString = Inheritance.upcast(?*String, StringUtil.getInstance().?.EMPTY_STRING);
+        this.shaderAsString = Inheritance.upcast(?*String, Inheritance.fieldPointer(StringUtil.getInstance().?, "EMPTY_STRING").*);
         this.shaderHandle = 0;
     }
 

@@ -30,11 +30,11 @@ pub const LastFetchHighScoresFactory = struct {
 
     // Static fields with runtime initializers: call staticInit once at startup
     pub fn staticInit() void {
-        instance = Inheritance.upcast(?Object, NullUtil.getInstance().?.NULL_OBJECT);
+        instance = Inheritance.upcast(?Object, Inheritance.fieldPointer(NullUtil.getInstance().?, "NULL_OBJECT").*);
     }
 
     fn initFields(this: *Self) void {
-        this.highScoresArray = NoHighScoresFactory.getInstance().?.NO_HIGH_SCORES;
+        this.highScoresArray = Inheritance.fieldPointer(NoHighScoresFactory.getInstance().?, "NO_HIGH_SCORES").*;
     }
 
     pub fn create() *Self {
@@ -46,7 +46,7 @@ pub const LastFetchHighScoresFactory = struct {
     
 
     pub fn getInstance() ?*LastFetchHighScoresFactory {
-        if (Object.same(LastFetchHighScoresFactory.instance, NullUtil.getInstance().?.NULL_OBJECT)) {
+        if (Object.same(LastFetchHighScoresFactory.instance, Inheritance.fieldPointer(NullUtil.getInstance().?, "NULL_OBJECT").*)) {
             LastFetchHighScoresFactory.instance = Inheritance.upcast(@TypeOf(LastFetchHighScoresFactory.instance), LastFetchHighScoresFactory.create());
         }
         return Inheritance.cast(?*LastFetchHighScoresFactory, LastFetchHighScoresFactory.instance);

@@ -47,7 +47,7 @@ pub const BasicInputMappingHelpPaintable = struct {
     pub fn create2(gameInputMappingArray: []?*GameInputMapping, basicColor: ?*BasicColor) *Self {
         const this = allocator.create(Self) catch unreachable;
         this.* = .{};
-        this.base = Inheritance.callStatic(HelpPaintable, "create3", .{ String.literal("Help Screen"), BasicColorFactory.getInstance().?.BLACK, basicColor }).*;
+        this.base = Inheritance.callStatic(HelpPaintable, "create3", .{ String.literal("Help Screen"), Inheritance.fieldPointer(BasicColorFactory.getInstance().?, "BLACK").*, basicColor }).*;
         this.initFields();
         this.gameInputMappingArray = gameInputMappingArray;
         _ = Inheritance.call(this, "update", .{ this.NONE, this.NONE });
@@ -91,17 +91,17 @@ pub const BasicInputMappingHelpPaintable = struct {
         {
             var index: i32 = 0;
             while (index < size) : (index += 1) {
-            key = Inheritance.cast(?*Input, keyList.?.objectArray[@intCast(index)]);
+            key = Inheritance.cast(?*Input, Inheritance.fieldPointer(keyList.?, "objectArray").*[@intCast(index)]);
             _ = Inheritance.call(stringBuffer.?, "append", .{ key.?.getName() });
             if (index + 1 < keyList.?.size()) {
                 if (keyList.?.size() == 2) {
-                    _ = Inheritance.call(Inheritance.call(stringBuffer.?, "append", .{ commonSeps.?.SPACE }).?, "append", .{ AND });
+                    _ = Inheritance.call(Inheritance.call(stringBuffer.?, "append", .{ Inheritance.fieldPointer(commonSeps.?, "SPACE").* }).?, "append", .{ AND });
                 } else {
                     if (index + 2 == keyList.?.size()) {
-                        _ = Inheritance.call(stringBuffer.?, "append", .{ commonSeps.?.COMMA_SEP });
+                        _ = Inheritance.call(stringBuffer.?, "append", .{ Inheritance.fieldPointer(commonSeps.?, "COMMA_SEP").* });
                         _ = Inheritance.call(stringBuffer.?, "append", .{ AND });
                     } else {
-                        _ = Inheritance.call(stringBuffer.?, "append", .{ commonSeps.?.COMMA_SEP });
+                        _ = Inheritance.call(stringBuffer.?, "append", .{ Inheritance.fieldPointer(commonSeps.?, "COMMA_SEP").* });
                     }
                 }
             }

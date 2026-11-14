@@ -25,6 +25,7 @@ const CommonStrings = @import("org/allbinary/string/CommonStrings.zig").CommonSt
 const BasicArrayList = @import("org/allbinary/util/BasicArrayList.zig").BasicArrayList;
 const BasicArrayListD = @import("org/allbinary/util/BasicArrayListD.zig").BasicArrayListD;
 const RawKeyEventListener = @import("org/allbinary/game/input/event/RawKeyEventListener.zig").RawKeyEventListener;
+const Exception = @import("java/lang/Exception.zig").Exception;
 
 pub const RawKeyEventHandler = struct {
     const Self = @This();
@@ -113,7 +114,7 @@ pub const RawKeyEventHandler = struct {
             }
             // catch (Exception e):
 //                 const commonStrings: ?*CommonStrings = Inheritance.upcast(?*CommonStrings, CommonStrings.getInstance()); _ = commonStrings;
-//                 _ = Inheritance.call(self.logUtil.?, "put", .{ commonStrings.?.EXCEPTION, self, EventStrings.getInstance().?.FIRE_EVENT, e });
+//                 _ = Inheritance.call(self.logUtil.?, "put", .{ Inheritance.fieldPointer(commonStrings.?, "EXCEPTION").*, self, Inheritance.fieldPointer(EventStrings.getInstance().?, "FIRE_EVENT").*, e });
             index += 1;
         }
     }
@@ -145,7 +146,7 @@ pub const RawKeyEventHandler = struct {
             }
             // catch (Exception e):
 //                 const commonStrings: ?*CommonStrings = Inheritance.upcast(?*CommonStrings, CommonStrings.getInstance()); _ = commonStrings;
-//                 _ = Inheritance.call(self.logUtil.?, "put", .{ commonStrings.?.EXCEPTION, self, commonStrings.?.TOSTRING, e });
+//                 _ = Inheritance.call(self.logUtil.?, "put", .{ Inheritance.fieldPointer(commonStrings.?, "EXCEPTION").*, self, Inheritance.fieldPointer(commonStrings.?, "TOSTRING").*, e });
             index += 1;
         }
         return Inheritance.upcast(?*String, Object.toString(Object.of(stringBuffer)));

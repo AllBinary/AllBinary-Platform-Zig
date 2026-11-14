@@ -18,7 +18,7 @@ const allocator = std.heap.page_allocator;
 const String = @import("java/lang/String.zig").String;
 const Object = @import("java/lang/Object.zig").Object;
 const Inheritance = @import("zig/Inheritance.zig");
-// const Graphics = @import("javax/microedition/lcdui/Graphics.zig").Graphics;
+const Graphics = @import("javax/microedition/lcdui/Graphics.zig").Graphics;
 const Animation = @import("org/allbinary/animation/Animation.zig").Animation;
 const AnimationBehavior = @import("org/allbinary/animation/AnimationBehavior.zig").AnimationBehavior;
 const NullAnimationFactory = @import("org/allbinary/animation/NullAnimationFactory.zig").NullAnimationFactory;
@@ -41,7 +41,7 @@ pub const CaptionAnimationHelper = struct {
 
     fn initFields(this: *Self) void {
         this.timeHelper = Inheritance.callStatic(TimeDelayHelper, "create1", .{ 620 });
-        this.textAnimation = Inheritance.callStatic(TextAnimation, "create2", .{ StringUtil.getInstance().?.EMPTY_STRING, AnimationBehavior.getInstance() });
+        this.textAnimation = Inheritance.callStatic(TextAnimation, "create2", .{ Inheritance.fieldPointer(StringUtil.getInstance().?, "EMPTY_STRING").*, AnimationBehavior.getInstance() });
         
         this.animation = Inheritance.upcast(?*Animation, Inheritance.call(NullAnimationFactory.getFactoryInstance().?, "getInstance", .{ 0 }));
     }
@@ -68,7 +68,7 @@ pub const CaptionAnimationHelper = struct {
     
 
     pub fn tick(self: *Self) void {
-        if (Inheritance.call(self.timeHelper.?, "isTime", .{ GameTickTimeDelayHelperFactory.getInstance().?.startTime })) {
+        if (Inheritance.call(self.timeHelper.?, "isTime", .{ Inheritance.fieldPointer(GameTickTimeDelayHelperFactory.getInstance().?, "startTime").* })) {
             self.animation = Inheritance.upcast(@TypeOf(self.animation), Inheritance.call(NullAnimationFactory.getFactoryInstance().?, "getInstance", .{ 0 }));
         }
     }

@@ -42,7 +42,7 @@ pub const NoSound = struct {
     pub fn create() *Self {
         const this = allocator.create(Self) catch unreachable;
         this.* = .{};
-        this.base = Inheritance.callStatic(Sound, "create1", .{ StringUtil.getInstance().?.EMPTY_STRING }).*;
+        this.base = Inheritance.callStatic(Sound, "create1", .{ Inheritance.fieldPointer(StringUtil.getInstance().?, "EMPTY_STRING").* }).*;
         _ = Inheritance.call(this, "setPlayerP", .{ NoPlayer.NO_PLAYER });
         Inheritance.bindOverrides(this);
         return this;

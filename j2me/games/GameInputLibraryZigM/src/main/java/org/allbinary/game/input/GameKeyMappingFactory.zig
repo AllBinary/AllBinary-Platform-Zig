@@ -31,16 +31,16 @@ pub const GameKeyMappingFactory = struct {
 
     // Static fields with runtime initializers: call staticInit once at startup
     pub fn staticInit() void {
-        instance = Inheritance.upcast(?Object, NullUtil.getInstance().?.NULL_OBJECT);
+        instance = Inheritance.upcast(?Object, Inheritance.fieldPointer(NullUtil.getInstance().?, "NULL_OBJECT").*);
     }
 
     fn initFields(this: *Self) void {
-        this.intKeyToGameKey = array_N65844: { const array_N65844_array = allocator.alloc(?*GameKey, @intCast(InputFactory.getInstance().?.MAX)) catch unreachable; @memset(array_N65844_array, null); break :array_N65844 array_N65844_array; };
+        this.intKeyToGameKey = array_N65844: { const array_N65844_array = allocator.alloc(?*GameKey, @intCast(Inheritance.fieldPointer(InputFactory.getInstance().?, "MAX").*)) catch unreachable; @memset(array_N65844_array, null); break :array_N65844 array_N65844_array; };
     }
     
 
     pub fn getInstance() ?*GameKeyMappingFactory {
-        if (Object.same(GameKeyMappingFactory.instance, NullUtil.getInstance().?.NULL_OBJECT)) {
+        if (Object.same(GameKeyMappingFactory.instance, Inheritance.fieldPointer(NullUtil.getInstance().?, "NULL_OBJECT").*)) {
             GameKeyMappingFactory.instance = Inheritance.upcast(@TypeOf(GameKeyMappingFactory.instance), GameKeyMappingFactory.create());
         }
         return Inheritance.cast(?*GameKeyMappingFactory, GameKeyMappingFactory.instance);
@@ -52,30 +52,30 @@ pub const GameKeyMappingFactory = struct {
         this.* = .{};
         this.initFields();
         const gameKeyFactory: ?*GameKeyFactory = Inheritance.upcast(?*GameKeyFactory, GameKeyFactory.getInstance());
-        _ = Inheritance.call(this, "setGameKey", .{ gameKeyFactory.?.NONE });
-        _ = Inheritance.call(this, "setGameKey", .{ gameKeyFactory.?.UP });
-        _ = Inheritance.call(this, "setGameKey", .{ gameKeyFactory.?.DOWN });
-        _ = Inheritance.call(this, "setGameKey", .{ gameKeyFactory.?.LEFT });
-        _ = Inheritance.call(this, "setGameKey", .{ gameKeyFactory.?.RIGHT });
-        _ = Inheritance.call(this, "setGameKey", .{ gameKeyFactory.?.KEY_POUND });
-        _ = Inheritance.call(this, "setGameKey", .{ gameKeyFactory.?.KEY_STAR });
-        _ = Inheritance.call(this, "setGameKey", .{ gameKeyFactory.?.KEY_NUM0 });
-        _ = Inheritance.call(this, "setGameKey", .{ gameKeyFactory.?.KEY_NUM1 });
-        _ = Inheritance.call(this, "setGameKey", .{ gameKeyFactory.?.KEY_NUM2 });
-        _ = Inheritance.call(this, "setGameKey", .{ gameKeyFactory.?.KEY_NUM3 });
-        _ = Inheritance.call(this, "setGameKey", .{ gameKeyFactory.?.KEY_NUM4 });
-        _ = Inheritance.call(this, "setGameKey", .{ gameKeyFactory.?.KEY_NUM5 });
-        _ = Inheritance.call(this, "setGameKey", .{ gameKeyFactory.?.KEY_NUM6 });
-        _ = Inheritance.call(this, "setGameKey", .{ gameKeyFactory.?.KEY_NUM7 });
-        _ = Inheritance.call(this, "setGameKey", .{ gameKeyFactory.?.KEY_NUM8 });
-        _ = Inheritance.call(this, "setGameKey", .{ gameKeyFactory.?.KEY_NUM9 });
-        _ = Inheritance.call(this, "setGameKey", .{ gameKeyFactory.?.GAME_A });
-        _ = Inheritance.call(this, "setGameKey", .{ gameKeyFactory.?.GAME_B });
-        _ = Inheritance.call(this, "setGameKey", .{ gameKeyFactory.?.GAME_C });
-        _ = Inheritance.call(this, "setGameKey", .{ gameKeyFactory.?.GAME_D });
-        _ = Inheritance.call(this, "setGameKey", .{ gameKeyFactory.?.FIRE });
-        _ = Inheritance.call(this, "setGameKey", .{ gameKeyFactory.?.LEVEL_DOWN });
-        _ = Inheritance.call(this, "setGameKey", .{ gameKeyFactory.?.LEVEL_UP });
+        _ = Inheritance.call(this, "setGameKey", .{ Inheritance.fieldPointer(gameKeyFactory.?, "NONE").* });
+        _ = Inheritance.call(this, "setGameKey", .{ Inheritance.fieldPointer(gameKeyFactory.?, "UP").* });
+        _ = Inheritance.call(this, "setGameKey", .{ Inheritance.fieldPointer(gameKeyFactory.?, "DOWN").* });
+        _ = Inheritance.call(this, "setGameKey", .{ Inheritance.fieldPointer(gameKeyFactory.?, "LEFT").* });
+        _ = Inheritance.call(this, "setGameKey", .{ Inheritance.fieldPointer(gameKeyFactory.?, "RIGHT").* });
+        _ = Inheritance.call(this, "setGameKey", .{ Inheritance.fieldPointer(gameKeyFactory.?, "KEY_POUND").* });
+        _ = Inheritance.call(this, "setGameKey", .{ Inheritance.fieldPointer(gameKeyFactory.?, "KEY_STAR").* });
+        _ = Inheritance.call(this, "setGameKey", .{ Inheritance.fieldPointer(gameKeyFactory.?, "KEY_NUM0").* });
+        _ = Inheritance.call(this, "setGameKey", .{ Inheritance.fieldPointer(gameKeyFactory.?, "KEY_NUM1").* });
+        _ = Inheritance.call(this, "setGameKey", .{ Inheritance.fieldPointer(gameKeyFactory.?, "KEY_NUM2").* });
+        _ = Inheritance.call(this, "setGameKey", .{ Inheritance.fieldPointer(gameKeyFactory.?, "KEY_NUM3").* });
+        _ = Inheritance.call(this, "setGameKey", .{ Inheritance.fieldPointer(gameKeyFactory.?, "KEY_NUM4").* });
+        _ = Inheritance.call(this, "setGameKey", .{ Inheritance.fieldPointer(gameKeyFactory.?, "KEY_NUM5").* });
+        _ = Inheritance.call(this, "setGameKey", .{ Inheritance.fieldPointer(gameKeyFactory.?, "KEY_NUM6").* });
+        _ = Inheritance.call(this, "setGameKey", .{ Inheritance.fieldPointer(gameKeyFactory.?, "KEY_NUM7").* });
+        _ = Inheritance.call(this, "setGameKey", .{ Inheritance.fieldPointer(gameKeyFactory.?, "KEY_NUM8").* });
+        _ = Inheritance.call(this, "setGameKey", .{ Inheritance.fieldPointer(gameKeyFactory.?, "KEY_NUM9").* });
+        _ = Inheritance.call(this, "setGameKey", .{ Inheritance.fieldPointer(gameKeyFactory.?, "GAME_A").* });
+        _ = Inheritance.call(this, "setGameKey", .{ Inheritance.fieldPointer(gameKeyFactory.?, "GAME_B").* });
+        _ = Inheritance.call(this, "setGameKey", .{ Inheritance.fieldPointer(gameKeyFactory.?, "GAME_C").* });
+        _ = Inheritance.call(this, "setGameKey", .{ Inheritance.fieldPointer(gameKeyFactory.?, "GAME_D").* });
+        _ = Inheritance.call(this, "setGameKey", .{ Inheritance.fieldPointer(gameKeyFactory.?, "FIRE").* });
+        _ = Inheritance.call(this, "setGameKey", .{ Inheritance.fieldPointer(gameKeyFactory.?, "LEVEL_DOWN").* });
+        _ = Inheritance.call(this, "setGameKey", .{ Inheritance.fieldPointer(gameKeyFactory.?, "LEVEL_UP").* });
         return this;
     }
     

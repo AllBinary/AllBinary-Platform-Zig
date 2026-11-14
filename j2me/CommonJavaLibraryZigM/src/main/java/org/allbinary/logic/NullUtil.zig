@@ -50,8 +50,7 @@ pub const NullUtil = struct {
         this.NULL_SHORT_ARRAY_ARRAY = array_N66022: { const array_N66022_array = allocator.alloc([]i16, @intCast(0)) catch unreachable; for (array_N66022_array) |*array_N66022_row| { array_N66022_row.* = allocator.alloc(i16, @intCast(0)) catch unreachable; @memset(array_N66022_row.*, 0); } break :array_N66022 array_N66022_array; };
         this.NULL_INT_ARRAY = array_N66093: { const array_N66093_array = allocator.alloc(i32, @intCast(0)) catch unreachable; @memset(array_N66093_array, 0); break :array_N66093 array_N66093_array; };
         this.NULL_INT_ARRAY_ARRAY = array_N66151: { const array_N66151_array = allocator.alloc([]i32, @intCast(0)) catch unreachable; for (array_N66151_array) |*array_N66151_row| { array_N66151_row.* = allocator.alloc(i32, @intCast(0)) catch unreachable; @memset(array_N66151_row.*, 0); } break :array_N66151 array_N66151_array; };
-        this.NULL_INT_ARRAY_ARRAY_ARRAY = undefined // Otherwise - newArray - 3
-;
+        this.NULL_INT_ARRAY_ARRAY_ARRAY = array_N66222: { const array_N66222_array = allocator.alloc([][]i32, @intCast(0)) catch unreachable; for (array_N66222_array) |*array_N66222_row| { array_N66222_row.* = allocator.alloc([]i32, @intCast(0)) catch unreachable; for (array_N66222_row.*) |*array_N66222_cell| { array_N66222_cell.* = allocator.alloc(i32, @intCast(0)) catch unreachable; @memset(array_N66222_cell.*, 0); } } break :array_N66222 array_N66222_array; };
         this.NULL_FLOAT_ARRAY = array_N66306: { const array_N66306_array = allocator.alloc(f32, @intCast(0)) catch unreachable; @memset(array_N66306_array, 0.0); break :array_N66306 array_N66306_array; };
     }
 

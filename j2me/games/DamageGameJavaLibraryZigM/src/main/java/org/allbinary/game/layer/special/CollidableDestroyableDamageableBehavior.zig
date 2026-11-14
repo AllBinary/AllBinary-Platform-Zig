@@ -24,6 +24,7 @@ const DamageUtil = @import("org/allbinary/game/combat/damage/DamageUtil.zig").Da
 const CollidableCompositeLayer = @import("org/allbinary/game/layer/CollidableCompositeLayer.zig").CollidableCompositeLayer;
 const ForcedLogUtil = @import("org/allbinary/logic/communication/log/ForcedLogUtil.zig").ForcedLogUtil;
 const CollidableDestroyableDamageableLayer = @import("org/allbinary/game/layer/special/CollidableDestroyableDamageableLayer.zig").CollidableDestroyableDamageableLayer;
+const Exception = @import("java/lang/Exception.zig").Exception;
 
 pub const CollidableDestroyableDamageableBehavior = struct {
     const Self = @This();

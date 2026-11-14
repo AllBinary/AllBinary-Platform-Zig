@@ -31,7 +31,7 @@ pub const LicenseInitInfo = struct {
     serverList: ?*BasicArrayList = null,
 
     fn initFields(this: *Self) void {
-        this.id = Inheritance.upcast(?*String, StringUtil.getInstance().?.EMPTY_STRING);
+        this.id = Inheritance.upcast(?*String, Inheritance.fieldPointer(StringUtil.getInstance().?, "EMPTY_STRING").*);
         this.serverList = Inheritance.upcast(?*BasicArrayList, BasicArrayListD.create());
     }
     

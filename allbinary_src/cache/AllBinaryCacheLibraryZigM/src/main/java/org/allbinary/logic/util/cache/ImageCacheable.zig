@@ -26,7 +26,7 @@ pub const ImageCacheable = struct {
     name: ?*String = null,
 
     fn initFields(this: *Self) void {
-        this.name = Inheritance.upcast(?*String, StringUtil.getInstance().?.EMPTY_STRING);
+        this.name = Inheritance.upcast(?*String, Inheritance.fieldPointer(StringUtil.getInstance().?, "EMPTY_STRING").*);
     }
     
 

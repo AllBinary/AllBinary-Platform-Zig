@@ -21,6 +21,7 @@ const Inheritance = @import("zig/Inheritance.zig");
 const RelativeRelationship = @import("org/allbinary/graphics/RelativeRelationship.zig").RelativeRelationship;
 const AllBinaryLayer = @import("org/allbinary/layer/AllBinaryLayer.zig").AllBinaryLayer;
 const PartInterface = @import("org/allbinary/game/part/PartInterface.zig").PartInterface;
+const Exception = @import("java/lang/Exception.zig").Exception;
 
 // Java interface: an implementation is a pointer and a table of functions
 pub const PartFactoryInterface = struct {
@@ -29,7 +30,7 @@ pub const PartFactoryInterface = struct {
     pointer: *anyopaque,
     object: Object,
     toStringFn: *const fn (pointer: *anyopaque) ?*String,
-    getInstanceFn: *const fn (pointer: *anyopaque, sourceLayerInterface: ?*AllBinaryLayer, relativeRelationship: ?*RelativeRelationship) ?*PartInterface,
+    getInstanceFn: *const fn (interface_pointer: *anyopaque, sourceLayerInterface: ?*AllBinaryLayer, relativeRelationship: ?*RelativeRelationship) ?*PartInterface,
 
     pub fn getInstance(self: *Self, sourceLayerInterface: ?*AllBinaryLayer, relativeRelationship: ?*RelativeRelationship) ?*PartInterface {
         return self.getInstanceFn(self.pointer, sourceLayerInterface, relativeRelationship);
@@ -41,15 +42,15 @@ pub const PartFactoryInterface = struct {
 
     // The interface value of an object with the methods. Like a Java class a method can be declared by the object or a superclass.
     pub fn of(object: anytype) ?*Self {
-        const Implementation = @TypeOf(object);
+        const ImplementationType = @TypeOf(object);
         const Methods = struct {
             fn toString(pointer: *anyopaque) ?*String {
-                const implementation: Implementation = @ptrCast(@alignCast(pointer));
+                const implementation: ImplementationType = @ptrCast(@alignCast(pointer));
                 return String.valueOf(implementation);
             }
-            fn getInstance(pointer: *anyopaque, sourceLayerInterface: ?*AllBinaryLayer, relativeRelationship: ?*RelativeRelationship) ?*PartInterface {
-                const implementation: Implementation = @ptrCast(@alignCast(pointer));
-                return Inheritance.upcast(?*PartInterface, Inheritance.receiver(implementation, "getInstance").getInstance(sourceLayerInterface, relativeRelationship));
+            fn getInstance(interface_pointer: *anyopaque, sourceLayerInterface: ?*AllBinaryLayer, relativeRelationship: ?*RelativeRelationship) ?*PartInterface {
+                const implementation: ImplementationType = @ptrCast(@alignCast(interface_pointer));
+                return Inheritance.upcast(?*PartInterface, Inheritance.call(implementation, "getInstance", .{ sourceLayerInterface, relativeRelationship }));
             }
         };
         const this = allocator.create(Self) catch unreachable;

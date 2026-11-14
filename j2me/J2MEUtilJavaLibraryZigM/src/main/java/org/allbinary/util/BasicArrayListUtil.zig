@@ -64,7 +64,7 @@ pub const BasicArrayListUtil = struct {
 
     pub fn getRandom(self: *Self, list: ?*BasicArrayList) ?Object {
         const i_random: i32 = Inheritance.call(self, "getRandomIndex", .{ list });
-        return Inheritance.upcast(?Object, list.?.objectArray[@intCast(i_random)]);
+        return Inheritance.upcast(?Object, Inheritance.fieldPointer(list.?, "objectArray").*[@intCast(i_random)]);
     }
     
 
@@ -96,12 +96,12 @@ pub const BasicArrayListUtil = struct {
         const S_LABEL: ?*String = String.literal(" s: ");
         const size: i32 = list.?.size();
         const stringBuffer: ?*StringMaker = StringMaker.create();
-        _ = Inheritance.call(stringBuffer.?, "append", .{ CommonLabels.getInstance().?.TOTAL_LABEL });
+        _ = Inheritance.call(stringBuffer.?, "append", .{ Inheritance.fieldPointer(CommonLabels.getInstance().?, "TOTAL_LABEL").* });
         _ = Inheritance.call(stringBuffer.?, "appendint", .{ size });
         {
             var index: i32 = size - 1;
             while (index >= 0) : (index -= 1) {
-            const usedList: ?*BasicArrayList = Inheritance.cast(?*BasicArrayList, list.?.objectArray[@intCast(index)]);
+            const usedList: ?*BasicArrayList = Inheritance.cast(?*BasicArrayList, Inheritance.fieldPointer(list.?, "objectArray").*[@intCast(index)]);
             _ = Inheritance.call(stringBuffer.?, "append", .{ S_LABEL });
             _ = Inheritance.call(stringBuffer.?, "appendint", .{ usedList.?.size() });
             }
@@ -119,15 +119,15 @@ pub const BasicArrayListUtil = struct {
         _ = args;
         const commonPhoneStrings: ?*CommonPhoneStrings = Inheritance.upcast(?*CommonPhoneStrings, CommonPhoneStrings.getInstance());
         const list: ?*BasicArrayList = Inheritance.upcast(?*BasicArrayList, BasicArrayListD.create());
-        _ = Inheritance.call(list.?, "add", .{ commonPhoneStrings.?.ONE });
-        _ = Inheritance.call(list.?, "add", .{ commonPhoneStrings.?.TWO });
-        _ = Inheritance.call(list.?, "add", .{ commonPhoneStrings.?.THREE });
-        _ = Inheritance.call(list.?, "add", .{ commonPhoneStrings.?.FOUR });
-        _ = Inheritance.call(list.?, "add", .{ commonPhoneStrings.?.FIVE });
-        _ = Inheritance.call(list.?, "add", .{ commonPhoneStrings.?.SIX });
-        _ = Inheritance.call(list.?, "add", .{ commonPhoneStrings.?.SEVEN });
-        _ = Inheritance.call(list.?, "add", .{ commonPhoneStrings.?.EIGHT });
-        _ = Inheritance.call(list.?, "add", .{ commonPhoneStrings.?.NINE });
+        _ = Inheritance.call(list.?, "add", .{ Inheritance.fieldPointer(commonPhoneStrings.?, "ONE").* });
+        _ = Inheritance.call(list.?, "add", .{ Inheritance.fieldPointer(commonPhoneStrings.?, "TWO").* });
+        _ = Inheritance.call(list.?, "add", .{ Inheritance.fieldPointer(commonPhoneStrings.?, "THREE").* });
+        _ = Inheritance.call(list.?, "add", .{ Inheritance.fieldPointer(commonPhoneStrings.?, "FOUR").* });
+        _ = Inheritance.call(list.?, "add", .{ Inheritance.fieldPointer(commonPhoneStrings.?, "FIVE").* });
+        _ = Inheritance.call(list.?, "add", .{ Inheritance.fieldPointer(commonPhoneStrings.?, "SIX").* });
+        _ = Inheritance.call(list.?, "add", .{ Inheritance.fieldPointer(commonPhoneStrings.?, "SEVEN").* });
+        _ = Inheritance.call(list.?, "add", .{ Inheritance.fieldPointer(commonPhoneStrings.?, "EIGHT").* });
+        _ = Inheritance.call(list.?, "add", .{ Inheritance.fieldPointer(commonPhoneStrings.?, "NINE").* });
         _ = Inheritance.call(BasicArrayListUtil.getInstance().?, "reverse", .{ list });
         _ = std.debug.print("{s}\n", .{String.text(Object.toString(Object.of(list)))});
     }

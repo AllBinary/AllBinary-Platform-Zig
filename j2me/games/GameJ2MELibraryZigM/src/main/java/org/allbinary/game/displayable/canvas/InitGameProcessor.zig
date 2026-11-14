@@ -23,6 +23,7 @@ const ProgressCanvasFactory = @import("org/allbinary/graphics/canvas/transition/
 const LogUtil = @import("org/allbinary/logic/communication/log/LogUtil.zig").LogUtil;
 const CommonStrings = @import("org/allbinary/string/CommonStrings.zig").CommonStrings;
 const AllBinaryGameCanvas = @import("org/allbinary/game/displayable/canvas/AllBinaryGameCanvas.zig").AllBinaryGameCanvas;
+const Exception = @import("java/lang/Exception.zig").Exception;
 
 pub const InitGameProcessor = struct {
     const Self = @This();

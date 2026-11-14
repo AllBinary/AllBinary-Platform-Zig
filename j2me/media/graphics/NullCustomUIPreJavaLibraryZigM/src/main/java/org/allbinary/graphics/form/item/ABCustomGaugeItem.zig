@@ -19,7 +19,7 @@ pub const ABCustomGaugeItem = struct {
 
     // Static fields with runtime initializers: call staticInit once at startup
     pub fn staticInit() void {
-        NULL_GAUGE_ITEM = Inheritance.callStatic(ABCustomGaugeItem, "create5", .{ StringUtil.getInstance().?.EMPTY_STRING, 1, 0, BasicColorFactory.getInstance().?.BLACK, BasicColorFactory.getInstance().?.WHITE });
+        NULL_GAUGE_ITEM = Inheritance.callStatic(ABCustomGaugeItem, "create5", .{ Inheritance.fieldPointer(StringUtil.getInstance().?, "EMPTY_STRING").*, 1, 0, Inheritance.fieldPointer(BasicColorFactory.getInstance().?, "BLACK").*, Inheritance.fieldPointer(BasicColorFactory.getInstance().?, "WHITE").* });
     }
     
 

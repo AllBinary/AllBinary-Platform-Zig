@@ -61,28 +61,28 @@ pub const ReverseVelocityBoundsVisitor = struct {
     
 
     pub fn minX(self: *Self) void {
-        if (Inheritance.receiverOf(Inheritance.receiver(self.velocityInterface.?, "getVelocityXBasicDecimalP").getVelocityXBasicDecimalP().?, "getUnscaled").getUnscaled() < 0) {
+        if (Inheritance.arithmetic(.less, Inheritance.receiverOf(Inheritance.receiver(self.velocityInterface.?, "getVelocityXBasicDecimalP").getVelocityXBasicDecimalP().?, "getUnscaled").getUnscaled(), 0)) {
             _ = Inheritance.call(Inheritance.receiver(self.velocityInterface.?, "getVelocityXBasicDecimalP").getVelocityXBasicDecimalP().?, "multiplyint", .{ -1 });
         }
     }
     
 
     pub fn maxX(self: *Self) void {
-        if (Inheritance.receiverOf(Inheritance.receiver(self.velocityInterface.?, "getVelocityXBasicDecimalP").getVelocityXBasicDecimalP().?, "getUnscaled").getUnscaled() > 0) {
+        if (Inheritance.arithmetic(.greater, Inheritance.receiverOf(Inheritance.receiver(self.velocityInterface.?, "getVelocityXBasicDecimalP").getVelocityXBasicDecimalP().?, "getUnscaled").getUnscaled(), 0)) {
             _ = Inheritance.call(Inheritance.receiver(self.velocityInterface.?, "getVelocityXBasicDecimalP").getVelocityXBasicDecimalP().?, "multiplyint", .{ -1 });
         }
     }
     
 
     pub fn minY(self: *Self) void {
-        if (Inheritance.receiverOf(Inheritance.receiver(self.velocityInterface.?, "getVelocityYBasicDecimalP").getVelocityYBasicDecimalP().?, "getUnscaled").getUnscaled() < 0) {
+        if (Inheritance.arithmetic(.less, Inheritance.receiverOf(Inheritance.receiver(self.velocityInterface.?, "getVelocityYBasicDecimalP").getVelocityYBasicDecimalP().?, "getUnscaled").getUnscaled(), 0)) {
             _ = Inheritance.call(Inheritance.receiver(self.velocityInterface.?, "getVelocityYBasicDecimalP").getVelocityYBasicDecimalP().?, "multiplyint", .{ -1 });
         }
     }
     
 
     pub fn maxY(self: *Self) void {
-        if (Inheritance.receiverOf(Inheritance.receiver(self.velocityInterface.?, "getVelocityYBasicDecimalP").getVelocityYBasicDecimalP().?, "getUnscaled").getUnscaled() > 0) {
+        if (Inheritance.arithmetic(.greater, Inheritance.receiverOf(Inheritance.receiver(self.velocityInterface.?, "getVelocityYBasicDecimalP").getVelocityYBasicDecimalP().?, "getUnscaled").getUnscaled(), 0)) {
             _ = Inheritance.call(Inheritance.receiver(self.velocityInterface.?, "getVelocityYBasicDecimalP").getVelocityYBasicDecimalP().?, "multiplyint", .{ -1 });
         }
     }

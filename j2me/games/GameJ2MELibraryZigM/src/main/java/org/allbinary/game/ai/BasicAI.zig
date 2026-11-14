@@ -31,6 +31,7 @@ const StringMaker = @import("org/allbinary/logic/string/StringMaker.zig").String
 const CommonSeps = @import("org/allbinary/string/CommonSeps.zig").CommonSeps;
 const CommonStrings = @import("org/allbinary/string/CommonStrings.zig").CommonStrings;
 const Integer = @import("java/lang/Integer.zig").Integer;
+const Exception = @import("java/lang/Exception.zig").Exception;
 
 pub const BasicAI = struct {
     const Self = @This();
@@ -77,7 +78,7 @@ pub const BasicAI = struct {
     // throws Exception
     pub fn processAI(self: *Self, allBinaryLayerManager: ?*AllBinaryLayerManager) void {
         _ = allBinaryLayerManager;
-        std.debug.panic("{any}", .{exception: { _ = self.commonStrings.?.NOT_IMPLEMENTED; break :exception error.Exception; }});
+        std.debug.panic("{any}", .{exception: { _ = Inheritance.fieldPointer(self.commonStrings.?, "NOT_IMPLEMENTED").*; break :exception error.Exception; }});
     }
     
 
@@ -116,7 +117,7 @@ pub const BasicAI = struct {
 
     pub fn toString(self: *Self) ?*String {
         const stringBuffer: ?*StringMaker = StringMaker.create();
-        _ = Inheritance.call(stringBuffer.?, "append", .{ CommonSeps.getInstance().?.NEW_LINE });
+        _ = Inheritance.call(stringBuffer.?, "append", .{ Inheritance.fieldPointer(CommonSeps.getInstance().?, "NEW_LINE").* });
         _ = Inheritance.call(stringBuffer.?, "append", .{ self.getName() });
         _ = Inheritance.call(stringBuffer.?, "append", .{ String.literal(" LastKey: ") });
         _ = Inheritance.call(stringBuffer.?, "append", .{ Inheritance.callStatic(CanvasUtil, "getKeyName", .{ self.getLastKey() }) });

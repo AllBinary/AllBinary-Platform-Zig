@@ -19,6 +19,7 @@ const String = @import("java/lang/String.zig").String;
 const Object = @import("java/lang/Object.zig").Object;
 const Inheritance = @import("zig/Inheritance.zig");
 const NullUtil = @import("org/allbinary/logic/NullUtil.zig").NullUtil;
+const Input = @import("org/allbinary/game/input/Input.zig").Input;
 const J2MEGameKey = @import("org/allbinary/game/input/J2MEGameKey.zig").J2MEGameKey;
 const J2MEKeyFactory = @import("org/allbinary/game/input/J2MEKeyFactory.zig").J2MEKeyFactory;
 
@@ -29,7 +30,7 @@ pub const PlatformKeyFactory = struct {
 
     // Static fields with runtime initializers: call staticInit once at startup
     pub fn staticInit() void {
-        instance = Inheritance.upcast(?Object, NullUtil.getInstance().?.NULL_OBJECT);
+        instance = Inheritance.upcast(?Object, Inheritance.fieldPointer(NullUtil.getInstance().?, "NULL_OBJECT").*);
     }
 
     pub fn create() *Self {
@@ -40,7 +41,7 @@ pub const PlatformKeyFactory = struct {
     
 
     pub fn getInstance() ?*PlatformKeyFactory {
-        if (Object.same(PlatformKeyFactory.instance, NullUtil.getInstance().?.NULL_OBJECT)) {
+        if (Object.same(PlatformKeyFactory.instance, Inheritance.fieldPointer(NullUtil.getInstance().?, "NULL_OBJECT").*)) {
             PlatformKeyFactory.instance = Inheritance.upcast(@TypeOf(PlatformKeyFactory.instance), PlatformKeyFactory.create());
         }
         return Inheritance.cast(?*PlatformKeyFactory, PlatformKeyFactory.instance);

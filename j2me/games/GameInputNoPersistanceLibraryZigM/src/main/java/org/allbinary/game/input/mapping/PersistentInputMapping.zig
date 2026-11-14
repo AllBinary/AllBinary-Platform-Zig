@@ -35,6 +35,7 @@ const BasicArrayList = @import("org/allbinary/util/BasicArrayList.zig").BasicArr
 const EnumerationUtil = @import("org/allbinary/util/EnumerationUtil.zig").EnumerationUtil;
 const ABHashtable = @import("org/allbinary/util/ABHashtable.zig").ABHashtable;
 const InputToGameKeyMapping = @import("org/allbinary/game/input/mapping/InputToGameKeyMapping.zig").InputToGameKeyMapping;
+const Exception = @import("java/lang/Exception.zig").Exception;
 
 //GameInputNoPersistanceLibrary
 pub const PersistentInputMapping = struct {
@@ -51,7 +52,7 @@ pub const PersistentInputMapping = struct {
 
     // Static fields with runtime initializers: call staticInit once at startup
     pub fn staticInit() void {
-        instance = Inheritance.upcast(?Object, NullUtil.getInstance().?.NULL_OBJECT);
+        instance = Inheritance.upcast(?Object, Inheritance.fieldPointer(NullUtil.getInstance().?, "NULL_OBJECT").*);
     }
 
     fn initFields(this: *Self) void {
@@ -66,8 +67,8 @@ pub const PersistentInputMapping = struct {
     
 
     pub fn getNullInstance() ?*PersistentInputMapping {
-        if (Object.same(PersistentInputMapping.instance, NullUtil.getInstance().?.NULL_OBJECT)) {
-            PersistentInputMapping.instance = Inheritance.upcast(@TypeOf(PersistentInputMapping.instance), Inheritance.callStatic(PersistentInputMapping, "create1", .{ GamePersistanceStrings.getInstance().?.SAVED_INPUT_CONFIGURATION_RECORD_ID }));
+        if (Object.same(PersistentInputMapping.instance, Inheritance.fieldPointer(NullUtil.getInstance().?, "NULL_OBJECT").*)) {
+            PersistentInputMapping.instance = Inheritance.upcast(@TypeOf(PersistentInputMapping.instance), Inheritance.callStatic(PersistentInputMapping, "create1", .{ Inheritance.fieldPointer(GamePersistanceStrings.getInstance().?, "SAVED_INPUT_CONFIGURATION_RECORD_ID").* }));
         }
         return Inheritance.cast(?*PersistentInputMapping, PersistentInputMapping.instance);
     }
@@ -118,7 +119,7 @@ pub const PersistentInputMapping = struct {
     pub fn save(self: *Self, abeClientInformation: ?*AbeClientInformationInterface) void {
         _ = Inheritance.call(self.inputPersistance.?, "save", .{ abeClientInformation, Inheritance.receiverOf(self.getInputMapping().?, "getHashtable").getHashtable() });
         _ = Inheritance.call(self.inputMappingEvent.?, "setInputToGameKeyMapping", .{ self.getInputMapping() });
-        if (self.getInputMappingEventListenerInterface() != null) {
+        if (!Object.isNull(self.getInputMappingEventListenerInterface())) {
             _ = Inheritance.call(self.getInputMappingEventListenerInterface().?, "onInputMappingEvent", .{ self.inputMappingEvent });
         }
     }
@@ -126,12 +127,12 @@ pub const PersistentInputMapping = struct {
 
     // throws Exception
     pub fn init(self: *Self, abeClientInformation: ?*AbeClientInformationInterface) void {
-        _ = Inheritance.call(self.logUtil.?, "putF", .{ self.commonStrings.?.START, self, self.commonStrings.?.INIT });
+        _ = Inheritance.call(self.logUtil.?, "putF", .{ Inheritance.fieldPointer(self.commonStrings.?, "START").*, self, Inheritance.fieldPointer(self.commonStrings.?, "INIT").* });
         { // try
             _ = Inheritance.call(self.inputPersistance.?, "loadAll", .{ abeClientInformation });
         }
         // catch (Exception e):
-//             _ = Inheritance.callStatic(PreLogUtil, "putOE", .{ self.commonStrings.?.EXCEPTION, self, self.commonStrings.?.INIT, e });
+//             _ = Inheritance.callStatic(PreLogUtil, "putOE", .{ Inheritance.fieldPointer(self.commonStrings.?, "EXCEPTION").*, self, Inheritance.fieldPointer(self.commonStrings.?, "INIT").*, e });
 //             _ = Inheritance.call(self.inputPersistance.?, "deleteRecoreStore", .{ abeClientInformation });
 //             _ = Inheritance.call(self, "setDefault", .{ abeClientInformation });
 //             _ = Inheritance.call(self.inputPersistance.?, "loadAll", .{ abeClientInformation });
@@ -145,7 +146,7 @@ pub const PersistentInputMapping = struct {
         {
             var index: i32 = 0;
             while (index < size) : (index += 1) {
-            hashtable = Inheritance.cast(?*ABHashtable, list.?.objectArray[@intCast(index)]);
+            hashtable = Inheritance.cast(?*ABHashtable, Inheritance.fieldPointer(list.?, "objectArray").*[@intCast(index)]);
             enumeration = Inheritance.upcast(@TypeOf(enumeration), Inheritance.receiver(hashtable.?, "keys").keys());
             while (Inheritance.call(self.enumerationUtil.?, "hasMoreElements", .{ enumeration })) {
                 mappedToInput = Inheritance.cast(?*Input, Inheritance.call(self.enumerationUtil.?, "nextElement", .{ enumeration }));
@@ -160,7 +161,7 @@ pub const PersistentInputMapping = struct {
         _ = Inheritance.call(stringBuffer.?, "appendint", .{ self.getTotalMapped() });
         _ = Inheritance.call(stringBuffer.?, "append", .{ String.literal(" to: ") });
         _ = Inheritance.call(stringBuffer.?, "appendint", .{ totalMappedTo });
-        _ = Inheritance.call(self.logUtil.?, "putF", .{ Object.toString(Object.of(stringBuffer)), self, self.commonStrings.?.INIT });
+        _ = Inheritance.call(self.logUtil.?, "putF", .{ Object.toString(Object.of(stringBuffer)), self, Inheritance.fieldPointer(self.commonStrings.?, "INIT").* });
     }
     
 
@@ -182,14 +183,14 @@ pub const PersistentInputMapping = struct {
     // throws Exception
     pub fn isDelete(self: *Self, input: ?*Input) bool {
         _ = input;
-        std.debug.panic("{any}", .{exception: { _ = self.commonStrings.?.NOT_IMPLEMENTED; break :exception error.Exception; }});
+        std.debug.panic("{any}", .{exception: { _ = Inheritance.fieldPointer(self.commonStrings.?, "NOT_IMPLEMENTED").*; break :exception error.Exception; }});
     }
     
 
     // throws Exception
     pub fn isSystemInput(self: *Self, input: ?*Input) bool {
         _ = input;
-        std.debug.panic("{any}", .{exception: { _ = self.commonStrings.?.NOT_IMPLEMENTED; break :exception error.Exception; }});
+        std.debug.panic("{any}", .{exception: { _ = Inheritance.fieldPointer(self.commonStrings.?, "NOT_IMPLEMENTED").*; break :exception error.Exception; }});
     }
 };
 

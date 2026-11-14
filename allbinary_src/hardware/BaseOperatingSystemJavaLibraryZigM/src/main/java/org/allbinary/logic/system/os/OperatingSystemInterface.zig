@@ -26,16 +26,16 @@ pub const OperatingSystemInterface = struct {
     pub const java_name = "org.allbinary.logic.system.os.OperatingSystemInterface";
     pointer: *anyopaque,
     object: Object,
-    getNameFn: *const fn (pointer: *anyopaque) ?*String,
-    getVersionFn: *const fn (pointer: *anyopaque) ?*String,
-    getArchFn: *const fn (pointer: *anyopaque) ?*String,
-    getCharacterSetFn: *const fn (pointer: *anyopaque) ?*CharacterSet,
-    isOverScanFn: *const fn (pointer: *anyopaque) bool,
-    getOverScanXPercentFn: *const fn (pointer: *anyopaque) i32,
-    getOverScanYPercentFn: *const fn (pointer: *anyopaque) i32,
-    isScalableFn: *const fn (pointer: *anyopaque) bool,
-    isAutoHideFn: *const fn (pointer: *anyopaque) bool,
-    toStringFn: *const fn (pointer: *anyopaque) ?*String,
+    getNameFn: *const fn (interface_pointer: *anyopaque) ?*String,
+    getVersionFn: *const fn (interface_pointer: *anyopaque) ?*String,
+    getArchFn: *const fn (interface_pointer: *anyopaque) ?*String,
+    getCharacterSetFn: *const fn (interface_pointer: *anyopaque) ?*CharacterSet,
+    isOverScanFn: *const fn (interface_pointer: *anyopaque) bool,
+    getOverScanXPercentFn: *const fn (interface_pointer: *anyopaque) i32,
+    getOverScanYPercentFn: *const fn (interface_pointer: *anyopaque) i32,
+    isScalableFn: *const fn (interface_pointer: *anyopaque) bool,
+    isAutoHideFn: *const fn (interface_pointer: *anyopaque) bool,
+    toStringFn: *const fn (interface_pointer: *anyopaque) ?*String,
 
     pub fn getName(self: *Self) ?*String {
         return self.getNameFn(self.pointer);
@@ -79,46 +79,46 @@ pub const OperatingSystemInterface = struct {
 
     // The interface value of an object with the methods. Like a Java class a method can be declared by the object or a superclass.
     pub fn of(object: anytype) ?*Self {
-        const Implementation = @TypeOf(object);
+        const ImplementationType = @TypeOf(object);
         const Methods = struct {
-            fn getName(pointer: *anyopaque) ?*String {
-                const implementation: Implementation = @ptrCast(@alignCast(pointer));
+            fn getName(interface_pointer: *anyopaque) ?*String {
+                const implementation: ImplementationType = @ptrCast(@alignCast(interface_pointer));
                 return Inheritance.upcast(?*String, Inheritance.receiver(implementation, "getName").getName());
             }
-            fn getVersion(pointer: *anyopaque) ?*String {
-                const implementation: Implementation = @ptrCast(@alignCast(pointer));
+            fn getVersion(interface_pointer: *anyopaque) ?*String {
+                const implementation: ImplementationType = @ptrCast(@alignCast(interface_pointer));
                 return Inheritance.upcast(?*String, Inheritance.receiver(implementation, "getVersion").getVersion());
             }
-            fn getArch(pointer: *anyopaque) ?*String {
-                const implementation: Implementation = @ptrCast(@alignCast(pointer));
+            fn getArch(interface_pointer: *anyopaque) ?*String {
+                const implementation: ImplementationType = @ptrCast(@alignCast(interface_pointer));
                 return Inheritance.upcast(?*String, Inheritance.receiver(implementation, "getArch").getArch());
             }
-            fn getCharacterSet(pointer: *anyopaque) ?*CharacterSet {
-                const implementation: Implementation = @ptrCast(@alignCast(pointer));
+            fn getCharacterSet(interface_pointer: *anyopaque) ?*CharacterSet {
+                const implementation: ImplementationType = @ptrCast(@alignCast(interface_pointer));
                 return Inheritance.upcast(?*CharacterSet, Inheritance.receiver(implementation, "getCharacterSet").getCharacterSet());
             }
-            fn isOverScan(pointer: *anyopaque) bool {
-                const implementation: Implementation = @ptrCast(@alignCast(pointer));
+            fn isOverScan(interface_pointer: *anyopaque) bool {
+                const implementation: ImplementationType = @ptrCast(@alignCast(interface_pointer));
                 return Inheritance.receiver(implementation, "isOverScan").isOverScan();
             }
-            fn getOverScanXPercent(pointer: *anyopaque) i32 {
-                const implementation: Implementation = @ptrCast(@alignCast(pointer));
+            fn getOverScanXPercent(interface_pointer: *anyopaque) i32 {
+                const implementation: ImplementationType = @ptrCast(@alignCast(interface_pointer));
                 return Inheritance.receiver(implementation, "getOverScanXPercent").getOverScanXPercent();
             }
-            fn getOverScanYPercent(pointer: *anyopaque) i32 {
-                const implementation: Implementation = @ptrCast(@alignCast(pointer));
+            fn getOverScanYPercent(interface_pointer: *anyopaque) i32 {
+                const implementation: ImplementationType = @ptrCast(@alignCast(interface_pointer));
                 return Inheritance.receiver(implementation, "getOverScanYPercent").getOverScanYPercent();
             }
-            fn isScalable(pointer: *anyopaque) bool {
-                const implementation: Implementation = @ptrCast(@alignCast(pointer));
+            fn isScalable(interface_pointer: *anyopaque) bool {
+                const implementation: ImplementationType = @ptrCast(@alignCast(interface_pointer));
                 return Inheritance.receiver(implementation, "isScalable").isScalable();
             }
-            fn isAutoHide(pointer: *anyopaque) bool {
-                const implementation: Implementation = @ptrCast(@alignCast(pointer));
+            fn isAutoHide(interface_pointer: *anyopaque) bool {
+                const implementation: ImplementationType = @ptrCast(@alignCast(interface_pointer));
                 return Inheritance.receiver(implementation, "isAutoHide").isAutoHide();
             }
-            fn toString(pointer: *anyopaque) ?*String {
-                const implementation: Implementation = @ptrCast(@alignCast(pointer));
+            fn toString(interface_pointer: *anyopaque) ?*String {
+                const implementation: ImplementationType = @ptrCast(@alignCast(interface_pointer));
                 return Inheritance.upcast(?*String, Inheritance.receiver(implementation, "toString").toString());
             }
         };

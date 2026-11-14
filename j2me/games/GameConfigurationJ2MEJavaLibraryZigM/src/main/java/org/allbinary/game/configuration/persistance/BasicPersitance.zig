@@ -18,7 +18,7 @@ const allocator = std.heap.page_allocator;
 const String = @import("java/lang/String.zig").String;
 const Object = @import("java/lang/Object.zig").Object;
 const Inheritance = @import("zig/Inheritance.zig");
-// const RecordStore = @import("javax/microedition/rms/RecordStore.zig").RecordStore;
+const RecordStore = @import("javax/microedition/rms/RecordStore.zig").RecordStore;
 const LogUtil = @import("org/allbinary/logic/communication/log/LogUtil.zig").LogUtil;
 const PreLogUtil = @import("org/allbinary/logic/communication/log/PreLogUtil.zig").PreLogUtil;
 const StringMaker = @import("org/allbinary/logic/string/StringMaker.zig").StringMaker;
@@ -30,6 +30,7 @@ const BasicArrayListD = @import("org/allbinary/util/BasicArrayListD.zig").BasicA
 const NullRecordStore = @import("org/allbinary/game/configuration/persistance/NullRecordStore.zig").NullRecordStore;
 const PersistanceStrings = @import("org/allbinary/game/configuration/persistance/PersistanceStrings.zig").PersistanceStrings;
 const Integer = @import("java/lang/Integer.zig").Integer;
+const Exception = @import("java/lang/Exception.zig").Exception;
 
 pub const BasicPersitance = struct {
     const Self = @This();
@@ -74,7 +75,7 @@ pub const BasicPersitance = struct {
         {
             var index: i32 = 0;
             while (index < size) : (index += 1) {
-            const integer: ?*Integer = Inheritance.cast(?*Integer, self.idList.?.objectArray[@intCast(index)]);
+            const integer: ?*Integer = Inheritance.cast(?*Integer, Inheritance.fieldPointer(self.idList.?, "objectArray").*[@intCast(index)]);
             _ = Inheritance.call(self, "delete", .{ abeClientInformation, integer.?.intValue() });
             }
         }
@@ -86,15 +87,15 @@ pub const BasicPersitance = struct {
     pub fn delete(self: *Self, abeClientInformation: ?*AbeClientInformationInterface, deleteId: i32) void {
         var recordStore: ?*RecordStore = Inheritance.upcast(?*RecordStore, NullRecordStore.NULL_RECORD_STORE);
         { // try
-            _ = Inheritance.call(self.logUtil.?, "putF", .{ Object.toString(Object.of(Inheritance.call(Inheritance.call(StringMaker.create(), "append", .{ self.persistanceStrings.?.DELETING_WITH_ID }).?, "appendint", .{ deleteId }))), self, self.commonStrings.?.delete });
+            _ = Inheritance.call(self.logUtil.?, "putF", .{ Object.toString(Object.of(Inheritance.call(Inheritance.call(StringMaker.create(), "append", .{ Inheritance.fieldPointer(self.persistanceStrings.?, "DELETING_WITH_ID").* }).?, "appendint", .{ deleteId }))), self, Inheritance.fieldPointer(self.commonStrings.?, "delete").* });
             recordStore = Inheritance.upcast(@TypeOf(recordStore), Inheritance.callStatic(RecordStore, "openRecordStore", .{ Inheritance.call(self, "getRecordId", .{ abeClientInformation }), true }));
             _ = Inheritance.call(recordStore.?, "deleteRecord", .{ deleteId });
         }
         // catch (Exception e):
 //             std.debug.panic("{any}", .{e});
         { // finally
-            if (recordStore != null) {
-                _ = Inheritance.callStatic(PreLogUtil, "put", .{ self.persistanceStrings.?.CLOSING_RECORDSTORE, self, self.commonStrings.?.delete });
+            if (!Object.isNull(recordStore)) {
+                _ = Inheritance.callStatic(PreLogUtil, "put", .{ Inheritance.fieldPointer(self.persistanceStrings.?, "CLOSING_RECORDSTORE").*, self, Inheritance.fieldPointer(self.commonStrings.?, "delete").* });
                 _ = recordStore.?.closeRecordStore();
             }
         }

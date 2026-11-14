@@ -19,6 +19,7 @@ const String = @import("java/lang/String.zig").String;
 const Object = @import("java/lang/Object.zig").Object;
 const Inheritance = @import("zig/Inheritance.zig");
 const NullUtil = @import("org/allbinary/logic/NullUtil.zig").NullUtil;
+const ClassLoader = @import("java/lang/ClassLoader.zig").ClassLoader;
 
 pub const WebappClassLoaderInfo = struct {
     const Self = @This();
@@ -27,7 +28,7 @@ pub const WebappClassLoaderInfo = struct {
 
     // Static fields with runtime initializers: call staticInit once at startup
     pub fn staticInit() void {
-        classLoader = Inheritance.upcast(?Object, NullUtil.getInstance().?.NULL_OBJECT);
+        classLoader = Inheritance.upcast(?Object, Inheritance.fieldPointer(NullUtil.getInstance().?, "NULL_OBJECT").*);
     }
     
 

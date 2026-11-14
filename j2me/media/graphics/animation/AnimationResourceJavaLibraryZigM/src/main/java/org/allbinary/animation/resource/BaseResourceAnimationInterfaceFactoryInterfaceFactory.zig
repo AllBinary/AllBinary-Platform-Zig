@@ -30,6 +30,7 @@ const CommonSeps = @import("org/allbinary/string/CommonSeps.zig").CommonSeps;
 const CommonStrings = @import("org/allbinary/string/CommonStrings.zig").CommonStrings;
 const ABHashtable = @import("org/allbinary/util/ABHashtable.zig").ABHashtable;
 const FeatureResourceAnimationInterfaceFactoryInterface = @import("org/allbinary/animation/resource/FeatureResourceAnimationInterfaceFactoryInterface.zig").FeatureResourceAnimationInterfaceFactoryInterface;
+const Exception = @import("java/lang/Exception.zig").Exception;
 
 pub const BaseResourceAnimationInterfaceFactoryInterfaceFactory = struct {
     const Self = @This();
@@ -76,7 +77,7 @@ pub const BaseResourceAnimationInterfaceFactoryInterfaceFactory = struct {
     pub fn init(self: *Self, level: i32) void {
         _ = level;
         const commonStrings: ?*CommonStrings = Inheritance.upcast(?*CommonStrings, CommonStrings.getInstance());
-        _ = Inheritance.call(self.logUtil.?, "putF", .{ Object.toString(Object.of(Inheritance.call(Inheritance.call(StringMaker.create(), "append", .{ String.literal("Available List of Animations: ") }).?, "append", .{ Object.toString(Object.of(self.hashtable)) }))), self, commonStrings.?.INIT });
+        _ = Inheritance.call(self.logUtil.?, "putF", .{ Object.toString(Object.of(Inheritance.call(Inheritance.call(StringMaker.create(), "append", .{ String.literal("Available List of Animations: ") }).?, "append", .{ Object.toString(Object.of(self.hashtable)) }))), self, Inheritance.fieldPointer(commonStrings.?, "INIT").* });
         _ = Inheritance.call(self, "setInitialized", .{ true });
     }
     
@@ -101,7 +102,7 @@ pub const BaseResourceAnimationInterfaceFactoryInterfaceFactory = struct {
     // throws Exception
     pub fn getBasicAnimationInterfaceFactoryInstance(self: *Self, resource: ?*String) ?*BasicAnimationInterfaceFactoryInterface {
         const basicAnimationInterfaceFactoryInterfaceCanBeNull: ?Object = Inheritance.upcast(?Object, Inheritance.call(self.hashtable.?, "get", .{ resource }));
-        if (basicAnimationInterfaceFactoryInterfaceCanBeNull == null) {
+        if (Object.isNull(basicAnimationInterfaceFactoryInterfaceCanBeNull)) {
             return Inheritance.upcast(?*BasicAnimationInterfaceFactoryInterface, NullAnimationFactory.NULL_NOT_FOR_USE_ANIMATION_FACTORY);
         }
         return Inheritance.cast(?*BasicAnimationInterfaceFactoryInterface, basicAnimationInterfaceFactoryInterfaceCanBeNull);
@@ -111,7 +112,7 @@ pub const BaseResourceAnimationInterfaceFactoryInterfaceFactory = struct {
     // throws Exception
     pub fn getRectangle(self: *Self, resource: ?*String) ?*Rectangle {
         const rectangleCanBeNull: ?Object = Inheritance.upcast(?Object, Inheritance.call(self.rectangleHashtable.?, "get", .{ resource }));
-        if (rectangleCanBeNull == null) {
+        if (Object.isNull(rectangleCanBeNull)) {
             return Inheritance.upcast(?*Rectangle, RectangleFactory.SINGLETON);
         }
         return Inheritance.cast(?*Rectangle, rectangleCanBeNull);
@@ -127,7 +128,7 @@ pub const BaseResourceAnimationInterfaceFactoryInterfaceFactory = struct {
     // throws Exception
     pub fn getRectangleArrayOfArrays(self: *Self, resource: ?*String) [][]?*Rectangle {
         const valueCanBeNull: ?Object = Inheritance.upcast(?Object, Inheritance.call(self.rectangleArrayOfArraysHashtable.?, "get", .{ resource }));
-        if (valueCanBeNull != null) {
+        if (!Object.isNull(valueCanBeNull)) {
             const rectangleArrayOfArrays: [][]?*Rectangle = Inheritance.cast([][]?*Rectangle, valueCanBeNull);
             return rectangleArrayOfArrays;
         } else {
@@ -151,7 +152,7 @@ pub const BaseResourceAnimationInterfaceFactoryInterfaceFactory = struct {
     pub fn isLoadingLevel(self: *Self, level: i32) bool {
         _ = self;
         const resourceLoadingLevelFactory: ?*ResourceLoadingLevelFactory = Inheritance.upcast(?*ResourceLoadingLevelFactory, ResourceLoadingLevelFactory.getInstance());
-        if (level == Inheritance.receiverOf(resourceLoadingLevelFactory.?.LOAD_ALL.?, "getLevel").getLevel()) {
+        if (level == Inheritance.receiverOf(Inheritance.fieldPointer(resourceLoadingLevelFactory.?, "LOAD_ALL").*.?, "getLevel").getLevel()) {
             return true;
         } else {
             return false;
@@ -160,7 +161,7 @@ pub const BaseResourceAnimationInterfaceFactoryInterfaceFactory = struct {
     
 
     pub fn toString(self: *Self) ?*String {
-        return Inheritance.upcast(?*String, Object.toString(Object.of(Inheritance.call(Inheritance.call(Inheritance.call(Inheritance.call(StringMaker.create(), "append", .{ String.fromBytes(@as(*const Object.Class, @ptrCast(@alignCast(@as(?*anyopaque, @ptrCast(@constCast(Object.of(self).?.class))).?))).name) }).?, "append", .{ CommonSeps.getInstance().?.SEMICOLON }).?, "append", .{ CommonSeps.getInstance().?.SPACE }).?, "append", .{ self.name }))));
+        return Inheritance.upcast(?*String, Object.toString(Object.of(Inheritance.call(Inheritance.call(Inheritance.call(Inheritance.call(StringMaker.create(), "append", .{ String.fromBytes(@as(*const Object.Class, @ptrCast(@alignCast(@as(?*anyopaque, @ptrCast(@constCast(Object.of(self).?.class))).?))).name) }).?, "append", .{ Inheritance.fieldPointer(CommonSeps.getInstance().?, "SEMICOLON").* }).?, "append", .{ Inheritance.fieldPointer(CommonSeps.getInstance().?, "SPACE").* }).?, "append", .{ self.name }))));
     }
     
 

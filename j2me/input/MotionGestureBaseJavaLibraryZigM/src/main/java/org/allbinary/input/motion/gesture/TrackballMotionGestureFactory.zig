@@ -33,7 +33,7 @@ pub const TrackballMotionGestureFactory = struct {
 
     // Static fields with runtime initializers: call staticInit once at startup
     pub fn staticInit() void {
-        instance = Inheritance.upcast(?Object, NullUtil.getInstance().?.NULL_OBJECT);
+        instance = Inheritance.upcast(?Object, Inheritance.fieldPointer(NullUtil.getInstance().?, "NULL_OBJECT").*);
     }
 
     fn initFields(this: *Self) void {
@@ -46,7 +46,7 @@ pub const TrackballMotionGestureFactory = struct {
     
 
     pub fn getInstance() ?*TrackballMotionGestureFactory {
-        if (Object.same(TrackballMotionGestureFactory.instance, NullUtil.getInstance().?.NULL_OBJECT)) {
+        if (Object.same(TrackballMotionGestureFactory.instance, Inheritance.fieldPointer(NullUtil.getInstance().?, "NULL_OBJECT").*)) {
             TrackballMotionGestureFactory.instance = Inheritance.upcast(@TypeOf(TrackballMotionGestureFactory.instance), TrackballMotionGestureFactory.create());
         }
         return Inheritance.cast(?*TrackballMotionGestureFactory, TrackballMotionGestureFactory.instance);
@@ -57,7 +57,7 @@ pub const TrackballMotionGestureFactory = struct {
         const this = allocator.create(Self) catch unreachable;
         this.* = .{};
         this.initFields();
-        const MAX: i32 = InputFactory.getInstance().?.MAX;
+        const MAX: i32 = Inheritance.fieldPointer(InputFactory.getInstance().?, "MAX").*;
         this.LEFT = Inheritance.callStatic(MotionGestureInput, "create2", .{ MAX - 26, String.literal("L Trackball") });
         this.RIGHT = Inheritance.callStatic(MotionGestureInput, "create2", .{ MAX - 27, String.literal("R Trackball") });
         this.UP = Inheritance.callStatic(MotionGestureInput, "create2", .{ MAX - 28, String.literal("Up Trackball") });

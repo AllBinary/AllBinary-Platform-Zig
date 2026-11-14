@@ -20,6 +20,7 @@ const Object = @import("java/lang/Object.zig").Object;
 const Inheritance = @import("zig/Inheritance.zig");
 const Animation = @import("org/allbinary/animation/Animation.zig").Animation;
 const IconLayer = @import("org/allbinary/game/layer/pickup/IconLayer.zig").IconLayer;
+const Exception = @import("java/lang/Exception.zig").Exception;
 
 pub const IconLayerFactory = struct {
     const Self = @This();

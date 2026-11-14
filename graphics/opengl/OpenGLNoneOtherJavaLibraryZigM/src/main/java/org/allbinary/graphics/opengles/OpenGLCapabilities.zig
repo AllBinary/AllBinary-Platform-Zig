@@ -51,9 +51,9 @@ pub const OpenGLCapabilities = struct {
         this.VERSION_3_1 = String.literal("3.1");
         this.VERSION_3_2 = String.literal("3.2");
         this.VERSION_HIGHER_THAN_EXISTS = String.literal("999.999");
-        this.glVersion = Inheritance.upcast(?*String, StringUtil.getInstance().?.EMPTY_STRING);
+        this.glVersion = Inheritance.upcast(?*String, Inheritance.fieldPointer(StringUtil.getInstance().?, "EMPTY_STRING").*);
         this.shaderVersion = 0;
-        this.glInstanceVersion = Inheritance.upcast(?*String, StringUtil.getInstance().?.EMPTY_STRING);
+        this.glInstanceVersion = Inheritance.upcast(?*String, Inheritance.fieldPointer(StringUtil.getInstance().?, "EMPTY_STRING").*);
         this.maxTextureSize = 64;
     }
     

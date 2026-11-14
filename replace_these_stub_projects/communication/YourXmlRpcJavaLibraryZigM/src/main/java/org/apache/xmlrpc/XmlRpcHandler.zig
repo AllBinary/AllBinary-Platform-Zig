@@ -8,6 +8,7 @@ const Object = @import("java/lang/Object.zig").Object;
 const Inheritance = @import("zig/Inheritance.zig");
 const BasicArrayList = @import("org/allbinary/util/BasicArrayList.zig").BasicArrayList;
 const BasicArrayListD = @import("org/allbinary/util/BasicArrayListD.zig").BasicArrayListD;
+const Exception = @import("java/lang/Exception.zig").Exception;
 
 // Java interface: an implementation is a pointer and a table of functions
 pub const XmlRpcHandler = struct {
@@ -16,7 +17,7 @@ pub const XmlRpcHandler = struct {
     pointer: *anyopaque,
     object: Object,
     toStringFn: *const fn (pointer: *anyopaque) ?*String,
-    executeFn: *const fn (pointer: *anyopaque, method: ?*String, params: ?*BasicArrayList) ?Object,
+    executeFn: *const fn (interface_pointer: *anyopaque, method: ?*String, params: ?*BasicArrayList) ?Object,
 
     pub fn execute(self: *Self, method: ?*String, params: ?*BasicArrayList) ?Object {
         return self.executeFn(self.pointer, method, params);
@@ -28,15 +29,15 @@ pub const XmlRpcHandler = struct {
 
     // The interface value of an object with the methods. Like a Java class a method can be declared by the object or a superclass.
     pub fn of(object: anytype) ?*Self {
-        const Implementation = @TypeOf(object);
+        const ImplementationType = @TypeOf(object);
         const Methods = struct {
             fn toString(pointer: *anyopaque) ?*String {
-                const implementation: Implementation = @ptrCast(@alignCast(pointer));
+                const implementation: ImplementationType = @ptrCast(@alignCast(pointer));
                 return String.valueOf(implementation);
             }
-            fn execute(pointer: *anyopaque, method: ?*String, params: ?*BasicArrayList) ?Object {
-                const implementation: Implementation = @ptrCast(@alignCast(pointer));
-                return Inheritance.upcast(?Object, Inheritance.receiver(implementation, "execute").execute(method, params));
+            fn execute(interface_pointer: *anyopaque, method: ?*String, params: ?*BasicArrayList) ?Object {
+                const implementation: ImplementationType = @ptrCast(@alignCast(interface_pointer));
+                return Inheritance.upcast(?Object, Inheritance.call(implementation, "execute", .{ method, params }));
             }
         };
         const this = allocator.create(Self) catch unreachable;

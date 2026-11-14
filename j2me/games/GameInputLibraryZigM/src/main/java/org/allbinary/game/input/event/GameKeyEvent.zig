@@ -35,7 +35,7 @@ pub const GameKeyEvent = struct {
 
     // Static fields with runtime initializers: call staticInit once at startup
     pub fn staticInit() void {
-        NONE = Inheritance.callStatic(GameKeyEvent, "create6", .{ NullUtil.getInstance().?.NULL_OBJECT, -1, -1, -1, -1, false });
+        NONE = Inheritance.callStatic(GameKeyEvent, "create6", .{ Inheritance.fieldPointer(NullUtil.getInstance().?, "NULL_OBJECT").*, -1, -1, -1, -1, false });
     }
 
     fn initFields(this: *Self) void {

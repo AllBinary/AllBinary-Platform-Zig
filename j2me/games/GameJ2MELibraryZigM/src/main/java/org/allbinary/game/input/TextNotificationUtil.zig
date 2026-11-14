@@ -28,6 +28,7 @@ const PrimaryPlayerQueueFactory = @import("org/allbinary/media/audio/PrimaryPlay
 const SelectSound = @import("org/allbinary/media/audio/SelectSound.zig").SelectSound;
 const Integer = @import("java/lang/Integer.zig").Integer;
 const Boolean = @import("java/lang/Boolean.zig").Boolean;
+const Exception = @import("java/lang/Exception.zig").Exception;
 
 pub const TextNotificationUtil = struct {
     const Self = @This();
@@ -84,7 +85,7 @@ pub const TextNotificationUtil = struct {
 
     // throws Exception
     pub fn fire(self: *Self, message: ?*String) void {
-        const gameNotificationEvent: ?*GameNotificationEvent = Inheritance.callStatic(GameNotificationEvent, "create5", .{ self, message, self.TWO, BasicColorFactory.getInstance().?.RED, self.FALSE });
+        const gameNotificationEvent: ?*GameNotificationEvent = Inheritance.callStatic(GameNotificationEvent, "create5", .{ self, message, self.TWO, Inheritance.fieldPointer(BasicColorFactory.getInstance().?, "RED").*, self.FALSE });
         _ = Inheritance.call(self.gameNotificationEventHandler.?, "fireEvent", .{ gameNotificationEvent });
     }
 };

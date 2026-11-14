@@ -72,7 +72,7 @@ pub const MotionGestureToMotionGestureActionAssociation = struct {
         {
             var i: i32 = size - 1;
             while (i >= 0) : (i -= 1) {
-            if (!Object.same(aList.?.objectArray[@intCast(i)], self.list.?.objectArray[@intCast(i)])) {
+            if (!Object.same(Inheritance.fieldPointer(aList.?, "objectArray").*[@intCast(i)], Inheritance.fieldPointer(self.list.?, "objectArray").*[@intCast(i)])) {
                 return false;
             }
             }

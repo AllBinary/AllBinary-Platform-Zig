@@ -27,6 +27,7 @@ const DamageableInterface = @import("org/allbinary/game/combat/damage/Damageable
 const CollidableCompositeLayer = @import("org/allbinary/game/layer/CollidableCompositeLayer.zig").CollidableCompositeLayer;
 const CollidableDestroyableDamageableBehavior = @import("org/allbinary/game/layer/special/CollidableDestroyableDamageableBehavior.zig").CollidableDestroyableDamageableBehavior;
 const AllBinaryLayer = @import("org/allbinary/layer/AllBinaryLayer.zig").AllBinaryLayer;
+const Exception = @import("java/lang/Exception.zig").Exception;
 
 pub const CollidableDamageWeaponBehavior = struct {
     const Self = @This();
@@ -100,7 +101,7 @@ pub const CollidableDamageWeaponBehavior = struct {
     pub fn getCollisionTypeWith(self: *Self, layerInterface: ?*AllBinaryLayer) ?*CollisionType {
         _ = layerInterface;
         _ = self;
-        return Inheritance.upcast(?*CollisionType, CollisionTypeFactory.getInstance().?.COLLISION);
+        return Inheritance.upcast(?*CollisionType, Inheritance.fieldPointer(CollisionTypeFactory.getInstance().?, "COLLISION").*);
     }
     
 

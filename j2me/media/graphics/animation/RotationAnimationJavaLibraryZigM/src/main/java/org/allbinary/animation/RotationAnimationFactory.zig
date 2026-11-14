@@ -27,6 +27,7 @@ const AnimationBehavior = @import("org/allbinary/animation/AnimationBehavior.zig
 const AnimationInterfaceFactoryInterface = @import("org/allbinary/animation/AnimationInterfaceFactoryInterface.zig").AnimationInterfaceFactoryInterface;
 const NullRotationAnimation = @import("org/allbinary/animation/NullRotationAnimation.zig").NullRotationAnimation;
 const ProceduralAnimationInterfaceFactoryInterface = @import("org/allbinary/animation/ProceduralAnimationInterfaceFactoryInterface.zig").ProceduralAnimationInterfaceFactoryInterface;
+const Exception = @import("java/lang/Exception.zig").Exception;
 
 pub const RotationAnimationFactory = struct {
     const Self = @This();
@@ -45,8 +46,8 @@ pub const RotationAnimationFactory = struct {
     
 
     pub fn createFactory() ?*RotationAnimationFactory {
-        const totalAngle: i16 = AngleFactory.getInstance().?.TOTAL_ANGLE;
-        return Inheritance.callStatic(RotationAnimationFactory, "create2", .{ totalAngle, @as(i16, @intCast((@divTrunc(totalAngle, Inheritance.receiverOf(GameConfigurationCentral.getInstance().?, "getGameControlFidelity").getGameControlFidelity())))) });
+        const totalAngle: i16 = Inheritance.fieldPointer(AngleFactory.getInstance().?, "TOTAL_ANGLE").*;
+        return Inheritance.callStatic(RotationAnimationFactory, "create2", .{ totalAngle, Inheritance.number(i16, (@divTrunc(totalAngle, Inheritance.receiverOf(GameConfigurationCentral.getInstance().?, "getGameControlFidelity").getGameControlFidelity()))) });
     }
     
 

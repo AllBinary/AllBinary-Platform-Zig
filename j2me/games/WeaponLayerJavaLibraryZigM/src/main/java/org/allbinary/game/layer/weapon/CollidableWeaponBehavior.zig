@@ -28,6 +28,7 @@ const CollidableCompositeLayer = @import("org/allbinary/game/layer/CollidableCom
 const CollidableDestroyableDamageableBehavior = @import("org/allbinary/game/layer/special/CollidableDestroyableDamageableBehavior.zig").CollidableDestroyableDamageableBehavior;
 const AllBinaryLayer = @import("org/allbinary/layer/AllBinaryLayer.zig").AllBinaryLayer;
 const NullUtil = @import("org/allbinary/logic/NullUtil.zig").NullUtil;
+const Exception = @import("java/lang/Exception.zig").Exception;
 
 pub const CollidableWeaponBehavior = struct {
     const Self = @This();
@@ -39,7 +40,7 @@ pub const CollidableWeaponBehavior = struct {
 
     // Static fields with runtime initializers: call staticInit once at startup
     pub fn staticInit() void {
-        NULL_COLLIDABLE_WEAPON_BEHAVIOR = Inheritance.upcast(?Object, NullUtil.getInstance().?.NULL_OBJECT);
+        NULL_COLLIDABLE_WEAPON_BEHAVIOR = Inheritance.upcast(?Object, Inheritance.fieldPointer(NullUtil.getInstance().?, "NULL_OBJECT").*);
     }
 
     fn initFields(this: *Self) void {
@@ -49,7 +50,7 @@ pub const CollidableWeaponBehavior = struct {
     
 
     pub fn getNullInstance() ?*CollidableWeaponBehavior {
-        if (Object.same(CollidableWeaponBehavior.NULL_COLLIDABLE_WEAPON_BEHAVIOR, NullUtil.getInstance().?.NULL_OBJECT)) {
+        if (Object.same(CollidableWeaponBehavior.NULL_COLLIDABLE_WEAPON_BEHAVIOR, Inheritance.fieldPointer(NullUtil.getInstance().?, "NULL_OBJECT").*)) {
             CollidableWeaponBehavior.NULL_COLLIDABLE_WEAPON_BEHAVIOR = Inheritance.upcast(@TypeOf(CollidableWeaponBehavior.NULL_COLLIDABLE_WEAPON_BEHAVIOR), Inheritance.callStatic(CollidableWeaponBehavior, "create1", .{ false }));
         }
         return Inheritance.cast(?*CollidableWeaponBehavior, CollidableWeaponBehavior.NULL_COLLIDABLE_WEAPON_BEHAVIOR);
@@ -117,7 +118,7 @@ pub const CollidableWeaponBehavior = struct {
     pub fn getCollisionTypeWith(self: *Self, layerInterface: ?*AllBinaryLayer) ?*CollisionType {
         _ = layerInterface;
         _ = self;
-        return Inheritance.upcast(?*CollisionType, CollisionTypeFactory.getInstance().?.COLLISION);
+        return Inheritance.upcast(?*CollisionType, Inheritance.fieldPointer(CollisionTypeFactory.getInstance().?, "COLLISION").*);
     }
     
 

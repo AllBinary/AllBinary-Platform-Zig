@@ -18,11 +18,12 @@ const allocator = std.heap.page_allocator;
 const String = @import("java/lang/String.zig").String;
 const Object = @import("java/lang/Object.zig").Object;
 const Inheritance = @import("zig/Inheritance.zig");
-// const GL10 = @import("javax/microedition/khronos/opengles/GL10.zig").GL10;
-// const Image = @import("javax/microedition/lcdui/Image.zig").Image;
+const GL10 = @import("javax/microedition/khronos/opengles/GL10.zig").GL10;
+const Image = @import("javax/microedition/lcdui/Image.zig").Image;
 const BasicColor = @import("org/allbinary/graphics/color/BasicColor.zig").BasicColor;
 const OpenGLESImage = @import("org/allbinary/image/opengles/OpenGLESImage.zig").OpenGLESImage;
 const TrueTypeFontUtilBase = @import("org/allbinary/emulator/device/TrueTypeFontUtilBase.zig").TrueTypeFontUtilBase;
+const RuntimeException = @import("java/lang/RuntimeException.zig").RuntimeException;
 
 pub const TrueTypeFontUtil = struct {
     const Self = @This();

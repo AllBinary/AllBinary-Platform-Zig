@@ -18,9 +18,9 @@ const allocator = std.heap.page_allocator;
 const String = @import("java/lang/String.zig").String;
 const Object = @import("java/lang/Object.zig").Object;
 const Inheritance = @import("zig/Inheritance.zig");
-// const Canvas = @import("javax/microedition/lcdui/Canvas.zig").Canvas;
-// const Font = @import("javax/microedition/lcdui/Font.zig").Font;
-// const Graphics = @import("javax/microedition/lcdui/Graphics.zig").Graphics;
+const Canvas = @import("javax/microedition/lcdui/Canvas.zig").Canvas;
+const Font = @import("javax/microedition/lcdui/Font.zig").Font;
+const Graphics = @import("javax/microedition/lcdui/Graphics.zig").Graphics;
 const GameKeyEventHandler = @import("org/allbinary/game/input/event/GameKeyEventHandler.zig").GameKeyEventHandler;
 const GameKeyEventUtil = @import("org/allbinary/game/input/event/GameKeyEventUtil.zig").GameKeyEventUtil;
 const HighScoresCanvas = @import("org/allbinary/game/score/displayable/HighScoresCanvas.zig").HighScoresCanvas;
@@ -88,7 +88,7 @@ pub const HighScoresCanvasLevelChangeInputProcessor = struct {
         {
             var index: i32 = 0;
             while (index < size) : (index += 1) {
-            const anyType: ?Object = Inheritance.upcast(?Object, list.?.objectArray[@intCast(index)]);
+            const anyType: ?Object = Inheritance.upcast(?Object, Inheritance.fieldPointer(list.?, "objectArray").*[@intCast(index)]);
             const key: i32 = Inheritance.callStatic(GameKeyEventUtil, "getKey", .{ anyType });
             if (key == Canvas.RIGHT) {
                 _ = Inheritance.receiverOf(Inheritance.receiverOf(Inheritance.receiver(self, "getHighScoresCanvas").getHighScoresCanvas().?, "getGameInfo").getGameInfo().?, "nextGameLevel").nextGameLevel();

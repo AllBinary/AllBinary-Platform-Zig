@@ -21,6 +21,7 @@ const Inheritance = @import("zig/Inheritance.zig");
 const BasicArrayList = @import("org/allbinary/util/BasicArrayList.zig").BasicArrayList;
 const BasicArrayListD = @import("org/allbinary/util/BasicArrayListD.zig").BasicArrayListD;
 const BasicUserRole = @import("org/allbinary/business/user/role/BasicUserRole.zig").BasicUserRole;
+const Exception = @import("java/lang/Exception.zig").Exception;
 
 pub const BasicUserRoles = struct {
     const Self = @This();

@@ -26,6 +26,7 @@ const BasicDecimal = @import("org/allbinary/logic/math/BasicDecimal.zig").BasicD
 const AxisMathVectorUtil = @import("org/allbinary/logic/math/vector/AxisMathVectorUtil.zig").AxisMathVectorUtil;
 const AngleFactory = @import("org/allbinary/math/AngleFactory.zig").AngleFactory;
 const Movement = @import("org/allbinary/physics/movement/Movement.zig").Movement;
+const Exception = @import("java/lang/Exception.zig").Exception;
 
 pub const BasicConstantVelocityMovement = struct {
     const Self = @This();
@@ -64,9 +65,9 @@ pub const BasicConstantVelocityMovement = struct {
 
     pub fn moveOutsideRadius(self: *Self, layer: ?*AllBinaryLayer, radius: i64, angle: i32, otherAngle: i32) void {
         const scaleFactorValue: i32 = self.speedBasicDecimal.?.getScaledFactorValue();
-        const xVector: i32 = @as(i32, @intCast(((divide_N66371: { const left_N66371 = Inheritance.call(self.axisMathVectorUtil.?, "calculateX", .{ radius, angle }); const right_N66371 = scaleFactorValue; break :divide_N66371 if (comptime @typeInfo(@TypeOf(left_N66371)) == .int or @TypeOf(left_N66371) == comptime_int) @divTrunc(left_N66371, right_N66371) else left_N66371 / right_N66371; }))));
-        const yVector: i32 = @as(i32, @intCast(((divide_N66457: { const left_N66457 = Inheritance.call(self.axisMathVectorUtil.?, "calculateY", .{ radius, angle }); const right_N66457 = scaleFactorValue; break :divide_N66457 if (comptime @typeInfo(@TypeOf(left_N66457)) == .int or @TypeOf(left_N66457) == comptime_int) @divTrunc(left_N66457, right_N66457) else left_N66457 / right_N66457; }))));
-        const zVector: i32 = @as(i32, @intCast(((divide_N66543: { const left_N66543 = Inheritance.call(self.axisMathVectorUtil.?, "calculateZ", .{ radius, otherAngle }); const right_N66543 = scaleFactorValue; break :divide_N66543 if (comptime @typeInfo(@TypeOf(left_N66543)) == .int or @TypeOf(left_N66543) == comptime_int) @divTrunc(left_N66543, right_N66543) else left_N66543 / right_N66543; }))));
+        const xVector: i32 = Inheritance.number(i32, ((divide_N66371: { const left_N66371 = Inheritance.call(self.axisMathVectorUtil.?, "calculateX", .{ radius, angle }); const right_N66371 = scaleFactorValue; break :divide_N66371 if (comptime @typeInfo(@TypeOf(left_N66371)) == .int or @TypeOf(left_N66371) == comptime_int) @divTrunc(left_N66371, right_N66371) else left_N66371 / right_N66371; })));
+        const yVector: i32 = Inheritance.number(i32, ((divide_N66457: { const left_N66457 = Inheritance.call(self.axisMathVectorUtil.?, "calculateY", .{ radius, angle }); const right_N66457 = scaleFactorValue; break :divide_N66457 if (comptime @typeInfo(@TypeOf(left_N66457)) == .int or @TypeOf(left_N66457) == comptime_int) @divTrunc(left_N66457, right_N66457) else left_N66457 / right_N66457; })));
+        const zVector: i32 = Inheritance.number(i32, ((divide_N66543: { const left_N66543 = Inheritance.call(self.axisMathVectorUtil.?, "calculateZ", .{ radius, otherAngle }); const right_N66543 = scaleFactorValue; break :divide_N66543 if (comptime @typeInfo(@TypeOf(left_N66543)) == .int or @TypeOf(left_N66543) == comptime_int) @divTrunc(left_N66543, right_N66543) else left_N66543 / right_N66543; })));
         _ = Inheritance.call(layer.?, "moveDXYZ", .{ xVector, yVector, zVector });
     }
     

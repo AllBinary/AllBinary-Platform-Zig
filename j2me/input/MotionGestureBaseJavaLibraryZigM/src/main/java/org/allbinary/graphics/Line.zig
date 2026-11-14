@@ -41,7 +41,7 @@ pub const Line = struct {
         const this = allocator.create(Self) catch unreachable;
         this.* = .{};
         this.initFields();
-        this.p1 = Inheritance.upcast(@TypeOf(this.p1), PointFactory.getInstance().?.ZERO_ZERO);
+        this.p1 = Inheritance.upcast(@TypeOf(this.p1), Inheritance.fieldPointer(PointFactory.getInstance().?, "ZERO_ZERO").*);
         this.p2 = this.p1;
         _ = Inheritance.call(this, "setP1", .{ p1 });
         _ = Inheritance.call(this, "setP2", .{ p2 });
@@ -55,8 +55,8 @@ pub const Line = struct {
     
 
     pub fn update(self: *Self) void {
-        self.deltaX = @as(f64, @floatCast(Inheritance.receiverOf(self.getP1().?, "getX").getX())) - Inheritance.receiverOf(self.getP2().?, "getX").getX();
-        self.deltaY = @as(f64, @floatCast(Inheritance.receiverOf(self.getP1().?, "getY").getY())) - Inheritance.receiverOf(self.getP2().?, "getY").getY();
+        self.deltaX = Inheritance.number(f64, Inheritance.receiverOf(self.getP1().?, "getX").getX()) - Inheritance.number(f64, Inheritance.receiverOf(self.getP2().?, "getX").getX());
+        self.deltaY = Inheritance.number(f64, Inheritance.receiverOf(self.getP1().?, "getY").getY()) - Inheritance.number(f64, Inheritance.receiverOf(self.getP2().?, "getY").getY());
     }
     
 

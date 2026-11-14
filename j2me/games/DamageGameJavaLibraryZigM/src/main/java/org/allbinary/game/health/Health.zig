@@ -89,7 +89,7 @@ pub const Health = struct {
             const stringBuffer: ?*StringMaker = StringMaker.create();
             _ = Inheritance.call(stringBuffer.?, "append", .{ String.literal("******* Trying to heal when damaging. Damage: ") });
             _ = Inheritance.call(stringBuffer.?, "appendint", .{ ahealth });
-            _ = Inheritance.call(stringBuffer.?, "append", .{ CommonSeps.getInstance().?.SPACE });
+            _ = Inheritance.call(stringBuffer.?, "append", .{ Inheritance.fieldPointer(CommonSeps.getInstance().?, "SPACE").* });
             _ = Inheritance.call(stringBuffer.?, "append", .{ Object.toString(Object.of(self)) });
             _ = Inheritance.callStatic(ForcedLogUtil, "log", .{ Object.toString(Object.of(stringBuffer)), self });
             return;
@@ -126,7 +126,7 @@ pub const Health = struct {
         } else {
             self.health = health;
         }
-        if (self.healthListenerInterface != null) {
+        if (!Object.isNull(self.healthListenerInterface)) {
             _ = self.healthListenerInterface.?.onHealthChange();
         }
     }

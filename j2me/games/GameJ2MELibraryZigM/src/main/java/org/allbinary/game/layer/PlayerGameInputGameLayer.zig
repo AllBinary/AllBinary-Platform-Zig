@@ -18,7 +18,7 @@ const allocator = std.heap.page_allocator;
 const String = @import("java/lang/String.zig").String;
 const Object = @import("java/lang/Object.zig").Object;
 const Inheritance = @import("zig/Inheritance.zig");
-// const Graphics = @import("javax/microedition/lcdui/Graphics.zig").Graphics;
+const Graphics = @import("javax/microedition/lcdui/Graphics.zig").Graphics;
 const PlayerGameInput = @import("org/allbinary/game/input/PlayerGameInput.zig").PlayerGameInput;
 const PlayerGameInputCompositeInterface = @import("org/allbinary/game/input/PlayerGameInputCompositeInterface.zig").PlayerGameInputCompositeInterface;
 const PointFactory = @import("org/allbinary/graphics/PointFactory.zig").PointFactory;
@@ -29,6 +29,7 @@ const StringUtil = @import("org/allbinary/logic/string/StringUtil.zig").StringUt
 const BasicArrayListD = @import("org/allbinary/util/BasicArrayListD.zig").BasicArrayListD;
 const StaticViewPosition = @import("org/allbinary/view/StaticViewPosition.zig").StaticViewPosition;
 const AllBinaryGameLayer = @import("org/allbinary/game/layer/AllBinaryGameLayer.zig").AllBinaryGameLayer;
+const Exception = @import("java/lang/Exception.zig").Exception;
 
 pub const PlayerGameInputGameLayer = struct {
     const Self = @This();
@@ -46,11 +47,11 @@ pub const PlayerGameInputGameLayer = struct {
     pub fn create1(playerInputId: i32) *Self {
         const this = allocator.create(Self) catch unreachable;
         this.* = .{};
-        this.base = Inheritance.callStatic(AllBinaryGameLayer, "create3", .{ StringUtil.getInstance().?.EMPTY_STRING, Inheritance.callStatic(Rectangle, "create3", .{ PointFactory.getInstance().?.ZERO_ZERO, 0, 0 }), Inheritance.callStatic(StaticViewPosition, "create3", .{ 0, 0, 0 }) }).*;
+        this.base = Inheritance.callStatic(AllBinaryGameLayer, "create3", .{ Inheritance.fieldPointer(StringUtil.getInstance().?, "EMPTY_STRING").*, Inheritance.callStatic(Rectangle, "create3", .{ Inheritance.fieldPointer(PointFactory.getInstance().?, "ZERO_ZERO").*, 0, 0 }), Inheritance.callStatic(StaticViewPosition, "create3", .{ 0, 0, 0 }) }).*;
         this.initFields();
         this.playerGameInput = Inheritance.callStatic(PlayerGameInput, "create3", .{ Inheritance.receiver(this, "getGameKeyEventList").getGameKeyEventList(), BasicArrayListD.create(), playerInputId });
         const canvasStrings: ?*CanvasStrings = Inheritance.upcast(?*CanvasStrings, CanvasStrings.getInstance());
-        _ = Inheritance.call(Inheritance.fieldPointer(this, "logUtil").*.?, "putF", .{ String.literal("Danger Danger Danger: Should Not Be Called Except For Testing Input"), this, canvasStrings.?.PAINT });
+        _ = Inheritance.call(Inheritance.fieldPointer(this, "logUtil").*.?, "putF", .{ String.literal("Danger Danger Danger: Should Not Be Called Except For Testing Input"), this, Inheritance.fieldPointer(canvasStrings.?, "PAINT").* });
         Inheritance.bindOverrides(this);
         return this;
     }

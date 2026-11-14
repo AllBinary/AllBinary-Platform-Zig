@@ -72,7 +72,7 @@ pub const GameKeyEventHandler = struct {
     
 
     pub fn addListenerForPlayer(self: *Self, eventListenerInterface: ?*EventListenerInterface, playerInputId: i32) void {
-        _ = Inheritance.call(self.logUtil.?, "putF", .{ Object.toString(Object.of(eventListenerInterface)), self, self.commonStrings.?.ADD_LISTENER });
+        _ = Inheritance.call(self.logUtil.?, "putF", .{ Object.toString(Object.of(eventListenerInterface)), self, Inheritance.fieldPointer(self.commonStrings.?, "ADD_LISTENER").* });
         _ = Inheritance.call(self.pressGameKeyEventHandler.?, "addListenerSingleThreaded", .{ eventListenerInterface });
         _ = Inheritance.call(Inheritance.call(self.upGameKeyEventHandler.?, "getInstanceForPlayer", .{ playerInputId }).?, "addListenerSingleThreaded", .{ eventListenerInterface });
         _ = Inheritance.call(Inheritance.call(self.downGameKeyEventHandler.?, "getInstanceForPlayer", .{ playerInputId }).?, "addListenerSingleThreaded", .{ eventListenerInterface });
@@ -80,7 +80,7 @@ pub const GameKeyEventHandler = struct {
     
 
     pub fn addListener(self: *Self, eventListenerInterface: ?*EventListenerInterface) void {
-        _ = Inheritance.call(self.logUtil.?, "putF", .{ Object.toString(Object.of(eventListenerInterface)), self, self.commonStrings.?.ADD_LISTENER });
+        _ = Inheritance.call(self.logUtil.?, "putF", .{ Object.toString(Object.of(eventListenerInterface)), self, Inheritance.fieldPointer(self.commonStrings.?, "ADD_LISTENER").* });
         _ = Inheritance.call(self.pressGameKeyEventHandler.?, "addListenerSingleThreaded", .{ eventListenerInterface });
         _ = Inheritance.call(self.upGameKeyEventHandler.?, "addListenerSingleThreaded", .{ eventListenerInterface });
         _ = Inheritance.call(self.downGameKeyEventHandler.?, "addListenerSingleThreaded", .{ eventListenerInterface });
@@ -88,7 +88,7 @@ pub const GameKeyEventHandler = struct {
     
 
     pub fn removeListener(self: *Self, eventListenerInterface: ?*EventListenerInterface) void {
-        _ = Inheritance.call(self.logUtil.?, "putF", .{ Object.toString(Object.of(eventListenerInterface)), self, self.commonStrings.?.REMOVE_LISTENER });
+        _ = Inheritance.call(self.logUtil.?, "putF", .{ Object.toString(Object.of(eventListenerInterface)), self, Inheritance.fieldPointer(self.commonStrings.?, "REMOVE_LISTENER").* });
         _ = Inheritance.call(self.pressGameKeyEventHandler.?, "removeListenerSingleThreaded", .{ eventListenerInterface });
         _ = Inheritance.call(self.upGameKeyEventHandler.?, "removeListenerSingleThreaded", .{ eventListenerInterface });
         _ = Inheritance.call(self.downGameKeyEventHandler.?, "removeListenerSingleThreaded", .{ eventListenerInterface });

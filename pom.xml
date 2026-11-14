@@ -37,13 +37,13 @@
         <module>../working_thirdpartyzig/embedded/j2me/microemulator/2_0_4/microemu-extensions/microemu-jsr-135Zig</module>
         
         <module>./j2me/AllBinaryBaseLibraryPOZigM</module>
-        <module>./j2me/AllBinaryJ2MELibraryP</module>
-        <module>./AllBinaryPersistenceLibraryP</module>
+        <module>./j2me/AllBinaryJ2MELibraryZigP</module>
+        <module>./AllBinaryPersistenceLibraryZigP</module>
 
-        <module>./automation/InputAutomationToolsP</module>
-        <module>./graphics/GraphicsToolsP</module>
-        <module>./allbinary_src/FreeblisketJavaLibraryP</module>
-        <module>./j2me/games/platform/AllBinaryOnAllPlatformsJavaLibraryP</module>
+        <!--<module>./automation/InputAutomationToolsZigP</module>-->
+        <module>./graphics/GraphicsToolsZigP</module>
+        <!--<module>./allbinary_src/FreeblisketJavaLibraryZigP</module>-->
+        <module>./j2me/games/platform/AllBinaryOnAllPlatformsJavaLibraryZigP</module>
 
         <!--
         <module>./j2me/media/graphics/animation/image/AllBinaryHTMLImageAnimationRotationJavaLibraryZigM</module>

@@ -19,7 +19,10 @@ const String = @import("java/lang/String.zig").String;
 const Object = @import("java/lang/Object.zig").Object;
 const Inheritance = @import("zig/Inheritance.zig");
 const NullUtil = @import("org/allbinary/logic/NullUtil.zig").NullUtil;
+const Graphics = @import("javax/microedition/lcdui/Graphics.zig").Graphics;
+const Image = @import("javax/microedition/lcdui/Image.zig").Image;
 const NullImage = @import("javax/microedition/lcdui/NullImage.zig").NullImage;
+const RuntimeException = @import("java/lang/RuntimeException.zig").RuntimeException;
 
 //PlatformNullImageJavaLibrary
 pub const PlatformImage = struct {
@@ -133,7 +136,7 @@ pub const PlatformImage = struct {
     pub fn getData(self: *Self, image: ?*Image) []i32 {
         _ = image;
         _ = self;
-        return NullUtil.getInstance().?.NULL_INT_ARRAY;
+        return Inheritance.fieldPointer(NullUtil.getInstance().?, "NULL_INT_ARRAY").*;
     }
 };
 

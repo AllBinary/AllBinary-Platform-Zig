@@ -18,7 +18,7 @@ const allocator = std.heap.page_allocator;
 const String = @import("java/lang/String.zig").String;
 const Object = @import("java/lang/Object.zig").Object;
 const Inheritance = @import("zig/Inheritance.zig");
-// const Graphics = @import("javax/microedition/lcdui/Graphics.zig").Graphics;
+const Graphics = @import("javax/microedition/lcdui/Graphics.zig").Graphics;
 
 // Java interface: an implementation is a pointer and a table of functions
 pub const PaintableInterface = struct {
@@ -27,8 +27,8 @@ pub const PaintableInterface = struct {
     pointer: *anyopaque,
     object: Object,
     toStringFn: *const fn (pointer: *anyopaque) ?*String,
-    paintFn: *const fn (pointer: *anyopaque, graphics: ?*Graphics) void,
-    paintThreedFn: *const fn (pointer: *anyopaque, graphics: ?*Graphics) void,
+    paintFn: *const fn (interface_pointer: *anyopaque, graphics: ?*Graphics) void,
+    paintThreedFn: *const fn (interface_pointer: *anyopaque, graphics: ?*Graphics) void,
 
     pub fn paint(self: *Self, graphics: ?*Graphics) void {
         return self.paintFn(self.pointer, graphics);
@@ -44,19 +44,19 @@ pub const PaintableInterface = struct {
 
     // The interface value of an object with the methods. Like a Java class a method can be declared by the object or a superclass.
     pub fn of(object: anytype) ?*Self {
-        const Implementation = @TypeOf(object);
+        const ImplementationType = @TypeOf(object);
         const Methods = struct {
             fn toString(pointer: *anyopaque) ?*String {
-                const implementation: Implementation = @ptrCast(@alignCast(pointer));
+                const implementation: ImplementationType = @ptrCast(@alignCast(pointer));
                 return String.valueOf(implementation);
             }
-            fn paint(pointer: *anyopaque, graphics: ?*Graphics) void {
-                const implementation: Implementation = @ptrCast(@alignCast(pointer));
-                return Inheritance.receiver(implementation, "paint").paint(graphics);
+            fn paint(interface_pointer: *anyopaque, graphics: ?*Graphics) void {
+                const implementation: ImplementationType = @ptrCast(@alignCast(interface_pointer));
+                return Inheritance.call(implementation, "paint", .{ graphics });
             }
-            fn paintThreed(pointer: *anyopaque, graphics: ?*Graphics) void {
-                const implementation: Implementation = @ptrCast(@alignCast(pointer));
-                return Inheritance.receiver(implementation, "paintThreed").paintThreed(graphics);
+            fn paintThreed(interface_pointer: *anyopaque, graphics: ?*Graphics) void {
+                const implementation: ImplementationType = @ptrCast(@alignCast(interface_pointer));
+                return Inheritance.call(implementation, "paintThreed", .{ graphics });
             }
         };
         const this = allocator.create(Self) catch unreachable;

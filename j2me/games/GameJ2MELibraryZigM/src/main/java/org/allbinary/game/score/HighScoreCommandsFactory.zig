@@ -18,7 +18,7 @@ const allocator = std.heap.page_allocator;
 const String = @import("java/lang/String.zig").String;
 const Object = @import("java/lang/Object.zig").Object;
 const Inheritance = @import("zig/Inheritance.zig");
-// const Command = @import("javax/microedition/lcdui/Command.zig").Command;
+const Command = @import("javax/microedition/lcdui/Command.zig").Command;
 const HighScoreCommands = @import("org/allbinary/game/score/HighScoreCommands.zig").HighScoreCommands;
 const HighScoreCommandsBaseFactory = @import("org/allbinary/game/score/HighScoreCommandsBaseFactory.zig").HighScoreCommandsBaseFactory;
 
@@ -42,7 +42,7 @@ pub const HighScoreCommandsFactory = struct {
     pub fn create() *Self {
         const this = allocator.create(Self) catch unreachable;
         this.* = .{};
-        this.base = Inheritance.callStatic(HighScoreCommandsBaseFactory, "create1", .{ @constCast(&[_]?*Command{ HighScoreCommands.getInstance().?.PERSONAL, HighScoreCommands.getInstance().?.WORLD })[0..] }).*;
+        this.base = Inheritance.callStatic(HighScoreCommandsBaseFactory, "create1", .{ @constCast(&[_]?*Command{ Inheritance.upcast(?*Command, Inheritance.fieldPointer(HighScoreCommands.getInstance().?, "PERSONAL").*), Inheritance.upcast(?*Command, Inheritance.fieldPointer(HighScoreCommands.getInstance().?, "WORLD").*) })[0..] }).*;
         Inheritance.bindOverrides(this);
         return this;
     }

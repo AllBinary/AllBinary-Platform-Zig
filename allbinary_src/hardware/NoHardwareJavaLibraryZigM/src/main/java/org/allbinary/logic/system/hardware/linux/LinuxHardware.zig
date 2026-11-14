@@ -34,6 +34,8 @@ const MonitorInterface = @import("org/allbinary/logic/system/hardware/components
 const UsbInterface = @import("org/allbinary/logic/system/hardware/components/interfaces/UsbInterface.zig").UsbInterface;
 const VideoInterface = @import("org/allbinary/logic/system/hardware/components/interfaces/VideoInterface.zig").VideoInterface;
 const ABHashtable = @import("org/allbinary/util/ABHashtable.zig").ABHashtable;
+const Exception = @import("java/lang/Exception.zig").Exception;
+const RuntimeException = @import("java/lang/RuntimeException.zig").RuntimeException;
 
 pub const LinuxHardware = struct {
     const Self = @This();
@@ -134,7 +136,7 @@ pub const LinuxHardware = struct {
 
     pub fn toString(self: *Self) ?*String {
         _ = self;
-        return Inheritance.upcast(?*String, StringUtil.getInstance().?.EMPTY_STRING);
+        return Inheritance.upcast(?*String, Inheritance.fieldPointer(StringUtil.getInstance().?, "EMPTY_STRING").*);
     }
     
 
@@ -148,7 +150,7 @@ pub const LinuxHardware = struct {
     pub fn difference(self: *Self, hardwareInterface: ?*HardwareInterface) ?*ABHashtable {
         _ = hardwareInterface;
         _ = self;
-        return Inheritance.upcast(?*ABHashtable, StdUtil.getInstance().?.NULL_TABLE);
+        return Inheritance.upcast(?*ABHashtable, Inheritance.fieldPointer(StdUtil.getInstance().?, "NULL_TABLE").*);
     }
     
 

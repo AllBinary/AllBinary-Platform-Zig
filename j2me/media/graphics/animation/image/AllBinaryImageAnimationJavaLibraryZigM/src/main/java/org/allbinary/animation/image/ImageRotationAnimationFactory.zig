@@ -18,7 +18,7 @@ const allocator = std.heap.page_allocator;
 const String = @import("java/lang/String.zig").String;
 const Object = @import("java/lang/Object.zig").Object;
 const Inheritance = @import("zig/Inheritance.zig");
-// const Image = @import("javax/microedition/lcdui/Image.zig").Image;
+const Image = @import("javax/microedition/lcdui/Image.zig").Image;
 const Animation = @import("org/allbinary/animation/Animation.zig").Animation;
 const AnimationBehaviorFactory = @import("org/allbinary/animation/AnimationBehaviorFactory.zig").AnimationBehaviorFactory;
 const GameConfigurationCentral = @import("org/allbinary/game/configuration/GameConfigurationCentral.zig").GameConfigurationCentral;
@@ -28,6 +28,7 @@ const AngleInfo = @import("org/allbinary/math/AngleInfo.zig").AngleInfo;
 const AdjustedImageBaseRotationAnimation = @import("org/allbinary/animation/image/AdjustedImageBaseRotationAnimation.zig").AdjustedImageBaseRotationAnimation;
 const BaseImageAnimationFactory = @import("org/allbinary/animation/image/BaseImageAnimationFactory.zig").BaseImageAnimationFactory;
 const ImageBaseRotationAnimation = @import("org/allbinary/animation/image/ImageBaseRotationAnimation.zig").ImageBaseRotationAnimation;
+const Exception = @import("java/lang/Exception.zig").Exception;
 
 pub const ImageRotationAnimationFactory = struct {
     const Self = @This();
@@ -47,8 +48,8 @@ pub const ImageRotationAnimationFactory = struct {
         this.base = Inheritance.callStatic(BaseImageAnimationFactory, "create7", .{ image, PrimitiveIntUtil.getArrayInstance(), width, height, 0, 0, animationBehaviorFactory }).*;
         this.initFields();
         this.angleIncrement = angleIncrement;
-        Inheritance.fieldPointer(this, "animationFactoryInitializationVisitor").*.?.dx = Inheritance.upcast(@TypeOf(Inheritance.fieldPointer(this, "animationFactoryInitializationVisitor").*.?.dx), dx);
-        Inheritance.fieldPointer(this, "animationFactoryInitializationVisitor").*.?.dy = Inheritance.upcast(@TypeOf(Inheritance.fieldPointer(this, "animationFactoryInitializationVisitor").*.?.dy), dy);
+        Inheritance.fieldPointer(Inheritance.fieldPointer(this, "animationFactoryInitializationVisitor").*.?, "dx").* = Inheritance.upcast(@TypeOf(Inheritance.fieldPointer(Inheritance.fieldPointer(this, "animationFactoryInitializationVisitor").*.?, "dx").*), dx);
+        Inheritance.fieldPointer(Inheritance.fieldPointer(this, "animationFactoryInitializationVisitor").*.?, "dy").* = Inheritance.upcast(@TypeOf(Inheritance.fieldPointer(Inheritance.fieldPointer(this, "animationFactoryInitializationVisitor").*.?, "dy").*), dy);
         Inheritance.bindOverrides(this);
         return this;
     }
@@ -57,11 +58,11 @@ pub const ImageRotationAnimationFactory = struct {
     // throws Exception
     pub fn getInstance(self: *Self, instanceId: i32) ?*Animation {
         _ = instanceId;
-        if (Inheritance.fieldPointer(self, "animationFactoryInitializationVisitor").*.?.dx != 0 or Inheritance.fieldPointer(self, "animationFactoryInitializationVisitor").*.?.dy != 0) {
+        if (Inheritance.fieldPointer(Inheritance.fieldPointer(self, "animationFactoryInitializationVisitor").*.?, "dx").* != 0 or Inheritance.fieldPointer(Inheritance.fieldPointer(self, "animationFactoryInitializationVisitor").*.?, "dy").* != 0) {
             _ = Inheritance.call(Inheritance.fieldPointer(self, "animationFactoryImageScaleUtil").*.?, "processAdjust", .{ self });
-            return Inheritance.upcast(?*Animation, Inheritance.callStatic(AdjustedImageBaseRotationAnimation, "create6", .{ Inheritance.receiver(self, "getImage").getImage(), Inheritance.callStatic(AngleInfo, "getInstance", .{ self.angleIncrement }), AngleFactory.getInstance().?.TOTAL_ANGLE, Inheritance.fieldPointer(self, "animationFactoryInitializationVisitor").*.?.dx, Inheritance.fieldPointer(self, "animationFactoryInitializationVisitor").*.?.dy, Inheritance.fieldPointer(self, "animationBehaviorFactory").*.?.getOrCreateInstance() }));
+            return Inheritance.upcast(?*Animation, Inheritance.callStatic(AdjustedImageBaseRotationAnimation, "create6", .{ Inheritance.receiver(self, "getImage").getImage(), Inheritance.callStatic(AngleInfo, "getInstance", .{ self.angleIncrement }), Inheritance.fieldPointer(AngleFactory.getInstance().?, "TOTAL_ANGLE").*, Inheritance.fieldPointer(Inheritance.fieldPointer(self, "animationFactoryInitializationVisitor").*.?, "dx").*, Inheritance.fieldPointer(Inheritance.fieldPointer(self, "animationFactoryInitializationVisitor").*.?, "dy").*, Inheritance.fieldPointer(self, "animationBehaviorFactory").*.?.getOrCreateInstance() }));
         } else {
-            return Inheritance.upcast(?*Animation, Inheritance.callStatic(ImageBaseRotationAnimation, "create4", .{ Inheritance.receiver(self, "getImage").getImage(), Inheritance.callStatic(AngleInfo, "getInstance", .{ self.angleIncrement }), AngleFactory.getInstance().?.TOTAL_ANGLE, Inheritance.fieldPointer(self, "animationBehaviorFactory").*.?.getOrCreateInstance() }));
+            return Inheritance.upcast(?*Animation, Inheritance.callStatic(ImageBaseRotationAnimation, "create4", .{ Inheritance.receiver(self, "getImage").getImage(), Inheritance.callStatic(AngleInfo, "getInstance", .{ self.angleIncrement }), Inheritance.fieldPointer(AngleFactory.getInstance().?, "TOTAL_ANGLE").*, Inheritance.fieldPointer(self, "animationBehaviorFactory").*.?.getOrCreateInstance() }));
         }
     }
     

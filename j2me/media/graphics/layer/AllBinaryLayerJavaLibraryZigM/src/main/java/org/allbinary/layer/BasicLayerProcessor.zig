@@ -24,6 +24,7 @@ const BasicArrayList = @import("org/allbinary/util/BasicArrayList.zig").BasicArr
 const BasicArrayListD = @import("org/allbinary/util/BasicArrayListD.zig").BasicArrayListD;
 const AllBinaryLayer = @import("org/allbinary/layer/AllBinaryLayer.zig").AllBinaryLayer;
 const AllBinaryLayerManager = @import("org/allbinary/layer/AllBinaryLayerManager.zig").AllBinaryLayerManager;
+const Exception = @import("java/lang/Exception.zig").Exception;
 
 pub const BasicLayerProcessor = struct {
     const Self = @This();
@@ -62,7 +63,7 @@ pub const BasicLayerProcessor = struct {
     pub fn process(self: *Self, allBinaryLayerManager: ?*AllBinaryLayerManager) void {
         _ = allBinaryLayerManager;
         _ = self;
-        std.debug.panic("{any}", .{exception: { _ = CommonStrings.getInstance().?.NOT_IMPLEMENTED; break :exception error.Exception; }});
+        std.debug.panic("{any}", .{exception: { _ = Inheritance.fieldPointer(CommonStrings.getInstance().?, "NOT_IMPLEMENTED").*; break :exception error.Exception; }});
     }
     
 

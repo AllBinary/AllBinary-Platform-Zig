@@ -6,7 +6,7 @@ const allocator = std.heap.page_allocator;
 const String = @import("java/lang/String.zig").String;
 const Object = @import("java/lang/Object.zig").Object;
 const Inheritance = @import("zig/Inheritance.zig");
-// const Graphics = @import("javax/microedition/lcdui/Graphics.zig").Graphics;
+const Graphics = @import("javax/microedition/lcdui/Graphics.zig").Graphics;
 const BasicColor = @import("org/allbinary/graphics/color/BasicColor.zig").BasicColor;
 const ABCustomItemInterface = @import("org/allbinary/graphics/form/item/ABCustomItemInterface.zig").ABCustomItemInterface;
 const ABStringComponent = @import("org/allbinary/graphics/form/item/ABStringComponent.zig").ABStringComponent;
@@ -48,6 +48,26 @@ pub const ABTextItem = struct {
     pub fn getLabelStringComponent(self: *Self) ?*ABStringComponent {
         _ = self;
         return Inheritance.upcast(?*ABStringComponent, ABStringComponent.NULL_STRING_COMPONENT);
+    }
+    
+
+    pub fn getMinimumWidth(self: *Self) i32 {
+        return Inheritance.receiver(&self.base, "getMinimumWidth").getMinimumWidth();
+    }
+    
+
+    pub fn getMinimumHeight(self: *Self) i32 {
+        return Inheritance.receiver(&self.base, "getMinimumHeight").getMinimumHeight();
+    }
+    
+
+    pub fn getLabel(self: *Self) ?*String {
+        return Inheritance.upcast(?*String, Inheritance.receiver(&self.base, "getLabel").getLabel());
+    }
+    
+
+    pub fn paintXY(self: *Self, graphics: ?*Graphics, x: i32, y: i32) void {
+        _ = Inheritance.call(&self.base, "paintXY", .{ graphics, x, y });
     }
 };
 

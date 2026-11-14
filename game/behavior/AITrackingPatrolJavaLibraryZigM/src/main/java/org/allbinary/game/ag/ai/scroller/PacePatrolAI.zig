@@ -18,7 +18,7 @@ const allocator = std.heap.page_allocator;
 const String = @import("java/lang/String.zig").String;
 const Object = @import("java/lang/Object.zig").Object;
 const Inheritance = @import("zig/Inheritance.zig");
-// const Canvas = @import("javax/microedition/lcdui/Canvas.zig").Canvas;
+const Canvas = @import("javax/microedition/lcdui/Canvas.zig").Canvas;
 const Direction = @import("org/allbinary/direction/Direction.zig").Direction;
 const DirectionCompositeInterface = @import("org/allbinary/direction/DirectionCompositeInterface.zig").DirectionCompositeInterface;
 const DirectionFactory = @import("org/allbinary/direction/DirectionFactory.zig").DirectionFactory;
@@ -36,6 +36,7 @@ const ABHashtable = @import("org/allbinary/util/ABHashtable.zig").ABHashtable;
 const BasicArrayList = @import("org/allbinary/util/BasicArrayList.zig").BasicArrayList;
 const BasicArrayListD = @import("org/allbinary/util/BasicArrayListD.zig").BasicArrayListD;
 const BasePatrolAI = @import("org/allbinary/game/ag/ai/scroller/BasePatrolAI.zig").BasePatrolAI;
+const Exception = @import("java/lang/Exception.zig").Exception;
 
 pub const PacePatrolAI = struct {
     const Self = @This();
@@ -71,7 +72,7 @@ pub const PacePatrolAI = struct {
         _ = Inheritance.receiver(self, "update").update();
         const direction: ?*Direction = Inheritance.upcast(?*Direction, self.setFiringDirectionForTargetIfInRange());
         const directionFactory: ?*DirectionFactory = Inheritance.upcast(?*DirectionFactory, DirectionFactory.getInstance());
-        if (Object.same(direction, directionFactory.?.LEFT)) {
+        if (Object.same(direction, Inheritance.fieldPointer(directionFactory.?, "LEFT").*)) {
             if (!Object.same(Inheritance.fieldPointer(self, "lastKeyDirection").*, Inheritance.fieldPointer(self, "keyDirection").*) or !self.isFollowLimitedByTerrain) {
                 _ = Inheritance.call(&self.base, "processKeyAI", .{ Canvas.LEFT });
             }
@@ -79,7 +80,7 @@ pub const PacePatrolAI = struct {
             Inheritance.fieldPointer(self, "lastKeyDirection").* = Inheritance.upcast(@TypeOf(Inheritance.fieldPointer(self, "lastKeyDirection").*), Inheritance.fieldPointer(self, "keyDirection").*);
             Inheritance.fieldPointer(self, "xTotalDistance").* = 0;
             _ = Inheritance.call(&self.base, "processKeyAI", .{ Canvas.KEY_NUM1 });
-        } else if (Object.same(direction, directionFactory.?.RIGHT)) {
+        } else if (Object.same(direction, Inheritance.fieldPointer(directionFactory.?, "RIGHT").*)) {
             if (!Object.same(Inheritance.fieldPointer(self, "lastKeyDirection").*, Inheritance.fieldPointer(self, "keyDirection").*) or !self.isFollowLimitedByTerrain) {
                 _ = Inheritance.call(&self.base, "processKeyAI", .{ Canvas.RIGHT });
             }
@@ -96,7 +97,7 @@ pub const PacePatrolAI = struct {
     pub fn setFiringDirectionForTargetIfInRange(self: *Self) ?*Direction {
         const directionFactory: ?*DirectionFactory = Inheritance.upcast(?*DirectionFactory, DirectionFactory.getInstance());
         const ownerLayerInterface: ?*AllBinaryLayer = Inheritance.upcast(?*AllBinaryLayer, Inheritance.receiver(self, "getOwnerLayerInterface").getOwnerLayerInterface());
-        var direction: ?*Direction = Inheritance.upcast(?*Direction, directionFactory.?.NOT_BORDERED_WITH);
+        var direction: ?*Direction = Inheritance.upcast(?*Direction, Inheritance.fieldPointer(directionFactory.?, "NOT_BORDERED_WITH").*);
         var lastTrackingEvent: ?*TrackingEvent = null;
         var lastTrackingLayerInterface: ?*LayerInterface = null;
         var directionCompositeInterface: ?*DirectionCompositeInterface = null;
@@ -108,17 +109,17 @@ pub const PacePatrolAI = struct {
             lastTrackingLayerInterface = Inheritance.upcast(@TypeOf(lastTrackingLayerInterface), Inheritance.receiver(lastTrackingEvent.?, "getLayerInterface").getLayerInterface());
             const x: i32 = Inheritance.receiver(lastTrackingLayerInterface.?, "getXP").getXP();
             const y: i32 = Inheritance.receiver(lastTrackingLayerInterface.?, "getYP").getYP();
-            const yDistance: i32 = Inheritance.receiver(ownerLayerInterface.?, "getYP").getYP() - y - Inheritance.receiver(ownerLayerInterface.?, "getHeight").getHeight();
-            const xDistance: i32 = Inheritance.receiver(ownerLayerInterface.?, "getXP").getXP() - x - Inheritance.receiver(ownerLayerInterface.?, "getWidth").getWidth();
-            const absXDistance: i32 = @abs(xDistance);
-            const absYDistance: i32 = @abs(yDistance);
+            const yDistance: i32 = Inheritance.arithmetic(.subtract, Inheritance.arithmetic(.subtract, Inheritance.receiver(ownerLayerInterface.?, "getYP").getYP(), y), Inheritance.receiver(ownerLayerInterface.?, "getHeight").getHeight());
+            const xDistance: i32 = Inheritance.arithmetic(.subtract, Inheritance.arithmetic(.subtract, Inheritance.receiver(ownerLayerInterface.?, "getXP").getXP(), x), Inheritance.receiver(ownerLayerInterface.?, "getWidth").getWidth());
+            const absXDistance: i32 = Inheritance.abs(xDistance);
+            const absYDistance: i32 = Inheritance.abs(yDistance);
             if (absYDistance <= 100) {
                 if (absXDistance < @divTrunc(self.getFiringDistance(), 2)) {
                     directionCompositeInterface = Inheritance.cast(?*DirectionCompositeInterface, Inheritance.receiver(self, "getOwnerLayerInterface").getOwnerLayerInterface());
-                    if (xDistance < 0 and Object.same(directionCompositeInterface.?.getDirection(), directionFactory.?.RIGHT)) {
-                        direction = Inheritance.upcast(@TypeOf(direction), directionFactory.?.RIGHT);
-                    } else if (xDistance > 0 and Object.same(directionCompositeInterface.?.getDirection(), directionFactory.?.LEFT)) {
-                        direction = Inheritance.upcast(@TypeOf(direction), directionFactory.?.LEFT);
+                    if (xDistance < 0 and Object.same(directionCompositeInterface.?.getDirection(), Inheritance.fieldPointer(directionFactory.?, "RIGHT").*)) {
+                        direction = Inheritance.upcast(@TypeOf(direction), Inheritance.fieldPointer(directionFactory.?, "RIGHT").*);
+                    } else if (xDistance > 0 and Object.same(directionCompositeInterface.?.getDirection(), Inheritance.fieldPointer(directionFactory.?, "LEFT").*)) {
+                        direction = Inheritance.upcast(@TypeOf(direction), Inheritance.fieldPointer(directionFactory.?, "LEFT").*);
                     }
                 }
             }
@@ -135,7 +136,7 @@ pub const PacePatrolAI = struct {
 
     pub fn onEvent(self: *Self, eventObject: ?*AllBinaryEventObject) void {
         _ = eventObject;
-        _ = Inheritance.callStatic(ForcedLogUtil, "log", .{ EventStrings.getInstance().?.PERFORMANCE_MESSAGE, self });
+        _ = Inheritance.callStatic(ForcedLogUtil, "log", .{ Inheritance.fieldPointer(EventStrings.getInstance().?, "PERFORMANCE_MESSAGE").*, self });
     }
     
 

@@ -18,7 +18,7 @@ const allocator = std.heap.page_allocator;
 const String = @import("java/lang/String.zig").String;
 const Object = @import("java/lang/Object.zig").Object;
 const Inheritance = @import("zig/Inheritance.zig");
-// const Canvas = @import("javax/microedition/lcdui/Canvas.zig").Canvas;
+const Canvas = @import("javax/microedition/lcdui/Canvas.zig").Canvas;
 const MultiPlayerGameFeatureFactory = @import("org/allbinary/game/configuration/feature/MultiPlayerGameFeatureFactory.zig").MultiPlayerGameFeatureFactory;
 
 pub const PostGameCommandFactory = struct {

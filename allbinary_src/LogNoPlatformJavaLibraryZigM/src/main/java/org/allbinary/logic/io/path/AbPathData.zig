@@ -36,9 +36,9 @@ pub const AbPathData = struct {
     }
 
     fn initFields(this: *Self) void {
-        this.EXTENSION_SEP = Inheritance.upcast(?*String, CommonSeps.getInstance().?.PERIOD);
+        this.EXTENSION_SEP = Inheritance.upcast(?*String, Inheritance.fieldPointer(CommonSeps.getInstance().?, "PERIOD").*);
         this.SEPARATORCHAR = '/';
-        this.SEPARATOR = Inheritance.upcast(?*String, CommonSeps.getInstance().?.FORWARD_SLASH);
+        this.SEPARATOR = Inheritance.upcast(?*String, Inheritance.fieldPointer(CommonSeps.getInstance().?, "FORWARD_SLASH").*);
     }
     
 
@@ -70,7 +70,7 @@ pub const AbPathData = struct {
 
     pub fn getExtensionWithDot(self: *Self, filePath: ?*String) ?*String {
         const indexOfFileExtensionDelmiter: i32 = Inheritance.call(self, "getExtensionIndex", .{ filePath });
-        var extension: ?*String = Inheritance.upcast(?*String, StringUtil.getInstance().?.EMPTY_STRING);
+        var extension: ?*String = Inheritance.upcast(?*String, Inheritance.fieldPointer(StringUtil.getInstance().?, "EMPTY_STRING").*);
         if (indexOfFileExtensionDelmiter >= 0) {
             extension = Inheritance.upcast(@TypeOf(extension), Inheritance.call(filePath.?, "substring", .{ indexOfFileExtensionDelmiter }));
         }
@@ -80,7 +80,7 @@ pub const AbPathData = struct {
 
     pub fn getExtension(self: *Self, filePath: ?*String) ?*String {
         const indexOfFileExtensionDelmiter: i32 = Inheritance.call(self, "getExtensionIndex", .{ filePath });
-        var extension: ?*String = Inheritance.upcast(?*String, StringUtil.getInstance().?.EMPTY_STRING);
+        var extension: ?*String = Inheritance.upcast(?*String, Inheritance.fieldPointer(StringUtil.getInstance().?, "EMPTY_STRING").*);
         if (indexOfFileExtensionDelmiter >= 0) {
             extension = Inheritance.upcast(@TypeOf(extension), Inheritance.call(filePath.?, "substring", .{ indexOfFileExtensionDelmiter + 1 }));
         }
@@ -112,7 +112,7 @@ pub const AbPathData = struct {
             endIndex = Inheritance.call(path.?, "lastIndexOf", .{ FilePathData.getInstance().?.SEPARATORCHAR });
         }
         if (endIndex < 0) {
-            return Inheritance.upcast(?*String, StringUtil.getInstance().?.EMPTY_STRING);
+            return Inheritance.upcast(?*String, Inheritance.fieldPointer(StringUtil.getInstance().?, "EMPTY_STRING").*);
         }
         if (path.?.length() == endIndex + 1) {
             return Inheritance.upcast(?*String, Inheritance.call(self, "removeNameFromPath", .{ path.?.substring2(0, endIndex - 1) }));

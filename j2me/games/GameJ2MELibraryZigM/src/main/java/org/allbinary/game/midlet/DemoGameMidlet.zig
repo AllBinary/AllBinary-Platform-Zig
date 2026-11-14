@@ -30,6 +30,7 @@ const ABHashtable = @import("org/allbinary/util/ABHashtable.zig").ABHashtable;
 const CreateGameRunnable = @import("org/allbinary/game/midlet/CreateGameRunnable.zig").CreateGameRunnable;
 const DemoRunnable = @import("org/allbinary/game/midlet/DemoRunnable.zig").DemoRunnable;
 const GameMidlet = @import("org/allbinary/game/midlet/GameMidlet.zig").GameMidlet;
+const Exception = @import("java/lang/Exception.zig").Exception;
 
 pub const DemoGameMidlet = struct {
     const Self = @This();
@@ -49,7 +50,7 @@ pub const DemoGameMidlet = struct {
     // throws Exception
     pub fn isContinue(self: *Self) bool {
         const hashtable: ?*ABHashtable = Inheritance.upcast(?*ABHashtable, Inheritance.receiver(self, "getStartStateHashtable").getStartStateHashtable());
-        if (hashtable != null and Inheritance.receiver(hashtable.?, "size").size() > 0) {
+        if (!Object.isNull(hashtable) and Inheritance.receiver(hashtable.?, "size").size() > 0) {
             return true;
         } else {
             return false;
@@ -65,7 +66,7 @@ pub const DemoGameMidlet = struct {
 
     // throws Exception
     pub fn createDemoGameCanvasRunnableInterface(self: *Self) ?*GameCanvasRunnableInterface {
-        _ = Inheritance.call(Inheritance.fieldPointer(self, "logUtil").*.?, "putF", .{ Inheritance.fieldPointer(self, "commonStrings").*.?.NOT_IMPLEMENTED, self, Inheritance.fieldPointer(self, "commonStrings").*.?.CREATE });
+        _ = Inheritance.call(Inheritance.fieldPointer(self, "logUtil").*.?, "putF", .{ Inheritance.fieldPointer(Inheritance.fieldPointer(self, "commonStrings").*.?, "NOT_IMPLEMENTED").*, self, Inheritance.fieldPointer(Inheritance.fieldPointer(self, "commonStrings").*.?, "CREATE").* });
         return Inheritance.upcast(?*GameCanvasRunnableInterface, NullGameCanvasRunnable.NULL_GAME_CANVAS_RUNNABLE);
     }
     
@@ -73,7 +74,7 @@ pub const DemoGameMidlet = struct {
     // throws Exception
     pub fn createGameCanvasRunnable(self: *Self, allBinaryGameLayerManager: ?*AllBinaryGameLayerManager) ?*GameCanvasRunnableInterface {
         _ = allBinaryGameLayerManager;
-        std.debug.panic("{any}", .{exception: { _ = Inheritance.fieldPointer(self, "commonStrings").*.?.NOT_IMPLEMENTED; break :exception error.Exception; }});
+        std.debug.panic("{any}", .{exception: { _ = Inheritance.fieldPointer(Inheritance.fieldPointer(self, "commonStrings").*.?, "NOT_IMPLEMENTED").*; break :exception error.Exception; }});
     }
     
 
@@ -98,7 +99,7 @@ pub const DemoGameMidlet = struct {
         // Java synchronized method
         const javaMonitor = Object.monitor(self).enter();
         defer javaMonitor.exit();
-        _ = Inheritance.call(Inheritance.fieldPointer(self, "logUtil").*.?, "putF", .{ Inheritance.fieldPointer(self, "commonStrings").*.?.START, self, String.literal("setDemo") });
+        _ = Inheritance.call(Inheritance.fieldPointer(self, "logUtil").*.?, "putF", .{ Inheritance.fieldPointer(Inheritance.fieldPointer(self, "commonStrings").*.?, "START").*, self, String.literal("setDemo") });
         const progressCanvas: ?*ProgressCanvas = Inheritance.upcast(?*ProgressCanvas, ProgressCanvasFactory.getInstance());
         _ = Inheritance.receiver(progressCanvas.?, "start").start();
         _ = Inheritance.call(PrimaryThreadPool.getInstance().?, "runTask", .{ Inheritance.callStatic(DemoRunnable, "create1", .{ self }) });
@@ -111,13 +112,13 @@ pub const DemoGameMidlet = struct {
         const javaMonitor = Object.monitor(self).enter();
         defer javaMonitor.exit();
         const CREATE_GAME: ?*String = String.literal("createGame");
-        _ = Inheritance.call(Inheritance.fieldPointer(self, "logUtil").*.?, "putF", .{ Inheritance.fieldPointer(self, "commonStrings").*.?.START, self, CREATE_GAME });
+        _ = Inheritance.call(Inheritance.fieldPointer(self, "logUtil").*.?, "putF", .{ Inheritance.fieldPointer(Inheritance.fieldPointer(self, "commonStrings").*.?, "START").*, self, CREATE_GAME });
         const progressCanvas: ?*ProgressCanvas = Inheritance.upcast(?*ProgressCanvas, ProgressCanvasFactory.getInstance());
         _ = Inheritance.receiver(progressCanvas.?, "start").start();
         const hashtable: ?*ABHashtable = Inheritance.upcast(?*ABHashtable, Inheritance.receiver(self, "getStartStateHashtable").getStartStateHashtable());
-        _ = Inheritance.call(self, "setStartStateHashtable", .{ StdUtil.getInstance().?.NULL_TABLE });
+        _ = Inheritance.call(self, "setStartStateHashtable", .{ Inheritance.fieldPointer(StdUtil.getInstance().?, "NULL_TABLE").* });
         _ = Inheritance.call(PrimaryThreadPool.getInstance().?, "runTask", .{ Inheritance.callStatic(CreateGameRunnable, "create2", .{ self, hashtable }) });
-        _ = Inheritance.call(Inheritance.fieldPointer(self, "logUtil").*.?, "putF", .{ Inheritance.fieldPointer(self, "commonStrings").*.?.END, self, CREATE_GAME });
+        _ = Inheritance.call(Inheritance.fieldPointer(self, "logUtil").*.?, "putF", .{ Inheritance.fieldPointer(Inheritance.fieldPointer(self, "commonStrings").*.?, "END").*, self, CREATE_GAME });
     }
     
 

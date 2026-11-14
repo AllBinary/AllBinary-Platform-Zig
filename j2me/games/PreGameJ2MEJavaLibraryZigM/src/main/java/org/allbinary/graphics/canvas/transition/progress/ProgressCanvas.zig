@@ -18,11 +18,11 @@ const allocator = std.heap.page_allocator;
 const String = @import("java/lang/String.zig").String;
 const Object = @import("java/lang/Object.zig").Object;
 const Inheritance = @import("zig/Inheritance.zig");
-// const CommandListener = @import("javax/microedition/lcdui/CommandListener.zig").CommandListener;
-// const Font = @import("javax/microedition/lcdui/Font.zig").Font;
-// const Graphics = @import("javax/microedition/lcdui/Graphics.zig").Graphics;
-// const NullCanvas = @import("javax/microedition/lcdui/NullCanvas.zig").NullCanvas;
-// const NullCommandListener = @import("javax/microedition/lcdui/NullCommandListener.zig").NullCommandListener;
+const CommandListener = @import("javax/microedition/lcdui/CommandListener.zig").CommandListener;
+const Font = @import("javax/microedition/lcdui/Font.zig").Font;
+const Graphics = @import("javax/microedition/lcdui/Graphics.zig").Graphics;
+const NullCanvas = @import("javax/microedition/lcdui/NullCanvas.zig").NullCanvas;
+const NullCommandListener = @import("javax/microedition/lcdui/NullCommandListener.zig").NullCommandListener;
 const Processor = @import("org/allbinary/canvas/Processor.zig").Processor;
 const RunnableCanvas = @import("org/allbinary/canvas/RunnableCanvas.zig").RunnableCanvas;
 const GameCommandsFactory = @import("org/allbinary/game/commands/GameCommandsFactory.zig").GameCommandsFactory;
@@ -43,6 +43,8 @@ const AllBinaryMidlet = @import("org/allbinary/midlet/AllBinaryMidlet.zig").AllB
 const PathFindingThreadPool = @import("org/allbinary/thread/PathFindingThreadPool.zig").PathFindingThreadPool;
 const ThreadPool = @import("org/allbinary/thread/ThreadPool.zig").ThreadPool;
 const ProgressEndListener = @import("org/allbinary/graphics/canvas/transition/progress/ProgressEndListener.zig").ProgressEndListener;
+const ProgressPaintable = @import("org/allbinary/graphics/canvas/transition/progress/ProgressPaintable.zig").ProgressPaintable;
+const Exception = @import("java/lang/Exception.zig").Exception;
 
 pub const ProgressCanvas = struct {
     const Self = @This();
@@ -78,7 +80,7 @@ pub const ProgressCanvas = struct {
         this.GAUGE_PAINTABLE = Inheritance.upcast(?*Paintable, Inheritance.callStatic(ProgressPaintable, "create1", .{ this }));
         this.maxValue = 100.0;
         
-        this.TEXT = Inheritance.upcast(?*String, Inheritance.fieldPointer(this, "commonStrings").*.?.LOADING);
+        this.TEXT = Inheritance.upcast(?*String, Inheritance.fieldPointer(Inheritance.fieldPointer(this, "commonStrings").*.?, "LOADING").*);
         this.updateMyFontProcessor = Inheritance.upcast(?*MyFontProcessor, Inheritance.callStatic(UpdateMyFontProcessor, "create1", .{ this }));
         this.myFontProcessor = this.updateMyFontProcessor;
         this.allbinaryMidlet = Inheritance.upcast(?*AllBinaryMidlet, AllBinaryMidlet.getNullInstance());
@@ -109,10 +111,10 @@ pub const ProgressCanvas = struct {
         _ = title;
         const this = allocator.create(Self) catch unreachable;
         this.* = .{};
-        this.base = Inheritance.callStatic(RunnableCanvas, "create3", .{ NullCommandListener.NULL_COMMAND_LISTENER, CanvasStrings.getInstance().?.EMPTY_CHILD_NAME_LIST, false }).*;
+        this.base = Inheritance.callStatic(RunnableCanvas, "create3", .{ NullCommandListener.NULL_COMMAND_LISTENER, Inheritance.fieldPointer(CanvasStrings.getInstance().?, "EMPTY_CHILD_NAME_LIST").*, false }).*;
         this.initFields();
         this.backgroundBasicColor = backgroundBasicColor;
-        this.gauge = Inheritance.callStatic(ABCustomGaugeItem, "create5", .{ StringUtil.getInstance().?.EMPTY_STRING, @as(i32, @intFromFloat(this.maxValue)), 0, backgroundBasicColor, foregroundBasicColor });
+        this.gauge = Inheritance.callStatic(ABCustomGaugeItem, "create5", .{ Inheritance.fieldPointer(StringUtil.getInstance().?, "EMPTY_STRING").*, @as(i32, @intFromFloat(this.maxValue)), 0, backgroundBasicColor, foregroundBasicColor });
         Inheritance.bindOverrides(this);
         return this;
     }
@@ -149,10 +151,10 @@ pub const ProgressCanvas = struct {
     
 
     pub fn start(self: *Self) void {
-        _ = Inheritance.call(Inheritance.fieldPointer(self, "logUtil").*.?, "putF", .{ Inheritance.fieldPointer(self, "commonStrings").*.?.START, self, Inheritance.fieldPointer(self, "commonStrings").*.?.START_METHOD_NAME });
+        _ = Inheritance.call(Inheritance.fieldPointer(self, "logUtil").*.?, "putF", .{ Inheritance.fieldPointer(Inheritance.fieldPointer(self, "commonStrings").*.?, "START").*, self, Inheritance.fieldPointer(Inheritance.fieldPointer(self, "commonStrings").*.?, "START_METHOD_NAME").* });
         _ = Inheritance.call(self, "setBackground", .{ true });
         _ = Inheritance.call(self.gauge.?, "setHeight", .{ 30 });
-        _ = Inheritance.call(self.gauge.?, "setLabel", .{ Inheritance.fieldPointer(self, "commonStrings").*.?.PLEASE_WAIT });
+        _ = Inheritance.call(self.gauge.?, "setLabel", .{ Inheritance.fieldPointer(Inheritance.fieldPointer(self, "commonStrings").*.?, "PLEASE_WAIT").* });
         _ = Inheritance.call(self, "setText", .{ self.TEXT });
         _ = Inheritance.call(self, "setValue", .{ 0 });
         self.inGameProcessor = Inheritance.upcast(@TypeOf(self.inGameProcessor), Processor.getInstance());
@@ -162,7 +164,7 @@ pub const ProgressCanvas = struct {
     
 
     pub fn startBackground(self: *Self, background: bool) void {
-        _ = Inheritance.call(Inheritance.fieldPointer(self, "logUtil").*.?, "putF", .{ Inheritance.fieldPointer(self, "commonStrings").*.?.START, self, self.START_BACKGROUND });
+        _ = Inheritance.call(Inheritance.fieldPointer(self, "logUtil").*.?, "putF", .{ Inheritance.fieldPointer(Inheritance.fieldPointer(self, "commonStrings").*.?, "START").*, self, self.START_BACKGROUND });
         _ = Inheritance.call(self, "setBackground", .{ background });
         self.myFontProcessor = self.updateMyFontProcessor;
         _ = Inheritance.call(self.gauge.?, "setLabel", .{ self.backgroundLabel });
@@ -174,7 +176,7 @@ pub const ProgressCanvas = struct {
     
 
     pub fn endActual(self: *Self) void {
-        _ = Inheritance.call(self.allbinaryMidlet.?, "commandAction", .{ GameCommandsFactory.getInstance().?.SHOW_GAME_CANVAS, NullCanvas.NULL_CANVAS });
+        _ = Inheritance.call(self.allbinaryMidlet.?, "commandAction", .{ Inheritance.fieldPointer(GameCommandsFactory.getInstance().?, "SHOW_GAME_CANVAS").*, NullCanvas.NULL_CANVAS });
         self.inProgress = false;
         _ = self.inGame();
     }
@@ -187,7 +189,7 @@ pub const ProgressCanvas = struct {
     
 
     pub fn end(self: *Self) void {
-        _ = Inheritance.call(Inheritance.fieldPointer(self, "logUtil").*.?, "putF", .{ Inheritance.fieldPointer(self, "commonStrings").*.?.START, self, Inheritance.fieldPointer(self, "commonStrings").*.?.END_METHOD_NAME });
+        _ = Inheritance.call(Inheritance.fieldPointer(self, "logUtil").*.?, "putF", .{ Inheritance.fieldPointer(Inheritance.fieldPointer(self, "commonStrings").*.?, "START").*, self, Inheritance.fieldPointer(Inheritance.fieldPointer(self, "commonStrings").*.?, "END_METHOD_NAME").* });
         _ = Inheritance.call(self.gauge.?, "setValue", .{ self.getMaxValue() });
         _ = self.endActual();
         self.paintable = Inheritance.upcast(@TypeOf(self.paintable), NullPaintable.getInstance());
@@ -216,14 +218,14 @@ pub const ProgressCanvas = struct {
 
     pub fn addEarlyPortion(self: *Self, value: i32, text: ?*String, index: i32) void {
         _ = Inheritance.call(self, "setText", .{ Object.toString(Object.of(Inheritance.call(Inheritance.call(StringMaker.create(), "append", .{ text }).?, "append", .{ Object.toString(Object.of(Inheritance.call(SmallIntegerSingletonFactory.getInstance().?, "getAt", .{ index }))) }))) });
-        _ = Inheritance.call(self.gauge.?, "setValue", .{ Inheritance.receiver(self.gauge.?, "getValue").getValue() + self.getMaxValue() / @as(f32, @floatFromInt(value)) });
+        _ = Inheritance.call(self.gauge.?, "setValue", .{ Inheritance.number(f32, Inheritance.receiver(self.gauge.?, "getValue").getValue()) + self.getMaxValue() / @as(f32, @floatFromInt(value)) });
     }
     
 
     pub fn addPortion(self: *Self, value: i32, text: ?*String, index: i32) void {
         _ = Inheritance.call(self, "setText", .{ Object.toString(Object.of(Inheritance.call(Inheritance.call(StringMaker.create(), "append", .{ text }).?, "append", .{ Object.toString(Object.of(Inheritance.call(SmallIntegerSingletonFactory.getInstance().?, "getAt", .{ index }))) }))) });
         _ = Inheritance.callStatic(PreLogUtil, "put", .{ self.text, self, self.ADD_PORTION });
-        _ = Inheritance.call(self.gauge.?, "setValue", .{ Inheritance.receiver(self.gauge.?, "getValue").getValue() + self.getMaxValue() / @as(f32, @floatFromInt(value)) });
+        _ = Inheritance.call(self.gauge.?, "setValue", .{ Inheritance.number(f32, Inheritance.receiver(self.gauge.?, "getValue").getValue()) + self.getMaxValue() / @as(f32, @floatFromInt(value)) });
     }
     
 
@@ -232,7 +234,7 @@ pub const ProgressCanvas = struct {
             _ = Inheritance.callStatic(PreLogUtil, "put", .{ text, self, self.ADD_PORTION });
         }
         _ = Inheritance.call(self, "setText", .{ text });
-        _ = Inheritance.call(self.gauge.?, "setValue", .{ Inheritance.receiver(self.gauge.?, "getValue").getValue() + self.getMaxValue() / @as(f32, @floatFromInt(value)) });
+        _ = Inheritance.call(self.gauge.?, "setValue", .{ Inheritance.number(f32, Inheritance.receiver(self.gauge.?, "getValue").getValue()) + self.getMaxValue() / @as(f32, @floatFromInt(value)) });
     }
     
 
@@ -285,32 +287,5 @@ pub const ProgressCanvas = struct {
     pub fn isBackground(self: *Self) bool {
         return self.background;
     }
-    pub const ProgressPaintable = struct {
-        const Self = @This();
-        pub const java_name = "org.allbinary.graphics.canvas.transition.progress.ProgressPaintable";
-        base: Paintable = undefined,
-        progressCanvas: ?*ProgressCanvas = null,
-
-    fn initFields(this: *Self) void {
-        _ = this;
-            
-    }
-        
-
-        pub fn create1(progressCanvas: ?*ProgressCanvas) *Self {
-            const this = allocator.create(Self) catch unreachable;
-            this.* = .{};
-        this.base = Paintable.create().*;
-            this.initFields();
-            Inheritance.fieldPointer(this, "progressCanvas").* = progressCanvas;
-            Inheritance.bindOverrides(this);
-            return this;
-        }
-        
-
-        pub fn paint(self: *Self, graphics: ?*Graphics) void {
-            _ = Inheritance.call(Inheritance.fieldPointer(self, "progressCanvas").*.?, "paint2", .{ graphics });
-        }
-    };
 };
 

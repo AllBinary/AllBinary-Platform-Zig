@@ -18,9 +18,9 @@ const allocator = std.heap.page_allocator;
 const String = @import("java/lang/String.zig").String;
 const Object = @import("java/lang/Object.zig").Object;
 const Inheritance = @import("zig/Inheritance.zig");
-// const Command = @import("javax/microedition/lcdui/Command.zig").Command;
-// const Item = @import("javax/microedition/lcdui/Item.zig").Item;
-// const ItemCommandListener = @import("javax/microedition/lcdui/ItemCommandListener.zig").ItemCommandListener;
+const Command = @import("javax/microedition/lcdui/Command.zig").Command;
+const Item = @import("javax/microedition/lcdui/Item.zig").Item;
+const ItemCommandListener = @import("javax/microedition/lcdui/ItemCommandListener.zig").ItemCommandListener;
 const GameConfigurationGauge = @import("org/allbinary/game/configuration/GameConfigurationGauge.zig").GameConfigurationGauge;
 const GameConfigurationUtil = @import("org/allbinary/game/configuration/GameConfigurationUtil.zig").GameConfigurationUtil;
 const GameOptionsForm = @import("org/allbinary/game/configuration/GameOptionsForm.zig").GameOptionsForm;
@@ -29,6 +29,7 @@ const StringMaker = @import("org/allbinary/logic/string/StringMaker.zig").String
 const MidletStrings = @import("org/allbinary/midlet/MidletStrings.zig").MidletStrings;
 const CommonLabels = @import("org/allbinary/string/CommonLabels.zig").CommonLabels;
 const CommonStrings = @import("org/allbinary/string/CommonStrings.zig").CommonStrings;
+const Exception = @import("java/lang/Exception.zig").Exception;
 
 pub const GameFeatureItemCommandListener = struct {
     const Self = @This();
@@ -56,14 +57,14 @@ pub const GameFeatureItemCommandListener = struct {
         _ = command;
         { // try
             const itemLabel: ?*String = Inheritance.upcast(?*String, item.?.getLabel());
-            _ = Inheritance.call(self.logUtil.?, "putF", .{ Object.toString(Object.of(Inheritance.call(Inheritance.call(StringMaker.create(), "append", .{ CommonLabels.getInstance().?.ITEM_LABEL }).?, "append", .{ itemLabel }))), self, MidletStrings.getInstance().?.COMMAND_ACTION });
+            _ = Inheritance.call(self.logUtil.?, "putF", .{ Object.toString(Object.of(Inheritance.call(Inheritance.call(StringMaker.create(), "append", .{ Inheritance.fieldPointer(CommonLabels.getInstance().?, "ITEM_LABEL").* }).?, "append", .{ itemLabel }))), self, Inheritance.fieldPointer(MidletStrings.getInstance().?, "COMMAND_ACTION").* });
             if (Object.instanceOf(Object.of(item), GameConfigurationGauge)) {
                 _ = Inheritance.call(GameConfigurationUtil.getInstance().?, "change", .{ self.gameOptionsForm, Inheritance.cast(?*GameConfigurationGauge, item) });
             }
         }
         // catch (Exception e):
 //             const commonStrings: ?*CommonStrings = Inheritance.upcast(?*CommonStrings, CommonStrings.getInstance()); _ = commonStrings;
-//             _ = Inheritance.call(self.logUtil.?, "put", .{ commonStrings.?.EXCEPTION, self, MidletStrings.getInstance().?.COMMAND_ACTION, e });
+//             _ = Inheritance.call(self.logUtil.?, "put", .{ Inheritance.fieldPointer(commonStrings.?, "EXCEPTION").*, self, Inheritance.fieldPointer(MidletStrings.getInstance().?, "COMMAND_ACTION").*, e });
     }
 };
 

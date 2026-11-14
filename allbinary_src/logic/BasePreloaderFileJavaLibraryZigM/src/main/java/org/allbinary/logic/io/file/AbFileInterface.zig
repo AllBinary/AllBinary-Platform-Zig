@@ -18,9 +18,9 @@ const allocator = std.heap.page_allocator;
 const String = @import("java/lang/String.zig").String;
 const Object = @import("java/lang/Object.zig").Object;
 const Inheritance = @import("zig/Inheritance.zig");
-// const FilenameFilter = @import("java/io/FilenameFilter.zig").FilenameFilter;
-// const IOException = @import("java/io/IOException.zig").IOException;
-// const URI = @import("java/net/URI.zig").URI;
+const FilenameFilter = @import("java/io/FilenameFilter.zig").FilenameFilter;
+const IOException = @import("java/io/IOException.zig").IOException;
+const URI = @import("java/net/URI.zig").URI;
 
 // Java interface: an implementation is a pointer and a table of functions
 pub const AbFileInterface = struct {
@@ -28,30 +28,30 @@ pub const AbFileInterface = struct {
     pub const java_name = "org.allbinary.logic.io.file.AbFileInterface";
     pointer: *anyopaque,
     object: Object,
-    canReadFn: *const fn (pointer: *anyopaque) bool,
-    canWriteFn: *const fn (pointer: *anyopaque) bool,
-    createNewFileFn: *const fn (pointer: *anyopaque) bool,
-    deleteFn: *const fn (pointer: *anyopaque) bool,
-    deleteOnExitFn: *const fn (pointer: *anyopaque) void,
-    existsFn: *const fn (pointer: *anyopaque) bool,
-    getAbsolutePathFn: *const fn (pointer: *anyopaque) ?*String,
-    getCanonicalPathFn: *const fn (pointer: *anyopaque) ?*String,
-    getParentFn: *const fn (pointer: *anyopaque) ?*String,
-    getPathFn: *const fn (pointer: *anyopaque) ?*String,
-    isAbsoluteFn: *const fn (pointer: *anyopaque) bool,
-    isDirectoryFn: *const fn (pointer: *anyopaque) bool,
-    isFileFn: *const fn (pointer: *anyopaque) bool,
-    isHiddenFn: *const fn (pointer: *anyopaque) bool,
-    lastModifiedFn: *const fn (pointer: *anyopaque) i64,
-    lengthFn: *const fn (pointer: *anyopaque) i64,
-    listFn: *const fn (pointer: *anyopaque) []?*String,
-    listWithFilterFn: *const fn (pointer: *anyopaque, filter: ?*FilenameFilter) []?*String,
-    mkdirFn: *const fn (pointer: *anyopaque) bool,
-    mkdirsFn: *const fn (pointer: *anyopaque) bool,
-    setLastModifiedFn: *const fn (pointer: *anyopaque, time: i64) bool,
-    setReadOnlyFn: *const fn (pointer: *anyopaque) bool,
-    toStringFn: *const fn (pointer: *anyopaque) ?*String,
-    toURIFn: *const fn (pointer: *anyopaque) ?*URI,
+    canReadFn: *const fn (interface_pointer: *anyopaque) bool,
+    canWriteFn: *const fn (interface_pointer: *anyopaque) bool,
+    createNewFileFn: *const fn (interface_pointer: *anyopaque) bool,
+    deleteFn: *const fn (interface_pointer: *anyopaque) bool,
+    deleteOnExitFn: *const fn (interface_pointer: *anyopaque) void,
+    existsFn: *const fn (interface_pointer: *anyopaque) bool,
+    getAbsolutePathFn: *const fn (interface_pointer: *anyopaque) ?*String,
+    getCanonicalPathFn: *const fn (interface_pointer: *anyopaque) ?*String,
+    getParentFn: *const fn (interface_pointer: *anyopaque) ?*String,
+    getPathFn: *const fn (interface_pointer: *anyopaque) ?*String,
+    isAbsoluteFn: *const fn (interface_pointer: *anyopaque) bool,
+    isDirectoryFn: *const fn (interface_pointer: *anyopaque) bool,
+    isFileFn: *const fn (interface_pointer: *anyopaque) bool,
+    isHiddenFn: *const fn (interface_pointer: *anyopaque) bool,
+    lastModifiedFn: *const fn (interface_pointer: *anyopaque) i64,
+    lengthFn: *const fn (interface_pointer: *anyopaque) i64,
+    listFn: *const fn (interface_pointer: *anyopaque) []?*String,
+    listWithFilterFn: *const fn (interface_pointer: *anyopaque, filter: ?*FilenameFilter) []?*String,
+    mkdirFn: *const fn (interface_pointer: *anyopaque) bool,
+    mkdirsFn: *const fn (interface_pointer: *anyopaque) bool,
+    setLastModifiedFn: *const fn (interface_pointer: *anyopaque, time: i64) bool,
+    setReadOnlyFn: *const fn (interface_pointer: *anyopaque) bool,
+    toStringFn: *const fn (interface_pointer: *anyopaque) ?*String,
+    toURIFn: *const fn (interface_pointer: *anyopaque) ?*URI,
 
     pub fn canRead(self: *Self) bool {
         return self.canReadFn(self.pointer);
@@ -151,102 +151,102 @@ pub const AbFileInterface = struct {
 
     // The interface value of an object with the methods. Like a Java class a method can be declared by the object or a superclass.
     pub fn of(object: anytype) ?*Self {
-        const Implementation = @TypeOf(object);
+        const ImplementationType = @TypeOf(object);
         const Methods = struct {
-            fn canRead(pointer: *anyopaque) bool {
-                const implementation: Implementation = @ptrCast(@alignCast(pointer));
+            fn canRead(interface_pointer: *anyopaque) bool {
+                const implementation: ImplementationType = @ptrCast(@alignCast(interface_pointer));
                 return Inheritance.receiver(implementation, "canRead").canRead();
             }
-            fn canWrite(pointer: *anyopaque) bool {
-                const implementation: Implementation = @ptrCast(@alignCast(pointer));
+            fn canWrite(interface_pointer: *anyopaque) bool {
+                const implementation: ImplementationType = @ptrCast(@alignCast(interface_pointer));
                 return Inheritance.receiver(implementation, "canWrite").canWrite();
             }
-            fn createNewFile(pointer: *anyopaque) bool {
-                const implementation: Implementation = @ptrCast(@alignCast(pointer));
+            fn createNewFile(interface_pointer: *anyopaque) bool {
+                const implementation: ImplementationType = @ptrCast(@alignCast(interface_pointer));
                 return Inheritance.receiver(implementation, "createNewFile").createNewFile();
             }
-            fn delete(pointer: *anyopaque) bool {
-                const implementation: Implementation = @ptrCast(@alignCast(pointer));
+            fn delete(interface_pointer: *anyopaque) bool {
+                const implementation: ImplementationType = @ptrCast(@alignCast(interface_pointer));
                 return Inheritance.receiver(implementation, "delete").delete();
             }
-            fn deleteOnExit(pointer: *anyopaque) void {
-                const implementation: Implementation = @ptrCast(@alignCast(pointer));
+            fn deleteOnExit(interface_pointer: *anyopaque) void {
+                const implementation: ImplementationType = @ptrCast(@alignCast(interface_pointer));
                 return Inheritance.receiver(implementation, "deleteOnExit").deleteOnExit();
             }
-            fn exists(pointer: *anyopaque) bool {
-                const implementation: Implementation = @ptrCast(@alignCast(pointer));
+            fn exists(interface_pointer: *anyopaque) bool {
+                const implementation: ImplementationType = @ptrCast(@alignCast(interface_pointer));
                 return Inheritance.receiver(implementation, "exists").exists();
             }
-            fn getAbsolutePath(pointer: *anyopaque) ?*String {
-                const implementation: Implementation = @ptrCast(@alignCast(pointer));
+            fn getAbsolutePath(interface_pointer: *anyopaque) ?*String {
+                const implementation: ImplementationType = @ptrCast(@alignCast(interface_pointer));
                 return Inheritance.upcast(?*String, Inheritance.receiver(implementation, "getAbsolutePath").getAbsolutePath());
             }
-            fn getCanonicalPath(pointer: *anyopaque) ?*String {
-                const implementation: Implementation = @ptrCast(@alignCast(pointer));
+            fn getCanonicalPath(interface_pointer: *anyopaque) ?*String {
+                const implementation: ImplementationType = @ptrCast(@alignCast(interface_pointer));
                 return Inheritance.upcast(?*String, Inheritance.receiver(implementation, "getCanonicalPath").getCanonicalPath());
             }
-            fn getParent(pointer: *anyopaque) ?*String {
-                const implementation: Implementation = @ptrCast(@alignCast(pointer));
+            fn getParent(interface_pointer: *anyopaque) ?*String {
+                const implementation: ImplementationType = @ptrCast(@alignCast(interface_pointer));
                 return Inheritance.upcast(?*String, Inheritance.receiver(implementation, "getParent").getParent());
             }
-            fn getPath(pointer: *anyopaque) ?*String {
-                const implementation: Implementation = @ptrCast(@alignCast(pointer));
+            fn getPath(interface_pointer: *anyopaque) ?*String {
+                const implementation: ImplementationType = @ptrCast(@alignCast(interface_pointer));
                 return Inheritance.upcast(?*String, Inheritance.receiver(implementation, "getPath").getPath());
             }
-            fn isAbsolute(pointer: *anyopaque) bool {
-                const implementation: Implementation = @ptrCast(@alignCast(pointer));
+            fn isAbsolute(interface_pointer: *anyopaque) bool {
+                const implementation: ImplementationType = @ptrCast(@alignCast(interface_pointer));
                 return Inheritance.receiver(implementation, "isAbsolute").isAbsolute();
             }
-            fn isDirectory(pointer: *anyopaque) bool {
-                const implementation: Implementation = @ptrCast(@alignCast(pointer));
+            fn isDirectory(interface_pointer: *anyopaque) bool {
+                const implementation: ImplementationType = @ptrCast(@alignCast(interface_pointer));
                 return Inheritance.receiver(implementation, "isDirectory").isDirectory();
             }
-            fn isFile(pointer: *anyopaque) bool {
-                const implementation: Implementation = @ptrCast(@alignCast(pointer));
+            fn isFile(interface_pointer: *anyopaque) bool {
+                const implementation: ImplementationType = @ptrCast(@alignCast(interface_pointer));
                 return Inheritance.receiver(implementation, "isFile").isFile();
             }
-            fn isHidden(pointer: *anyopaque) bool {
-                const implementation: Implementation = @ptrCast(@alignCast(pointer));
+            fn isHidden(interface_pointer: *anyopaque) bool {
+                const implementation: ImplementationType = @ptrCast(@alignCast(interface_pointer));
                 return Inheritance.receiver(implementation, "isHidden").isHidden();
             }
-            fn lastModified(pointer: *anyopaque) i64 {
-                const implementation: Implementation = @ptrCast(@alignCast(pointer));
+            fn lastModified(interface_pointer: *anyopaque) i64 {
+                const implementation: ImplementationType = @ptrCast(@alignCast(interface_pointer));
                 return Inheritance.receiver(implementation, "lastModified").lastModified();
             }
-            fn length(pointer: *anyopaque) i64 {
-                const implementation: Implementation = @ptrCast(@alignCast(pointer));
+            fn length(interface_pointer: *anyopaque) i64 {
+                const implementation: ImplementationType = @ptrCast(@alignCast(interface_pointer));
                 return Inheritance.receiver(implementation, "length").length();
             }
-            fn list(pointer: *anyopaque) []?*String {
-                const implementation: Implementation = @ptrCast(@alignCast(pointer));
+            fn list(interface_pointer: *anyopaque) []?*String {
+                const implementation: ImplementationType = @ptrCast(@alignCast(interface_pointer));
                 return Inheritance.receiver(implementation, "list").list();
             }
-            fn listWithFilter(pointer: *anyopaque, filter: ?*FilenameFilter) []?*String {
-                const implementation: Implementation = @ptrCast(@alignCast(pointer));
-                return Inheritance.receiver(implementation, "listWithFilter").listWithFilter(filter);
+            fn listWithFilter(interface_pointer: *anyopaque, filter: ?*FilenameFilter) []?*String {
+                const implementation: ImplementationType = @ptrCast(@alignCast(interface_pointer));
+                return Inheritance.call(implementation, "listWithFilter", .{ filter });
             }
-            fn mkdir(pointer: *anyopaque) bool {
-                const implementation: Implementation = @ptrCast(@alignCast(pointer));
+            fn mkdir(interface_pointer: *anyopaque) bool {
+                const implementation: ImplementationType = @ptrCast(@alignCast(interface_pointer));
                 return Inheritance.receiver(implementation, "mkdir").mkdir();
             }
-            fn mkdirs(pointer: *anyopaque) bool {
-                const implementation: Implementation = @ptrCast(@alignCast(pointer));
+            fn mkdirs(interface_pointer: *anyopaque) bool {
+                const implementation: ImplementationType = @ptrCast(@alignCast(interface_pointer));
                 return Inheritance.receiver(implementation, "mkdirs").mkdirs();
             }
-            fn setLastModified(pointer: *anyopaque, time: i64) bool {
-                const implementation: Implementation = @ptrCast(@alignCast(pointer));
-                return Inheritance.receiver(implementation, "setLastModified").setLastModified(time);
+            fn setLastModified(interface_pointer: *anyopaque, time: i64) bool {
+                const implementation: ImplementationType = @ptrCast(@alignCast(interface_pointer));
+                return Inheritance.call(implementation, "setLastModified", .{ time });
             }
-            fn setReadOnly(pointer: *anyopaque) bool {
-                const implementation: Implementation = @ptrCast(@alignCast(pointer));
+            fn setReadOnly(interface_pointer: *anyopaque) bool {
+                const implementation: ImplementationType = @ptrCast(@alignCast(interface_pointer));
                 return Inheritance.receiver(implementation, "setReadOnly").setReadOnly();
             }
-            fn toString(pointer: *anyopaque) ?*String {
-                const implementation: Implementation = @ptrCast(@alignCast(pointer));
+            fn toString(interface_pointer: *anyopaque) ?*String {
+                const implementation: ImplementationType = @ptrCast(@alignCast(interface_pointer));
                 return Inheritance.upcast(?*String, Inheritance.receiver(implementation, "toString").toString());
             }
-            fn toURI(pointer: *anyopaque) ?*URI {
-                const implementation: Implementation = @ptrCast(@alignCast(pointer));
+            fn toURI(interface_pointer: *anyopaque) ?*URI {
+                const implementation: ImplementationType = @ptrCast(@alignCast(interface_pointer));
                 return Inheritance.upcast(?*URI, Inheritance.receiver(implementation, "toURI").toURI());
             }
         };

@@ -67,7 +67,7 @@ pub const CurrentlyPressedTouchButtonSingleton = struct {
     
 
     pub fn get(self: *Self, index: i32) ?*TouchButtonInput {
-        return Inheritance.cast(?*TouchButtonInput, self.list.?.objectArray[@intCast(index)]);
+        return Inheritance.cast(?*TouchButtonInput, Inheritance.fieldPointer(self.list.?, "objectArray").*[@intCast(index)]);
     }
     
 

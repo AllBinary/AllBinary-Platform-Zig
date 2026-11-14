@@ -18,8 +18,8 @@ const allocator = std.heap.page_allocator;
 const String = @import("java/lang/String.zig").String;
 const Object = @import("java/lang/Object.zig").Object;
 const Inheritance = @import("zig/Inheritance.zig");
-// const Font = @import("javax/microedition/lcdui/Font.zig").Font;
-// const Graphics = @import("javax/microedition/lcdui/Graphics.zig").Graphics;
+const Font = @import("javax/microedition/lcdui/Font.zig").Font;
+const Graphics = @import("javax/microedition/lcdui/Graphics.zig").Graphics;
 const AnimationBehavior = @import("org/allbinary/animation/AnimationBehavior.zig").AnimationBehavior;
 const IndexedAnimation = @import("org/allbinary/animation/IndexedAnimation.zig").IndexedAnimation;
 const Anchor = @import("org/allbinary/graphics/Anchor.zig").Anchor;
@@ -32,6 +32,7 @@ const StringUtil = @import("org/allbinary/logic/string/StringUtil.zig").StringUt
 const BasicArrayList = @import("org/allbinary/util/BasicArrayList.zig").BasicArrayList;
 const BasicArrayListD = @import("org/allbinary/util/BasicArrayListD.zig").BasicArrayListD;
 const TextChangeListener = @import("org/allbinary/animation/text/TextChangeListener.zig").TextChangeListener;
+const Exception = @import("java/lang/Exception.zig").Exception;
 
 pub const TextAnimation = struct {
     const Self = @This();
@@ -49,7 +50,7 @@ pub const TextAnimation = struct {
     fn initFields(this: *Self) void {
         this.updateMyFontProcessor = Inheritance.upcast(?*MyFontProcessor, Inheritance.callStatic(UpdateMyFontProcessor, "create1", .{ this }));
         this.myFontProcessor = this.updateMyFontProcessor;
-        this.textArrayP = StringUtil.getInstance().?.ONE_EMPTY_STRING_ARRAY;
+        this.textArrayP = Inheritance.fieldPointer(StringUtil.getInstance().?, "ONE_EMPTY_STRING_ARRAY").*;
         this.anchor = Anchor.TOP_LEFT;
         this.fontHeight = 0;
         this.offsetY = 0;
@@ -111,7 +112,7 @@ pub const TextAnimation = struct {
 
     pub fn setText(self: *Self, text: ?*String) void {
         const list: ?*BasicArrayList = Inheritance.upcast(?*BasicArrayList, BasicArrayListD.create());
-        if (text != null and text.?.length() > 0) {
+        if (text.?.length() > 0) {
             var index: i32 = 0;
             var startIndex: i32 = 0;
             var endIndex: i32 = 0;
@@ -130,7 +131,7 @@ pub const TextAnimation = struct {
             }
         }
         if (list.?.size() > 0) {
-            const textArray: []?*String = array_N68056: { const array_N68056_array = allocator.alloc(?*String, @intCast(list.?.size())) catch unreachable; @memset(array_N68056_array, null); break :array_N68056 array_N68056_array; };
+            const textArray: []?*String = array_N68039: { const array_N68039_array = allocator.alloc(?*String, @intCast(list.?.size())) catch unreachable; @memset(array_N68039_array, null); break :array_N68039 array_N68039_array; };
             const size: i32 = list.?.size();
             {
                 var index: i32 = 0;
@@ -140,7 +141,7 @@ pub const TextAnimation = struct {
             }
             self.textArrayP = textArray;
         } else {
-            self.textArrayP = Inheritance.upcast(@TypeOf(self.textArrayP), StringUtil.getInstance().?.ONE_EMPTY_STRING_ARRAY);
+            self.textArrayP = Inheritance.upcast(@TypeOf(self.textArrayP), Inheritance.fieldPointer(StringUtil.getInstance().?, "ONE_EMPTY_STRING_ARRAY").*);
         }
         self.myFontProcessor = self.updateMyFontProcessor;
     }

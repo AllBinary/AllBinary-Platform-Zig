@@ -22,6 +22,7 @@ const AllBinaryLayer = @import("org/allbinary/layer/AllBinaryLayer.zig").AllBina
 const AllBinaryLayerManager = @import("org/allbinary/layer/AllBinaryLayerManager.zig").AllBinaryLayerManager;
 const BasicLayerProcessorInterface = @import("org/allbinary/layer/BasicLayerProcessorInterface.zig").BasicLayerProcessorInterface;
 const LayerManager = @import("org/allbinary/layer/LayerManager.zig").LayerManager;
+const Exception = @import("java/lang/Exception.zig").Exception;
 
 // Java interface: an implementation is a pointer and a table of functions
 pub const LayerProcessorInterface = struct {
@@ -31,9 +32,9 @@ pub const LayerProcessorInterface = struct {
     object: Object,
     base: BasicLayerProcessorInterface,
     toStringFn: *const fn (pointer: *anyopaque) ?*String,
-    getLayerManagerFn: *const fn (pointer: *anyopaque) ?*LayerManager,
-    processAtFn: *const fn (pointer: *anyopaque, allBinaryLayerManager: ?*AllBinaryLayerManager, layerInterface: ?*AllBinaryLayer, index: i32) void,
-    isProcessorLayerFn: *const fn (pointer: *anyopaque, layerInterface: ?*AllBinaryLayer) bool,
+    getLayerManagerFn: *const fn (interface_pointer: *anyopaque) ?*LayerManager,
+    processAtFn: *const fn (interface_pointer: *anyopaque, allBinaryLayerManager: ?*AllBinaryLayerManager, layerInterface: ?*AllBinaryLayer, index: i32) void,
+    isProcessorLayerFn: *const fn (interface_pointer: *anyopaque, layerInterface: ?*AllBinaryLayer) bool,
 
     pub fn getLayerManager(self: *Self) ?*LayerManager {
         return self.getLayerManagerFn(self.pointer);
@@ -53,23 +54,23 @@ pub const LayerProcessorInterface = struct {
 
     // The interface value of an object with the methods. Like a Java class a method can be declared by the object or a superclass.
     pub fn of(object: anytype) ?*Self {
-        const Implementation = @TypeOf(object);
+        const ImplementationType = @TypeOf(object);
         const Methods = struct {
             fn toString(pointer: *anyopaque) ?*String {
-                const implementation: Implementation = @ptrCast(@alignCast(pointer));
+                const implementation: ImplementationType = @ptrCast(@alignCast(pointer));
                 return String.valueOf(implementation);
             }
-            fn getLayerManager(pointer: *anyopaque) ?*LayerManager {
-                const implementation: Implementation = @ptrCast(@alignCast(pointer));
+            fn getLayerManager(interface_pointer: *anyopaque) ?*LayerManager {
+                const implementation: ImplementationType = @ptrCast(@alignCast(interface_pointer));
                 return Inheritance.upcast(?*LayerManager, Inheritance.receiver(implementation, "getLayerManager").getLayerManager());
             }
-            fn processAt(pointer: *anyopaque, allBinaryLayerManager: ?*AllBinaryLayerManager, layerInterface: ?*AllBinaryLayer, index: i32) void {
-                const implementation: Implementation = @ptrCast(@alignCast(pointer));
-                return Inheritance.receiver(implementation, "processAt").processAt(allBinaryLayerManager, layerInterface, index);
+            fn processAt(interface_pointer: *anyopaque, allBinaryLayerManager: ?*AllBinaryLayerManager, layerInterface: ?*AllBinaryLayer, index: i32) void {
+                const implementation: ImplementationType = @ptrCast(@alignCast(interface_pointer));
+                return Inheritance.call(implementation, "processAt", .{ allBinaryLayerManager, layerInterface, index });
             }
-            fn isProcessorLayer(pointer: *anyopaque, layerInterface: ?*AllBinaryLayer) bool {
-                const implementation: Implementation = @ptrCast(@alignCast(pointer));
-                return Inheritance.receiver(implementation, "isProcessorLayer").isProcessorLayer(layerInterface);
+            fn isProcessorLayer(interface_pointer: *anyopaque, layerInterface: ?*AllBinaryLayer) bool {
+                const implementation: ImplementationType = @ptrCast(@alignCast(interface_pointer));
+                return Inheritance.call(implementation, "isProcessorLayer", .{ layerInterface });
             }
         };
         const this = allocator.create(Self) catch unreachable;

@@ -55,7 +55,7 @@ pub const GameTickTimeDelayHelper = struct {
         if (self.lastStartTime == @as(i64, std.math.minInt(i64))) {
             self.timeDelta = 0;
         } else {
-            self.timeDelta = std.Io.Timestamp.now(std.Io.Threaded.global_single_threaded.io(), .real).toMilliseconds() - self.lastStartTime;
+            self.timeDelta = Inheritance.arithmetic(.subtract, std.Io.Timestamp.now(std.Io.Threaded.global_single_threaded.io(), .real).toMilliseconds(), self.lastStartTime);
         }
     }
     

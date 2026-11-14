@@ -27,10 +27,10 @@ pub const HardwareInterface = struct {
     pub const java_name = "org.allbinary.logic.system.hardware.HardwareInterface";
     pointer: *anyopaque,
     object: Object,
-    getComponentFn: *const fn (pointer: *anyopaque, index: i32) ?*HardwareComponentInterface,
-    toStringFn: *const fn (pointer: *anyopaque) ?*String,
-    compareToFn: *const fn (pointer: *anyopaque, hardwareInterface: ?*HardwareInterface) bool,
-    differenceFn: *const fn (pointer: *anyopaque, hardwareInterface: ?*HardwareInterface) ?*ABHashtable,
+    getComponentFn: *const fn (interface_pointer: *anyopaque, index: i32) ?*HardwareComponentInterface,
+    toStringFn: *const fn (interface_pointer: *anyopaque) ?*String,
+    compareToFn: *const fn (interface_pointer: *anyopaque, hardwareInterface: ?*HardwareInterface) bool,
+    differenceFn: *const fn (interface_pointer: *anyopaque, hardwareInterface: ?*HardwareInterface) ?*ABHashtable,
 
     pub fn getComponent(self: *Self, index: i32) ?*HardwareComponentInterface {
         return self.getComponentFn(self.pointer, index);
@@ -50,23 +50,23 @@ pub const HardwareInterface = struct {
 
     // The interface value of an object with the methods. Like a Java class a method can be declared by the object or a superclass.
     pub fn of(object: anytype) ?*Self {
-        const Implementation = @TypeOf(object);
+        const ImplementationType = @TypeOf(object);
         const Methods = struct {
-            fn getComponent(pointer: *anyopaque, index: i32) ?*HardwareComponentInterface {
-                const implementation: Implementation = @ptrCast(@alignCast(pointer));
-                return Inheritance.upcast(?*HardwareComponentInterface, Inheritance.receiver(implementation, "getComponent").getComponent(index));
+            fn getComponent(interface_pointer: *anyopaque, index: i32) ?*HardwareComponentInterface {
+                const implementation: ImplementationType = @ptrCast(@alignCast(interface_pointer));
+                return Inheritance.upcast(?*HardwareComponentInterface, Inheritance.call(implementation, "getComponent", .{ index }));
             }
-            fn toString(pointer: *anyopaque) ?*String {
-                const implementation: Implementation = @ptrCast(@alignCast(pointer));
+            fn toString(interface_pointer: *anyopaque) ?*String {
+                const implementation: ImplementationType = @ptrCast(@alignCast(interface_pointer));
                 return Inheritance.upcast(?*String, Inheritance.receiver(implementation, "toString").toString());
             }
-            fn compareTo(pointer: *anyopaque, hardwareInterface: ?*HardwareInterface) bool {
-                const implementation: Implementation = @ptrCast(@alignCast(pointer));
-                return Inheritance.receiver(implementation, "compareTo").compareTo(hardwareInterface);
+            fn compareTo(interface_pointer: *anyopaque, hardwareInterface: ?*HardwareInterface) bool {
+                const implementation: ImplementationType = @ptrCast(@alignCast(interface_pointer));
+                return Inheritance.call(implementation, "compareTo", .{ hardwareInterface });
             }
-            fn difference(pointer: *anyopaque, hardwareInterface: ?*HardwareInterface) ?*ABHashtable {
-                const implementation: Implementation = @ptrCast(@alignCast(pointer));
-                return Inheritance.upcast(?*ABHashtable, Inheritance.receiver(implementation, "difference").difference(hardwareInterface));
+            fn difference(interface_pointer: *anyopaque, hardwareInterface: ?*HardwareInterface) ?*ABHashtable {
+                const implementation: ImplementationType = @ptrCast(@alignCast(interface_pointer));
+                return Inheritance.upcast(?*ABHashtable, Inheritance.call(implementation, "difference", .{ hardwareInterface }));
             }
         };
         const this = allocator.create(Self) catch unreachable;

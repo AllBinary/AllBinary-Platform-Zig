@@ -20,6 +20,7 @@ const Object = @import("java/lang/Object.zig").Object;
 const Inheritance = @import("zig/Inheritance.zig");
 const CommonStrings = @import("org/allbinary/string/CommonStrings.zig").CommonStrings;
 const PreLogUtil = @import("org/allbinary/logic/communication/log/PreLogUtil.zig").PreLogUtil;
+const Exception = @import("java/lang/Exception.zig").Exception;
 
 pub const ForcedLogUtil = struct {
     const Self = @This();
@@ -38,7 +39,7 @@ pub const ForcedLogUtil = struct {
             std.debug.panic("{any}", .{exception: { _ = message; break :exception error.Exception; }});
         }
         // catch (Exception e):
-//             _ = Inheritance.callStatic(PreLogUtil, "putOE", .{ CommonStrings.getInstance().?.EXCEPTION, anyType, String.literal("log"), e });
+//             _ = Inheritance.callStatic(PreLogUtil, "putOE", .{ Inheritance.fieldPointer(CommonStrings.getInstance().?, "EXCEPTION").*, anyType, String.literal("log"), e });
     }
 };
 

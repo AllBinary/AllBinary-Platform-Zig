@@ -18,9 +18,9 @@ const allocator = std.heap.page_allocator;
 const String = @import("java/lang/String.zig").String;
 const Object = @import("java/lang/Object.zig").Object;
 const Inheritance = @import("zig/Inheritance.zig");
-// const InputStream = @import("java/io/InputStream.zig").InputStream;
-// const Image = @import("javax/microedition/lcdui/Image.zig").Image;
-// const NullImage = @import("javax/microedition/lcdui/NullImage.zig").NullImage;
+const InputStream = @import("java/io/InputStream.zig").InputStream;
+const Image = @import("javax/microedition/lcdui/Image.zig").Image;
+const NullImage = @import("javax/microedition/lcdui/NullImage.zig").NullImage;
 const StdUtil = @import("org/allbinary/logic/StdUtil.zig").StdUtil;
 const LogUtil = @import("org/allbinary/logic/communication/log/LogUtil.zig").LogUtil;
 const StringMaker = @import("org/allbinary/logic/string/StringMaker.zig").StringMaker;
@@ -30,6 +30,8 @@ const ABHashtable = @import("org/allbinary/util/ABHashtable.zig").ABHashtable;
 const BasicArrayList = @import("org/allbinary/util/BasicArrayList.zig").BasicArrayList;
 const BasicArrayListD = @import("org/allbinary/util/BasicArrayListD.zig").BasicArrayListD;
 const ImageFactory = @import("org/allbinary/image/ImageFactory.zig").ImageFactory;
+const Exception = @import("java/lang/Exception.zig").Exception;
+const RuntimeException = @import("java/lang/RuntimeException.zig").RuntimeException;
 
 pub const ImageCacheBase = struct {
     const Self = @This();
@@ -81,7 +83,7 @@ pub const ImageCacheBase = struct {
 
     pub fn getImage(self: *Self, resourceId: ?Object) ?*Image {
         const imageCanBeNull: ?Object = Inheritance.upcast(?Object, Inheritance.call(self.hashtable.?, "get", .{ resourceId }));
-        if (imageCanBeNull == null) {
+        if (Object.isNull(imageCanBeNull)) {
             return Inheritance.upcast(?*Image, NullImage.NULL_IMAGE);
         }
         return Inheritance.cast(?*Image, imageCanBeNull);
@@ -172,8 +174,8 @@ pub const ImageCacheBase = struct {
             _ = Inheritance.call(stringBuffer.?, "appendint", .{ width });
             _ = Inheritance.call(stringBuffer.?, "append", .{ String.literal(" h: ") });
             _ = Inheritance.call(stringBuffer.?, "appendint", .{ height });
-            _ = Inheritance.call(stringBuffer.?, "append", .{ CommonSeps.getInstance().?.SPACE });
-            _ = Inheritance.call(stringBuffer.?, "append", .{ CommonLabels.getInstance().?.TOTAL_LABEL });
+            _ = Inheritance.call(stringBuffer.?, "append", .{ Inheritance.fieldPointer(CommonSeps.getInstance().?, "SPACE").* });
+            _ = Inheritance.call(stringBuffer.?, "append", .{ Inheritance.fieldPointer(CommonLabels.getInstance().?, "TOTAL_LABEL").* });
             _ = Inheritance.call(stringBuffer.?, "appendint", .{ total });
             _ = Inheritance.call(stringBuffer.?, "append", .{ String.literal(" available: ") });
             _ = Inheritance.call(stringBuffer.?, "appendint", .{ totalAvailable });

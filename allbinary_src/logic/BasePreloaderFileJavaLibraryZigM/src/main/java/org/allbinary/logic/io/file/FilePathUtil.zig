@@ -41,9 +41,9 @@ pub const FilePathUtil = struct {
         const stringValidationUtil: ?*StringValidationUtil = Inheritance.upcast(?*StringValidationUtil, StringValidationUtil.getInstance());
         const filePathData: ?*FilePathData = Inheritance.upcast(?*FilePathData, FilePathData.getInstance());
         if (Inheritance.call(stringValidationUtil.?, "isEmpty", .{ path })) {
-            return Inheritance.upcast(?*String, filePathData.?.PATH_START);
+            return Inheritance.upcast(?*String, Inheritance.fieldPointer(filePathData.?, "PATH_START").*);
         }
-        path = Inheritance.upcast(@TypeOf(path), Inheritance.call(path.?, "replace", .{ abPathData.?.SEPARATORCHAR, filePathData.?.SEPARATORCHAR }));
+        path = Inheritance.upcast(@TypeOf(path), Inheritance.call(path.?, "replace", .{ Inheritance.fieldPointer(abPathData.?, "SEPARATORCHAR").*, Inheritance.fieldPointer(filePathData.?, "SEPARATORCHAR").* }));
         return path;
     }
 };

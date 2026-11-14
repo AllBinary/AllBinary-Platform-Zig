@@ -18,11 +18,12 @@ const allocator = std.heap.page_allocator;
 const String = @import("java/lang/String.zig").String;
 const Object = @import("java/lang/Object.zig").Object;
 const Inheritance = @import("zig/Inheritance.zig");
-// const Font = @import("javax/microedition/lcdui/Font.zig").Font;
-// const MIDlet = @import("javax/microedition/midlet/MIDlet.zig").MIDlet;
+const Font = @import("javax/microedition/lcdui/Font.zig").Font;
+const MIDlet = @import("javax/microedition/midlet/MIDlet.zig").MIDlet;
 const GLHolder = @import("org/allbinary/graphics/threed/GLHolder.zig").GLHolder;
 const RatioProcessor = @import("org/allbinary/graphics/threed/RatioProcessor.zig").RatioProcessor;
 const Runnable = @import("java/lang/Runnable.zig").Runnable;
+const RuntimeException = @import("java/lang/RuntimeException.zig").RuntimeException;
 
 //SWTWithoutJOGL
 pub const SWTJOGLProcessor = struct {
@@ -70,7 +71,7 @@ pub const SWTJOGLProcessor = struct {
     
 
     pub fn isHolderCreated(self: *Self) bool {
-        return self.glHolder.?.isCreated;
+        return Inheritance.fieldPointer(self.glHolder.?, "isCreated").*;
     }
     
 

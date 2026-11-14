@@ -73,7 +73,7 @@ pub const GameScrollMenuPaintable = struct {
             while (index >= 0) : (index -= 1) {
             item = Inheritance.cast(?*ABTextItem, Inheritance.call(scrollSelectionForm.?, "get", .{ index }));
             stringComponent = Inheritance.upcast(@TypeOf(stringComponent), Inheritance.receiver(item.?, "getLabelStringComponent").getLabelStringComponent());
-            if (stringComponent != null) {
+            if (!Object.isNull(stringComponent)) {
                 _ = Inheritance.call(stringComponent.?, "setForegroundBasicColor", .{ basicColor });
             }
             }

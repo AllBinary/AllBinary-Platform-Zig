@@ -22,6 +22,7 @@ const ItemPaintable = @import("org/allbinary/graphics/form/ItemPaintable.zig").I
 const ItemPaintableFactory = @import("org/allbinary/graphics/form/ItemPaintableFactory.zig").ItemPaintableFactory;
 const LockablePaintable = @import("org/allbinary/graphics/form/LockablePaintable.zig").LockablePaintable;
 const PaintableForm = @import("org/allbinary/graphics/form/PaintableForm.zig").PaintableForm;
+const Exception = @import("java/lang/Exception.zig").Exception;
 
 pub const LockableFormPaintableFactory = struct {
     const Self = @This();

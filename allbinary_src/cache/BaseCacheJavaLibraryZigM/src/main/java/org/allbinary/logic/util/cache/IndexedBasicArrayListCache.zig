@@ -26,6 +26,7 @@ const JsProperty = @import("jsinterop/annotations/JsProperty.zig").JsProperty;
 const BaseBasicArrayListCache = @import("org/allbinary/logic/util/cache/BaseBasicArrayListCache.zig").BaseBasicArrayListCache;
 const CacheInterface = @import("org/allbinary/logic/util/cache/CacheInterface.zig").CacheInterface;
 const CacheableInterface = @import("org/allbinary/logic/util/cache/CacheableInterface.zig").CacheableInterface;
+const Exception = @import("java/lang/Exception.zig").Exception;
 
 pub const IndexedBasicArrayListCache = struct {
     const Self = @This();
@@ -78,7 +79,7 @@ pub const IndexedBasicArrayListCache = struct {
     
 
     pub fn getAt(self: *Self, index: i32) ?Object {
-        return Inheritance.upcast(?Object, Inheritance.fieldPointer(self, "list").*.?.objectArray[@intCast(index)]);
+        return Inheritance.upcast(?Object, Inheritance.fieldPointer(Inheritance.fieldPointer(self, "list").*.?, "objectArray").*[@intCast(index)]);
     }
     
 

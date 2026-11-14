@@ -23,6 +23,7 @@ const BasicColorFactory = @import("org/allbinary/graphics/color/BasicColorFactor
 const LogUtil = @import("org/allbinary/logic/communication/log/LogUtil.zig").LogUtil;
 const CommonStrings = @import("org/allbinary/string/CommonStrings.zig").CommonStrings;
 const GameNotificationHud = @import("org/allbinary/game/ag/layer/hud/basic/notification/GameNotificationHud.zig").GameNotificationHud;
+const Exception = @import("java/lang/Exception.zig").Exception;
 
 pub const NoGameNotificationHudSingleton = struct {
     const Self = @This();
@@ -52,28 +53,12 @@ pub const NoGameNotificationHudSingleton = struct {
         this.* = .{};
         this.initFields();
         { // try
-            const basicHudFactory: ?*BasicHudFactory = Inheritance.upcast(?*BasicHudFactory, BasicHudFactory.getInstance());
-            const NoGameGameNotificationHud = struct {
-                const Self = @This();
-                pub const java_name = "org.allbinary.game.ag.layer.hud.basic.notification.NoGameGameNotificationHud";
-                base: GameNotificationHud = undefined,
-                
-
-                pub fn create() *Self {
-                    const this = allocator.create(Self) catch unreachable;
-                    this.* = .{};
-                    
-                    this.updateMaxWidth = 40;
-                    this.updateMaxHeight = 14;
-                    Inheritance.bindOverrides(this);
-                    return this;
-                }
-            };
+            const basicHudFactory: ?*BasicHudFactory = Inheritance.upcast(?*BasicHudFactory, BasicHudFactory.getInstance()); _ = basicHudFactory;
             this.gameNotificationHud = Inheritance.upcast(@TypeOf(this.gameNotificationHud), NoGameGameNotificationHud.create());
         }
         // catch (Exception e):
 //             const commonStrings: ?*CommonStrings = Inheritance.upcast(?*CommonStrings, CommonStrings.getInstance()); _ = commonStrings;
-//             _ = Inheritance.call(this.logUtil.?, "put", .{ commonStrings.?.EXCEPTION, this, commonStrings.?.CONSTRUCTOR, e });
+//             _ = Inheritance.call(this.logUtil.?, "put", .{ Inheritance.fieldPointer(commonStrings.?, "EXCEPTION").*, this, Inheritance.fieldPointer(commonStrings.?, "CONSTRUCTOR").*, e });
         return this;
     }
     
@@ -81,5 +66,21 @@ pub const NoGameNotificationHudSingleton = struct {
     pub fn getGameNotificationHud(self: *Self) ?*GameNotificationHud {
         return self.gameNotificationHud;
     }
+    pub const NoGameGameNotificationHud = struct {
+        const Self1 = @This();
+        pub const java_name = "org.allbinary.game.ag.layer.hud.basic.notification.NoGameGameNotificationHud";
+        base: GameNotificationHud = undefined,
+        
+
+        pub fn create() *Self1 {
+            const this = allocator.create(Self1) catch unreachable;
+            this.* = .{};
+            this.base = Inheritance.callStatic(GameNotificationHud, "create4", .{ Inheritance.fieldPointer(BasicHudFactory.getInstance().?, "TOPCENTER").*, Inheritance.fieldPointer(BasicHudFactory.getInstance().?, "HORIZONTAL").*, 2, Inheritance.fieldPointer(BasicColorFactory.getInstance().?, "RED").* }).*;
+            Inheritance.fieldPointer(this, "updateMaxWidth").* = 40;
+            Inheritance.fieldPointer(this, "updateMaxHeight").* = 14;
+            Inheritance.bindOverrides(this);
+            return this;
+        }
+    };
 };
 

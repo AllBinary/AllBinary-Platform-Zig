@@ -18,17 +18,13 @@ const allocator = std.heap.page_allocator;
 const String = @import("java/lang/String.zig").String;
 const Object = @import("java/lang/Object.zig").Object;
 const Inheritance = @import("zig/Inheritance.zig");
-// const Graphics = @import("javax/microedition/lcdui/Graphics.zig").Graphics;
-const AngleFactory = @import("org/allbinary/math/AngleFactory.zig").AngleFactory;
-const AngleInfo = @import("org/allbinary/math/AngleInfo.zig").AngleInfo;
 const ScaleProperties = @import("org/allbinary/media/ScaleProperties.zig").ScaleProperties;
-const CircularIndexUtil = @import("org/allbinary/util/CircularIndexUtil.zig").CircularIndexUtil;
 const Animation = @import("org/allbinary/animation/Animation.zig").Animation;
 const AnimationInterfaceFactoryInterface = @import("org/allbinary/animation/AnimationInterfaceFactoryInterface.zig").AnimationInterfaceFactoryInterface;
-const IndexedAnimationBehavior = @import("org/allbinary/animation/IndexedAnimationBehavior.zig").IndexedAnimationBehavior;
-const NullRotationAnimation = @import("org/allbinary/animation/NullRotationAnimation.zig").NullRotationAnimation;
+const NullRotationAnimation2 = @import("org/allbinary/animation/NullRotationAnimation2.zig").NullRotationAnimation2;
 const ProceduralAnimationInterfaceFactoryInterface = @import("org/allbinary/animation/ProceduralAnimationInterfaceFactoryInterface.zig").ProceduralAnimationInterfaceFactoryInterface;
 const RotationAnimation = @import("org/allbinary/animation/RotationAnimation.zig").RotationAnimation;
+const Exception = @import("java/lang/Exception.zig").Exception;
 
 pub const NullRotationAnimationFactory = struct {
     const Self = @This();
@@ -46,7 +42,7 @@ pub const NullRotationAnimationFactory = struct {
     }
 
     fn initFields(this: *Self) void {
-        this.NULL_ROTATION_ANIMATION_ARRAY = array_N65787: { const array_N65787_array = allocator.alloc(?*RotationAnimation, @intCast(0)) catch unreachable; @memset(array_N65787_array, null); break :array_N65787 array_N65787_array; };
+        this.NULL_ROTATION_ANIMATION_ARRAY = array_N65687: { const array_N65687_array = allocator.alloc(?*RotationAnimation, @intCast(0)) catch unreachable; @memset(array_N65687_array, null); break :array_N65687 array_N65687_array; };
         this.NULL_ANIMATION = Inheritance.upcast(?*Animation, NullRotationAnimation2.create());
     }
     
@@ -81,27 +77,5 @@ pub const NullRotationAnimationFactory = struct {
         _ = scaleProperties;
         _ = self;
     }
-    pub const NullRotationAnimation2 = struct {
-        const Self = @This();
-        pub const java_name = "org.allbinary.animation.NullRotationAnimation2";
-        base: NullRotationAnimation = undefined,
-        
-
-        pub fn create() *Self {
-            const this = allocator.create(Self) catch unreachable;
-            this.* = .{};
-            
-            Inheritance.bindOverrides(this);
-            return this;
-        }
-        
-
-        pub fn paintXY(self: *Self, graphics: ?*Graphics, x: i32, y: i32) void {
-            _ = graphics;
-            _ = x;
-            _ = y;
-            _ = self;
-        }
-    };
 };
 

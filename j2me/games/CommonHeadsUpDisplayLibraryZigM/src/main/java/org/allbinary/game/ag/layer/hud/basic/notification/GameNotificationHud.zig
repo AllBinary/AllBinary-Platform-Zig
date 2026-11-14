@@ -18,7 +18,7 @@ const allocator = std.heap.page_allocator;
 const String = @import("java/lang/String.zig").String;
 const Object = @import("java/lang/Object.zig").Object;
 const Inheritance = @import("zig/Inheritance.zig");
-// const Graphics = @import("javax/microedition/lcdui/Graphics.zig").Graphics;
+const Graphics = @import("javax/microedition/lcdui/Graphics.zig").Graphics;
 const BasicHud = @import("org/allbinary/game/graphics/hud/BasicHud.zig").BasicHud;
 const BasicHudFactory = @import("org/allbinary/game/graphics/hud/BasicHudFactory.zig").BasicHudFactory;
 const GameNotificationEvent = @import("org/allbinary/game/layer/hud/event/GameNotificationEvent.zig").GameNotificationEvent;
@@ -31,6 +31,7 @@ const EventStrings = @import("org/allbinary/logic/util/event/EventStrings.zig").
 const GameNotification = @import("org/allbinary/game/ag/layer/hud/basic/notification/GameNotification.zig").GameNotification;
 const Integer = @import("java/lang/Integer.zig").Integer;
 const Boolean = @import("java/lang/Boolean.zig").Boolean;
+const Exception = @import("java/lang/Exception.zig").Exception;
 
 pub const GameNotificationHud = struct {
     const Self = @This();
@@ -43,7 +44,7 @@ pub const GameNotificationHud = struct {
 
     // Static fields with runtime initializers: call staticInit once at startup
     pub fn staticInit() void {
-        NULL_GAME_NOTIFICATION = Inheritance.callStatic(GameNotificationHud, "create4", .{ BasicHudFactory.getInstance().?.TOPCENTER, BasicHudFactory.getInstance().?.HORIZONTAL, 0, BasicColorFactory.getInstance().?.RED });
+        NULL_GAME_NOTIFICATION = Inheritance.callStatic(GameNotificationHud, "create4", .{ Inheritance.fieldPointer(BasicHudFactory.getInstance().?, "TOPCENTER").*, Inheritance.fieldPointer(BasicHudFactory.getInstance().?, "HORIZONTAL").*, 0, Inheritance.fieldPointer(BasicColorFactory.getInstance().?, "RED").* });
     }
 
     fn initFields(this: *Self) void {
@@ -64,7 +65,7 @@ pub const GameNotificationHud = struct {
 
     pub fn onEvent(self: *Self, eventObject: ?*AllBinaryEventObject) void {
         _ = eventObject;
-        _ = Inheritance.callStatic(ForcedLogUtil, "log", .{ EventStrings.getInstance().?.PERFORMANCE_MESSAGE, self });
+        _ = Inheritance.callStatic(ForcedLogUtil, "log", .{ Inheritance.fieldPointer(EventStrings.getInstance().?, "PERFORMANCE_MESSAGE").*, self });
     }
     
 

@@ -18,10 +18,11 @@ const allocator = std.heap.page_allocator;
 const String = @import("java/lang/String.zig").String;
 const Object = @import("java/lang/Object.zig").Object;
 const Inheritance = @import("zig/Inheritance.zig");
-// const IOException = @import("java/io/IOException.zig").IOException;
-// const InputStream = @import("java/io/InputStream.zig").InputStream;
+const IOException = @import("java/io/IOException.zig").IOException;
+const InputStream = @import("java/io/InputStream.zig").InputStream;
 const OpenGLBitmap = @import("org/allbinary/graphics/OpenGLBitmap.zig").OpenGLBitmap;
 const BasicColor = @import("org/allbinary/graphics/color/BasicColor.zig").BasicColor;
+const RuntimeException = @import("java/lang/RuntimeException.zig").RuntimeException;
 
 pub const OpenGLImageUtilBase = struct {
     const Self = @This();

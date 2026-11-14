@@ -22,6 +22,7 @@ const Features = @import("org/allbinary/game/configuration/feature/Features.zig"
 const OpenGLFeatureFactory = @import("org/allbinary/graphics/opengles/OpenGLFeatureFactory.zig").OpenGLFeatureFactory;
 const OpenGLImageCacheFactory = @import("org/allbinary/image/opengles/OpenGLImageCacheFactory.zig").OpenGLImageCacheFactory;
 const TouchButtonResourceAnimationInterfaceFactoryInterfaceFactory = @import("org/allbinary/input/motion/button/TouchButtonResourceAnimationInterfaceFactoryInterfaceFactory.zig").TouchButtonResourceAnimationInterfaceFactoryInterfaceFactory;
+const Exception = @import("java/lang/Exception.zig").Exception;
 
 pub const TouchButtonResourceOpenGLESAnimationInterfaceFactoryInterfaceFactory = struct {
     const Self = @This();
@@ -46,7 +47,7 @@ pub const TouchButtonResourceOpenGLESAnimationInterfaceFactoryInterfaceFactory =
 
     pub fn isFeature(self: *Self) bool {
         _ = self;
-        if (Inheritance.call(Features.getInstance().?, "isDefault", .{ OpenGLFeatureFactory.getInstance().?.OPENGL })) {
+        if (Inheritance.call(Features.getInstance().?, "isDefault", .{ Inheritance.fieldPointer(OpenGLFeatureFactory.getInstance().?, "OPENGL").* })) {
             return true;
         } else {
             return false;

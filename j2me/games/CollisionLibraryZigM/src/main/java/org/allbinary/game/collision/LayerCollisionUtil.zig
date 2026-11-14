@@ -53,7 +53,7 @@ pub const LayerCollisionUtil = struct {
         this.initFields();
         const features: ?*Features = Inheritance.upcast(?*Features, Features.getInstance());
         const gameFeatureFactory: ?*GameFeatureFactory = Inheritance.upcast(?*GameFeatureFactory, GameFeatureFactory.getInstance());
-        if (Inheritance.receiverOf(OpenGLFeatureUtil.getInstance().?, "isAnyThreed").isAnyThreed() and !Inheritance.call(features.?, "isFeature", .{ gameFeatureFactory.?.COLLISIONS_FORCED_TWO_DIMENSIONAL })) {
+        if (Inheritance.receiverOf(OpenGLFeatureUtil.getInstance().?, "isAnyThreed").isAnyThreed() and !Inheritance.call(features.?, "isFeature", .{ Inheritance.fieldPointer(gameFeatureFactory.?, "COLLISIONS_FORCED_TWO_DIMENSIONAL").* })) {
             this.collisionProcessor = Inheritance.upcast(@TypeOf(this.collisionProcessor), CollisionThreedProcessor.create());
         } else {
             this.collisionProcessor = Inheritance.upcast(@TypeOf(this.collisionProcessor), Collision2DProcessor.create());

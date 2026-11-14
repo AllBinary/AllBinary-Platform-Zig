@@ -24,6 +24,7 @@ const BasicArrayListD = @import("org/allbinary/util/BasicArrayListD.zig").BasicA
 const CacheableInterface = @import("org/allbinary/logic/util/cache/CacheableInterface.zig").CacheableInterface;
 const CacheableInterfaceFactoryInterface = @import("org/allbinary/logic/util/cache/CacheableInterfaceFactoryInterface.zig").CacheableInterfaceFactoryInterface;
 const PoolInterface = @import("org/allbinary/logic/util/cache/PoolInterface.zig").PoolInterface;
+const Exception = @import("java/lang/Exception.zig").Exception;
 
 pub const AbstractArrayListPool = struct {
     const Self = @This();
@@ -52,14 +53,14 @@ pub const AbstractArrayListPool = struct {
 
     // throws Exception
     pub fn clear(self: *Self) void {
-        std.debug.panic("{any}", .{exception: { _ = self.commonStrings.?.NOT_IMPLEMENTED; break :exception error.Exception; }});
+        std.debug.panic("{any}", .{exception: { _ = Inheritance.fieldPointer(self.commonStrings.?, "NOT_IMPLEMENTED").*; break :exception error.Exception; }});
     }
     
 
     // throws Exception
     pub fn remove(self: *Self, key: ?Object) ?*CacheableInterface {
         _ = key;
-        std.debug.panic("{any}", .{exception: { _ = self.commonStrings.?.NOT_IMPLEMENTED; break :exception error.Exception; }});
+        std.debug.panic("{any}", .{exception: { _ = Inheritance.fieldPointer(self.commonStrings.?, "NOT_IMPLEMENTED").*; break :exception error.Exception; }});
     }
     
 

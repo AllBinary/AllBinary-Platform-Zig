@@ -28,10 +28,10 @@ pub const IntermissionInterface = struct {
     pointer: *anyopaque,
     object: Object,
     toStringFn: *const fn (pointer: *anyopaque) ?*String,
-    getTimeDelayHelperFn: *const fn (pointer: *anyopaque) ?*TimeDelayHelper,
-    isEnabledFn: *const fn (pointer: *anyopaque) bool,
-    setEnabledFn: *const fn (pointer: *anyopaque, value: bool) void,
-    setListenerFn: *const fn (pointer: *anyopaque, enableListener: ?*IntermissionEnableListenerInterface) void,
+    getTimeDelayHelperFn: *const fn (interface_pointer: *anyopaque) ?*TimeDelayHelper,
+    isEnabledFn: *const fn (interface_pointer: *anyopaque) bool,
+    setEnabledFn: *const fn (interface_pointer: *anyopaque, value: bool) void,
+    setListenerFn: *const fn (interface_pointer: *anyopaque, enableListener: ?*IntermissionEnableListenerInterface) void,
 
     pub fn getTimeDelayHelper(self: *Self) ?*TimeDelayHelper {
         return self.getTimeDelayHelperFn(self.pointer);
@@ -55,27 +55,27 @@ pub const IntermissionInterface = struct {
 
     // The interface value of an object with the methods. Like a Java class a method can be declared by the object or a superclass.
     pub fn of(object: anytype) ?*Self {
-        const Implementation = @TypeOf(object);
+        const ImplementationType = @TypeOf(object);
         const Methods = struct {
             fn toString(pointer: *anyopaque) ?*String {
-                const implementation: Implementation = @ptrCast(@alignCast(pointer));
+                const implementation: ImplementationType = @ptrCast(@alignCast(pointer));
                 return String.valueOf(implementation);
             }
-            fn getTimeDelayHelper(pointer: *anyopaque) ?*TimeDelayHelper {
-                const implementation: Implementation = @ptrCast(@alignCast(pointer));
+            fn getTimeDelayHelper(interface_pointer: *anyopaque) ?*TimeDelayHelper {
+                const implementation: ImplementationType = @ptrCast(@alignCast(interface_pointer));
                 return Inheritance.upcast(?*TimeDelayHelper, Inheritance.receiver(implementation, "getTimeDelayHelper").getTimeDelayHelper());
             }
-            fn isEnabled(pointer: *anyopaque) bool {
-                const implementation: Implementation = @ptrCast(@alignCast(pointer));
+            fn isEnabled(interface_pointer: *anyopaque) bool {
+                const implementation: ImplementationType = @ptrCast(@alignCast(interface_pointer));
                 return Inheritance.receiver(implementation, "isEnabled").isEnabled();
             }
-            fn setEnabled(pointer: *anyopaque, value: bool) void {
-                const implementation: Implementation = @ptrCast(@alignCast(pointer));
-                return Inheritance.receiver(implementation, "setEnabled").setEnabled(value);
+            fn setEnabled(interface_pointer: *anyopaque, value: bool) void {
+                const implementation: ImplementationType = @ptrCast(@alignCast(interface_pointer));
+                return Inheritance.call(implementation, "setEnabled", .{ value });
             }
-            fn setListener(pointer: *anyopaque, enableListener: ?*IntermissionEnableListenerInterface) void {
-                const implementation: Implementation = @ptrCast(@alignCast(pointer));
-                return Inheritance.receiver(implementation, "setListener").setListener(enableListener);
+            fn setListener(interface_pointer: *anyopaque, enableListener: ?*IntermissionEnableListenerInterface) void {
+                const implementation: ImplementationType = @ptrCast(@alignCast(interface_pointer));
+                return Inheritance.call(implementation, "setListener", .{ enableListener });
             }
         };
         const this = allocator.create(Self) catch unreachable;

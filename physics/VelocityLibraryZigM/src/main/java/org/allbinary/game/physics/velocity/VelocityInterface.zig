@@ -28,14 +28,14 @@ pub const VelocityInterface = struct {
     object: Object,
     base: BasicVelocityInterface,
     toStringFn: *const fn (pointer: *anyopaque) ?*String,
-    getMaxForwardVelocityFn: *const fn (pointer: *anyopaque) i32,
-    getMaxReverseVelocityFn: *const fn (pointer: *anyopaque) i32,
-    limitMaxXYForwardVelocityFn: *const fn (pointer: *anyopaque) void,
-    limitMaxXYReverseVelocityFn: *const fn (pointer: *anyopaque) void,
-    limitXYToForwardAndReverseMaxVelocityFn: *const fn (pointer: *anyopaque) void,
-    limitMaxXYVelocityFn: *const fn (pointer: *anyopaque, maxVelocity: i32) void,
-    setMaxForwardVelocityFn: *const fn (pointer: *anyopaque, maxForwardVelocity: i32) void,
-    setMaxReverseVelocityFn: *const fn (pointer: *anyopaque, maxReverseVelocity: i32) void,
+    getMaxForwardVelocityFn: *const fn (interface_pointer: *anyopaque) i32,
+    getMaxReverseVelocityFn: *const fn (interface_pointer: *anyopaque) i32,
+    limitMaxXYForwardVelocityFn: *const fn (interface_pointer: *anyopaque) void,
+    limitMaxXYReverseVelocityFn: *const fn (interface_pointer: *anyopaque) void,
+    limitXYToForwardAndReverseMaxVelocityFn: *const fn (interface_pointer: *anyopaque) void,
+    limitMaxXYVelocityFn: *const fn (interface_pointer: *anyopaque, maxVelocity: i32) void,
+    setMaxForwardVelocityFn: *const fn (interface_pointer: *anyopaque, maxForwardVelocity: i32) void,
+    setMaxReverseVelocityFn: *const fn (interface_pointer: *anyopaque, maxReverseVelocity: i32) void,
 
     pub fn getMaxForwardVelocity(self: *Self) i32 {
         return self.getMaxForwardVelocityFn(self.pointer);
@@ -75,43 +75,43 @@ pub const VelocityInterface = struct {
 
     // The interface value of an object with the methods. Like a Java class a method can be declared by the object or a superclass.
     pub fn of(object: anytype) ?*Self {
-        const Implementation = @TypeOf(object);
+        const ImplementationType = @TypeOf(object);
         const Methods = struct {
             fn toString(pointer: *anyopaque) ?*String {
-                const implementation: Implementation = @ptrCast(@alignCast(pointer));
+                const implementation: ImplementationType = @ptrCast(@alignCast(pointer));
                 return String.valueOf(implementation);
             }
-            fn getMaxForwardVelocity(pointer: *anyopaque) i32 {
-                const implementation: Implementation = @ptrCast(@alignCast(pointer));
+            fn getMaxForwardVelocity(interface_pointer: *anyopaque) i32 {
+                const implementation: ImplementationType = @ptrCast(@alignCast(interface_pointer));
                 return Inheritance.receiver(implementation, "getMaxForwardVelocity").getMaxForwardVelocity();
             }
-            fn getMaxReverseVelocity(pointer: *anyopaque) i32 {
-                const implementation: Implementation = @ptrCast(@alignCast(pointer));
+            fn getMaxReverseVelocity(interface_pointer: *anyopaque) i32 {
+                const implementation: ImplementationType = @ptrCast(@alignCast(interface_pointer));
                 return Inheritance.receiver(implementation, "getMaxReverseVelocity").getMaxReverseVelocity();
             }
-            fn limitMaxXYForwardVelocity(pointer: *anyopaque) void {
-                const implementation: Implementation = @ptrCast(@alignCast(pointer));
+            fn limitMaxXYForwardVelocity(interface_pointer: *anyopaque) void {
+                const implementation: ImplementationType = @ptrCast(@alignCast(interface_pointer));
                 return Inheritance.receiver(implementation, "limitMaxXYForwardVelocity").limitMaxXYForwardVelocity();
             }
-            fn limitMaxXYReverseVelocity(pointer: *anyopaque) void {
-                const implementation: Implementation = @ptrCast(@alignCast(pointer));
+            fn limitMaxXYReverseVelocity(interface_pointer: *anyopaque) void {
+                const implementation: ImplementationType = @ptrCast(@alignCast(interface_pointer));
                 return Inheritance.receiver(implementation, "limitMaxXYReverseVelocity").limitMaxXYReverseVelocity();
             }
-            fn limitXYToForwardAndReverseMaxVelocity(pointer: *anyopaque) void {
-                const implementation: Implementation = @ptrCast(@alignCast(pointer));
+            fn limitXYToForwardAndReverseMaxVelocity(interface_pointer: *anyopaque) void {
+                const implementation: ImplementationType = @ptrCast(@alignCast(interface_pointer));
                 return Inheritance.receiver(implementation, "limitXYToForwardAndReverseMaxVelocity").limitXYToForwardAndReverseMaxVelocity();
             }
-            fn limitMaxXYVelocity(pointer: *anyopaque, maxVelocity: i32) void {
-                const implementation: Implementation = @ptrCast(@alignCast(pointer));
-                return Inheritance.receiver(implementation, "limitMaxXYVelocity").limitMaxXYVelocity(maxVelocity);
+            fn limitMaxXYVelocity(interface_pointer: *anyopaque, maxVelocity: i32) void {
+                const implementation: ImplementationType = @ptrCast(@alignCast(interface_pointer));
+                return Inheritance.call(implementation, "limitMaxXYVelocity", .{ maxVelocity });
             }
-            fn setMaxForwardVelocity(pointer: *anyopaque, maxForwardVelocity: i32) void {
-                const implementation: Implementation = @ptrCast(@alignCast(pointer));
-                return Inheritance.receiver(implementation, "setMaxForwardVelocity").setMaxForwardVelocity(maxForwardVelocity);
+            fn setMaxForwardVelocity(interface_pointer: *anyopaque, maxForwardVelocity: i32) void {
+                const implementation: ImplementationType = @ptrCast(@alignCast(interface_pointer));
+                return Inheritance.call(implementation, "setMaxForwardVelocity", .{ maxForwardVelocity });
             }
-            fn setMaxReverseVelocity(pointer: *anyopaque, maxReverseVelocity: i32) void {
-                const implementation: Implementation = @ptrCast(@alignCast(pointer));
-                return Inheritance.receiver(implementation, "setMaxReverseVelocity").setMaxReverseVelocity(maxReverseVelocity);
+            fn setMaxReverseVelocity(interface_pointer: *anyopaque, maxReverseVelocity: i32) void {
+                const implementation: ImplementationType = @ptrCast(@alignCast(interface_pointer));
+                return Inheritance.call(implementation, "setMaxReverseVelocity", .{ maxReverseVelocity });
             }
         };
         const this = allocator.create(Self) catch unreachable;

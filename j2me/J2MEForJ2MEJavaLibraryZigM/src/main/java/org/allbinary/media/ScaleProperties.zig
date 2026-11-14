@@ -53,7 +53,7 @@ pub const ScaleProperties = struct {
     
 
     pub fn toString(self: *Self) ?*String {
-        return Inheritance.upcast(?*String, Object.toString(Object.of(Inheritance.call(Inheritance.call(Inheritance.call(Inheritance.call(Inheritance.call(Inheritance.call(Inheritance.call(Inheritance.call(Inheritance.call(Inheritance.call(StringMaker.create(), "append", .{ CommonLabels.getInstance().?.COLON_SEP }).?, "appendboolean", .{ self.shouldScale }).?, "append", .{ String.literal("scaleX: ") }).?, "appendfloat", .{ self.scaleX }).?, "append", .{ String.literal("scaleY: ") }).?, "appendfloat", .{ self.scaleY }).?, "append", .{ String.literal("scaleWidth: ") }).?, "appendint", .{ self.scaleWidth }).?, "append", .{ String.literal("scaleHeight: ") }).?, "appendint", .{ self.scaleHeight }))));
+        return Inheritance.upcast(?*String, Object.toString(Object.of(Inheritance.call(Inheritance.call(Inheritance.call(Inheritance.call(Inheritance.call(Inheritance.call(Inheritance.call(Inheritance.call(Inheritance.call(Inheritance.call(StringMaker.create(), "append", .{ Inheritance.fieldPointer(CommonLabels.getInstance().?, "COLON_SEP").* }).?, "appendboolean", .{ self.shouldScale }).?, "append", .{ String.literal("scaleX: ") }).?, "appendfloat", .{ self.scaleX }).?, "append", .{ String.literal("scaleY: ") }).?, "appendfloat", .{ self.scaleY }).?, "append", .{ String.literal("scaleWidth: ") }).?, "appendint", .{ self.scaleWidth }).?, "append", .{ String.literal("scaleHeight: ") }).?, "appendint", .{ self.scaleHeight }))));
     }
 };
 

@@ -27,8 +27,8 @@ pub const PickupCompositeInterface = struct {
     pointer: *anyopaque,
     object: Object,
     toStringFn: *const fn (pointer: *anyopaque) ?*String,
-    getPickupBehaviorFn: *const fn (pointer: *anyopaque) ?*PickupBehavior,
-    setPickupBehaviorFn: *const fn (pointer: *anyopaque, pickupBehavior: ?*PickupBehavior) void,
+    getPickupBehaviorFn: *const fn (interface_pointer: *anyopaque) ?*PickupBehavior,
+    setPickupBehaviorFn: *const fn (interface_pointer: *anyopaque, pickupBehavior: ?*PickupBehavior) void,
 
     pub fn getPickupBehavior(self: *Self) ?*PickupBehavior {
         return self.getPickupBehaviorFn(self.pointer);
@@ -44,19 +44,19 @@ pub const PickupCompositeInterface = struct {
 
     // The interface value of an object with the methods. Like a Java class a method can be declared by the object or a superclass.
     pub fn of(object: anytype) ?*Self {
-        const Implementation = @TypeOf(object);
+        const ImplementationType = @TypeOf(object);
         const Methods = struct {
             fn toString(pointer: *anyopaque) ?*String {
-                const implementation: Implementation = @ptrCast(@alignCast(pointer));
+                const implementation: ImplementationType = @ptrCast(@alignCast(pointer));
                 return String.valueOf(implementation);
             }
-            fn getPickupBehavior(pointer: *anyopaque) ?*PickupBehavior {
-                const implementation: Implementation = @ptrCast(@alignCast(pointer));
+            fn getPickupBehavior(interface_pointer: *anyopaque) ?*PickupBehavior {
+                const implementation: ImplementationType = @ptrCast(@alignCast(interface_pointer));
                 return Inheritance.upcast(?*PickupBehavior, Inheritance.receiver(implementation, "getPickupBehavior").getPickupBehavior());
             }
-            fn setPickupBehavior(pointer: *anyopaque, pickupBehavior: ?*PickupBehavior) void {
-                const implementation: Implementation = @ptrCast(@alignCast(pointer));
-                return Inheritance.receiver(implementation, "setPickupBehavior").setPickupBehavior(pickupBehavior);
+            fn setPickupBehavior(interface_pointer: *anyopaque, pickupBehavior: ?*PickupBehavior) void {
+                const implementation: ImplementationType = @ptrCast(@alignCast(interface_pointer));
+                return Inheritance.call(implementation, "setPickupBehavior", .{ pickupBehavior });
             }
         };
         const this = allocator.create(Self) catch unreachable;

@@ -18,14 +18,13 @@ const allocator = std.heap.page_allocator;
 const String = @import("java/lang/String.zig").String;
 const Object = @import("java/lang/Object.zig").Object;
 const Inheritance = @import("zig/Inheritance.zig");
-// const Graphics = @import("javax/microedition/lcdui/Graphics.zig").Graphics;
 const ScaleProperties = @import("org/allbinary/media/ScaleProperties.zig").ScaleProperties;
 const Animation = @import("org/allbinary/animation/Animation.zig").Animation;
 const AnimationInterfaceFactoryInterface = @import("org/allbinary/animation/AnimationInterfaceFactoryInterface.zig").AnimationInterfaceFactoryInterface;
 const IndexedAnimation = @import("org/allbinary/animation/IndexedAnimation.zig").IndexedAnimation;
-const IndexedAnimationBehavior = @import("org/allbinary/animation/IndexedAnimationBehavior.zig").IndexedAnimationBehavior;
-const NullIndexedAnimation = @import("org/allbinary/animation/NullIndexedAnimation.zig").NullIndexedAnimation;
+const NullIndexedAnimationInner = @import("org/allbinary/animation/NullIndexedAnimationInner.zig").NullIndexedAnimationInner;
 const ProceduralAnimationInterfaceFactoryInterface = @import("org/allbinary/animation/ProceduralAnimationInterfaceFactoryInterface.zig").ProceduralAnimationInterfaceFactoryInterface;
+const Exception = @import("java/lang/Exception.zig").Exception;
 
 pub const NullIndexedAnimationFactory = struct {
     const Self = @This();
@@ -39,7 +38,7 @@ pub const NullIndexedAnimationFactory = struct {
 
     // Static fields with runtime initializers: call staticInit once at startup
     pub fn staticInit() void {
-        NULL_INDEXED_ANIMATION_ARRAY = array_N65670: { const array_N65670_array = allocator.alloc(?*IndexedAnimation, @intCast(0)) catch unreachable; @memset(array_N65670_array, null); break :array_N65670 array_N65670_array; };
+        NULL_INDEXED_ANIMATION_ARRAY = array_N65645: { const array_N65645_array = allocator.alloc(?*IndexedAnimation, @intCast(0)) catch unreachable; @memset(array_N65645_array, null); break :array_N65645 array_N65645_array; };
         NULL_INDEXED_ANIMATION_FACTORY = NullIndexedAnimationFactory.create();
     }
 
@@ -79,27 +78,5 @@ pub const NullIndexedAnimationFactory = struct {
         _ = scaleProperties;
         _ = self;
     }
-    pub const NullIndexedAnimationInner = struct {
-        const Self = @This();
-        pub const java_name = "org.allbinary.animation.NullIndexedAnimationInner";
-        base: NullIndexedAnimation = undefined,
-        
-
-        pub fn create() *Self {
-            const this = allocator.create(Self) catch unreachable;
-            this.* = .{};
-            
-            Inheritance.bindOverrides(this);
-            return this;
-        }
-        
-
-        pub fn paintXY(self: *Self, graphics: ?*Graphics, x: i32, y: i32) void {
-            _ = graphics;
-            _ = x;
-            _ = y;
-            _ = self;
-        }
-    };
 };
 

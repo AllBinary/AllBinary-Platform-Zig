@@ -23,6 +23,7 @@ const J2MEUtil = @import("org/allbinary/J2MEUtil.zig").J2MEUtil;
 const LogUtil = @import("org/allbinary/logic/communication/log/LogUtil.zig").LogUtil;
 const StringMaker = @import("org/allbinary/logic/string/StringMaker.zig").StringMaker;
 const Integer = @import("java/lang/Integer.zig").Integer;
+const Exception = @import("java/lang/Exception.zig").Exception;
 
 pub const SmallIntegerSingletonFactory = struct {
     const Self = @This();
@@ -161,7 +162,7 @@ pub const SmallIntegerSingletonFactory = struct {
 
     pub fn createInstance(self: *Self, index: i32) ?*Integer {
         var integer: ?*Integer = Inheritance.upcast(?*Integer, Inheritance.call(self, "getAt", .{ index }));
-        if (integer == null) {
+        if (Object.isNull(integer)) {
             integer = Inheritance.callStatic(Integer, "create1", .{ index });
         }
         return integer;
@@ -170,7 +171,7 @@ pub const SmallIntegerSingletonFactory = struct {
 
     pub fn getString(self: *Self, index: i32) ?*String {
         const i: i32 = index + self.NEGATIVE_MAX;
-        if (self.STRING_ARRAY[@intCast(i)] == null) {
+        if (Object.isNull(self.STRING_ARRAY[@intCast(i)])) {
             self.STRING_ARRAY[@intCast(i)] = Inheritance.upcast(@TypeOf(self.STRING_ARRAY[@intCast(i)]), String.valueOf(self.INTEGER_ARRAY[@intCast(i)].?));
         }
         return Inheritance.upcast(?*String, self.STRING_ARRAY[@intCast(i)]);

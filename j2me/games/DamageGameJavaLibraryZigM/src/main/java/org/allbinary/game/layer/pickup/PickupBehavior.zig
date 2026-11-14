@@ -35,6 +35,7 @@ const PickedUpLayerType = @import("org/allbinary/game/layer/pickup/PickedUpLayer
 const PickedUpLayerTypeFactory = @import("org/allbinary/game/layer/pickup/PickedUpLayerTypeFactory.zig").PickedUpLayerTypeFactory;
 const PickupBehaviorInterface = @import("org/allbinary/game/layer/pickup/PickupBehaviorInterface.zig").PickupBehaviorInterface;
 const PickupProcessorInterface = @import("org/allbinary/game/layer/pickup/PickupProcessorInterface.zig").PickupProcessorInterface;
+const Exception = @import("java/lang/Exception.zig").Exception;
 
 pub const PickupBehavior = struct {
     const Self = @This();
@@ -48,7 +49,7 @@ pub const PickupBehavior = struct {
 
     // Static fields with runtime initializers: call staticInit once at startup
     pub fn staticInit() void {
-        NULL_PICKUP_BEHAVIOR = Inheritance.upcast(?Object, NullUtil.getInstance().?.NULL_OBJECT);
+        NULL_PICKUP_BEHAVIOR = Inheritance.upcast(?Object, Inheritance.fieldPointer(NullUtil.getInstance().?, "NULL_OBJECT").*);
     }
 
     fn initFields(this: *Self) void {
@@ -59,7 +60,7 @@ pub const PickupBehavior = struct {
     
 
     pub fn getNullInstance() ?*PickupBehavior {
-        if (Object.same(PickupBehavior.NULL_PICKUP_BEHAVIOR, NullUtil.getInstance().?.NULL_OBJECT)) {
+        if (Object.same(PickupBehavior.NULL_PICKUP_BEHAVIOR, Inheritance.fieldPointer(NullUtil.getInstance().?, "NULL_OBJECT").*)) {
             PickupBehavior.NULL_PICKUP_BEHAVIOR = Inheritance.upcast(@TypeOf(PickupBehavior.NULL_PICKUP_BEHAVIOR), Inheritance.callStatic(PickupBehavior, "create2", .{ CollidableCompositeLayer.getNullInstance(), 0 }));
         }
         return Inheritance.cast(?*PickupBehavior, PickupBehavior.NULL_PICKUP_BEHAVIOR);
@@ -85,7 +86,7 @@ pub const PickupBehavior = struct {
         }
         // catch (Exception e):
 //             const commonStrings: ?*CommonStrings = Inheritance.upcast(?*CommonStrings, CommonStrings.getInstance()); _ = commonStrings;
-//             _ = Inheritance.call(self.logUtil.?, "put", .{ commonStrings.?.EXCEPTION, self, String.literal("doPickup"), e });
+//             _ = Inheritance.call(self.logUtil.?, "put", .{ Inheritance.fieldPointer(commonStrings.?, "EXCEPTION").*, self, String.literal("doPickup"), e });
     }
     
 
@@ -94,12 +95,12 @@ pub const PickupBehavior = struct {
             const pickedUpLayerInterfaceFactoryInterface: ?*PickedUpLayerInterfaceFactoryInterface = Inheritance.upcast(?*PickedUpLayerInterfaceFactoryInterface, Inheritance.receiver(pickupLayerInterface.?, "getPickedUpLayerInterfaceFactoryInterface").getPickedUpLayerInterfaceFactoryInterface());
             const pickedUpLayerType: ?*PickedUpLayerType = Inheritance.upcast(?*PickedUpLayerType, pickedUpLayerInterfaceFactoryInterface.?.getPickedUpLayerType());
             const pickedUpLayerTypeFactory: ?*PickedUpLayerTypeFactory = Inheritance.upcast(?*PickedUpLayerTypeFactory, PickedUpLayerTypeFactory.getInstance());
-            if (Object.same(pickedUpLayerType, pickedUpLayerTypeFactory.?.BEAM) or Object.same(pickedUpLayerType, pickedUpLayerTypeFactory.?.MINE) or Object.same(pickedUpLayerType, pickedUpLayerTypeFactory.?.PROJECTILE) or Object.same(pickedUpLayerType, pickedUpLayerTypeFactory.?.ENHANCEMENT)) {
+            if (Object.same(pickedUpLayerType, Inheritance.fieldPointer(pickedUpLayerTypeFactory.?, "BEAM").*) or Object.same(pickedUpLayerType, Inheritance.fieldPointer(pickedUpLayerTypeFactory.?, "MINE").*) or Object.same(pickedUpLayerType, Inheritance.fieldPointer(pickedUpLayerTypeFactory.?, "PROJECTILE").*) or Object.same(pickedUpLayerType, Inheritance.fieldPointer(pickedUpLayerTypeFactory.?, "ENHANCEMENT").*)) {
                 _ = Inheritance.call(self, "add", .{ Inheritance.cast(?*CountedPickedUpLayerInterfaceFactoryInterface, pickedUpLayerInterfaceFactoryInterface) });
-            } else if (Object.same(pickedUpLayerInterfaceFactoryInterface.?.getPickedUpLayerType(), pickedUpLayerTypeFactory.?.PART)) {
+            } else if (Object.same(pickedUpLayerInterfaceFactoryInterface.?.getPickedUpLayerType(), Inheritance.fieldPointer(pickedUpLayerTypeFactory.?, "PART").*)) {
                 const collidableDestroyableDamageableLayer: ?*CollidableDestroyableDamageableLayer = Inheritance.cast(?*CollidableDestroyableDamageableLayer, self.ownerLayerInterface);
                 _ = Inheritance.call(collidableDestroyableDamageableLayer.?, "addPart", .{ pickedUpLayerInterfaceFactoryInterface });
-            } else if (Object.same(pickedUpLayerType, pickedUpLayerTypeFactory.?.NONE)) {
+            } else if (Object.same(pickedUpLayerType, Inheritance.fieldPointer(pickedUpLayerTypeFactory.?, "NONE").*)) {
             } else {
                 const pickupProcessorInterface: ?*PickupProcessorInterface = Inheritance.cast(?*PickupProcessorInterface, pickedUpLayerInterfaceFactoryInterface);
                 _ = Inheritance.call(self, "doPickup", .{ pickupProcessorInterface });
@@ -108,7 +109,7 @@ pub const PickupBehavior = struct {
         }
         // catch (Exception e):
 //             const commonStrings: ?*CommonStrings = Inheritance.upcast(?*CommonStrings, CommonStrings.getInstance()); _ = commonStrings;
-//             _ = Inheritance.callStatic(PreLogUtil, "putOE", .{ commonStrings.?.EXCEPTION, self, String.literal("doPickup"), e });
+//             _ = Inheritance.callStatic(PreLogUtil, "putOE", .{ Inheritance.fieldPointer(commonStrings.?, "EXCEPTION").*, self, String.literal("doPickup"), e });
     }
     
 
@@ -121,7 +122,7 @@ pub const PickupBehavior = struct {
     pub fn addAt(self: *Self, countedPickedUpLayerInterfaceFactoryInterface: ?*CountedPickedUpLayerInterfaceFactoryInterface, partIndex: i32) void {
         const collidableDestroyableDamageableLayer: ?*CollidableDestroyableDamageableLayer = Inheritance.cast(?*CollidableDestroyableDamageableLayer, self.ownerLayerInterface);
         const countedLayerInterfaceFactory: ?*CountedLayerInterfaceFactoryPart = Inheritance.cast(?*CountedLayerInterfaceFactoryPart, Inheritance.receiver(collidableDestroyableDamageableLayer.?, "getPartInterfaceArray").getPartInterfaceArray()[@intCast(partIndex)]);
-        _ = Inheritance.call(countedLayerInterfaceFactory.?, "setTotal", .{ countedLayerInterfaceFactory.?.getTotal() + Inheritance.receiver(countedPickedUpLayerInterfaceFactoryInterface.?, "getTotal").getTotal() });
+        _ = Inheritance.call(countedLayerInterfaceFactory.?, "setTotal", .{ Inheritance.plus(countedLayerInterfaceFactory.?.getTotal(), Inheritance.receiver(countedPickedUpLayerInterfaceFactoryInterface.?, "getTotal").getTotal()) });
     }
     
 
@@ -140,7 +141,7 @@ pub const PickupBehavior = struct {
                 var index2: i32 = @as(i32, @intCast(pickedUpLayerTypeArray.len));
                 while (value_N68362: { index2 -= 1; break :value_N68362 index2; } >= 0) {
                 if (Object.same(Inheritance.receiver(countedPickedUpLayerInterfaceFactory.?, "getPickedUpLayerType").getPickedUpLayerType(), pickedUpLayerTypeArray[@intCast(index2)])) {
-                    if (nextCountedLayerInterfaceFactory.?.getTotal() > 0) {
+                    if (Inheritance.arithmetic(.greater, nextCountedLayerInterfaceFactory.?.getTotal(), 0)) {
                         return nextCountedLayerInterfaceFactory;
                     }
                 }
@@ -163,7 +164,7 @@ pub const PickupBehavior = struct {
             var index: i32 = self.countedIndex;
             while (index < size) : (index += 1) {
             nextCountedLayerInterfaceFactory = Inheritance.cast(?*CountedLayerInterfaceFactoryPart, Inheritance.receiver(collidableDestroyableDamageableLayer.?, "getPartInterfaceArray").getPartInterfaceArray()[@intCast(index)]);
-            if (nextCountedLayerInterfaceFactory.?.getTotal() > 0) {
+            if (Inheritance.arithmetic(.greater, nextCountedLayerInterfaceFactory.?.getTotal(), 0)) {
                 if (currentSlot == slotIndex) {
                     return nextCountedLayerInterfaceFactory;
                 } else {

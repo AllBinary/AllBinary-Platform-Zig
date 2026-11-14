@@ -23,6 +23,7 @@ const StringUtil = @import("org/allbinary/logic/string/StringUtil.zig").StringUt
 const NoPlayerGameInput = @import("org/allbinary/game/input/NoPlayerGameInput.zig").NoPlayerGameInput;
 const PlayerGameInput = @import("org/allbinary/game/input/PlayerGameInput.zig").PlayerGameInput;
 const PlayerGameInputCompositeInterface = @import("org/allbinary/game/input/PlayerGameInputCompositeInterface.zig").PlayerGameInputCompositeInterface;
+const Exception = @import("java/lang/Exception.zig").Exception;
 
 pub const NullPlayerGameInputComposite = struct {
     const Self = @This();
@@ -45,7 +46,7 @@ pub const NullPlayerGameInputComposite = struct {
 
     pub fn getName(self: *Self) ?*String {
         _ = self;
-        return Inheritance.upcast(?*String, StringUtil.getInstance().?.EMPTY_STRING);
+        return Inheritance.upcast(?*String, Inheritance.fieldPointer(StringUtil.getInstance().?, "EMPTY_STRING").*);
     }
     
 

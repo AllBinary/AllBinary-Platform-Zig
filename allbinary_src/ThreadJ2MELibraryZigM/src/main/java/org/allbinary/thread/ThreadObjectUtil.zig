@@ -11,6 +11,7 @@ const NullPriorityRunnable = @import("org/allbinary/thread/NullPriorityRunnable.
 const PriorityRunnable = @import("org/allbinary/thread/PriorityRunnable.zig").PriorityRunnable;
 const Thread = @import("java/lang/Thread.zig").Thread;
 const Runnable = @import("java/lang/Runnable.zig").Runnable;
+const Exception = @import("java/lang/Exception.zig").Exception;
 
 pub const ThreadObjectUtil = struct {
     const Self = @This();

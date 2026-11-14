@@ -46,7 +46,7 @@ pub const SimultaneousCompoundRotationAnimationInterfaceFactory = struct {
 
     pub fn createArray(self: *Self, size: i32) []?*Animation {
         _ = self;
-        return array_N65912: { const array_N65912_array = allocator.alloc(?*RotationAnimation, @intCast(size)) catch unreachable; @memset(array_N65912_array, null); break :array_N65912 array_N65912_array; };
+        return array_N65912: { const array_N65912_array = allocator.alloc(?*Animation, @intCast(size)) catch unreachable; @memset(array_N65912_array, null); break :array_N65912 array_N65912_array; };
     }
     
 

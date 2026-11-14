@@ -18,7 +18,7 @@ const allocator = std.heap.page_allocator;
 const String = @import("java/lang/String.zig").String;
 const Object = @import("java/lang/Object.zig").Object;
 const Inheritance = @import("zig/Inheritance.zig");
-// const Graphics = @import("javax/microedition/lcdui/Graphics.zig").Graphics;
+const Graphics = @import("javax/microedition/lcdui/Graphics.zig").Graphics;
 const MyRandomFactory = @import("org/allbinary/game/rand/MyRandomFactory.zig").MyRandomFactory;
 const BasicColor = @import("org/allbinary/graphics/color/BasicColor.zig").BasicColor;
 const BasicColorArrayIndexer = @import("org/allbinary/graphics/color/BasicColorArrayIndexer.zig").BasicColorArrayIndexer;
@@ -48,7 +48,7 @@ pub const PtsDamageFloaters = struct {
 
     // Static fields with runtime initializers: call staticInit once at startup
     pub fn staticInit() void {
-        basicColorArrayIndexer = Inheritance.callStatic(BasicColorArrayIndexer, "create1", .{ @constCast(&[_]?*BasicColor{ BasicColorFactory.getInstance().?.WHITE, BasicColorFactory.getInstance().?.RED, BasicColorFactory.getInstance().?.YELLOW, BasicColorFactory.getInstance().?.BLUE })[0..] });
+        basicColorArrayIndexer = Inheritance.callStatic(BasicColorArrayIndexer, "create1", .{ @constCast(&[_]?*BasicColor{ Inheritance.upcast(?*BasicColor, Inheritance.fieldPointer(BasicColorFactory.getInstance().?, "WHITE").*), Inheritance.upcast(?*BasicColor, Inheritance.fieldPointer(BasicColorFactory.getInstance().?, "RED").*), Inheritance.upcast(?*BasicColor, Inheritance.fieldPointer(BasicColorFactory.getInstance().?, "YELLOW").*), Inheritance.upcast(?*BasicColor, Inheritance.fieldPointer(BasicColorFactory.getInstance().?, "BLUE").*) })[0..] });
     }
 
     fn initFields(this: *Self) void {
@@ -101,7 +101,7 @@ pub const PtsDamageFloaters = struct {
             if (self.lastDamage[@intCast(index)] != 0) {
                 const delta: i32 = 10 * (index + 2);
                 _ = Inheritance.call(self.basicSetColorUtil.?, "setBasicColorP", .{ graphics, Inheritance.receiverOf(PtsDamageFloaters.basicColorArrayIndexer.?, "get").get() });
-                _ = Inheritance.call(graphics.?, "drawChars", .{ self.lastDamageString[@intCast(index)], 0, self.lastDamageStringSizeArray[@intCast(index)], x - Inheritance.call(self.myRandomFactory.?, "getNextInt", .{ delta }), y - delta, 0 });
+                _ = Inheritance.call(graphics.?, "drawChars", .{ self.lastDamageString[@intCast(index)], 0, self.lastDamageStringSizeArray[@intCast(index)], Inheritance.arithmetic(.subtract, x, Inheritance.call(self.myRandomFactory.?, "getNextInt", .{ delta })), y - delta, 0 });
                 _ = Inheritance.receiverOf(PtsDamageFloaters.basicColorArrayIndexer.?, "next").next();
             }
             self.lastDamage[@intCast(index)] = 0;

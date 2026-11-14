@@ -20,6 +20,7 @@ const Object = @import("java/lang/Object.zig").Object;
 const Inheritance = @import("zig/Inheritance.zig");
 const PickedUpLayerInterface = @import("org/allbinary/game/layer/pickup/PickedUpLayerInterface.zig").PickedUpLayerInterface;
 const PickupProcessorInterface = @import("org/allbinary/game/layer/pickup/PickupProcessorInterface.zig").PickupProcessorInterface;
+const Exception = @import("java/lang/Exception.zig").Exception;
 
 // Java interface: an implementation is a pointer and a table of functions
 pub const PickupBehaviorInterface = struct {
@@ -28,8 +29,8 @@ pub const PickupBehaviorInterface = struct {
     pointer: *anyopaque,
     object: Object,
     toStringFn: *const fn (pointer: *anyopaque) ?*String,
-    doPickupFn: *const fn (pointer: *anyopaque, pickupProcessorInterface: ?*PickupProcessorInterface) void,
-    doPickupLayerFn: *const fn (pointer: *anyopaque, pickupLayerInterface: ?*PickedUpLayerInterface) void,
+    doPickupFn: *const fn (interface_pointer: *anyopaque, pickupProcessorInterface: ?*PickupProcessorInterface) void,
+    doPickupLayerFn: *const fn (interface_pointer: *anyopaque, pickupLayerInterface: ?*PickedUpLayerInterface) void,
 
     pub fn doPickup(self: *Self, pickupProcessorInterface: ?*PickupProcessorInterface) void {
         return self.doPickupFn(self.pointer, pickupProcessorInterface);
@@ -45,19 +46,19 @@ pub const PickupBehaviorInterface = struct {
 
     // The interface value of an object with the methods. Like a Java class a method can be declared by the object or a superclass.
     pub fn of(object: anytype) ?*Self {
-        const Implementation = @TypeOf(object);
+        const ImplementationType = @TypeOf(object);
         const Methods = struct {
             fn toString(pointer: *anyopaque) ?*String {
-                const implementation: Implementation = @ptrCast(@alignCast(pointer));
+                const implementation: ImplementationType = @ptrCast(@alignCast(pointer));
                 return String.valueOf(implementation);
             }
-            fn doPickup(pointer: *anyopaque, pickupProcessorInterface: ?*PickupProcessorInterface) void {
-                const implementation: Implementation = @ptrCast(@alignCast(pointer));
-                return Inheritance.receiver(implementation, "doPickup").doPickup(pickupProcessorInterface);
+            fn doPickup(interface_pointer: *anyopaque, pickupProcessorInterface: ?*PickupProcessorInterface) void {
+                const implementation: ImplementationType = @ptrCast(@alignCast(interface_pointer));
+                return Inheritance.call(implementation, "doPickup", .{ pickupProcessorInterface });
             }
-            fn doPickupLayer(pointer: *anyopaque, pickupLayerInterface: ?*PickedUpLayerInterface) void {
-                const implementation: Implementation = @ptrCast(@alignCast(pointer));
-                return Inheritance.receiver(implementation, "doPickupLayer").doPickupLayer(pickupLayerInterface);
+            fn doPickupLayer(interface_pointer: *anyopaque, pickupLayerInterface: ?*PickedUpLayerInterface) void {
+                const implementation: ImplementationType = @ptrCast(@alignCast(interface_pointer));
+                return Inheritance.call(implementation, "doPickupLayer", .{ pickupLayerInterface });
             }
         };
         const this = allocator.create(Self) catch unreachable;

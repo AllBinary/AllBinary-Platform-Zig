@@ -18,7 +18,7 @@ const allocator = std.heap.page_allocator;
 const String = @import("java/lang/String.zig").String;
 const Object = @import("java/lang/Object.zig").Object;
 const Inheritance = @import("zig/Inheritance.zig");
-// const Item = @import("javax/microedition/lcdui/Item.zig").Item;
+const Item = @import("javax/microedition/lcdui/Item.zig").Item;
 const LogUtil = @import("org/allbinary/logic/communication/log/LogUtil.zig").LogUtil;
 const SmallIntegerSingletonFactory = @import("org/allbinary/logic/math/SmallIntegerSingletonFactory.zig").SmallIntegerSingletonFactory;
 const StringMaker = @import("org/allbinary/logic/string/StringMaker.zig").StringMaker;
@@ -29,6 +29,7 @@ const GameConfigurationGauge = @import("org/allbinary/game/configuration/GameCon
 const GameConfigurationSingleton = @import("org/allbinary/game/configuration/GameConfigurationSingleton.zig").GameConfigurationSingleton;
 const GameOptionsForm = @import("org/allbinary/game/configuration/GameOptionsForm.zig").GameOptionsForm;
 const Integer = @import("java/lang/Integer.zig").Integer;
+const Exception = @import("java/lang/Exception.zig").Exception;
 
 pub const GameConfigurationUtil = struct {
     const Self = @This();
@@ -82,15 +83,15 @@ pub const GameConfigurationUtil = struct {
         const gameConfigurationSingleton: ?*GameConfigurationSingleton = Inheritance.upcast(?*GameConfigurationSingleton, GameConfigurationSingleton.getInstance());
         const gameConfiguration: ?*GameConfiguration = Inheritance.upcast(?*GameConfiguration, Inheritance.call(gameConfigurationSingleton.?, "getInstanceByName", .{ Inheritance.receiver(gauge.?, "getLabel").getLabel() }));
         const smallIntegerSingletonFactory: ?*SmallIntegerSingletonFactory = Inheritance.upcast(?*SmallIntegerSingletonFactory, SmallIntegerSingletonFactory.getInstance());
-        const value: ?*Integer = Inheritance.upcast(?*Integer, Inheritance.call(smallIntegerSingletonFactory.?, "getAt", .{ Inheritance.receiver(gauge.?, "getValue").getValue() + Inheritance.receiverOf(gameConfiguration.?.getMinValue().?, "intValue").intValue() }));
+        const value: ?*Integer = Inheritance.upcast(?*Integer, Inheritance.call(smallIntegerSingletonFactory.?, "getAt", .{ Inheritance.plus(Inheritance.receiver(gauge.?, "getValue").getValue(), Inheritance.receiverOf(gameConfiguration.?.getMinValue().?, "intValue").intValue()) }));
         const stringBuffer: ?*StringMaker = StringMaker.create();
         _ = Inheritance.call(stringBuffer.?, "append", .{ self.GAUGE_UPDATE });
         _ = Inheritance.call(stringBuffer.?, "append", .{ gameConfiguration.?.getName() });
         _ = Inheritance.call(stringBuffer.?, "append", .{ self.FROM });
-        _ = Inheritance.call(stringBuffer.?, "appendint", .{ @as(i32, @intCast(Inheritance.receiverOf(gameConfiguration.?.getValue().?, "intValue").intValue())) });
+        _ = Inheritance.call(stringBuffer.?, "appendint", .{ Inheritance.number(i32, Inheritance.receiverOf(gameConfiguration.?.getValue().?, "intValue").intValue()) });
         _ = Inheritance.call(stringBuffer.?, "append", .{ self.TO });
-        _ = Inheritance.call(stringBuffer.?, "appendint", .{ @as(i32, @intCast(value.?.intValue())) });
-        _ = Inheritance.call(self.logUtil.?, "putF", .{ Object.toString(Object.of(stringBuffer)), self, self.commonStrings.?.UPDATE });
+        _ = Inheritance.call(stringBuffer.?, "appendint", .{ Inheritance.number(i32, value.?.intValue()) });
+        _ = Inheritance.call(self.logUtil.?, "putF", .{ Object.toString(Object.of(stringBuffer)), self, Inheritance.fieldPointer(self.commonStrings.?, "UPDATE").* });
         _ = Inheritance.call(gameConfiguration.?, "setValue", .{ value });
     }
     
@@ -103,9 +104,9 @@ pub const GameConfigurationUtil = struct {
         _ = Inheritance.call(stringBuffer.?, "append", .{ String.literal("Gauge Default: ") });
         _ = Inheritance.call(stringBuffer.?, "append", .{ gameConfiguration.?.getName() });
         _ = Inheritance.call(stringBuffer.?, "append", .{ self.TO });
-        _ = Inheritance.call(stringBuffer.?, "appendint", .{ @as(i32, @intCast(Inheritance.receiverOf(gameConfiguration.?.getDefaultValue().?, "intValue").intValue())) });
+        _ = Inheritance.call(stringBuffer.?, "appendint", .{ Inheritance.number(i32, Inheritance.receiverOf(gameConfiguration.?.getDefaultValue().?, "intValue").intValue()) });
         _ = Inheritance.call(self.logUtil.?, "putF", .{ Object.toString(Object.of(stringBuffer)), self, String.literal("setDefault") });
-        _ = Inheritance.call(gauge.?, "setValue", .{ Inheritance.receiverOf(gameConfiguration.?.getDefaultValue().?, "intValue").intValue() - Inheritance.receiverOf(gameConfiguration.?.getMinValue().?, "intValue").intValue() });
+        _ = Inheritance.call(gauge.?, "setValue", .{ Inheritance.arithmetic(.subtract, Inheritance.receiverOf(gameConfiguration.?.getDefaultValue().?, "intValue").intValue(), Inheritance.receiverOf(gameConfiguration.?.getMinValue().?, "intValue").intValue()) });
         _ = Inheritance.call(gameConfiguration.?, "setValue", .{ gameConfiguration.?.getDefaultValue() });
     }
     
@@ -114,12 +115,12 @@ pub const GameConfigurationUtil = struct {
     pub fn updateChallange(self: *Self, gameOptionsForm: ?*GameOptionsForm, gameConfiguration: ?*GameConfiguration) void {
         const gameConfigurationSingleton: ?*GameConfigurationSingleton = Inheritance.upcast(?*GameConfigurationSingleton, GameConfigurationSingleton.getInstance());
         const gameConfigurationCentral: ?*GameConfigurationCentral = Inheritance.upcast(?*GameConfigurationCentral, GameConfigurationCentral.getInstance());
-        if (Object.same(gameConfiguration, gameConfigurationCentral.?.CHALLENGE_LEVEL)) {
-            _ = Inheritance.call(self.logUtil.?, "putF", .{ self.commonStrings.?.START, self, String.literal("updateChallange") });
-            _ = Inheritance.call(gameConfigurationCentral.?.COLLIDE_DAMAGE.?, "setValue", .{ gameConfiguration.?.getValue() });
-            _ = Inheritance.call(gameConfigurationCentral.?.ATTACK_CHALLENGE_LEVEL.?, "setValue", .{ gameConfiguration.?.getValue() });
-            _ = Inheritance.call(gameConfigurationCentral.?.DURABILITY_CHALLENGE_LEVEL.?, "setValue", .{ gameConfiguration.?.getValue() });
-            _ = Inheritance.call(gameConfigurationCentral.?.SPEED_CHALLENGE_LEVEL.?, "setValue", .{ gameConfiguration.?.getValue() });
+        if (Object.same(gameConfiguration, Inheritance.fieldPointer(gameConfigurationCentral.?, "CHALLENGE_LEVEL").*)) {
+            _ = Inheritance.call(self.logUtil.?, "putF", .{ Inheritance.fieldPointer(self.commonStrings.?, "START").*, self, String.literal("updateChallange") });
+            _ = Inheritance.call(Inheritance.fieldPointer(gameConfigurationCentral.?, "COLLIDE_DAMAGE").*.?, "setValue", .{ gameConfiguration.?.getValue() });
+            _ = Inheritance.call(Inheritance.fieldPointer(gameConfigurationCentral.?, "ATTACK_CHALLENGE_LEVEL").*.?, "setValue", .{ gameConfiguration.?.getValue() });
+            _ = Inheritance.call(Inheritance.fieldPointer(gameConfigurationCentral.?, "DURABILITY_CHALLENGE_LEVEL").*.?, "setValue", .{ gameConfiguration.?.getValue() });
+            _ = Inheritance.call(Inheritance.fieldPointer(gameConfigurationCentral.?, "SPEED_CHALLENGE_LEVEL").*.?, "setValue", .{ gameConfiguration.?.getValue() });
             const size: i32 = Inheritance.receiver(gameOptionsForm.?, "size").size();
             {
                 var index: i32 = 0;
@@ -129,14 +130,14 @@ pub const GameConfigurationUtil = struct {
                     const gauge: ?*GameConfigurationGauge = Inheritance.cast(?*GameConfigurationGauge, item);
                     const name: ?*String = Inheritance.upcast(?*String, item.?.getLabel());
                     const nextGameConfiguration: ?*GameConfiguration = Inheritance.upcast(?*GameConfiguration, Inheritance.call(gameConfigurationSingleton.?, "getInstanceByName", .{ name }));
-                    if (Object.same(nextGameConfiguration, gameConfigurationCentral.?.COLLIDE_DAMAGE)) {
-                        _ = Inheritance.call(gauge.?, "setValue", .{ Inheritance.receiverOf(Inheritance.receiverOf(gameConfigurationCentral.?.COLLIDE_DAMAGE.?, "getValue").getValue().?, "intValue").intValue() - Inheritance.receiverOf(gameConfiguration.?.getMinValue().?, "intValue").intValue() });
-                    } else if (Object.same(nextGameConfiguration, gameConfigurationCentral.?.DURABILITY_CHALLENGE_LEVEL)) {
-                        _ = Inheritance.call(gauge.?, "setValue", .{ Inheritance.receiverOf(Inheritance.receiverOf(gameConfigurationCentral.?.DURABILITY_CHALLENGE_LEVEL.?, "getValue").getValue().?, "intValue").intValue() - Inheritance.receiverOf(gameConfiguration.?.getMinValue().?, "intValue").intValue() });
-                    } else if (Object.same(nextGameConfiguration, gameConfigurationCentral.?.ATTACK_CHALLENGE_LEVEL)) {
-                        _ = Inheritance.call(gauge.?, "setValue", .{ Inheritance.receiverOf(Inheritance.receiverOf(gameConfigurationCentral.?.ATTACK_CHALLENGE_LEVEL.?, "getValue").getValue().?, "intValue").intValue() - Inheritance.receiverOf(gameConfiguration.?.getMinValue().?, "intValue").intValue() });
-                    } else if (Object.same(nextGameConfiguration, gameConfigurationCentral.?.SPEED_CHALLENGE_LEVEL)) {
-                        _ = Inheritance.call(gauge.?, "setValue", .{ Inheritance.receiverOf(Inheritance.receiverOf(gameConfigurationCentral.?.SPEED_CHALLENGE_LEVEL.?, "getValue").getValue().?, "intValue").intValue() - Inheritance.receiverOf(gameConfiguration.?.getMinValue().?, "intValue").intValue() });
+                    if (Object.same(nextGameConfiguration, Inheritance.fieldPointer(gameConfigurationCentral.?, "COLLIDE_DAMAGE").*)) {
+                        _ = Inheritance.call(gauge.?, "setValue", .{ Inheritance.arithmetic(.subtract, Inheritance.receiverOf(Inheritance.receiverOf(Inheritance.fieldPointer(gameConfigurationCentral.?, "COLLIDE_DAMAGE").*.?, "getValue").getValue().?, "intValue").intValue(), Inheritance.receiverOf(gameConfiguration.?.getMinValue().?, "intValue").intValue()) });
+                    } else if (Object.same(nextGameConfiguration, Inheritance.fieldPointer(gameConfigurationCentral.?, "DURABILITY_CHALLENGE_LEVEL").*)) {
+                        _ = Inheritance.call(gauge.?, "setValue", .{ Inheritance.arithmetic(.subtract, Inheritance.receiverOf(Inheritance.receiverOf(Inheritance.fieldPointer(gameConfigurationCentral.?, "DURABILITY_CHALLENGE_LEVEL").*.?, "getValue").getValue().?, "intValue").intValue(), Inheritance.receiverOf(gameConfiguration.?.getMinValue().?, "intValue").intValue()) });
+                    } else if (Object.same(nextGameConfiguration, Inheritance.fieldPointer(gameConfigurationCentral.?, "ATTACK_CHALLENGE_LEVEL").*)) {
+                        _ = Inheritance.call(gauge.?, "setValue", .{ Inheritance.arithmetic(.subtract, Inheritance.receiverOf(Inheritance.receiverOf(Inheritance.fieldPointer(gameConfigurationCentral.?, "ATTACK_CHALLENGE_LEVEL").*.?, "getValue").getValue().?, "intValue").intValue(), Inheritance.receiverOf(gameConfiguration.?.getMinValue().?, "intValue").intValue()) });
+                    } else if (Object.same(nextGameConfiguration, Inheritance.fieldPointer(gameConfigurationCentral.?, "SPEED_CHALLENGE_LEVEL").*)) {
+                        _ = Inheritance.call(gauge.?, "setValue", .{ Inheritance.arithmetic(.subtract, Inheritance.receiverOf(Inheritance.receiverOf(Inheritance.fieldPointer(gameConfigurationCentral.?, "SPEED_CHALLENGE_LEVEL").*.?, "getValue").getValue().?, "intValue").intValue(), Inheritance.receiverOf(gameConfiguration.?.getMinValue().?, "intValue").intValue()) });
                     }
                 }
                 }
@@ -146,9 +147,9 @@ pub const GameConfigurationUtil = struct {
     
 
     pub fn updateCompetitionValue(self: *Self) void {
-        _ = Inheritance.call(self.logUtil.?, "putF", .{ self.commonStrings.?.START, self, String.literal("updateCompetitionValue") });
+        _ = Inheritance.call(self.logUtil.?, "putF", .{ Inheritance.fieldPointer(self.commonStrings.?, "START").*, self, String.literal("updateCompetitionValue") });
         const gameConfigurationCentral: ?*GameConfigurationCentral = Inheritance.upcast(?*GameConfigurationCentral, GameConfigurationCentral.getInstance());
-        self.COMPETITION_VALUE = Inheritance.receiverOf(Inheritance.receiverOf(gameConfigurationCentral.?.COLLIDE_DAMAGE.?, "getValue").getValue().?, "intValue").intValue() + Inheritance.receiverOf(Inheritance.receiverOf(gameConfigurationCentral.?.ATTACK_CHALLENGE_LEVEL.?, "getValue").getValue().?, "intValue").intValue() + Inheritance.receiverOf(Inheritance.receiverOf(gameConfigurationCentral.?.DURABILITY_CHALLENGE_LEVEL.?, "getValue").getValue().?, "intValue").intValue() + Inheritance.receiverOf(Inheritance.receiverOf(gameConfigurationCentral.?.SPEED_CHALLENGE_LEVEL.?, "getValue").getValue().?, "intValue").intValue();
+        self.COMPETITION_VALUE = Inheritance.plus(Inheritance.plus(Inheritance.plus(Inheritance.receiverOf(Inheritance.receiverOf(Inheritance.fieldPointer(gameConfigurationCentral.?, "COLLIDE_DAMAGE").*.?, "getValue").getValue().?, "intValue").intValue(), Inheritance.receiverOf(Inheritance.receiverOf(Inheritance.fieldPointer(gameConfigurationCentral.?, "ATTACK_CHALLENGE_LEVEL").*.?, "getValue").getValue().?, "intValue").intValue()), Inheritance.receiverOf(Inheritance.receiverOf(Inheritance.fieldPointer(gameConfigurationCentral.?, "DURABILITY_CHALLENGE_LEVEL").*.?, "getValue").getValue().?, "intValue").intValue()), Inheritance.receiverOf(Inheritance.receiverOf(Inheritance.fieldPointer(gameConfigurationCentral.?, "SPEED_CHALLENGE_LEVEL").*.?, "getValue").getValue().?, "intValue").intValue());
         self.COMPETITION_VALUE = (self.COMPETITION_VALUE >> @intCast(2));
     }
     

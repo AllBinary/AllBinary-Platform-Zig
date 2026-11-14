@@ -21,6 +21,7 @@ const Inheritance = @import("zig/Inheritance.zig");
 const GameKeyEvent = @import("org/allbinary/game/input/event/GameKeyEvent.zig").GameKeyEvent;
 const PaintableInterface = @import("org/allbinary/graphics/paint/PaintableInterface.zig").PaintableInterface;
 const AllBinaryLayerManager = @import("org/allbinary/layer/AllBinaryLayerManager.zig").AllBinaryLayerManager;
+const Exception = @import("java/lang/Exception.zig").Exception;
 
 // Java interface: an implementation is a pointer and a table of functions
 pub const SpecialGameInputInterface = struct {
@@ -30,18 +31,18 @@ pub const SpecialGameInputInterface = struct {
     object: Object,
     base: PaintableInterface,
     toStringFn: *const fn (pointer: *anyopaque) ?*String,
-    upFn: *const fn (pointer: *anyopaque) void,
-    downFn: *const fn (pointer: *anyopaque) void,
-    rightFn: *const fn (pointer: *anyopaque) void,
-    leftFn: *const fn (pointer: *anyopaque) void,
-    strafeLeftFn: *const fn (pointer: *anyopaque) void,
-    strafeRightFn: *const fn (pointer: *anyopaque) void,
-    fireFn: *const fn (pointer: *anyopaque, layerManager: ?*AllBinaryLayerManager, gameKeyEvent: ?*GameKeyEvent) void,
-    special1Fn: *const fn (pointer: *anyopaque, layerManager: ?*AllBinaryLayerManager, gameKeyEvent: ?*GameKeyEvent) void,
-    special2Fn: *const fn (pointer: *anyopaque, layerManager: ?*AllBinaryLayerManager, gameKeyEvent: ?*GameKeyEvent) void,
-    special3Fn: *const fn (pointer: *anyopaque, layerManager: ?*AllBinaryLayerManager, gameKeyEvent: ?*GameKeyEvent) void,
-    special4Fn: *const fn (pointer: *anyopaque, layerManager: ?*AllBinaryLayerManager, gameKeyEvent: ?*GameKeyEvent) void,
-    special5Fn: *const fn (pointer: *anyopaque, layerManager: ?*AllBinaryLayerManager, gameKeyEvent: ?*GameKeyEvent) void,
+    upFn: *const fn (interface_pointer: *anyopaque) void,
+    downFn: *const fn (interface_pointer: *anyopaque) void,
+    rightFn: *const fn (interface_pointer: *anyopaque) void,
+    leftFn: *const fn (interface_pointer: *anyopaque) void,
+    strafeLeftFn: *const fn (interface_pointer: *anyopaque) void,
+    strafeRightFn: *const fn (interface_pointer: *anyopaque) void,
+    fireFn: *const fn (interface_pointer: *anyopaque, layerManager: ?*AllBinaryLayerManager, gameKeyEvent: ?*GameKeyEvent) void,
+    special1Fn: *const fn (interface_pointer: *anyopaque, layerManager: ?*AllBinaryLayerManager, gameKeyEvent: ?*GameKeyEvent) void,
+    special2Fn: *const fn (interface_pointer: *anyopaque, layerManager: ?*AllBinaryLayerManager, gameKeyEvent: ?*GameKeyEvent) void,
+    special3Fn: *const fn (interface_pointer: *anyopaque, layerManager: ?*AllBinaryLayerManager, gameKeyEvent: ?*GameKeyEvent) void,
+    special4Fn: *const fn (interface_pointer: *anyopaque, layerManager: ?*AllBinaryLayerManager, gameKeyEvent: ?*GameKeyEvent) void,
+    special5Fn: *const fn (interface_pointer: *anyopaque, layerManager: ?*AllBinaryLayerManager, gameKeyEvent: ?*GameKeyEvent) void,
 
     pub fn up(self: *Self) void {
         return self.upFn(self.pointer);
@@ -97,59 +98,59 @@ pub const SpecialGameInputInterface = struct {
 
     // The interface value of an object with the methods. Like a Java class a method can be declared by the object or a superclass.
     pub fn of(object: anytype) ?*Self {
-        const Implementation = @TypeOf(object);
+        const ImplementationType = @TypeOf(object);
         const Methods = struct {
             fn toString(pointer: *anyopaque) ?*String {
-                const implementation: Implementation = @ptrCast(@alignCast(pointer));
+                const implementation: ImplementationType = @ptrCast(@alignCast(pointer));
                 return String.valueOf(implementation);
             }
-            fn up(pointer: *anyopaque) void {
-                const implementation: Implementation = @ptrCast(@alignCast(pointer));
+            fn up(interface_pointer: *anyopaque) void {
+                const implementation: ImplementationType = @ptrCast(@alignCast(interface_pointer));
                 return Inheritance.receiver(implementation, "up").up();
             }
-            fn down(pointer: *anyopaque) void {
-                const implementation: Implementation = @ptrCast(@alignCast(pointer));
+            fn down(interface_pointer: *anyopaque) void {
+                const implementation: ImplementationType = @ptrCast(@alignCast(interface_pointer));
                 return Inheritance.receiver(implementation, "down").down();
             }
-            fn right(pointer: *anyopaque) void {
-                const implementation: Implementation = @ptrCast(@alignCast(pointer));
+            fn right(interface_pointer: *anyopaque) void {
+                const implementation: ImplementationType = @ptrCast(@alignCast(interface_pointer));
                 return Inheritance.receiver(implementation, "right").right();
             }
-            fn left(pointer: *anyopaque) void {
-                const implementation: Implementation = @ptrCast(@alignCast(pointer));
+            fn left(interface_pointer: *anyopaque) void {
+                const implementation: ImplementationType = @ptrCast(@alignCast(interface_pointer));
                 return Inheritance.receiver(implementation, "left").left();
             }
-            fn strafeLeft(pointer: *anyopaque) void {
-                const implementation: Implementation = @ptrCast(@alignCast(pointer));
+            fn strafeLeft(interface_pointer: *anyopaque) void {
+                const implementation: ImplementationType = @ptrCast(@alignCast(interface_pointer));
                 return Inheritance.receiver(implementation, "strafeLeft").strafeLeft();
             }
-            fn strafeRight(pointer: *anyopaque) void {
-                const implementation: Implementation = @ptrCast(@alignCast(pointer));
+            fn strafeRight(interface_pointer: *anyopaque) void {
+                const implementation: ImplementationType = @ptrCast(@alignCast(interface_pointer));
                 return Inheritance.receiver(implementation, "strafeRight").strafeRight();
             }
-            fn fire(pointer: *anyopaque, layerManager: ?*AllBinaryLayerManager, gameKeyEvent: ?*GameKeyEvent) void {
-                const implementation: Implementation = @ptrCast(@alignCast(pointer));
-                return Inheritance.receiver(implementation, "fire").fire(layerManager, gameKeyEvent);
+            fn fire(interface_pointer: *anyopaque, layerManager: ?*AllBinaryLayerManager, gameKeyEvent: ?*GameKeyEvent) void {
+                const implementation: ImplementationType = @ptrCast(@alignCast(interface_pointer));
+                return Inheritance.call(implementation, "fire", .{ layerManager, gameKeyEvent });
             }
-            fn special1(pointer: *anyopaque, layerManager: ?*AllBinaryLayerManager, gameKeyEvent: ?*GameKeyEvent) void {
-                const implementation: Implementation = @ptrCast(@alignCast(pointer));
-                return Inheritance.receiver(implementation, "special1").special1(layerManager, gameKeyEvent);
+            fn special1(interface_pointer: *anyopaque, layerManager: ?*AllBinaryLayerManager, gameKeyEvent: ?*GameKeyEvent) void {
+                const implementation: ImplementationType = @ptrCast(@alignCast(interface_pointer));
+                return Inheritance.call(implementation, "special1", .{ layerManager, gameKeyEvent });
             }
-            fn special2(pointer: *anyopaque, layerManager: ?*AllBinaryLayerManager, gameKeyEvent: ?*GameKeyEvent) void {
-                const implementation: Implementation = @ptrCast(@alignCast(pointer));
-                return Inheritance.receiver(implementation, "special2").special2(layerManager, gameKeyEvent);
+            fn special2(interface_pointer: *anyopaque, layerManager: ?*AllBinaryLayerManager, gameKeyEvent: ?*GameKeyEvent) void {
+                const implementation: ImplementationType = @ptrCast(@alignCast(interface_pointer));
+                return Inheritance.call(implementation, "special2", .{ layerManager, gameKeyEvent });
             }
-            fn special3(pointer: *anyopaque, layerManager: ?*AllBinaryLayerManager, gameKeyEvent: ?*GameKeyEvent) void {
-                const implementation: Implementation = @ptrCast(@alignCast(pointer));
-                return Inheritance.receiver(implementation, "special3").special3(layerManager, gameKeyEvent);
+            fn special3(interface_pointer: *anyopaque, layerManager: ?*AllBinaryLayerManager, gameKeyEvent: ?*GameKeyEvent) void {
+                const implementation: ImplementationType = @ptrCast(@alignCast(interface_pointer));
+                return Inheritance.call(implementation, "special3", .{ layerManager, gameKeyEvent });
             }
-            fn special4(pointer: *anyopaque, layerManager: ?*AllBinaryLayerManager, gameKeyEvent: ?*GameKeyEvent) void {
-                const implementation: Implementation = @ptrCast(@alignCast(pointer));
-                return Inheritance.receiver(implementation, "special4").special4(layerManager, gameKeyEvent);
+            fn special4(interface_pointer: *anyopaque, layerManager: ?*AllBinaryLayerManager, gameKeyEvent: ?*GameKeyEvent) void {
+                const implementation: ImplementationType = @ptrCast(@alignCast(interface_pointer));
+                return Inheritance.call(implementation, "special4", .{ layerManager, gameKeyEvent });
             }
-            fn special5(pointer: *anyopaque, layerManager: ?*AllBinaryLayerManager, gameKeyEvent: ?*GameKeyEvent) void {
-                const implementation: Implementation = @ptrCast(@alignCast(pointer));
-                return Inheritance.receiver(implementation, "special5").special5(layerManager, gameKeyEvent);
+            fn special5(interface_pointer: *anyopaque, layerManager: ?*AllBinaryLayerManager, gameKeyEvent: ?*GameKeyEvent) void {
+                const implementation: ImplementationType = @ptrCast(@alignCast(interface_pointer));
+                return Inheritance.call(implementation, "special5", .{ layerManager, gameKeyEvent });
             }
         };
         const this = allocator.create(Self) catch unreachable;

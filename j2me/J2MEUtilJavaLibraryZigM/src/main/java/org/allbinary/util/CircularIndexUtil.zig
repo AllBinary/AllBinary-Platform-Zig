@@ -111,7 +111,7 @@ pub const CircularIndexUtil = struct {
     
 
     pub fn toString(self: *Self) ?*String {
-        return Inheritance.upcast(?*String, Object.toString(Object.of(Inheritance.call(Inheritance.call(Inheritance.call(Inheritance.call(Inheritance.call(Inheritance.call(StringMaker.create(), "append", .{ CommonLabels.getInstance().?.INDEX_LABEL }).?, "appendint", .{ self.index }).?, "append", .{ String.literal("lastIndex: ") }).?, "appendint", .{ self.lastIndex }).?, "append", .{ String.literal("size: ") }).?, "appendint", .{ self.size }))));
+        return Inheritance.upcast(?*String, Object.toString(Object.of(Inheritance.call(Inheritance.call(Inheritance.call(Inheritance.call(Inheritance.call(Inheritance.call(StringMaker.create(), "append", .{ Inheritance.fieldPointer(CommonLabels.getInstance().?, "INDEX_LABEL").* }).?, "appendint", .{ self.index }).?, "append", .{ String.literal("lastIndex: ") }).?, "appendint", .{ self.lastIndex }).?, "append", .{ String.literal("size: ") }).?, "appendint", .{ self.size }))));
     }
 };
 

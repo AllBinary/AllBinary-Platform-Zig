@@ -52,7 +52,7 @@ pub const LurchRotationAI = struct {
     
 
     pub fn reverse(self: *Self) void {
-        _ = self.base.reverse();
+        _ = Inheritance.receiver(&self.base, "reverse").reverse();
         _ = self.update();
     }
     
@@ -62,12 +62,12 @@ pub const LurchRotationAI = struct {
             const rotationAnimationInterface: ?*RotationAnimationInterface = Inheritance.cast(?*RotationAnimationInterface, self.rotationAnimationInterface);
             const angleIncrementInfo: ?*AngleIncrementInfo = Inheritance.upcast(?*AngleIncrementInfo, Inheritance.receiverOf(Inheritance.receiver(rotationAnimationInterface.?, "getAngleInfoP").getAngleInfoP().?, "getAngleIncrementInfo").getAngleIncrementInfo());
             const rotationAnimationInterfaceCompositeInterface: ?*RotationAnimationInterfaceCompositeInterface = Inheritance.cast(?*RotationAnimationInterfaceCompositeInterface, Inheritance.receiver(self, "getOwnerLayerInterface").getOwnerLayerInterface());
-            _ = Inheritance.call(rotationAnimationInterfaceCompositeInterface.?, "setFrame", .{ Inheritance.receiverOf(angleIncrementInfo.?.RIGHT_FRAME.?, "intValue").intValue() });
+            _ = Inheritance.call(rotationAnimationInterfaceCompositeInterface.?, "setFrame", .{ Inheritance.receiverOf(Inheritance.fieldPointer(angleIncrementInfo.?, "RIGHT_FRAME").*.?, "intValue").intValue() });
         } else if (Inheritance.fieldPointer(self, "currentRelativeAngle").* == 180) {
             const rotationAnimationInterface: ?*RotationAnimationInterface = Inheritance.cast(?*RotationAnimationInterface, self.rotationAnimationInterface);
             const angleIncrementInfo: ?*AngleIncrementInfo = Inheritance.upcast(?*AngleIncrementInfo, Inheritance.receiverOf(Inheritance.receiver(rotationAnimationInterface.?, "getAngleInfoP").getAngleInfoP().?, "getAngleIncrementInfo").getAngleIncrementInfo());
             const rotationAnimationInterfaceCompositeInterface: ?*RotationAnimationInterfaceCompositeInterface = Inheritance.cast(?*RotationAnimationInterfaceCompositeInterface, Inheritance.receiver(self, "getOwnerLayerInterface").getOwnerLayerInterface());
-            _ = Inheritance.call(rotationAnimationInterfaceCompositeInterface.?, "setFrame", .{ Inheritance.receiverOf(angleIncrementInfo.?.LEFT_FRAME.?, "intValue").intValue() });
+            _ = Inheritance.call(rotationAnimationInterfaceCompositeInterface.?, "setFrame", .{ Inheritance.receiverOf(Inheritance.fieldPointer(angleIncrementInfo.?, "LEFT_FRAME").*.?, "intValue").intValue() });
         }
     }
 };

@@ -18,12 +18,13 @@ const allocator = std.heap.page_allocator;
 const String = @import("java/lang/String.zig").String;
 const Object = @import("java/lang/Object.zig").Object;
 const Inheritance = @import("zig/Inheritance.zig");
-// const NullCanvas = @import("javax/microedition/lcdui/NullCanvas.zig").NullCanvas;
+const NullCanvas = @import("javax/microedition/lcdui/NullCanvas.zig").NullCanvas;
 const Processor = @import("org/allbinary/canvas/Processor.zig").Processor;
 const LogUtil = @import("org/allbinary/logic/communication/log/LogUtil.zig").LogUtil;
 const CommonStrings = @import("org/allbinary/string/CommonStrings.zig").CommonStrings;
 const AllBinaryMidlet = @import("org/allbinary/midlet/AllBinaryMidlet.zig").AllBinaryMidlet;
 const Runnable = @import("java/lang/Runnable.zig").Runnable;
+const Exception = @import("java/lang/Exception.zig").Exception;
 
 pub const ExitRunnable = struct {
     const Self = @This();
@@ -58,20 +59,20 @@ pub const ExitRunnable = struct {
 
     pub fn run(self: *Self) void {
         { // try
-            _ = Inheritance.call(self.logUtil.?, "putF", .{ self.commonStrings.?.START_RUNNABLE, self, self.commonStrings.?.RUN });
+            _ = Inheritance.call(self.logUtil.?, "putF", .{ Inheritance.fieldPointer(self.commonStrings.?, "START_RUNNABLE").*, self, Inheritance.fieldPointer(self.commonStrings.?, "RUN").* });
             _ = Inheritance.call(self.midlet.?, "destroyAppInRunnable", .{ false, self.isProgress });
             _ = Inheritance.call(self.midlet.?, "setDisplay", .{ NullCanvas.NULL_CANVAS });
             _ = Inheritance.receiver(self.midlet.?, "notifyDestroyed").notifyDestroyed();
-            _ = Inheritance.call(self.logUtil.?, "putF", .{ self.commonStrings.?.END_RUNNABLE, self, self.commonStrings.?.RUN });
+            _ = Inheritance.call(self.logUtil.?, "putF", .{ Inheritance.fieldPointer(self.commonStrings.?, "END_RUNNABLE").*, self, Inheritance.fieldPointer(self.commonStrings.?, "RUN").* });
             _ = self.processor.?.process();
         }
         // catch (Exception e):
-//             _ = Inheritance.call(self.logUtil.?, "put", .{ self.commonStrings.?.EXCEPTION, self, self.commonStrings.?.RUN, e });
+//             _ = Inheritance.call(self.logUtil.?, "put", .{ Inheritance.fieldPointer(self.commonStrings.?, "EXCEPTION").*, self, Inheritance.fieldPointer(self.commonStrings.?, "RUN").*, e });
 //             { // try
 //                 _ = self.processor.?.process();
 //             }
 //             // catch (Exception e2):
-// //                 _ = Inheritance.call(self.logUtil.?, "put", .{ self.commonStrings.?.EXCEPTION, self, self.commonStrings.?.RUN, e });
+// //                 _ = Inheritance.call(self.logUtil.?, "put", .{ Inheritance.fieldPointer(self.commonStrings.?, "EXCEPTION").*, self, Inheritance.fieldPointer(self.commonStrings.?, "RUN").*, e });
     }
 };
 

@@ -18,8 +18,8 @@ const allocator = std.heap.page_allocator;
 const String = @import("java/lang/String.zig").String;
 const Object = @import("java/lang/Object.zig").Object;
 const Inheritance = @import("zig/Inheritance.zig");
-// const Canvas = @import("javax/microedition/lcdui/Canvas.zig").Canvas;
-// const NullCanvas = @import("javax/microedition/lcdui/NullCanvas.zig").NullCanvas;
+const Canvas = @import("javax/microedition/lcdui/Canvas.zig").Canvas;
+const NullCanvas = @import("javax/microedition/lcdui/NullCanvas.zig").NullCanvas;
 const AllBinaryGameLayerManager = @import("org/allbinary/game/layer/AllBinaryGameLayerManager.zig").AllBinaryGameLayerManager;
 
 pub const ABToGBUtil = struct {

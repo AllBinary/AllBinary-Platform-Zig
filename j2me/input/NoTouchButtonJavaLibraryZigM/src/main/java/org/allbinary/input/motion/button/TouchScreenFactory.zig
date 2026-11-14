@@ -37,7 +37,7 @@ pub const TouchScreenFactory = struct {
     fn initFields(this: *Self) void {
         this.multiTouch = false;
         this.touch = false;
-        this.touchScreenType = Inheritance.upcast(?*TouchScreenType, TouchScreenTypesFactory.getInstance().?.NOTOUCH);
+        this.touchScreenType = Inheritance.upcast(?*TouchScreenType, Inheritance.fieldPointer(TouchScreenTypesFactory.getInstance().?, "NOTOUCH").*);
     }
     
 

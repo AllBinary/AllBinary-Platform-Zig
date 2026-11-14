@@ -18,8 +18,8 @@ const allocator = std.heap.page_allocator;
 const String = @import("java/lang/String.zig").String;
 const Object = @import("java/lang/Object.zig").Object;
 const Inheritance = @import("zig/Inheritance.zig");
-// const Image = @import("javax/microedition/lcdui/Image.zig").Image;
-// const Sprite = @import("javax/microedition/lcdui/game/Sprite.zig").Sprite;
+const Image = @import("javax/microedition/lcdui/Image.zig").Image;
+const Sprite = @import("javax/microedition/lcdui/game/Sprite.zig").Sprite;
 const AnimationBehavior = @import("org/allbinary/animation/AnimationBehavior.zig").AnimationBehavior;
 const Direction = @import("org/allbinary/direction/Direction.zig").Direction;
 const Angle = @import("org/allbinary/math/Angle.zig").Angle;
@@ -36,22 +36,22 @@ pub const AllBinarySpriteRotationAnimation = struct {
     pub fn create3(sprite: ?*Sprite, image: ?*Image, animationBehavior: ?*AnimationBehavior) *Self {
         const this = allocator.create(Self) catch unreachable;
         this.* = .{};
-        this.base = Inheritance.callStatic(HackRotationSpriteIndexedAnimation, "create4", .{ sprite, image, Inheritance.callStatic(AngleInfo, "getInstance", .{ @as(i16, @intCast(((divide_N65832: { const left_N65832 = AngleFactory.getInstance().?.TOTAL_ANGLE; const right_N65832 = sprite.?.getRawFrameCount(); break :divide_N65832 if (comptime @typeInfo(@TypeOf(left_N65832)) == .int or @TypeOf(left_N65832) == comptime_int) @divTrunc(left_N65832, right_N65832) else left_N65832 / right_N65832; })))) }), animationBehavior }).*;
-        _ = Inheritance.call(Inheritance.fieldPointer(this, "angleInfo").*.?, "adjustAngle", .{ Inheritance.fieldPointer(this, "sprite").*.?.getFrame() });
+        this.base = Inheritance.callStatic(HackRotationSpriteIndexedAnimation, "create4", .{ sprite, image, Inheritance.callStatic(AngleInfo, "getInstance", .{ Inheritance.number(i16, ((divide_N65832: { const left_N65832 = Inheritance.fieldPointer(AngleFactory.getInstance().?, "TOTAL_ANGLE").*; const right_N65832 = Inheritance.receiver(sprite.?, "getRawFrameCount").getRawFrameCount(); break :divide_N65832 if (comptime @typeInfo(@TypeOf(left_N65832)) == .int or @TypeOf(left_N65832) == comptime_int) @divTrunc(left_N65832, right_N65832) else left_N65832 / right_N65832; }))) }), animationBehavior }).*;
+        _ = Inheritance.call(Inheritance.fieldPointer(this, "angleInfo").*.?, "adjustAngle", .{ Inheritance.receiver(Inheritance.fieldPointer(this, "sprite").*.?, "getFrame").getFrame() });
         Inheritance.bindOverrides(this);
         return this;
     }
     
 
     pub fn nextRotation(self: *Self) void {
-        _ = Inheritance.fieldPointer(self, "sprite").*.?.nextFrame();
-        _ = Inheritance.call(Inheritance.fieldPointer(self, "angleInfo").*.?, "adjustAngle", .{ Inheritance.fieldPointer(self, "sprite").*.?.getFrame() });
+        _ = Inheritance.receiver(Inheritance.fieldPointer(self, "sprite").*.?, "nextFrame").nextFrame();
+        _ = Inheritance.call(Inheritance.fieldPointer(self, "angleInfo").*.?, "adjustAngle", .{ Inheritance.receiver(Inheritance.fieldPointer(self, "sprite").*.?, "getFrame").getFrame() });
     }
     
 
     pub fn previousRotation(self: *Self) void {
-        _ = Inheritance.fieldPointer(self, "sprite").*.?.prevFrame();
-        _ = Inheritance.call(Inheritance.fieldPointer(self, "angleInfo").*.?, "adjustAngle", .{ Inheritance.fieldPointer(self, "sprite").*.?.getFrame() });
+        _ = Inheritance.receiver(Inheritance.fieldPointer(self, "sprite").*.?, "prevFrame").prevFrame();
+        _ = Inheritance.call(Inheritance.fieldPointer(self, "angleInfo").*.?, "adjustAngle", .{ Inheritance.receiver(Inheritance.fieldPointer(self, "sprite").*.?, "getFrame").getFrame() });
     }
     
 
@@ -78,7 +78,7 @@ pub const AllBinarySpriteRotationAnimation = struct {
     
 
     pub fn adjustFrame(self: *Self, angle: i16) void {
-        _ = Inheritance.call(self, "setFrame", .{ Inheritance.call(Inheritance.fieldPointer(self, "frameUtil").*.?, "getFrameForAngle", .{ angle, @as(i32, @intCast(Inheritance.receiverOf(Inheritance.receiverOf(Inheritance.fieldPointer(self, "angleInfo").*.?, "getAngleIncrementInfo").getAngleIncrementInfo().?, "getAngleIncrement").getAngleIncrement())) }) });
+        _ = Inheritance.call(self, "setFrame", .{ Inheritance.call(Inheritance.fieldPointer(self, "frameUtil").*.?, "getFrameForAngle", .{ angle, Inheritance.number(i32, Inheritance.receiverOf(Inheritance.receiverOf(Inheritance.fieldPointer(self, "angleInfo").*.?, "getAngleIncrementInfo").getAngleIncrementInfo().?, "getAngleIncrement").getAngleIncrement()) }) });
     }
 };
 

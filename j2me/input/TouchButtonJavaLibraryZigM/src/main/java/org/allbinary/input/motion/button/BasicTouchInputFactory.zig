@@ -51,7 +51,7 @@ pub const BasicTouchInputFactory = struct {
 
     // Static fields with runtime initializers: call staticInit once at startup
     pub fn staticInit() void {
-        instance = Inheritance.upcast(?Object, NullUtil.getInstance().?.NULL_OBJECT);
+        instance = Inheritance.upcast(?Object, Inheritance.fieldPointer(NullUtil.getInstance().?, "NULL_OBJECT").*);
     }
 
     fn initFields(this: *Self) void {
@@ -75,7 +75,7 @@ pub const BasicTouchInputFactory = struct {
     
 
     pub fn getInstance() ?*BasicTouchInputFactory {
-        if (Object.same(BasicTouchInputFactory.instance, NullUtil.getInstance().?.NULL_OBJECT)) {
+        if (Object.same(BasicTouchInputFactory.instance, Inheritance.fieldPointer(NullUtil.getInstance().?, "NULL_OBJECT").*)) {
             BasicTouchInputFactory.instance = Inheritance.upcast(@TypeOf(BasicTouchInputFactory.instance), BasicTouchInputFactory.create());
         }
         return Inheritance.cast(?*BasicTouchInputFactory, BasicTouchInputFactory.instance);
@@ -86,7 +86,7 @@ pub const BasicTouchInputFactory = struct {
         const this = allocator.create(Self) catch unreachable;
         this.* = .{};
         this.initFields();
-        const MAX: i32 = InputFactory.getInstance().?.MAX;
+        const MAX: i32 = Inheritance.fieldPointer(InputFactory.getInstance().?, "MAX").*;
         this.SPECIAL_BUTTON_SEVEN_TESTING_ONLY = Inheritance.callStatic(TouchButtonInput, "create2", .{ MAX - 41, String.literal("Button 7 - Testing Only May Cross Over Key Values") });
         this.SPECIAL_BUTTON_EIGHT_TESTING_ONLY = Inheritance.callStatic(TouchButtonInput, "create2", .{ MAX - 42, String.literal("Button 8 - Testing Only May Cross Over Key Values") });
         this.SPECIAL_BUTTON_SIX = Inheritance.callStatic(TouchButtonInput, "create2", .{ MAX - 30, String.literal("Button 6") });
@@ -134,12 +134,12 @@ pub const BasicTouchInputFactory = struct {
     
 
     pub fn updateAllFromList(self: *Self, list: ?*BasicArrayList, inputToGameKeyMapping: ?*InputToGameKeyMapping) void {
-        _ = Inheritance.call(self.logUtil.?, "putF", .{ Object.toString(Object.of(Inheritance.call(Inheritance.call(StringMaker.create(), "append", .{ CommonLabels.getInstance().?.START_LABEL }).?, "appendint", .{ list.?.size() }))), self, String.literal("updateAll") });
+        _ = Inheritance.call(self.logUtil.?, "putF", .{ Object.toString(Object.of(Inheritance.call(Inheritance.call(StringMaker.create(), "append", .{ Inheritance.fieldPointer(CommonLabels.getInstance().?, "START_LABEL").* }).?, "appendint", .{ list.?.size() }))), self, String.literal("updateAll") });
         var touchButtonInput: ?*TouchButtonInput = null;
         {
             var index: i32 = list.?.size() - 1;
             while (index >= 0) : (index -= 1) {
-            touchButtonInput = Inheritance.cast(?*TouchButtonInput, list.?.objectArray[@intCast(index)]);
+            touchButtonInput = Inheritance.cast(?*TouchButtonInput, Inheritance.fieldPointer(list.?, "objectArray").*[@intCast(index)]);
             _ = Inheritance.call(touchButtonInput.?, "update", .{ inputToGameKeyMapping });
             }
         }

@@ -18,8 +18,8 @@ const allocator = std.heap.page_allocator;
 const String = @import("java/lang/String.zig").String;
 const Object = @import("java/lang/Object.zig").Object;
 const Inheritance = @import("zig/Inheritance.zig");
-// const Command = @import("javax/microedition/lcdui/Command.zig").Command;
-// const CommandListener = @import("javax/microedition/lcdui/CommandListener.zig").CommandListener;
+const Command = @import("javax/microedition/lcdui/Command.zig").Command;
+const CommandListener = @import("javax/microedition/lcdui/CommandListener.zig").CommandListener;
 const GameInfo = @import("org/allbinary/game/GameInfo.zig").GameInfo;
 const HighScore = @import("org/allbinary/game/score/HighScore.zig").HighScore;
 const HighScoreNamePersistanceSingleton = @import("org/allbinary/game/score/HighScoreNamePersistanceSingleton.zig").HighScoreNamePersistanceSingleton;
@@ -33,6 +33,7 @@ const StringMaker = @import("org/allbinary/logic/string/StringMaker.zig").String
 const StringUtil = @import("org/allbinary/logic/string/StringUtil.zig").StringUtil;
 const AbeClientInformationInterface = @import("org/allbinary/logic/system/security/licensing/AbeClientInformationInterface.zig").AbeClientInformationInterface;
 const CommonStrings = @import("org/allbinary/string/CommonStrings.zig").CommonStrings;
+const Exception = @import("java/lang/Exception.zig").Exception;
 
 pub const HighScoreUtil = struct {
     const Self = @This();
@@ -51,7 +52,7 @@ pub const HighScoreUtil = struct {
 
     // Static fields with runtime initializers: call staticInit once at startup
     pub fn staticInit() void {
-        SUBMIT_TEXTBOX_COMMAND = Inheritance.callStatic(Command, "create4", .{ String.literal("Submit"), StringUtil.getInstance().?.EMPTY_STRING, Command.SCREEN, 1 });
+        SUBMIT_TEXTBOX_COMMAND = Inheritance.callStatic(Command, "create4", .{ String.literal("Submit"), Inheritance.fieldPointer(StringUtil.getInstance().?, "EMPTY_STRING").*, Command.SCREEN, 1 });
     }
 
     fn initFields(this: *Self) void {
@@ -97,7 +98,7 @@ pub const HighScoreUtil = struct {
     
 
     pub fn saveHighScore(self: *Self) void {
-        _ = Inheritance.call(self.logUtil.?, "putF", .{ Object.toString(Object.of(Inheritance.call(Inheritance.call(StringMaker.create(), "append", .{ self.commonStrings.?.START }).?, "append", .{ Inheritance.call(StringUtil.getInstance().?, "toString", .{ self.highScore }) }))), self, String.literal("saveHighScore") });
+        _ = Inheritance.call(self.logUtil.?, "putF", .{ Object.toString(Object.of(Inheritance.call(Inheritance.call(StringMaker.create(), "append", .{ Inheritance.fieldPointer(self.commonStrings.?, "START").* }).?, "append", .{ Inheritance.call(StringUtil.getInstance().?, "toString", .{ self.highScore }) }))), self, String.literal("saveHighScore") });
         const size: i32 = @as(i32, @intCast(self.highScoresArray.len));
         if (self.firstTime and size == 0) {
             _ = Inheritance.call(self.logUtil.?, "putF", .{ String.literal("Games canvas did not give us any HighScores"), self, String.literal("saveHighScore") });

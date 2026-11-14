@@ -24,6 +24,7 @@ const MotionGestureEvent = @import("org/allbinary/input/motion/gesture/observer/
 const BasicArrayList = @import("org/allbinary/util/BasicArrayList.zig").BasicArrayList;
 const CommandFormInputProcessor = @import("org/allbinary/game/displayable/canvas/CommandFormInputProcessor.zig").CommandFormInputProcessor;
 const PopupMenuInputProcessor = @import("org/allbinary/game/displayable/canvas/PopupMenuInputProcessor.zig").PopupMenuInputProcessor;
+const Exception = @import("java/lang/Exception.zig").Exception;
 
 pub const PopupCommandFormInputProcessor = struct {
     const Self = @This();

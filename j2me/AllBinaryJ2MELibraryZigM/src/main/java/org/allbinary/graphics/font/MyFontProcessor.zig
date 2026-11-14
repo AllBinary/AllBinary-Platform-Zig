@@ -18,8 +18,8 @@ const allocator = std.heap.page_allocator;
 const String = @import("java/lang/String.zig").String;
 const Object = @import("java/lang/Object.zig").Object;
 const Inheritance = @import("zig/Inheritance.zig");
-// const Font = @import("javax/microedition/lcdui/Font.zig").Font;
-// const Graphics = @import("javax/microedition/lcdui/Graphics.zig").Graphics;
+const Font = @import("javax/microedition/lcdui/Font.zig").Font;
+const Graphics = @import("javax/microedition/lcdui/Graphics.zig").Graphics;
 
 pub const MyFontProcessor = struct {
     const Self = @This();
@@ -44,7 +44,7 @@ pub const MyFontProcessor = struct {
     
 
     pub fn defaultStringWidth(font: ?*Font, size: i32) i32 {
-        return Inheritance.callStatic(MyFontProcessor, "defaultCharWidth", .{ font }) * size;
+        return Inheritance.arithmetic(.multiply, Inheritance.callStatic(MyFontProcessor, "defaultCharWidth", .{ font }), size);
     }
     
 

@@ -18,7 +18,7 @@ const allocator = std.heap.page_allocator;
 const String = @import("java/lang/String.zig").String;
 const Object = @import("java/lang/Object.zig").Object;
 const Inheritance = @import("zig/Inheritance.zig");
-// const KeyEvent = @import("java/awt/event/KeyEvent.zig").KeyEvent;
+const KeyEvent = @import("java/awt/event/KeyEvent.zig").KeyEvent;
 const JsType = @import("jsinterop/annotations/JsType.zig").JsType;
 
 pub const ABKeyEventWrapper = struct {

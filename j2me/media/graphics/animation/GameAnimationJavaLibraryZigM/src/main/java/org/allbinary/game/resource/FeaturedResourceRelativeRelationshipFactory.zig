@@ -28,6 +28,7 @@ const BasicArrayListD = @import("org/allbinary/util/BasicArrayListD.zig").BasicA
 const BasicArrayListUtil = @import("org/allbinary/util/BasicArrayListUtil.zig").BasicArrayListUtil;
 const FeaturedResourceFactory = @import("org/allbinary/game/resource/FeaturedResourceFactory.zig").FeaturedResourceFactory;
 const ResourceRelativeRelationshipFactoryInterface = @import("org/allbinary/game/resource/ResourceRelativeRelationshipFactoryInterface.zig").ResourceRelativeRelationshipFactoryInterface;
+const Exception = @import("java/lang/Exception.zig").Exception;
 
 pub const FeaturedResourceRelativeRelationshipFactory = struct {
     const Self = @This();
@@ -68,7 +69,7 @@ pub const FeaturedResourceRelativeRelationshipFactory = struct {
         {
             var index: i32 = 0;
             while (index < size) : (index += 1) {
-            const featureInterface: ?*ResourceRelativeRelationshipFactoryInterface = Inheritance.cast(?*ResourceRelativeRelationshipFactoryInterface, featureReleaseList.?.objectArray[@intCast(index)]);
+            const featureInterface: ?*ResourceRelativeRelationshipFactoryInterface = Inheritance.cast(?*ResourceRelativeRelationshipFactoryInterface, Inheritance.fieldPointer(featureReleaseList.?, "objectArray").*[@intCast(index)]);
             if (Inheritance.receiver(featureInterface.?, "isFeature").isFeature()) {
                 const list: ?*BasicArrayList = Inheritance.upcast(?*BasicArrayList, Inheritance.call(featureInterface.?, "getResourceRelativeRelationshipList", .{ resource }));
                 if (!Object.same(list, self.basicArrayListUtil.?.getImmutableInstance())) {
@@ -90,7 +91,7 @@ pub const FeaturedResourceRelativeRelationshipFactory = struct {
         {
             var index: i32 = 0;
             while (index < size) : (index += 1) {
-            const relativeRelationship: ?*RelativeRelationship = Inheritance.cast(?*RelativeRelationship, list.?.objectArray[@intCast(index)]);
+            const relativeRelationship: ?*RelativeRelationship = Inheritance.cast(?*RelativeRelationship, Inheritance.fieldPointer(list.?, "objectArray").*[@intCast(index)]);
             _ = Inheritance.call(newList.?, "add", .{ Inheritance.callStatic(RelativeLayerRelationship, "create3", .{ layer, Inheritance.call(pointFactory.?, "createXY", .{ relativeRelationship.?.getX(), relativeRelationship.?.getY() }), Inheritance.receiverOf(BasicArrayListUtil.getInstance().?, "getImmutableInstance").getImmutableInstance() }) });
             }
         }

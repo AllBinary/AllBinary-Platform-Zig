@@ -42,7 +42,7 @@ pub const ShaderManagerFactory = struct {
     }
     
 
-    pub fn create(self: *Self) ?*ShaderManager {
+    pub fn create_Method(self: *Self) ?*ShaderManager {
         _ = self;
         return Inheritance.upcast(?*ShaderManager, ShaderManager.getInstance());
     }

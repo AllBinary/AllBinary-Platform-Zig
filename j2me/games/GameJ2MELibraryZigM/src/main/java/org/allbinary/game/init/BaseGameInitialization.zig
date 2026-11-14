@@ -18,7 +18,7 @@ const allocator = std.heap.page_allocator;
 const String = @import("java/lang/String.zig").String;
 const Object = @import("java/lang/Object.zig").Object;
 const Inheritance = @import("zig/Inheritance.zig");
-// const CommandListener = @import("javax/microedition/lcdui/CommandListener.zig").CommandListener;
+const CommandListener = @import("javax/microedition/lcdui/CommandListener.zig").CommandListener;
 const FeaturedAnimationInterfaceFactoryInterfaceFactory = @import("org/allbinary/animation/FeaturedAnimationInterfaceFactoryInterfaceFactory.zig").FeaturedAnimationInterfaceFactoryInterfaceFactory;
 const GameConfigurationCentral = @import("org/allbinary/game/configuration/GameConfigurationCentral.zig").GameConfigurationCentral;
 const ChangedGameFeatureListener = @import("org/allbinary/game/configuration/event/ChangedGameFeatureListener.zig").ChangedGameFeatureListener;
@@ -37,6 +37,7 @@ const BasicTouchInputFactory = @import("org/allbinary/input/motion/button/BasicT
 const CancelTouchButtonInputFactory = @import("org/allbinary/input/motion/button/CancelTouchButtonInputFactory.zig").CancelTouchButtonInputFactory;
 const AbeClientInformationInterface = @import("org/allbinary/logic/system/security/licensing/AbeClientInformationInterface.zig").AbeClientInformationInterface;
 const GameInitializationInterface = @import("org/allbinary/game/init/GameInitializationInterface.zig").GameInitializationInterface;
+const Exception = @import("java/lang/Exception.zig").Exception;
 
 pub const BaseGameInitialization = struct {
     const Self = @This();
@@ -93,10 +94,10 @@ pub const BaseGameInitialization = struct {
     pub fn initKeyMapping(self: *Self, abeClientInformation: ?*AbeClientInformationInterface, portion: i32) void {
         _ = portion;
         _ = self;
-        if (Inheritance.call(ChangedGameFeatureListener.getInstance().?, "isChangedFeature", .{ InputFeatureFactory.getInstance().?.INPUT_MAPPING })) {
+        if (Inheritance.call(ChangedGameFeatureListener.getInstance().?, "isChangedFeature", .{ Inheritance.fieldPointer(InputFeatureFactory.getInstance().?, "INPUT_MAPPING").* })) {
             _ = Inheritance.call(Inheritance.receiverOf(PlatformInputMappingFactory.getInstance().?, "getPersistentInputMappingInstance").getPersistentInputMappingInstance().?, "init", .{ abeClientInformation });
             _ = Inheritance.call(ProgressCanvasFactory.getInstance().?, "addNormalPortion", .{ 50, String.literal("Game Keys") });
-            _ = Inheritance.call(ChangedGameFeatureListener.getInstance().?, "remove", .{ InputFeatureFactory.getInstance().?.INPUT_MAPPING });
+            _ = Inheritance.call(ChangedGameFeatureListener.getInstance().?, "remove", .{ Inheritance.fieldPointer(InputFeatureFactory.getInstance().?, "INPUT_MAPPING").* });
         }
     }
     
@@ -105,9 +106,9 @@ pub const BaseGameInitialization = struct {
     pub fn init(self: *Self, abeClientInformation: ?*AbeClientInformationInterface, commandListener: ?*CommandListener, level: i32) void {
         _ = commandListener;
         const resourceLoadingLevelFactory: ?*ResourceLoadingLevelFactory = Inheritance.upcast(?*ResourceLoadingLevelFactory, ResourceLoadingLevelFactory.getInstance());
-        if (!self.isInitialized() and (level == Inheritance.receiverOf(resourceLoadingLevelFactory.?.LOAD_ALL.?, "getLevel").getLevel() or level == Inheritance.receiverOf(resourceLoadingLevelFactory.?.LOAD_EARLY.?, "getLevel").getLevel())) {
+        if (!self.isInitialized() and (level == Inheritance.receiverOf(Inheritance.fieldPointer(resourceLoadingLevelFactory.?, "LOAD_ALL").*.?, "getLevel").getLevel() or level == Inheritance.receiverOf(Inheritance.fieldPointer(resourceLoadingLevelFactory.?, "LOAD_EARLY").*.?, "getLevel").getLevel())) {
             var localPortion: i32 = 40;
-            if (level == Inheritance.receiverOf(resourceLoadingLevelFactory.?.LOAD_EARLY.?, "getLevel").getLevel()) {
+            if (level == Inheritance.receiverOf(Inheritance.fieldPointer(resourceLoadingLevelFactory.?, "LOAD_EARLY").*.?, "getLevel").getLevel()) {
                 localPortion = 8;
             }
             _ = Inheritance.call(self, "setInitialized", .{ true });
@@ -131,11 +132,11 @@ pub const BaseGameInitialization = struct {
     // throws Exception
     pub fn resourceInitialization(self: *Self, level: i32) void {
         const resourceLoadingLevelFactory: ?*ResourceLoadingLevelFactory = Inheritance.upcast(?*ResourceLoadingLevelFactory, ResourceLoadingLevelFactory.getInstance());
-        if (self.resourceAnimationChange() and level == Inheritance.receiverOf(resourceLoadingLevelFactory.?.LOAD_EARLY.?, "getLevel").getLevel()) {
+        if (self.resourceAnimationChange() and level == Inheritance.receiverOf(Inheritance.fieldPointer(resourceLoadingLevelFactory.?, "LOAD_EARLY").*.?, "getLevel").getLevel()) {
             _ = self.clearResources();
             _ = Inheritance.receiver(self.resourceInitializationArray[@intCast(self.EARLY_CHANGABLE_RESOURCES)].?, "init").init();
         }
-        if (self.resourceAnimationChange() and level == Inheritance.receiverOf(resourceLoadingLevelFactory.?.LOAD_ALL.?, "getLevel").getLevel()) {
+        if (self.resourceAnimationChange() and level == Inheritance.receiverOf(Inheritance.fieldPointer(resourceLoadingLevelFactory.?, "LOAD_ALL").*.?, "getLevel").getLevel()) {
             if (self.allLoaded) {
                 _ = self.clearResources();
             }
@@ -152,10 +153,10 @@ pub const BaseGameInitialization = struct {
         _ = self;
         const changedGameFeatureListener: ?*ChangedGameFeatureListener = Inheritance.upcast(?*ChangedGameFeatureListener, ChangedGameFeatureListener.getInstance());
         const gameConfigurationCentral: ?*GameConfigurationCentral = Inheritance.upcast(?*GameConfigurationCentral, GameConfigurationCentral.getInstance());
-        if (Inheritance.call(changedGameFeatureListener.?, "isChangedGameConfiguration", .{ gameConfigurationCentral.?.SCALE })) {
+        if (Inheritance.call(changedGameFeatureListener.?, "isChangedGameConfiguration", .{ Inheritance.fieldPointer(gameConfigurationCentral.?, "SCALE").* })) {
             return true;
         }
-        if (Inheritance.call(ChangedGameFeatureListener.getInstance().?, "isChangedFeature", .{ MainFeatureFactory.getInstance().?.STATIC })) {
+        if (Inheritance.call(ChangedGameFeatureListener.getInstance().?, "isChangedFeature", .{ Inheritance.fieldPointer(MainFeatureFactory.getInstance().?, "STATIC").* })) {
             return true;
         }
         return false;

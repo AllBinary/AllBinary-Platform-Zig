@@ -20,6 +20,7 @@ const Object = @import("java/lang/Object.zig").Object;
 const Inheritance = @import("zig/Inheritance.zig");
 const CollidableBaseBehavior = @import("org/allbinary/game/collision/CollidableBaseBehavior.zig").CollidableBaseBehavior;
 const CollidableBaseBehaviorFactoryInterface = @import("org/allbinary/game/collision/CollidableBaseBehaviorFactoryInterface.zig").CollidableBaseBehaviorFactoryInterface;
+const RuntimeException = @import("java/lang/RuntimeException.zig").RuntimeException;
 
 pub const CollidableBaseBehaviorFactory = struct {
     const Self = @This();

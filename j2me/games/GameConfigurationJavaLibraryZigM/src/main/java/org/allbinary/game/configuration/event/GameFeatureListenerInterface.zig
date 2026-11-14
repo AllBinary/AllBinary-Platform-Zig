@@ -29,7 +29,7 @@ pub const GameFeatureListenerInterface = struct {
     object: Object,
     base: EventListenerInterface,
     toStringFn: *const fn (pointer: *anyopaque) ?*String,
-    onGameFeatureChangeFn: *const fn (pointer: *anyopaque, gameFeatureEvent: ?*GameFeatureEvent) void,
+    onGameFeatureChangeFn: *const fn (interface_pointer: *anyopaque, gameFeatureEvent: ?*GameFeatureEvent) void,
 
     pub fn onGameFeatureChange(self: *Self, gameFeatureEvent: ?*GameFeatureEvent) void {
         return self.onGameFeatureChangeFn(self.pointer, gameFeatureEvent);
@@ -41,15 +41,15 @@ pub const GameFeatureListenerInterface = struct {
 
     // The interface value of an object with the methods. Like a Java class a method can be declared by the object or a superclass.
     pub fn of(object: anytype) ?*Self {
-        const Implementation = @TypeOf(object);
+        const ImplementationType = @TypeOf(object);
         const Methods = struct {
             fn toString(pointer: *anyopaque) ?*String {
-                const implementation: Implementation = @ptrCast(@alignCast(pointer));
+                const implementation: ImplementationType = @ptrCast(@alignCast(pointer));
                 return String.valueOf(implementation);
             }
-            fn onGameFeatureChange(pointer: *anyopaque, gameFeatureEvent: ?*GameFeatureEvent) void {
-                const implementation: Implementation = @ptrCast(@alignCast(pointer));
-                return Inheritance.receiver(implementation, "onGameFeatureChange").onGameFeatureChange(gameFeatureEvent);
+            fn onGameFeatureChange(interface_pointer: *anyopaque, gameFeatureEvent: ?*GameFeatureEvent) void {
+                const implementation: ImplementationType = @ptrCast(@alignCast(interface_pointer));
+                return Inheritance.call(implementation, "onGameFeatureChange", .{ gameFeatureEvent });
             }
         };
         const this = allocator.create(Self) catch unreachable;

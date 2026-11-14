@@ -21,6 +21,7 @@ const Inheritance = @import("zig/Inheritance.zig");
 const BaseResourceAnimationInterfaceFactoryInterfaceFactory = @import("org/allbinary/animation/resource/BaseResourceAnimationInterfaceFactoryInterfaceFactory.zig").BaseResourceAnimationInterfaceFactoryInterfaceFactory;
 const ImageCache = @import("org/allbinary/image/ImageCache.zig").ImageCache;
 const LogUtil = @import("org/allbinary/logic/communication/log/LogUtil.zig").LogUtil;
+const Exception = @import("java/lang/Exception.zig").Exception;
 
 pub const OnDemandResources = struct {
     const Self = @This();

@@ -18,16 +18,17 @@ const allocator = std.heap.page_allocator;
 const String = @import("java/lang/String.zig").String;
 const Object = @import("java/lang/Object.zig").Object;
 const Inheritance = @import("zig/Inheritance.zig");
-// const Displayable = @import("javax/microedition/lcdui/Displayable.zig").Displayable;
-// const Form = @import("javax/microedition/lcdui/Form.zig").Form;
-// const InvalidRecordIDException = @import("javax/microedition/rms/InvalidRecordIDException.zig").InvalidRecordIDException;
-// const RecordStore = @import("javax/microedition/rms/RecordStore.zig").RecordStore;
-// const RecordStoreException = @import("javax/microedition/rms/RecordStoreException.zig").RecordStoreException;
-// const RecordStoreNotOpenException = @import("javax/microedition/rms/RecordStoreNotOpenException.zig").RecordStoreNotOpenException;
+const Displayable = @import("javax/microedition/lcdui/Displayable.zig").Displayable;
+const Form = @import("javax/microedition/lcdui/Form.zig").Form;
+const InvalidRecordIDException = @import("javax/microedition/rms/InvalidRecordIDException.zig").InvalidRecordIDException;
+const RecordStore = @import("javax/microedition/rms/RecordStore.zig").RecordStore;
+const RecordStoreException = @import("javax/microedition/rms/RecordStoreException.zig").RecordStoreException;
+const RecordStoreNotOpenException = @import("javax/microedition/rms/RecordStoreNotOpenException.zig").RecordStoreNotOpenException;
 const NullUtil = @import("org/allbinary/logic/NullUtil.zig").NullUtil;
 const System = @import("java/lang/System.zig").System;
 const Float = @import("java/lang/Float.zig").Float;
 const Double = @import("java/lang/Double.zig").Double;
+const ClassLoader = @import("java/lang/ClassLoader.zig").ClassLoader;
 
 //J2SE
 pub const TsUtil = struct {
@@ -88,7 +89,7 @@ pub const TsUtil = struct {
             data = Inheritance.upcast(@TypeOf(data), array_N66392: { const array_N66392_array = allocator.alloc(i8, @intCast(Inheritance.call(recordStore.?, "getRecordSize", .{ recordId }))) catch unreachable; @memset(array_N66392_array, 0); break :array_N66392 array_N66392_array; });
             _ = Inheritance.call(recordStore.?, "getRecord", .{ recordId, data, 0 });
         }
-        return (if (@as(i32, @intCast(data.len)) < 1) NullUtil.getInstance().?.NULL_BYTE_ARRAY else data);
+        return (if (@as(i32, @intCast(data.len)) < 1) Inheritance.fieldPointer(NullUtil.getInstance().?, "NULL_BYTE_ARRAY").* else data);
     }
     
 
@@ -112,7 +113,7 @@ pub const TsUtil = struct {
 
     pub fn getClassClassLoader(self: *Self, anyType: ?Object) ?*ClassLoader {
         _ = self;
-        return Inheritance.upcast(?*ClassLoader, Inheritance.receiverOf(@as(?*anyopaque, @ptrCast(@constCast(Object.of(anyType).?.class))).?, "getClassLoader").getClassLoader());
+        return Inheritance.upcast(?*ClassLoader, @import("java/lang/ClassLoader.zig").ClassLoader.of(@as(?*anyopaque, @ptrCast(@constCast(Object.of(anyType).?.class)))));
     }
     
 

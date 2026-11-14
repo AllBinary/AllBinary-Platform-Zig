@@ -33,9 +33,9 @@ pub const Group = struct {
     // Implements GroupInterface
 
     fn initFields(this: *Self) void {
-        this.name = Inheritance.upcast(?*String, StringUtil.getInstance().?.EMPTY_STRING);
+        this.name = Inheritance.upcast(?*String, Inheritance.fieldPointer(StringUtil.getInstance().?, "EMPTY_STRING").*);
         
-        this.string = Inheritance.upcast(?*String, StringUtil.getInstance().?.EMPTY_STRING);
+        this.string = Inheritance.upcast(?*String, Inheritance.fieldPointer(StringUtil.getInstance().?, "EMPTY_STRING").*);
     }
     
 
@@ -58,9 +58,9 @@ pub const Group = struct {
         self.name = name;
         const groupCommonFactory: ?*GroupCommonFactory = Inheritance.upcast(?*GroupCommonFactory, GroupCommonFactory.getInstance());
         const stringBuffer: ?*StringMaker = StringMaker.create();
-        _ = Inheritance.call(stringBuffer.?, "append", .{ groupCommonFactory.?.GROUP_NAME_LABEL });
+        _ = Inheritance.call(stringBuffer.?, "append", .{ Inheritance.fieldPointer(groupCommonFactory.?, "GROUP_NAME_LABEL").* });
         _ = Inheritance.call(stringBuffer.?, "append", .{ self.name });
-        _ = Inheritance.call(stringBuffer.?, "append", .{ groupCommonFactory.?.ID_LABEL });
+        _ = Inheritance.call(stringBuffer.?, "append", .{ Inheritance.fieldPointer(groupCommonFactory.?, "ID_LABEL").* });
         _ = Inheritance.call(stringBuffer.?, "appendshort", .{ self.teamId });
         self.string = Inheritance.upcast(@TypeOf(self.string), Object.toString(Object.of(stringBuffer)));
     }

@@ -22,6 +22,7 @@ const AllBinarySensorListener = @import("org/allbinary/input/AllBinarySensorList
 const LogUtil = @import("org/allbinary/logic/communication/log/LogUtil.zig").LogUtil;
 const Orientation = @import("org/allbinary/logic/math/Orientation.zig").Orientation;
 const AllBinaryOrientationSensor = @import("org/allbinary/input/gyro/AllBinaryOrientationSensor.zig").AllBinaryOrientationSensor;
+const Exception = @import("java/lang/Exception.zig").Exception;
 
 pub const NoGyroSensor = struct {
     const Self = @This();
@@ -34,7 +35,7 @@ pub const NoGyroSensor = struct {
         const this = allocator.create(Self) catch unreachable;
         this.* = .{};
         this.base = AllBinaryOrientationSensor.create().*;
-        _ = Inheritance.call(Inheritance.fieldPointer(this, "logUtil").*.?, "putF", .{ Inheritance.fieldPointer(this, "commonStrings").*.?.START, this, Inheritance.fieldPointer(this, "commonStrings").*.?.CONSTRUCTOR });
+        _ = Inheritance.call(Inheritance.fieldPointer(this, "logUtil").*.?, "putF", .{ Inheritance.fieldPointer(Inheritance.fieldPointer(this, "commonStrings").*.?, "START").*, this, Inheritance.fieldPointer(Inheritance.fieldPointer(this, "commonStrings").*.?, "CONSTRUCTOR").* });
         Inheritance.bindOverrides(this);
         return this;
     }

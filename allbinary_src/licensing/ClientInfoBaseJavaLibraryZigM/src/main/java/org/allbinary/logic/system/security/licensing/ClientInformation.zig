@@ -57,7 +57,7 @@ pub const ClientInformation = struct {
         
         
         this.hardSale = true;
-        this.licenseId = Inheritance.upcast(?*String, StringUtil.getInstance().?.EMPTY_STRING);
+        this.licenseId = Inheritance.upcast(?*String, Inheritance.fieldPointer(StringUtil.getInstance().?, "EMPTY_STRING").*);
         this.licenseServers = Inheritance.upcast(?*BasicArrayList, Inheritance.receiverOf(BasicArrayListUtil.getInstance().?, "getImmutableInstance").getImmutableInstance());
     }
     
@@ -69,7 +69,7 @@ pub const ClientInformation = struct {
         this.name = name;
         this.version = version;
         this.specialName = specialName;
-        this.shortName = Inheritance.upcast(@TypeOf(this.shortName), Object.toString(Object.of(Inheritance.call(Inheritance.call(Inheritance.call(StringMaker.create(), "append", .{ shortName }).?, "append", .{ CommonSeps.getInstance().?.UNDERSCORE }).?, "append", .{ version }))));
+        this.shortName = Inheritance.upcast(@TypeOf(this.shortName), Object.toString(Object.of(Inheritance.call(Inheritance.call(Inheritance.call(StringMaker.create(), "append", .{ shortName }).?, "append", .{ Inheritance.fieldPointer(CommonSeps.getInstance().?, "UNDERSCORE").* }).?, "append", .{ version }))));
         _ = this.init();
         return this;
     }
@@ -111,7 +111,7 @@ pub const ClientInformation = struct {
     
 
     pub fn getLicenseServer(self: *Self, index: i32) ?*String {
-        return Inheritance.cast(?*String, self.licenseServers.?.objectArray[@intCast(index)]);
+        return Inheritance.cast(?*String, Inheritance.fieldPointer(self.licenseServers.?, "objectArray").*[@intCast(index)]);
     }
     
 
@@ -124,17 +124,17 @@ pub const ClientInformation = struct {
         const abeClientInformationData: ?*AbeClientInformationData = Inheritance.upcast(?*AbeClientInformationData, AbeClientInformationData.getInstance());
         const genericOperatingSystem: ?*GenericOperatingSystem = Inheritance.upcast(?*GenericOperatingSystem, self.getOperatingSystemInterface());
         const clientInfoHashtable: ?*ABHashtable = Inheritance.upcast(?*ABHashtable, Inheritance.receiverOf(StdUtil.getInstance().?, "createHashtable").createHashtable());
-        _ = Inheritance.call(clientInfoHashtable.?, "put", .{ abeClientInformationData.?.NAME, self.name });
-        _ = Inheritance.call(clientInfoHashtable.?, "put", .{ abeClientInformationData.?.VERSION, self.version });
-        _ = Inheritance.call(clientInfoHashtable.?, "put", .{ abeClientInformationData.?.SPECIALNAME, self.specialName });
-        _ = Inheritance.call(clientInfoHashtable.?, "put", .{ abeClientInformationData.?.LICENSEID, self.getLicenseId() });
-        _ = Inheritance.call(clientInfoHashtable.?, "put", .{ abeClientInformationData.?.OSNAME, genericOperatingSystem.?.getName() });
-        _ = Inheritance.call(clientInfoHashtable.?, "put", .{ abeClientInformationData.?.OSARCH, genericOperatingSystem.?.getArch() });
-        _ = Inheritance.call(clientInfoHashtable.?, "put", .{ abeClientInformationData.?.OSVERSION, genericOperatingSystem.?.getVersion() });
-        _ = Inheritance.call(clientInfoHashtable.?, "put", .{ abeClientInformationData.?.OS, Object.toString(Object.of(genericOperatingSystem)) });
+        _ = Inheritance.call(clientInfoHashtable.?, "put", .{ Inheritance.fieldPointer(abeClientInformationData.?, "NAME").*, self.name });
+        _ = Inheritance.call(clientInfoHashtable.?, "put", .{ Inheritance.fieldPointer(abeClientInformationData.?, "VERSION").*, self.version });
+        _ = Inheritance.call(clientInfoHashtable.?, "put", .{ Inheritance.fieldPointer(abeClientInformationData.?, "SPECIALNAME").*, self.specialName });
+        _ = Inheritance.call(clientInfoHashtable.?, "put", .{ Inheritance.fieldPointer(abeClientInformationData.?, "LICENSEID").*, self.getLicenseId() });
+        _ = Inheritance.call(clientInfoHashtable.?, "put", .{ Inheritance.fieldPointer(abeClientInformationData.?, "OSNAME").*, genericOperatingSystem.?.getName() });
+        _ = Inheritance.call(clientInfoHashtable.?, "put", .{ Inheritance.fieldPointer(abeClientInformationData.?, "OSARCH").*, genericOperatingSystem.?.getArch() });
+        _ = Inheritance.call(clientInfoHashtable.?, "put", .{ Inheritance.fieldPointer(abeClientInformationData.?, "OSVERSION").*, genericOperatingSystem.?.getVersion() });
+        _ = Inheritance.call(clientInfoHashtable.?, "put", .{ Inheritance.fieldPointer(abeClientInformationData.?, "OS").*, Object.toString(Object.of(genericOperatingSystem)) });
         const hardwareInterface: ?*HardwareInterface = Inheritance.upcast(?*HardwareInterface, Inheritance.call(SystemHardwareFactory.getInstance().?, "getInstance", .{ genericOperatingSystem }));
         const hardwareString: ?*String = Inheritance.upcast(?*String, Object.toString(Object.of(hardwareInterface)));
-        _ = Inheritance.call(clientInfoHashtable.?, "put", .{ abeClientInformationData.?.HARDWARE, hardwareString });
+        _ = Inheritance.call(clientInfoHashtable.?, "put", .{ Inheritance.fieldPointer(abeClientInformationData.?, "HARDWARE").*, hardwareString });
         return clientInfoHashtable;
     }
     
@@ -157,11 +157,11 @@ pub const ClientInformation = struct {
         {
             var index: i32 = size;
             while (index >= 0) : (index -= 1) {
-            const newServerName: ?*String = Inheritance.cast(?*String, list.?.objectArray[@intCast(index)]);
+            const newServerName: ?*String = Inheritance.cast(?*String, Inheritance.fieldPointer(list.?, "objectArray").*[@intCast(index)]);
             {
                 var index2: i32 = currentSize;
                 while (index2 >= 0) : (index2 -= 1) {
-                const nextOldServerName: ?*String = Inheritance.cast(?*String, self.licenseServers.?.objectArray[@intCast(index)]);
+                const nextOldServerName: ?*String = Inheritance.cast(?*String, Inheritance.fieldPointer(self.licenseServers.?, "objectArray").*[@intCast(index)]);
                 if (Inheritance.call(self.tsUtil.?, "compareTo", .{ newServerName, nextOldServerName }) != 0) {
                     return true;
                 }

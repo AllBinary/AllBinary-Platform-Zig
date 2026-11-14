@@ -19,6 +19,7 @@ const String = @import("java/lang/String.zig").String;
 const Object = @import("java/lang/Object.zig").Object;
 const Inheritance = @import("zig/Inheritance.zig");
 const SensorGameUpdateProcessor = @import("org/allbinary/input/gyro/SensorGameUpdateProcessor.zig").SensorGameUpdateProcessor;
+const Exception = @import("java/lang/Exception.zig").Exception;
 
 pub const SingleSensorGameUpdateProcessor = struct {
     const Self = @This();

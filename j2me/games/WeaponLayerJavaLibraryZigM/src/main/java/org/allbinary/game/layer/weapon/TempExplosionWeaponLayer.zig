@@ -16,6 +16,7 @@ const GameTickTimeDelayHelperFactory = @import("org/allbinary/time/GameTickTimeD
 const TimeDelayHelper = @import("org/allbinary/time/TimeDelayHelper.zig").TimeDelayHelper;
 const ViewPositionBase = @import("org/allbinary/view/ViewPositionBase.zig").ViewPositionBase;
 const SimpleWeaponLayer = @import("org/allbinary/game/layer/weapon/SimpleWeaponLayer.zig").SimpleWeaponLayer;
+const Exception = @import("java/lang/Exception.zig").Exception;
 
 pub const TempExplosionWeaponLayer = struct {
     const Self = @This();
@@ -35,7 +36,7 @@ pub const TempExplosionWeaponLayer = struct {
         this.* = .{};
         this.base = Inheritance.callStatic(SimpleWeaponLayer, "create8", .{ name, RemoteInfo.REMOTE_INFO, -1, movement, animationInterface, SimpleWeaponLayer.createDestroyed(), rectangle, viewPosition }).*;
         this.initFields();
-        this.timeDelayHelper.?.delay = Inheritance.upcast(@TypeOf(this.timeDelayHelper.?.delay), timeDelay);
+        Inheritance.fieldPointer(this.timeDelayHelper.?, "delay").* = Inheritance.upcast(@TypeOf(Inheritance.fieldPointer(this.timeDelayHelper.?, "delay").*), timeDelay);
         Inheritance.bindOverrides(this);
         return this;
     }
@@ -43,7 +44,7 @@ pub const TempExplosionWeaponLayer = struct {
 
     // throws Exception
     pub fn processTick(self: *Self, allBinaryLayerManager: ?*AllBinaryLayerManager) void {
-        if (Inheritance.call(self.timeDelayHelper.?, "isTime", .{ GameTickTimeDelayHelperFactory.getInstance().?.startTime })) {
+        if (Inheritance.call(self.timeDelayHelper.?, "isTime", .{ Inheritance.fieldPointer(GameTickTimeDelayHelperFactory.getInstance().?, "startTime").* })) {
             _ = Inheritance.call(Inheritance.receiver(self, "getCollidableInferface").getCollidableInferface().?, "collide", .{ self, self });
             Inheritance.fieldPointer(self, "totalDamage").* = Inheritance.upcast(@TypeOf(Inheritance.fieldPointer(self, "totalDamage").*), Inheritance.receiver(self, "getInitDamage").getInitDamage() + 1);
         }

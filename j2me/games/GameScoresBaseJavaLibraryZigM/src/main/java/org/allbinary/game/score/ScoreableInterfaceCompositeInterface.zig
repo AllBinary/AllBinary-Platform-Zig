@@ -27,7 +27,7 @@ pub const ScoreableInterfaceCompositeInterface = struct {
     pointer: *anyopaque,
     object: Object,
     toStringFn: *const fn (pointer: *anyopaque) ?*String,
-    getScoreableInterfaceFn: *const fn (pointer: *anyopaque) ?*Scoreable,
+    getScoreableInterfaceFn: *const fn (interface_pointer: *anyopaque) ?*Scoreable,
 
     pub fn getScoreableInterface(self: *Self) ?*Scoreable {
         return self.getScoreableInterfaceFn(self.pointer);
@@ -39,14 +39,14 @@ pub const ScoreableInterfaceCompositeInterface = struct {
 
     // The interface value of an object with the methods. Like a Java class a method can be declared by the object or a superclass.
     pub fn of(object: anytype) ?*Self {
-        const Implementation = @TypeOf(object);
+        const ImplementationType = @TypeOf(object);
         const Methods = struct {
             fn toString(pointer: *anyopaque) ?*String {
-                const implementation: Implementation = @ptrCast(@alignCast(pointer));
+                const implementation: ImplementationType = @ptrCast(@alignCast(pointer));
                 return String.valueOf(implementation);
             }
-            fn getScoreableInterface(pointer: *anyopaque) ?*Scoreable {
-                const implementation: Implementation = @ptrCast(@alignCast(pointer));
+            fn getScoreableInterface(interface_pointer: *anyopaque) ?*Scoreable {
+                const implementation: ImplementationType = @ptrCast(@alignCast(interface_pointer));
                 return Inheritance.upcast(?*Scoreable, Inheritance.receiver(implementation, "getScoreableInterface").getScoreableInterface());
             }
         };

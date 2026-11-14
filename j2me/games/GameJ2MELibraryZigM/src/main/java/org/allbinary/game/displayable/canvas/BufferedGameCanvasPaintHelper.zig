@@ -18,16 +18,17 @@ const allocator = std.heap.page_allocator;
 const String = @import("java/lang/String.zig").String;
 const Object = @import("java/lang/Object.zig").Object;
 const Inheritance = @import("zig/Inheritance.zig");
-// const Canvas = @import("javax/microedition/lcdui/Canvas.zig").Canvas;
-// const Graphics = @import("javax/microedition/lcdui/Graphics.zig").Graphics;
-// const Image = @import("javax/microedition/lcdui/Image.zig").Image;
-// const NullCanvas = @import("javax/microedition/lcdui/NullCanvas.zig").NullCanvas;
-// const NullImage = @import("javax/microedition/lcdui/NullImage.zig").NullImage;
+const Canvas = @import("javax/microedition/lcdui/Canvas.zig").Canvas;
+const Graphics = @import("javax/microedition/lcdui/Graphics.zig").Graphics;
+const Image = @import("javax/microedition/lcdui/Image.zig").Image;
+const NullCanvas = @import("javax/microedition/lcdui/NullCanvas.zig").NullCanvas;
+const NullImage = @import("javax/microedition/lcdui/NullImage.zig").NullImage;
 const Anchor = @import("org/allbinary/graphics/Anchor.zig").Anchor;
 const MyCanvas = @import("org/allbinary/graphics/displayable/MyCanvas.zig").MyCanvas;
 const ProcessPaintable = @import("org/allbinary/graphics/paint/ProcessPaintable.zig").ProcessPaintable;
 const CircularIndexUtil = @import("org/allbinary/util/CircularIndexUtil.zig").CircularIndexUtil;
 const AllBinaryGameCanvas = @import("org/allbinary/game/displayable/canvas/AllBinaryGameCanvas.zig").AllBinaryGameCanvas;
+const Exception = @import("java/lang/Exception.zig").Exception;
 
 pub const BufferedGameCanvasPaintHelper = struct {
     const Self = @This();
@@ -46,7 +47,7 @@ pub const BufferedGameCanvasPaintHelper = struct {
         this.offScreenImage = array_N65941: { const array_N65941_array = allocator.alloc(?*Image, @intCast(BufferedGameCanvasPaintHelper.MAX_IMAGES)) catch unreachable; @memset(array_N65941_array, null); break :array_N65941 array_N65941_array; };
         this.previousImage = Inheritance.upcast(?*Image, NullImage.NULL_IMAGE);
         this.circularIndexUtil = Inheritance.upcast(?*CircularIndexUtil, Inheritance.callStatic(CircularIndexUtil, "createInstance", .{ BufferedGameCanvasPaintHelper.MAX_IMAGES }));
-        this.drawCircularIndexUtil = Inheritance.upcast(?*CircularIndexUtil, Inheritance.callStatic(CircularIndexUtil, "createInstanceAt", .{ BufferedGameCanvasPaintHelper.MAX_IMAGES - 1, BufferedGameCanvasPaintHelper.MAX_IMAGES }));
+        this.drawCircularIndexUtil = Inheritance.upcast(?*CircularIndexUtil, Inheritance.callStatic(CircularIndexUtil, "createInstanceAt", .{ Inheritance.arithmetic(.subtract, BufferedGameCanvasPaintHelper.MAX_IMAGES, 1), BufferedGameCanvasPaintHelper.MAX_IMAGES }));
         this.anchor = Anchor.TOP_LEFT;
     }
     

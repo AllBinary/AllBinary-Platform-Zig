@@ -18,8 +18,8 @@ const allocator = std.heap.page_allocator;
 const String = @import("java/lang/String.zig").String;
 const Object = @import("java/lang/Object.zig").Object;
 const Inheritance = @import("zig/Inheritance.zig");
-// const Font = @import("javax/microedition/lcdui/Font.zig").Font;
-// const Graphics = @import("javax/microedition/lcdui/Graphics.zig").Graphics;
+const Font = @import("javax/microedition/lcdui/Font.zig").Font;
+const Graphics = @import("javax/microedition/lcdui/Graphics.zig").Graphics;
 const Anchor = @import("org/allbinary/graphics/Anchor.zig").Anchor;
 const BasicColor = @import("org/allbinary/graphics/color/BasicColor.zig").BasicColor;
 const BasicColorFactory = @import("org/allbinary/graphics/color/BasicColorFactory.zig").BasicColorFactory;
@@ -68,9 +68,9 @@ pub const StartIntermissionPaintable = struct {
         
         this.updateMyFontProcessor = Inheritance.upcast(?*MyFontProcessor, Inheritance.callStatic(UpdateMyFontProcessor, "create1", .{ this }));
         this.myFontProcessor = this.updateMyFontProcessor;
-        this.basicColor = Inheritance.upcast(?*BasicColor, BasicColorFactory.getInstance().?.BLACK);
+        this.basicColor = Inheritance.upcast(?*BasicColor, Inheritance.fieldPointer(BasicColorFactory.getInstance().?, "BLACK").*);
         
-        this.lineYOffsetArray = NullUtil.getInstance().?.NULL_INT_ARRAY;
+        this.lineYOffsetArray = Inheritance.fieldPointer(NullUtil.getInstance().?, "NULL_INT_ARRAY").*;
         this.hasChanged = true;
         this.anchor = Anchor.TOP_LEFT;
         this.fontHeightP = 0;
@@ -117,7 +117,7 @@ pub const StartIntermissionPaintable = struct {
                 self.lastWidth[@intCast(index)] = (Inheritance.call(graphics.?.getFont().?, "stringWidth", .{ self.stringArray[@intCast(index)] }) >> @intCast(1));
             }
             beginWidth = self.lastWidth[@intCast(index)];
-            _ = Inheritance.call(graphics.?, "drawString", .{ self.stringArray[@intCast(index)], displayInfo.?.getLastHalfWidth() - beginWidth, displayInfo.?.getLastHalfHeight() - self.lineYOffsetArray[@intCast(index)], self.anchor });
+            _ = Inheritance.call(graphics.?, "drawString", .{ self.stringArray[@intCast(index)], Inheritance.arithmetic(.subtract, displayInfo.?.getLastHalfWidth(), beginWidth), Inheritance.arithmetic(.subtract, displayInfo.?.getLastHalfHeight(), self.lineYOffsetArray[@intCast(index)]), self.anchor });
             }
         }
         self.hasChanged = false;

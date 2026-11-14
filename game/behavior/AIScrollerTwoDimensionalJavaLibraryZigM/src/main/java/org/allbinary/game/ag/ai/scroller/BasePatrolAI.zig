@@ -18,7 +18,7 @@ const allocator = std.heap.page_allocator;
 const String = @import("java/lang/String.zig").String;
 const Object = @import("java/lang/Object.zig").Object;
 const Inheritance = @import("zig/Inheritance.zig");
-// const Canvas = @import("javax/microedition/lcdui/Canvas.zig").Canvas;
+const Canvas = @import("javax/microedition/lcdui/Canvas.zig").Canvas;
 const BasicAI = @import("org/allbinary/game/ai/BasicAI.zig").BasicAI;
 const GameInput = @import("org/allbinary/game/input/GameInput.zig").GameInput;
 const BasicVelocityProperties = @import("org/allbinary/game/physics/velocity/BasicVelocityProperties.zig").BasicVelocityProperties;
@@ -28,6 +28,7 @@ const MathUtil = @import("org/allbinary/logic/math/MathUtil.zig").MathUtil;
 const SmallIntegerSingletonFactory = @import("org/allbinary/logic/math/SmallIntegerSingletonFactory.zig").SmallIntegerSingletonFactory;
 const ABHashtable = @import("org/allbinary/util/ABHashtable.zig").ABHashtable;
 const Integer = @import("java/lang/Integer.zig").Integer;
+const Exception = @import("java/lang/Exception.zig").Exception;
 
 pub const BasePatrolAI = struct {
     const Self = @This();

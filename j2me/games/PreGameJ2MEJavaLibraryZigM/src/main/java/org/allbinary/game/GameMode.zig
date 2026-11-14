@@ -30,13 +30,13 @@ pub const GameMode = struct {
 
     // Static fields with runtime initializers: call staticInit once at startup
     pub fn staticInit() void {
-        NONE = Inheritance.callStatic(GameMode, "create1", .{ StringUtil.getInstance().?.NULL_STRING });
+        NONE = Inheritance.callStatic(GameMode, "create1", .{ Inheritance.fieldPointer(StringUtil.getInstance().?, "NULL_STRING").* });
         SERVER = Inheritance.callStatic(GameMode, "create1", .{ String.literal("Server") });
         CLIENT = Inheritance.callStatic(GameMode, "create1", .{ String.literal("Client") });
     }
 
     fn initFields(this: *Self) void {
-        this.name = Inheritance.upcast(?*String, StringUtil.getInstance().?.EMPTY_STRING);
+        this.name = Inheritance.upcast(?*String, Inheritance.fieldPointer(StringUtil.getInstance().?, "EMPTY_STRING").*);
     }
     
 

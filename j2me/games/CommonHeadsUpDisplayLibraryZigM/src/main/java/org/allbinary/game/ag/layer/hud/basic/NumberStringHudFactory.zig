@@ -25,6 +25,8 @@ const LogUtil = @import("org/allbinary/logic/communication/log/LogUtil.zig").Log
 const StringUtil = @import("org/allbinary/logic/string/StringUtil.zig").StringUtil;
 const CommonStrings = @import("org/allbinary/string/CommonStrings.zig").CommonStrings;
 const NumberStringHud = @import("org/allbinary/game/ag/layer/hud/basic/NumberStringHud.zig").NumberStringHud;
+const Exception = @import("java/lang/Exception.zig").Exception;
+const RuntimeException = @import("java/lang/RuntimeException.zig").RuntimeException;
 
 pub const NumberStringHudFactory = struct {
     const Self = @This();
@@ -60,12 +62,12 @@ pub const NumberStringHudFactory = struct {
     pub fn createHud(self: *Self) ?*NumberStringHud {
         _ = self;
         { // try
-            return Inheritance.callStatic(NumberStringHud, "create6", .{ StringUtil.getInstance().?.EMPTY_STRING, 9, BasicHudFactory.getInstance().?.ABSOLUTE, 1, 0, BasicColorFactory.getInstance().?.NULL_COLOR });
+            return Inheritance.callStatic(NumberStringHud, "create6", .{ Inheritance.fieldPointer(StringUtil.getInstance().?, "EMPTY_STRING").*, 9, Inheritance.fieldPointer(BasicHudFactory.getInstance().?, "ABSOLUTE").*, 1, 0, Inheritance.fieldPointer(BasicColorFactory.getInstance().?, "NULL_COLOR").* });
         }
         // catch (Exception e):
 //             const logUtil: ?*LogUtil = Inheritance.upcast(?*LogUtil, LogUtil.getInstance()); _ = logUtil;
 //             const commonStrings: ?*CommonStrings = Inheritance.upcast(?*CommonStrings, CommonStrings.getInstance()); _ = commonStrings;
-//             _ = Inheritance.call(logUtil.?, "put", .{ commonStrings.?.EXCEPTION, self, commonStrings.?.CONSTRUCTOR, e });
+//             _ = Inheritance.call(logUtil.?, "put", .{ Inheritance.fieldPointer(commonStrings.?, "EXCEPTION").*, self, Inheritance.fieldPointer(commonStrings.?, "CONSTRUCTOR").*, e });
 //             std.debug.panic("{any}", .{error.RuntimeException});
     }
 };

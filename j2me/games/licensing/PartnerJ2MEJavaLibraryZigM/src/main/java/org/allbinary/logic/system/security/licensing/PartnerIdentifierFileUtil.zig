@@ -18,12 +18,13 @@ const allocator = std.heap.page_allocator;
 const String = @import("java/lang/String.zig").String;
 const Object = @import("java/lang/Object.zig").Object;
 const Inheritance = @import("zig/Inheritance.zig");
-// const InputStream = @import("java/io/InputStream.zig").InputStream;
-// const InputStreamReader = @import("java/io/InputStreamReader.zig").InputStreamReader;
+const InputStream = @import("java/io/InputStream.zig").InputStream;
+const InputStreamReader = @import("java/io/InputStreamReader.zig").InputStreamReader;
 const ResourceUtil = @import("org/allbinary/data/resource/ResourceUtil.zig").ResourceUtil;
 const LogUtil = @import("org/allbinary/logic/communication/log/LogUtil.zig").LogUtil;
 const StringUtil = @import("org/allbinary/logic/string/StringUtil.zig").StringUtil;
 const CommonStrings = @import("org/allbinary/string/CommonStrings.zig").CommonStrings;
+const Exception = @import("java/lang/Exception.zig").Exception;
 
 pub const PartnerIdentifierFileUtil = struct {
     const Self = @This();
@@ -62,7 +63,7 @@ pub const PartnerIdentifierFileUtil = struct {
             const inputStreamReader: ?*InputStreamReader = Inheritance.callStatic(InputStreamReader, "create1", .{ inputStream });
             const chars: []u16 = array_N66150: { const array_N66150_array = allocator.alloc(u16, @intCast(30)) catch unreachable; @memset(array_N66150_array, 0); break :array_N66150 array_N66150_array; };
             const size: i32 = Inheritance.call(inputStreamReader.?, "read", .{ chars });
-            var partnerString: ?*String = Inheritance.upcast(?*String, StringUtil.getInstance().?.EMPTY_STRING);
+            var partnerString: ?*String = Inheritance.upcast(?*String, Inheritance.fieldPointer(StringUtil.getInstance().?, "EMPTY_STRING").*);
             if (size > 0) {
                 partnerString = Inheritance.callStatic(String, "create3", .{ chars, 0, size });
             }
@@ -71,8 +72,8 @@ pub const PartnerIdentifierFileUtil = struct {
         }
         // catch (Exception e):
 //             const commonStrings: ?*CommonStrings = Inheritance.upcast(?*CommonStrings, CommonStrings.getInstance()); _ = commonStrings;
-//             _ = Inheritance.call(self.logUtil.?, "put", .{ commonStrings.?.EXCEPTION, self, commonStrings.?.GET, e });
-//             return Inheritance.upcast(?*String, StringUtil.getInstance().?.NULL_STRING);
+//             _ = Inheritance.call(self.logUtil.?, "put", .{ Inheritance.fieldPointer(commonStrings.?, "EXCEPTION").*, self, Inheritance.fieldPointer(commonStrings.?, "GET").*, e });
+//             return Inheritance.upcast(?*String, Inheritance.fieldPointer(StringUtil.getInstance().?, "NULL_STRING").*);
     }
 };
 

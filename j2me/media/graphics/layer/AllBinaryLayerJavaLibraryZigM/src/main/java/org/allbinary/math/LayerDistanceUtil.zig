@@ -51,24 +51,24 @@ pub const LayerDistanceUtil = struct {
     
 
     pub fn getDistance(self: *Self, layerInterface: ?*AllBinaryLayer, layerInterface2: ?*AllBinaryLayer) i32 {
-        const dx: i32 = (Inheritance.receiver(layerInterface.?, "getXP").getXP() + Inheritance.receiver(layerInterface.?, "getHalfWidth").getHalfWidth()) - (Inheritance.receiver(layerInterface2.?, "getXP").getXP() + Inheritance.receiver(layerInterface2.?, "getHalfWidth").getHalfWidth());
-        const dy: i32 = (Inheritance.receiver(layerInterface.?, "getYP").getYP() + Inheritance.receiver(layerInterface.?, "getHalfHeight").getHalfHeight()) - (Inheritance.receiver(layerInterface2.?, "getYP").getYP() + Inheritance.receiver(layerInterface2.?, "getHalfHeight").getHalfHeight());
-        return @as(i32, @intCast(Inheritance.call(self.mathUtil.?, "sqrt", .{ (dx * dx) + (dy * dy) })));
+        const dx: i32 = Inheritance.arithmetic(.subtract, (Inheritance.plus(Inheritance.receiver(layerInterface.?, "getXP").getXP(), Inheritance.receiver(layerInterface.?, "getHalfWidth").getHalfWidth())), (Inheritance.plus(Inheritance.receiver(layerInterface2.?, "getXP").getXP(), Inheritance.receiver(layerInterface2.?, "getHalfWidth").getHalfWidth())));
+        const dy: i32 = Inheritance.arithmetic(.subtract, (Inheritance.plus(Inheritance.receiver(layerInterface.?, "getYP").getYP(), Inheritance.receiver(layerInterface.?, "getHalfHeight").getHalfHeight())), (Inheritance.plus(Inheritance.receiver(layerInterface2.?, "getYP").getYP(), Inheritance.receiver(layerInterface2.?, "getHalfHeight").getHalfHeight())));
+        return Inheritance.number(i32, Inheritance.call(self.mathUtil.?, "sqrt", .{ (dx * dx) + (dy * dy) }));
     }
     
 
     pub fn getDistance3D(self: *Self, layerInterface: ?*AllBinaryLayer, layerInterface2: ?*AllBinaryLayer) i32 {
-        const dx: i32 = (Inheritance.receiver(layerInterface.?, "getXP").getXP() + Inheritance.receiver(layerInterface.?, "getHalfWidth").getHalfWidth()) - (Inheritance.receiver(layerInterface2.?, "getXP").getXP() + Inheritance.receiver(layerInterface2.?, "getHalfWidth").getHalfWidth());
-        const dy: i32 = (Inheritance.receiver(layerInterface.?, "getYP").getYP() + Inheritance.receiver(layerInterface.?, "getHalfHeight").getHalfHeight()) - (Inheritance.receiver(layerInterface2.?, "getYP").getYP() + Inheritance.receiver(layerInterface2.?, "getHalfHeight").getHalfHeight());
-        const dz: i32 = (Inheritance.receiver(layerInterface.?, "getZP").getZP() + Inheritance.receiver(layerInterface.?, "getHalfDepth").getHalfDepth()) - (Inheritance.receiver(layerInterface2.?, "getZP").getZP() + Inheritance.receiver(layerInterface2.?, "getHalfDepth").getHalfDepth());
-        return @as(i32, @intCast(Inheritance.call(self.mathUtil.?, "sqrt", .{ (dx * dx) + (dy * dy) + (dz * dz) })));
+        const dx: i32 = Inheritance.arithmetic(.subtract, (Inheritance.plus(Inheritance.receiver(layerInterface.?, "getXP").getXP(), Inheritance.receiver(layerInterface.?, "getHalfWidth").getHalfWidth())), (Inheritance.plus(Inheritance.receiver(layerInterface2.?, "getXP").getXP(), Inheritance.receiver(layerInterface2.?, "getHalfWidth").getHalfWidth())));
+        const dy: i32 = Inheritance.arithmetic(.subtract, (Inheritance.plus(Inheritance.receiver(layerInterface.?, "getYP").getYP(), Inheritance.receiver(layerInterface.?, "getHalfHeight").getHalfHeight())), (Inheritance.plus(Inheritance.receiver(layerInterface2.?, "getYP").getYP(), Inheritance.receiver(layerInterface2.?, "getHalfHeight").getHalfHeight())));
+        const dz: i32 = Inheritance.arithmetic(.subtract, (Inheritance.plus(Inheritance.receiver(layerInterface.?, "getZP").getZP(), Inheritance.receiver(layerInterface.?, "getHalfDepth").getHalfDepth())), (Inheritance.plus(Inheritance.receiver(layerInterface2.?, "getZP").getZP(), Inheritance.receiver(layerInterface2.?, "getHalfDepth").getHalfDepth())));
+        return Inheritance.number(i32, Inheritance.call(self.mathUtil.?, "sqrt", .{ (dx * dx) + (dy * dy) + (dz * dz) }));
     }
     
 
     pub fn getDistanceAt(self: *Self, layerInterface: ?*AllBinaryLayer, point: ?*GPoint) i32 {
-        const dx: i32 = Inheritance.receiver(layerInterface.?, "getXP").getXP() - point.?.getX();
-        const dy: i32 = Inheritance.receiver(layerInterface.?, "getYP").getYP() - point.?.getY();
-        return @as(i32, @intCast(Inheritance.call(self.mathUtil.?, "sqrt", .{ (dx * dx) + (dy * dy) })));
+        const dx: i32 = Inheritance.arithmetic(.subtract, Inheritance.receiver(layerInterface.?, "getXP").getXP(), point.?.getX());
+        const dy: i32 = Inheritance.arithmetic(.subtract, Inheritance.receiver(layerInterface.?, "getYP").getYP(), point.?.getY());
+        return Inheritance.number(i32, Inheritance.call(self.mathUtil.?, "sqrt", .{ (dx * dx) + (dy * dy) }));
     }
 };
 

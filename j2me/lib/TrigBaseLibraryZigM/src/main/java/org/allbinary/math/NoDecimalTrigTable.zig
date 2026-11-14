@@ -31,6 +31,7 @@ const Angle = @import("org/allbinary/math/Angle.zig").Angle;
 const AngleFactory = @import("org/allbinary/math/AngleFactory.zig").AngleFactory;
 const PositionStrings = @import("org/allbinary/math/PositionStrings.zig").PositionStrings;
 const Integer = @import("java/lang/Integer.zig").Integer;
+const Exception = @import("java/lang/Exception.zig").Exception;
 
 pub const NoDecimalTrigTable = struct {
     const Self = @This();
@@ -65,7 +66,7 @@ pub const NoDecimalTrigTable = struct {
         const this = allocator.create(Self) catch unreachable;
         this.* = .{};
         this.initFields();
-        const TOTAL_ANGLE: i32 = @as(i32, @intCast(AngleFactory.getInstance().?.TOTAL_ANGLE));
+        const TOTAL_ANGLE: i32 = Inheritance.number(i32, Inheritance.fieldPointer(AngleFactory.getInstance().?, "TOTAL_ANGLE").*);
         const MAX_VALUE: i64 = (@as(i64, @intCast(@as(i32, std.math.maxInt(i32)))));
         this.noDecimalSin = Inheritance.upcast(@TypeOf(this.noDecimalSin), array_N66223: { const array_N66223_array = allocator.alloc(i64, @intCast(TOTAL_ANGLE)) catch unreachable; @memset(array_N66223_array, 0); break :array_N66223 array_N66223_array; });
         this.noDecimalCos = Inheritance.upcast(@TypeOf(this.noDecimalCos), array_N66266: { const array_N66266_array = allocator.alloc(i64, @intCast(TOTAL_ANGLE)) catch unreachable; @memset(array_N66266_array, 0); break :array_N66266 array_N66266_array; });
@@ -1230,11 +1231,11 @@ pub const NoDecimalTrigTable = struct {
         const stringBuffer: ?*StringMaker = StringMaker.create();
         _ = Inheritance.call(stringBuffer.?, "append", .{ String.literal("Invalid Ratio: ") });
         _ = Inheritance.call(stringBuffer.?, "appendlong", .{ ratio });
-        _ = Inheritance.call(stringBuffer.?, "append", .{ CommonSeps.getInstance().?.SPACE });
-        _ = Inheritance.call(stringBuffer.?, "append", .{ PositionStrings.getInstance().?.DX_LABEL });
+        _ = Inheritance.call(stringBuffer.?, "append", .{ Inheritance.fieldPointer(CommonSeps.getInstance().?, "SPACE").* });
+        _ = Inheritance.call(stringBuffer.?, "append", .{ Inheritance.fieldPointer(PositionStrings.getInstance().?, "DX_LABEL").* });
         _ = Inheritance.call(stringBuffer.?, "appendint", .{ dx });
-        _ = Inheritance.call(stringBuffer.?, "append", .{ CommonSeps.getInstance().?.SPACE });
-        _ = Inheritance.call(stringBuffer.?, "append", .{ PositionStrings.getInstance().?.DX_LABEL });
+        _ = Inheritance.call(stringBuffer.?, "append", .{ Inheritance.fieldPointer(CommonSeps.getInstance().?, "SPACE").* });
+        _ = Inheritance.call(stringBuffer.?, "append", .{ Inheritance.fieldPointer(PositionStrings.getInstance().?, "DX_LABEL").* });
         _ = Inheritance.call(stringBuffer.?, "appendint", .{ dy });
         std.debug.panic("{any}", .{exception: { _ = Object.toString(Object.of(stringBuffer)); break :exception error.Exception; }});
     }
@@ -1272,7 +1273,7 @@ pub const NoDecimalTrigTable = struct {
                 angleOfTarget = Inheritance.call(self, "antiTan", .{ dx[@intCast(index)], dy[@intCast(index2)] });
                 angle = Inheritance.upcast(@TypeOf(angle), Inheritance.call(angleFactory.?, "getAt", .{ @as(i32, @intCast(angleOfTarget)) }));
                 _ = Inheritance.call(stringMaker.?, "delete", .{ 0, stringMaker.?.length() });
-                _ = Inheritance.callStatic(PreLogUtil, "put", .{ Object.toString(Object.of(Inheritance.call(Inheritance.call(Inheritance.call(Inheritance.call(Inheritance.call(Inheritance.call(Inheritance.call(Inheritance.call(Inheritance.call(Inheritance.call(Inheritance.call(Inheritance.call(stringMaker.?, "append", .{ CommonLabels.getInstance().?.INDEX_LABEL }).?, "appendint", .{ index }).?, "append", .{ String.literal(" index2: ") }).?, "appendint", .{ index2 }).?, "append", .{ PositionStrings.getInstance().?.DX_LABEL }).?, "appendint", .{ dx[@intCast(index)] }).?, "append", .{ PositionStrings.getInstance().?.DY_LABEL }).?, "appendint", .{ dy[@intCast(index2)] }).?, "append", .{ TARGET_ANGLE }).?, "appendshort", .{ angleOfTarget }).?, "append", .{ CommonSeps.getInstance().?.EQUALS }).?, "appendshort", .{ @as(i16, @intCast(angle.?.getValue())) }))), self, METHOD_NAME });
+                _ = Inheritance.callStatic(PreLogUtil, "put", .{ Object.toString(Object.of(Inheritance.call(Inheritance.call(Inheritance.call(Inheritance.call(Inheritance.call(Inheritance.call(Inheritance.call(Inheritance.call(Inheritance.call(Inheritance.call(Inheritance.call(Inheritance.call(stringMaker.?, "append", .{ Inheritance.fieldPointer(CommonLabels.getInstance().?, "INDEX_LABEL").* }).?, "appendint", .{ index }).?, "append", .{ String.literal(" index2: ") }).?, "appendint", .{ index2 }).?, "append", .{ Inheritance.fieldPointer(PositionStrings.getInstance().?, "DX_LABEL").* }).?, "appendint", .{ dx[@intCast(index)] }).?, "append", .{ Inheritance.fieldPointer(PositionStrings.getInstance().?, "DY_LABEL").* }).?, "appendint", .{ dy[@intCast(index2)] }).?, "append", .{ TARGET_ANGLE }).?, "appendshort", .{ angleOfTarget }).?, "append", .{ Inheritance.fieldPointer(CommonSeps.getInstance().?, "EQUALS").* }).?, "appendshort", .{ Inheritance.number(i16, angle.?.getValue()) }))), self, METHOD_NAME });
                 }
             }
             }

@@ -18,10 +18,11 @@ const allocator = std.heap.page_allocator;
 const String = @import("java/lang/String.zig").String;
 const Object = @import("java/lang/Object.zig").Object;
 const Inheritance = @import("zig/Inheritance.zig");
-// const Cipher = @import("javax/crypto/Cipher.zig").Cipher;
-// const SecretKey = @import("javax/crypto/SecretKey.zig").SecretKey;
+const Cipher = @import("javax/crypto/Cipher.zig").Cipher;
+const SecretKey = @import("javax/crypto/SecretKey.zig").SecretKey;
 const ByteUtil = @import("org/allbinary/logic/java/byteutil/ByteUtil.zig").ByteUtil;
 const BaseSecretComposite = @import("org/allbinary/logic/system/security/crypt/jcehelper/BaseSecretComposite.zig").BaseSecretComposite;
+const Exception = @import("java/lang/Exception.zig").Exception;
 
 pub const SecretComposite = struct {
     const Self = @This();

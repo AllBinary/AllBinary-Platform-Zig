@@ -28,6 +28,7 @@ const BasicArrayList = @import("org/allbinary/util/BasicArrayList.zig").BasicArr
 const BasicArrayListD = @import("org/allbinary/util/BasicArrayListD.zig").BasicArrayListD;
 const DownGameKeyEventListenerInterface = @import("org/allbinary/game/input/event/DownGameKeyEventListenerInterface.zig").DownGameKeyEventListenerInterface;
 const GameKeyEvent = @import("org/allbinary/game/input/event/GameKeyEvent.zig").GameKeyEvent;
+const Exception = @import("java/lang/Exception.zig").Exception;
 
 pub const DownGameKeyEventHandlerBase = struct {
     const Self = @This();
@@ -61,7 +62,7 @@ pub const DownGameKeyEventHandlerBase = struct {
 
     pub fn removeAllListeners(self: *Self) void {
         _ = self.list.?.clear();
-        _ = self.base.removeAllListeners();
+        _ = Inheritance.receiver(&self.base, "removeAllListeners").removeAllListeners();
     }
     
 
@@ -86,11 +87,11 @@ pub const DownGameKeyEventHandlerBase = struct {
             var index: i32 = self.list.?.size();
             while (value_N66611: { index -= 1; break :value_N66611 index; } >= 0) {
             { // try
-                const playerGameInput: ?*PlayerGameInput = Inheritance.cast(?*PlayerGameInput, self.list.?.objectArray[@intCast(index)]);
+                const playerGameInput: ?*PlayerGameInput = Inheritance.cast(?*PlayerGameInput, Inheritance.fieldPointer(self.list.?, "objectArray").*[@intCast(index)]);
                 _ = Inheritance.call(playerGameInput.?, "onDownGameKeyEvent", .{ Inheritance.cast(?*GameKeyEvent, eventObject) });
             }
             // catch (Exception e):
-//                 _ = Inheritance.call(Inheritance.fieldPointer(self, "logUtil").*.?, "put", .{ Inheritance.fieldPointer(self, "commonStrings").*.?.EXCEPTION, self, EventStrings.getInstance().?.FIRE_EVENT, e });
+//                 _ = Inheritance.call(Inheritance.fieldPointer(self, "logUtil").*.?, "put", .{ Inheritance.fieldPointer(Inheritance.fieldPointer(self, "commonStrings").*.?, "EXCEPTION").*, self, Inheritance.fieldPointer(EventStrings.getInstance().?, "FIRE_EVENT").*, e });
             }
         }
         _ = Inheritance.call(&self.base, "fireEvent", .{ eventObject });
@@ -107,7 +108,7 @@ pub const DownGameKeyEventHandlerBase = struct {
 
     pub fn toString(self: *Self) ?*String {
         const stringBuffer: ?*StringMaker = StringMaker.create();
-        _ = Inheritance.call(stringBuffer.?, "append", .{ self.base.toString() });
+        _ = Inheritance.call(stringBuffer.?, "append", .{ String.valueOf(&self.base) });
         _ = Inheritance.call(stringBuffer.?, "append", .{ DownGameKeyEventHandlerBase.TOTAL_LISTENERS });
         _ = Inheritance.call(stringBuffer.?, "appendint", .{ self.list.?.size() });
         var eventListenerInterface: ?*EventListenerInterface = null;
@@ -120,7 +121,7 @@ pub const DownGameKeyEventHandlerBase = struct {
                 _ = Inheritance.call(stringBuffer.?, "append", .{ Object.toString(Object.of(eventListenerInterface)) });
             }
             // catch (Exception e):
-//                 _ = Inheritance.call(Inheritance.fieldPointer(self, "logUtil").*.?, "put", .{ Inheritance.fieldPointer(self, "commonStrings").*.?.EXCEPTION, self, Inheritance.fieldPointer(self, "commonStrings").*.?.TOSTRING, e });
+//                 _ = Inheritance.call(Inheritance.fieldPointer(self, "logUtil").*.?, "put", .{ Inheritance.fieldPointer(Inheritance.fieldPointer(self, "commonStrings").*.?, "EXCEPTION").*, self, Inheritance.fieldPointer(Inheritance.fieldPointer(self, "commonStrings").*.?, "TOSTRING").*, e });
             index += 1;
         }
         return Inheritance.upcast(?*String, Object.toString(Object.of(stringBuffer)));

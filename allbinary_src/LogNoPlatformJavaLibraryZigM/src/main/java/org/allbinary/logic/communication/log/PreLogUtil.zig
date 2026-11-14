@@ -19,6 +19,7 @@ const String = @import("java/lang/String.zig").String;
 const Object = @import("java/lang/Object.zig").Object;
 const Inheritance = @import("zig/Inheritance.zig");
 const NullUtil = @import("org/allbinary/logic/NullUtil.zig").NullUtil;
+const RuntimeException = @import("java/lang/RuntimeException.zig").RuntimeException;
 
 //NoPlatform
 pub const PreLogUtil = struct {
@@ -34,7 +35,7 @@ pub const PreLogUtil = struct {
     
 
     pub fn put(specialMessage: ?*String, anyType: ?Object, functionName: ?*String) void {
-        _ = Inheritance.callStatic(PreLogUtil, "putOE", .{ specialMessage, anyType, functionName, NullUtil.getInstance().?.NULL_OBJECT });
+        _ = Inheritance.callStatic(PreLogUtil, "putOE", .{ specialMessage, anyType, functionName, Inheritance.fieldPointer(NullUtil.getInstance().?, "NULL_OBJECT").* });
     }
     
 

@@ -22,6 +22,7 @@ const MyRandomFactory = @import("org/allbinary/game/rand/MyRandomFactory.zig").M
 const AngleFactory = @import("org/allbinary/math/AngleFactory.zig").AngleFactory;
 const BasicArrayList = @import("org/allbinary/util/BasicArrayList.zig").BasicArrayList;
 const BasicGraphicsPipeline = @import("org/allbinary/graphics/pipeline/BasicGraphicsPipeline.zig").BasicGraphicsPipeline;
+const Exception = @import("java/lang/Exception.zig").Exception;
 
 pub const RandomRotationFactory = struct {
     const Self = @This();

@@ -24,6 +24,9 @@ const BasicTouchInputFactory = @import("org/allbinary/input/motion/button/BasicT
 const TouchMotionGestureFactory = @import("org/allbinary/input/motion/gesture/TouchMotionGestureFactory.zig").TouchMotionGestureFactory;
 const TrackballMotionGestureFactory = @import("org/allbinary/input/motion/gesture/TrackballMotionGestureFactory.zig").TrackballMotionGestureFactory;
 const AbeClientInformationInterface = @import("org/allbinary/logic/system/security/licensing/AbeClientInformationInterface.zig").AbeClientInformationInterface;
+const Input = @import("org/allbinary/game/input/Input.zig").Input;
+const PCKeyFactory = @import("org/allbinary/game/input/PCKeyFactory.zig").PCKeyFactory;
+const Exception = @import("java/lang/Exception.zig").Exception;
 
 pub const PCGameInputMapping = struct {
     const Self = @This();
@@ -34,7 +37,7 @@ pub const PCGameInputMapping = struct {
     pub fn create() *Self {
         const this = allocator.create(Self) catch unreachable;
         this.* = .{};
-        this.base = Inheritance.callStatic(PersistentInputMapping, "create1", .{ GamePersistanceStrings.getInstance().?.SAVED_INPUT_CONFIGURATION_RECORD_ID }).*;
+        this.base = Inheritance.callStatic(PersistentInputMapping, "create1", .{ Inheritance.fieldPointer(GamePersistanceStrings.getInstance().?, "SAVED_INPUT_CONFIGURATION_RECORD_ID").* }).*;
         Inheritance.bindOverrides(this);
         return this;
     }
@@ -42,7 +45,7 @@ pub const PCGameInputMapping = struct {
 
     // throws Exception
     pub fn init(self: *Self, abeClientInformation: ?*AbeClientInformationInterface) void {
-        _ = Inheritance.call(Inheritance.fieldPointer(self, "logUtil").*.?, "putF", .{ Inheritance.fieldPointer(self, "commonStrings").*.?.START, self, Inheritance.fieldPointer(self, "commonStrings").*.?.INIT });
+        _ = Inheritance.call(Inheritance.fieldPointer(self, "logUtil").*.?, "putF", .{ Inheritance.fieldPointer(Inheritance.fieldPointer(self, "commonStrings").*.?, "START").*, self, Inheritance.fieldPointer(Inheritance.fieldPointer(self, "commonStrings").*.?, "INIT").* });
         _ = PCKeyFactory.getInstance();
         _ = TouchMotionGestureFactory.getInstance();
         _ = TrackballMotionGestureFactory.getInstance();
@@ -57,7 +60,7 @@ pub const PCGameInputMapping = struct {
 
     pub fn isDelete(self: *Self, input: ?*Input) bool {
         _ = self;
-        if (Object.same(input, PCKeyFactory.getInstance().?.DEL)) {
+        if (Object.same(input, Inheritance.fieldPointer(PCKeyFactory.getInstance().?, "DEL").*)) {
             return true;
         } else {
             return false;

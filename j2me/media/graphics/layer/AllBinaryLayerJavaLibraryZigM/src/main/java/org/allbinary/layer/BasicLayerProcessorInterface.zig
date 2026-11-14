@@ -19,6 +19,7 @@ const String = @import("java/lang/String.zig").String;
 const Object = @import("java/lang/Object.zig").Object;
 const Inheritance = @import("zig/Inheritance.zig");
 const AllBinaryLayerManager = @import("org/allbinary/layer/AllBinaryLayerManager.zig").AllBinaryLayerManager;
+const Exception = @import("java/lang/Exception.zig").Exception;
 
 // Java interface: an implementation is a pointer and a table of functions
 pub const BasicLayerProcessorInterface = struct {
@@ -27,7 +28,7 @@ pub const BasicLayerProcessorInterface = struct {
     pointer: *anyopaque,
     object: Object,
     toStringFn: *const fn (pointer: *anyopaque) ?*String,
-    processFn: *const fn (pointer: *anyopaque, allBinaryLayerManager: ?*AllBinaryLayerManager) void,
+    processFn: *const fn (interface_pointer: *anyopaque, allBinaryLayerManager: ?*AllBinaryLayerManager) void,
 
     pub fn process(self: *Self, allBinaryLayerManager: ?*AllBinaryLayerManager) void {
         return self.processFn(self.pointer, allBinaryLayerManager);
@@ -39,15 +40,15 @@ pub const BasicLayerProcessorInterface = struct {
 
     // The interface value of an object with the methods. Like a Java class a method can be declared by the object or a superclass.
     pub fn of(object: anytype) ?*Self {
-        const Implementation = @TypeOf(object);
+        const ImplementationType = @TypeOf(object);
         const Methods = struct {
             fn toString(pointer: *anyopaque) ?*String {
-                const implementation: Implementation = @ptrCast(@alignCast(pointer));
+                const implementation: ImplementationType = @ptrCast(@alignCast(pointer));
                 return String.valueOf(implementation);
             }
-            fn process(pointer: *anyopaque, allBinaryLayerManager: ?*AllBinaryLayerManager) void {
-                const implementation: Implementation = @ptrCast(@alignCast(pointer));
-                return Inheritance.receiver(implementation, "process").process(allBinaryLayerManager);
+            fn process(interface_pointer: *anyopaque, allBinaryLayerManager: ?*AllBinaryLayerManager) void {
+                const implementation: ImplementationType = @ptrCast(@alignCast(interface_pointer));
+                return Inheritance.call(implementation, "process", .{ allBinaryLayerManager });
             }
         };
         const this = allocator.create(Self) catch unreachable;

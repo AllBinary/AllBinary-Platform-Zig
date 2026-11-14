@@ -25,8 +25,8 @@ pub const HardwareComponentInterface = struct {
     pub const java_name = "org.allbinary.logic.system.hardware.components.interfaces.HardwareComponentInterface";
     pointer: *anyopaque,
     object: Object,
-    compareToFn: *const fn (pointer: *anyopaque, componentInterface: ?*HardwareComponentInterface) bool,
-    toStringFn: *const fn (pointer: *anyopaque) ?*String,
+    compareToFn: *const fn (interface_pointer: *anyopaque, componentInterface: ?*HardwareComponentInterface) bool,
+    toStringFn: *const fn (interface_pointer: *anyopaque) ?*String,
 
     pub fn compareTo(self: *Self, componentInterface: ?*HardwareComponentInterface) bool {
         return self.compareToFn(self.pointer, componentInterface);
@@ -38,14 +38,14 @@ pub const HardwareComponentInterface = struct {
 
     // The interface value of an object with the methods. Like a Java class a method can be declared by the object or a superclass.
     pub fn of(object: anytype) ?*Self {
-        const Implementation = @TypeOf(object);
+        const ImplementationType = @TypeOf(object);
         const Methods = struct {
-            fn compareTo(pointer: *anyopaque, componentInterface: ?*HardwareComponentInterface) bool {
-                const implementation: Implementation = @ptrCast(@alignCast(pointer));
-                return Inheritance.receiver(implementation, "compareTo").compareTo(componentInterface);
+            fn compareTo(interface_pointer: *anyopaque, componentInterface: ?*HardwareComponentInterface) bool {
+                const implementation: ImplementationType = @ptrCast(@alignCast(interface_pointer));
+                return Inheritance.call(implementation, "compareTo", .{ componentInterface });
             }
-            fn toString(pointer: *anyopaque) ?*String {
-                const implementation: Implementation = @ptrCast(@alignCast(pointer));
+            fn toString(interface_pointer: *anyopaque) ?*String {
+                const implementation: ImplementationType = @ptrCast(@alignCast(interface_pointer));
                 return Inheritance.upcast(?*String, Inheritance.receiver(implementation, "toString").toString());
             }
         };

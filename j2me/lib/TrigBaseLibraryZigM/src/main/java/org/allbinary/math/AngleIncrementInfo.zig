@@ -56,10 +56,10 @@ pub const AngleIncrementInfo = struct {
         this.angleIncrement = angleIncrement;
         const angleFactory: ?*AngleFactory = Inheritance.upcast(?*AngleFactory, AngleFactory.getInstance());
         const smallIntegerSingletonFactory: ?*SmallIntegerSingletonFactory = Inheritance.upcast(?*SmallIntegerSingletonFactory, SmallIntegerSingletonFactory.getInstance());
-        this.DOWN_FRAME = Inheritance.upcast(@TypeOf(this.DOWN_FRAME), Inheritance.call(smallIntegerSingletonFactory.?, "getAt", .{ (divide_N66103: { const left_N66103 = Inheritance.receiverOf(angleFactory.?.DOWN.?, "getValue").getValue(); const right_N66103 = this.angleIncrement; break :divide_N66103 if (comptime @typeInfo(@TypeOf(left_N66103)) == .int or @TypeOf(left_N66103) == comptime_int) @divTrunc(left_N66103, right_N66103) else left_N66103 / right_N66103; }) }));
-        this.UP_FRAME = Inheritance.upcast(@TypeOf(this.UP_FRAME), Inheritance.call(smallIntegerSingletonFactory.?, "getAt", .{ @as(i32, @intCast(Inheritance.receiverOf(angleFactory.?.UP.?, "getValue").getValue())) }));
-        this.LEFT_FRAME = Inheritance.upcast(@TypeOf(this.LEFT_FRAME), Inheritance.call(smallIntegerSingletonFactory.?, "getAt", .{ (divide_N66253: { const left_N66253 = Inheritance.receiverOf(angleFactory.?.LEFT.?, "getValue").getValue(); const right_N66253 = this.angleIncrement; break :divide_N66253 if (comptime @typeInfo(@TypeOf(left_N66253)) == .int or @TypeOf(left_N66253) == comptime_int) @divTrunc(left_N66253, right_N66253) else left_N66253 / right_N66253; }) }));
-        this.RIGHT_FRAME = Inheritance.upcast(@TypeOf(this.RIGHT_FRAME), Inheritance.call(smallIntegerSingletonFactory.?, "getAt", .{ (divide_N66332: { const left_N66332 = Inheritance.receiverOf(angleFactory.?.RIGHT.?, "getValue").getValue(); const right_N66332 = this.angleIncrement; break :divide_N66332 if (comptime @typeInfo(@TypeOf(left_N66332)) == .int or @TypeOf(left_N66332) == comptime_int) @divTrunc(left_N66332, right_N66332) else left_N66332 / right_N66332; }) }));
+        this.DOWN_FRAME = Inheritance.upcast(@TypeOf(this.DOWN_FRAME), Inheritance.call(smallIntegerSingletonFactory.?, "getAt", .{ (divide_N66103: { const left_N66103 = Inheritance.receiverOf(Inheritance.fieldPointer(angleFactory.?, "DOWN").*.?, "getValue").getValue(); const right_N66103 = this.angleIncrement; break :divide_N66103 if (comptime @typeInfo(@TypeOf(left_N66103)) == .int or @TypeOf(left_N66103) == comptime_int) @divTrunc(left_N66103, right_N66103) else left_N66103 / right_N66103; }) }));
+        this.UP_FRAME = Inheritance.upcast(@TypeOf(this.UP_FRAME), Inheritance.call(smallIntegerSingletonFactory.?, "getAt", .{ Inheritance.number(i32, Inheritance.receiverOf(Inheritance.fieldPointer(angleFactory.?, "UP").*.?, "getValue").getValue()) }));
+        this.LEFT_FRAME = Inheritance.upcast(@TypeOf(this.LEFT_FRAME), Inheritance.call(smallIntegerSingletonFactory.?, "getAt", .{ (divide_N66253: { const left_N66253 = Inheritance.receiverOf(Inheritance.fieldPointer(angleFactory.?, "LEFT").*.?, "getValue").getValue(); const right_N66253 = this.angleIncrement; break :divide_N66253 if (comptime @typeInfo(@TypeOf(left_N66253)) == .int or @TypeOf(left_N66253) == comptime_int) @divTrunc(left_N66253, right_N66253) else left_N66253 / right_N66253; }) }));
+        this.RIGHT_FRAME = Inheritance.upcast(@TypeOf(this.RIGHT_FRAME), Inheritance.call(smallIntegerSingletonFactory.?, "getAt", .{ (divide_N66332: { const left_N66332 = Inheritance.receiverOf(Inheritance.fieldPointer(angleFactory.?, "RIGHT").*.?, "getValue").getValue(); const right_N66332 = this.angleIncrement; break :divide_N66332 if (comptime @typeInfo(@TypeOf(left_N66332)) == .int or @TypeOf(left_N66332) == comptime_int) @divTrunc(left_N66332, right_N66332) else left_N66332 / right_N66332; }) }));
         return this;
     }
     
@@ -81,16 +81,16 @@ pub const AngleIncrementInfo = struct {
 
     pub fn getClosestGeneralDirection(self: *Self, angle: i16) i32 {
         var closestDirection: ?*Integer = Inheritance.upcast(?*Integer, Inheritance.call(SmallIntegerSingletonFactory.getInstance().?, "getAt", .{ 360 }));
-        if (self.UP_FRAME.?.intValue() - angle < closestDirection.?.intValue() - angle) {
+        if (Inheritance.arithmetic(.less, Inheritance.arithmetic(.subtract, self.UP_FRAME.?.intValue(), angle), Inheritance.arithmetic(.subtract, closestDirection.?.intValue(), angle))) {
             closestDirection = self.UP_FRAME;
         }
-        if (self.DOWN_FRAME.?.intValue() - angle < closestDirection.?.intValue() - angle) {
+        if (Inheritance.arithmetic(.less, Inheritance.arithmetic(.subtract, self.DOWN_FRAME.?.intValue(), angle), Inheritance.arithmetic(.subtract, closestDirection.?.intValue(), angle))) {
             closestDirection = self.DOWN_FRAME;
         }
-        if (self.LEFT_FRAME.?.intValue() - angle < closestDirection.?.intValue() - angle) {
+        if (Inheritance.arithmetic(.less, Inheritance.arithmetic(.subtract, self.LEFT_FRAME.?.intValue(), angle), Inheritance.arithmetic(.subtract, closestDirection.?.intValue(), angle))) {
             closestDirection = self.LEFT_FRAME;
         }
-        if (self.RIGHT_FRAME.?.intValue() - angle < closestDirection.?.intValue() - angle) {
+        if (Inheritance.arithmetic(.less, Inheritance.arithmetic(.subtract, self.RIGHT_FRAME.?.intValue(), angle), Inheritance.arithmetic(.subtract, closestDirection.?.intValue(), angle))) {
             closestDirection = self.RIGHT_FRAME;
         }
         return closestDirection.?.intValue();

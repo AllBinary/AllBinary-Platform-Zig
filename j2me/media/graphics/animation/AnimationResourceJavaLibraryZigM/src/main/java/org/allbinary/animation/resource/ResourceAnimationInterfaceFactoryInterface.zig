@@ -19,6 +19,7 @@ const String = @import("java/lang/String.zig").String;
 const Object = @import("java/lang/Object.zig").Object;
 const Inheritance = @import("zig/Inheritance.zig");
 const BasicAnimationInterfaceFactoryInterface = @import("org/allbinary/animation/BasicAnimationInterfaceFactoryInterface.zig").BasicAnimationInterfaceFactoryInterface;
+const Exception = @import("java/lang/Exception.zig").Exception;
 
 // Java interface: an implementation is a pointer and a table of functions
 pub const ResourceAnimationInterfaceFactoryInterface = struct {
@@ -27,7 +28,7 @@ pub const ResourceAnimationInterfaceFactoryInterface = struct {
     pointer: *anyopaque,
     object: Object,
     toStringFn: *const fn (pointer: *anyopaque) ?*String,
-    getBasicAnimationInterfaceFactoryInstanceFn: *const fn (pointer: *anyopaque, resource: ?*String) ?*BasicAnimationInterfaceFactoryInterface,
+    getBasicAnimationInterfaceFactoryInstanceFn: *const fn (interface_pointer: *anyopaque, resource: ?*String) ?*BasicAnimationInterfaceFactoryInterface,
 
     pub fn getBasicAnimationInterfaceFactoryInstance(self: *Self, resource: ?*String) ?*BasicAnimationInterfaceFactoryInterface {
         return self.getBasicAnimationInterfaceFactoryInstanceFn(self.pointer, resource);
@@ -39,15 +40,15 @@ pub const ResourceAnimationInterfaceFactoryInterface = struct {
 
     // The interface value of an object with the methods. Like a Java class a method can be declared by the object or a superclass.
     pub fn of(object: anytype) ?*Self {
-        const Implementation = @TypeOf(object);
+        const ImplementationType = @TypeOf(object);
         const Methods = struct {
             fn toString(pointer: *anyopaque) ?*String {
-                const implementation: Implementation = @ptrCast(@alignCast(pointer));
+                const implementation: ImplementationType = @ptrCast(@alignCast(pointer));
                 return String.valueOf(implementation);
             }
-            fn getBasicAnimationInterfaceFactoryInstance(pointer: *anyopaque, resource: ?*String) ?*BasicAnimationInterfaceFactoryInterface {
-                const implementation: Implementation = @ptrCast(@alignCast(pointer));
-                return Inheritance.upcast(?*BasicAnimationInterfaceFactoryInterface, Inheritance.receiver(implementation, "getBasicAnimationInterfaceFactoryInstance").getBasicAnimationInterfaceFactoryInstance(resource));
+            fn getBasicAnimationInterfaceFactoryInstance(interface_pointer: *anyopaque, resource: ?*String) ?*BasicAnimationInterfaceFactoryInterface {
+                const implementation: ImplementationType = @ptrCast(@alignCast(interface_pointer));
+                return Inheritance.upcast(?*BasicAnimationInterfaceFactoryInterface, Inheritance.call(implementation, "getBasicAnimationInterfaceFactoryInstance", .{ resource }));
             }
         };
         const this = allocator.create(Self) catch unreachable;

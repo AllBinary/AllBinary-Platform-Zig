@@ -29,9 +29,9 @@ pub const HighScoresFactoryInterface = struct {
     pointer: *anyopaque,
     object: Object,
     toStringFn: *const fn (pointer: *anyopaque) ?*String,
-    fetchHighScoresFn: *const fn (pointer: *anyopaque, gameInfo: ?*GameInfo, highScoresResultsListener: ?*HighScoresResultsListener) void,
-    fetchHighScoresPreloadFn: *const fn (pointer: *anyopaque, gameInfo: ?*GameInfo, highScoresResultsListener: ?*HighScoresResultsListener, preload: bool) void,
-    createHighScoresHelperFn: *const fn (pointer: *anyopaque) ?*HighScoresHelperBaseInterface,
+    fetchHighScoresFn: *const fn (interface_pointer: *anyopaque, gameInfo: ?*GameInfo, highScoresResultsListener: ?*HighScoresResultsListener) void,
+    fetchHighScoresPreloadFn: *const fn (interface_pointer: *anyopaque, gameInfo: ?*GameInfo, highScoresResultsListener: ?*HighScoresResultsListener, preload: bool) void,
+    createHighScoresHelperFn: *const fn (interface_pointer: *anyopaque) ?*HighScoresHelperBaseInterface,
 
     pub fn fetchHighScores(self: *Self, gameInfo: ?*GameInfo, highScoresResultsListener: ?*HighScoresResultsListener) void {
         return self.fetchHighScoresFn(self.pointer, gameInfo, highScoresResultsListener);
@@ -51,22 +51,22 @@ pub const HighScoresFactoryInterface = struct {
 
     // The interface value of an object with the methods. Like a Java class a method can be declared by the object or a superclass.
     pub fn of(object: anytype) ?*Self {
-        const Implementation = @TypeOf(object);
+        const ImplementationType = @TypeOf(object);
         const Methods = struct {
             fn toString(pointer: *anyopaque) ?*String {
-                const implementation: Implementation = @ptrCast(@alignCast(pointer));
+                const implementation: ImplementationType = @ptrCast(@alignCast(pointer));
                 return String.valueOf(implementation);
             }
-            fn fetchHighScores(pointer: *anyopaque, gameInfo: ?*GameInfo, highScoresResultsListener: ?*HighScoresResultsListener) void {
-                const implementation: Implementation = @ptrCast(@alignCast(pointer));
-                return Inheritance.receiver(implementation, "fetchHighScores").fetchHighScores(gameInfo, highScoresResultsListener);
+            fn fetchHighScores(interface_pointer: *anyopaque, gameInfo: ?*GameInfo, highScoresResultsListener: ?*HighScoresResultsListener) void {
+                const implementation: ImplementationType = @ptrCast(@alignCast(interface_pointer));
+                return Inheritance.call(implementation, "fetchHighScores", .{ gameInfo, highScoresResultsListener });
             }
-            fn fetchHighScoresPreload(pointer: *anyopaque, gameInfo: ?*GameInfo, highScoresResultsListener: ?*HighScoresResultsListener, preload: bool) void {
-                const implementation: Implementation = @ptrCast(@alignCast(pointer));
-                return Inheritance.receiver(implementation, "fetchHighScoresPreload").fetchHighScoresPreload(gameInfo, highScoresResultsListener, preload);
+            fn fetchHighScoresPreload(interface_pointer: *anyopaque, gameInfo: ?*GameInfo, highScoresResultsListener: ?*HighScoresResultsListener, preload: bool) void {
+                const implementation: ImplementationType = @ptrCast(@alignCast(interface_pointer));
+                return Inheritance.call(implementation, "fetchHighScoresPreload", .{ gameInfo, highScoresResultsListener, preload });
             }
-            fn createHighScoresHelper(pointer: *anyopaque) ?*HighScoresHelperBaseInterface {
-                const implementation: Implementation = @ptrCast(@alignCast(pointer));
+            fn createHighScoresHelper(interface_pointer: *anyopaque) ?*HighScoresHelperBaseInterface {
+                const implementation: ImplementationType = @ptrCast(@alignCast(interface_pointer));
                 return Inheritance.upcast(?*HighScoresHelperBaseInterface, Inheritance.receiver(implementation, "createHighScoresHelper").createHighScoresHelper());
             }
         };

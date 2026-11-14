@@ -26,6 +26,8 @@ const StringValidationUtil = @import("org/allbinary/logic/string/StringValidatio
 const CommonSeps = @import("org/allbinary/string/CommonSeps.zig").CommonSeps;
 const AbPathData = @import("org/allbinary/logic/io/path/AbPathData.zig").AbPathData;
 const PathUtil = @import("org/allbinary/logic/io/path/PathUtil.zig").PathUtil;
+const Exception = @import("java/lang/Exception.zig").Exception;
+const RuntimeException = @import("java/lang/RuntimeException.zig").RuntimeException;
 
 pub const AbPath = struct {
     const Self = @This();
@@ -85,13 +87,13 @@ pub const AbPath = struct {
 
     pub fn init(self: *Self) void {
         self.schema = self.EMPTY_STRING;
-        _ = Inheritance.call(self, "setPath", .{ self.abPathData.?.SEPARATOR });
+        _ = Inheritance.call(self, "setPath", .{ Inheritance.fieldPointer(self.abPathData.?, "SEPARATOR").* });
         self.nameP = self.EMPTY_STRING;
     }
     
 
     pub fn getSchema(self: *Self, aPath: ?*String) ?*String {
-        const beginIndex: i32 = Inheritance.call(aPath.?, "indexOf", .{ self.commonSeps.?.COLON });
+        const beginIndex: i32 = Inheritance.call(aPath.?, "indexOf", .{ Inheritance.fieldPointer(self.commonSeps.?, "COLON").* });
         if (beginIndex >= 0) {
             self.hasSchemaP = true;
             return Inheritance.upcast(?*String, aPath.?.substring2(0, beginIndex));
@@ -113,10 +115,10 @@ pub const AbPath = struct {
         if (!self.hasSchema()) {
             tempPath = Inheritance.upcast(@TypeOf(tempPath), Inheritance.call(self.abPathUtil.?, "adjustStart", .{ tempPath }));
         } else {
-            var beginIndex: i32 = Inheritance.call(tempPath.?, "indexOf", .{ self.commonSeps.?.COLON });
+            var beginIndex: i32 = Inheritance.call(tempPath.?, "indexOf", .{ Inheritance.fieldPointer(self.commonSeps.?, "COLON").* });
             if (beginIndex >= 0) {
                 beginIndex += 1;
-                while (Object.same(Inheritance.call(tempPath.?, "charAt", .{ beginIndex }), self.abPathData.?.SEPARATORCHAR) or Object.same(Inheritance.call(tempPath.?, "charAt", .{ beginIndex }), filePathData.?.SEPARATORCHAR)) {
+                while (Object.same(Inheritance.call(tempPath.?, "charAt", .{ beginIndex }), Inheritance.fieldPointer(self.abPathData.?, "SEPARATORCHAR").*) or Object.same(Inheritance.call(tempPath.?, "charAt", .{ beginIndex }), Inheritance.fieldPointer(filePathData.?, "SEPARATORCHAR").*)) {
                     beginIndex += 1;
                     self.numberOfSeps += 1;
                     if (self.numberOfSeps > 2) {
@@ -157,8 +159,8 @@ pub const AbPath = struct {
             const filePathData: ?*FilePathData = Inheritance.upcast(?*FilePathData, FilePathData.getInstance());
             const stringBuffer: ?*StringMaker = StringMaker.create();
             _ = Inheritance.call(stringBuffer.?, "append", .{ self.schema });
-            _ = Inheritance.call(stringBuffer.?, "append", .{ self.commonSeps.?.COLON });
-            _ = Inheritance.call(stringBuffer.?, "append", .{ filePathData.?.PATH_START });
+            _ = Inheritance.call(stringBuffer.?, "append", .{ Inheritance.fieldPointer(self.commonSeps.?, "COLON").* });
+            _ = Inheritance.call(stringBuffer.?, "append", .{ Inheritance.fieldPointer(filePathData.?, "PATH_START").* });
             _ = Inheritance.call(stringBuffer.?, "append", .{ Inheritance.callStatic(FilePathUtil, "adjust", .{ self.getPath() }) });
             _ = Inheritance.call(stringBuffer.?, "append", .{ self.nameP });
             return Inheritance.upcast(?*String, Object.toString(Object.of(stringBuffer)));

@@ -40,7 +40,7 @@ pub const RectangleCollisionPointUtil = struct {
         {
             var index: i32 = list.?.size();
             while (value_N65913: { index -= 1; break :value_N65913 index; } >= 0) {
-            point = Inheritance.cast(?*GPoint, list.?.objectArray[@intCast(index)]);
+            point = Inheritance.cast(?*GPoint, Inheritance.fieldPointer(list.?, "objectArray").*[@intCast(index)]);
             if (!Inheritance.call(rectangleCollisionUtil.?, "isInside", .{ rectX1, rectY1, rectX2, rectY2, point.?.getX(), point.?.getY() })) {
                 return false;
             }
@@ -56,8 +56,8 @@ pub const RectangleCollisionPointUtil = struct {
         {
             var index: i32 = list.?.size();
             while (value_N66361: { index -= 1; break :value_N66361 index; } >= 0) {
-            point = Inheritance.cast(?*GPoint, list.?.objectArray[@intCast(index)]);
-            if (!Inheritance.call(rectangleCollisionUtil.?, "isInside", .{ rectX1, rectY1, rectX2, rectY2, point.?.getX() * xCellSize, point.?.getY() * yCellSize })) {
+            point = Inheritance.cast(?*GPoint, Inheritance.fieldPointer(list.?, "objectArray").*[@intCast(index)]);
+            if (!Inheritance.call(rectangleCollisionUtil.?, "isInside", .{ rectX1, rectY1, rectX2, rectY2, Inheritance.arithmetic(.multiply, point.?.getX(), xCellSize), Inheritance.arithmetic(.multiply, point.?.getY(), yCellSize) })) {
                 return false;
             }
             }

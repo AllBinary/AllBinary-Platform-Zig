@@ -27,6 +27,7 @@ const AllBinaryLayer = @import("org/allbinary/layer/AllBinaryLayer.zig").AllBina
 const Visitor = @import("org/allbinary/logic/util/visitor/Visitor.zig").Visitor;
 const ABHashtable = @import("org/allbinary/util/ABHashtable.zig").ABHashtable;
 const BasicRandomAI = @import("org/allbinary/game/ag/ai/tactical/BasicRandomAI.zig").BasicRandomAI;
+const Exception = @import("java/lang/Exception.zig").Exception;
 
 pub const BasicRandomAIFactory = struct {
     const Self = @This();
@@ -44,7 +45,7 @@ pub const BasicRandomAIFactory = struct {
     pub fn getInstance(self: *Self, hashtable: ?*ABHashtable, ownerLayerInterface: ?*AllBinaryLayer, gameInput: ?*GameInput) ?*ArtificialIntelligenceInterface {
         _ = self;
         const visitor: ?*Visitor = Inheritance.cast(?*Visitor, Inheritance.call(hashtable.?, "get", .{ Inheritance.cast(?Object, BasicAI.AI_VISITOR) }));
-        if (visitor == null) {
+        if (Object.isNull(visitor)) {
             std.debug.panic("{any}", .{exception: { _ = String.literal("No Visitor Provided"); break :exception error.Exception; }});
         }
         const inputProbability: ?*InputProbability = Inheritance.cast(?*InputProbability, Inheritance.call(hashtable.?, "get", .{ Inheritance.cast(?Object, InputProbability.INPUT_PROBABILITY) }));

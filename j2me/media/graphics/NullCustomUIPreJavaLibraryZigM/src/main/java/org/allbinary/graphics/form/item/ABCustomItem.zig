@@ -6,8 +6,8 @@ const allocator = std.heap.page_allocator;
 const String = @import("java/lang/String.zig").String;
 const Object = @import("java/lang/Object.zig").Object;
 const Inheritance = @import("zig/Inheritance.zig");
-// const Graphics = @import("javax/microedition/lcdui/Graphics.zig").Graphics;
-// const Screen = @import("javax/microedition/lcdui/Screen.zig").Screen;
+const Graphics = @import("javax/microedition/lcdui/Graphics.zig").Graphics;
+const Screen = @import("javax/microedition/lcdui/Screen.zig").Screen;
 const BasicColor = @import("org/allbinary/graphics/color/BasicColor.zig").BasicColor;
 const BasicColorFactory = @import("org/allbinary/graphics/color/BasicColorFactory.zig").BasicColorFactory;
 const NullUtil = @import("org/allbinary/logic/NullUtil.zig").NullUtil;
@@ -20,13 +20,13 @@ pub const ABCustomItem = struct {
 
     // Static fields with runtime initializers: call staticInit once at startup
     pub fn staticInit() void {
-        NULL_CUSTOM_ITEM = Inheritance.upcast(?Object, NullUtil.getInstance().?.NULL_OBJECT);
+        NULL_CUSTOM_ITEM = Inheritance.upcast(?Object, Inheritance.fieldPointer(NullUtil.getInstance().?, "NULL_OBJECT").*);
     }
     
 
     pub fn getNullInstance() ?*ABCustomItem {
-        if (Object.same(ABCustomItem.NULL_CUSTOM_ITEM, NullUtil.getInstance().?.NULL_OBJECT)) {
-            ABCustomItem.NULL_CUSTOM_ITEM = Inheritance.upcast(@TypeOf(ABCustomItem.NULL_CUSTOM_ITEM), Inheritance.callStatic(ABCustomItem, "create3", .{ StringUtil.getInstance().?.EMPTY_STRING, BasicColorFactory.getInstance().?.BLACK, BasicColorFactory.getInstance().?.WHITE }));
+        if (Object.same(ABCustomItem.NULL_CUSTOM_ITEM, Inheritance.fieldPointer(NullUtil.getInstance().?, "NULL_OBJECT").*)) {
+            ABCustomItem.NULL_CUSTOM_ITEM = Inheritance.upcast(@TypeOf(ABCustomItem.NULL_CUSTOM_ITEM), Inheritance.callStatic(ABCustomItem, "create3", .{ Inheritance.fieldPointer(StringUtil.getInstance().?, "EMPTY_STRING").*, Inheritance.fieldPointer(BasicColorFactory.getInstance().?, "BLACK").*, Inheritance.fieldPointer(BasicColorFactory.getInstance().?, "WHITE").* }));
         }
         return Inheritance.cast(?*ABCustomItem, ABCustomItem.NULL_CUSTOM_ITEM);
     }
@@ -72,7 +72,7 @@ pub const ABCustomItem = struct {
 
     pub fn getLabel(self: *Self) ?*String {
         _ = self;
-        return Inheritance.upcast(?*String, StringUtil.getInstance().?.EMPTY_STRING);
+        return Inheritance.upcast(?*String, Inheritance.fieldPointer(StringUtil.getInstance().?, "EMPTY_STRING").*);
     }
     
 

@@ -18,7 +18,7 @@ const allocator = std.heap.page_allocator;
 const String = @import("java/lang/String.zig").String;
 const Object = @import("java/lang/Object.zig").Object;
 const Inheritance = @import("zig/Inheritance.zig");
-// const Graphics = @import("javax/microedition/lcdui/Graphics.zig").Graphics;
+const Graphics = @import("javax/microedition/lcdui/Graphics.zig").Graphics;
 const Animation = @import("org/allbinary/animation/Animation.zig").Animation;
 const NullAnimationFactory = @import("org/allbinary/animation/NullAnimationFactory.zig").NullAnimationFactory;
 const WeaponProperties = @import("org/allbinary/game/combat/weapon/WeaponProperties.zig").WeaponProperties;
@@ -31,6 +31,7 @@ const AllBinaryLayerManager = @import("org/allbinary/layer/AllBinaryLayerManager
 const CommonStrings = @import("org/allbinary/string/CommonStrings.zig").CommonStrings;
 const ViewPositionBase = @import("org/allbinary/view/ViewPositionBase.zig").ViewPositionBase;
 const SalvoInterface = @import("org/allbinary/game/part/weapon/SalvoInterface.zig").SalvoInterface;
+const Exception = @import("java/lang/Exception.zig").Exception;
 
 pub const BasicWeaponPart = struct {
     const Self = @This();
@@ -96,7 +97,7 @@ pub const BasicWeaponPart = struct {
         _ = weaponProperties;
         _ = scoreableInterface;
         _ = self;
-        std.debug.panic("{any}", .{exception: { _ = CommonStrings.getInstance().?.NOT_IMPLEMENTED; break :exception error.Exception; }});
+        std.debug.panic("{any}", .{exception: { _ = Inheritance.fieldPointer(CommonStrings.getInstance().?, "NOT_IMPLEMENTED").*; break :exception error.Exception; }});
     }
     
 

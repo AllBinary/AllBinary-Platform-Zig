@@ -27,7 +27,7 @@ pub const MultiplayerBehavior = struct {
 
     // Static fields with runtime initializers: call staticInit once at startup
     pub fn staticInit() void {
-        NULL_MULTIPLAYER_BEHAVIOR = Inheritance.callStatic(MultiplayerBehavior, "create1", .{ StringUtil.getInstance().?.EMPTY_STRING });
+        NULL_MULTIPLAYER_BEHAVIOR = Inheritance.callStatic(MultiplayerBehavior, "create1", .{ Inheritance.fieldPointer(StringUtil.getInstance().?, "EMPTY_STRING").* });
     }
     
 

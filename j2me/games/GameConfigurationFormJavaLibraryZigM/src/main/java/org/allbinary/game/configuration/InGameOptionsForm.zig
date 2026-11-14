@@ -18,15 +18,16 @@ const allocator = std.heap.page_allocator;
 const String = @import("java/lang/String.zig").String;
 const Object = @import("java/lang/Object.zig").Object;
 const Inheritance = @import("zig/Inheritance.zig");
-// const Choice = @import("javax/microedition/lcdui/Choice.zig").Choice;
-// const Command = @import("javax/microedition/lcdui/Command.zig").Command;
-// const CommandListener = @import("javax/microedition/lcdui/CommandListener.zig").CommandListener;
+const Choice = @import("javax/microedition/lcdui/Choice.zig").Choice;
+const Command = @import("javax/microedition/lcdui/Command.zig").Command;
+const CommandListener = @import("javax/microedition/lcdui/CommandListener.zig").CommandListener;
 const GameCommandsFactory = @import("org/allbinary/game/commands/GameCommandsFactory.zig").GameCommandsFactory;
 const GameFeatureFormUtil = @import("org/allbinary/game/configuration/feature/GameFeatureFormUtil.zig").GameFeatureFormUtil;
 const InGameFeatureChoiceGroups = @import("org/allbinary/game/configuration/feature/InGameFeatureChoiceGroups.zig").InGameFeatureChoiceGroups;
 const BasicColor = @import("org/allbinary/graphics/color/BasicColor.zig").BasicColor;
 const CommandForm = @import("org/allbinary/graphics/displayable/screen/CommandForm.zig").CommandForm;
 const StringUtil = @import("org/allbinary/logic/string/StringUtil.zig").StringUtil;
+const Exception = @import("java/lang/Exception.zig").Exception;
 
 pub const InGameOptionsForm = struct {
     const Self = @This();
@@ -38,9 +39,9 @@ pub const InGameOptionsForm = struct {
 
     // Static fields with runtime initializers: call staticInit once at startup
     pub fn staticInit() void {
-        DISPLAY = Inheritance.callStatic(Command, "create4", .{ String.literal("Options In Game"), StringUtil.getInstance().?.EMPTY_STRING, Command.SCREEN, 1 });
-        SAVE = Inheritance.callStatic(Command, "create4", .{ String.literal("Save"), StringUtil.getInstance().?.EMPTY_STRING, Command.SCREEN, 1 });
-        DEFAULT = Inheritance.callStatic(Command, "create4", .{ String.literal("Default"), StringUtil.getInstance().?.EMPTY_STRING, Command.SCREEN, 1 });
+        DISPLAY = Inheritance.callStatic(Command, "create4", .{ String.literal("Options In Game"), Inheritance.fieldPointer(StringUtil.getInstance().?, "EMPTY_STRING").*, Command.SCREEN, 1 });
+        SAVE = Inheritance.callStatic(Command, "create4", .{ String.literal("Save"), Inheritance.fieldPointer(StringUtil.getInstance().?, "EMPTY_STRING").*, Command.SCREEN, 1 });
+        DEFAULT = Inheritance.callStatic(Command, "create4", .{ String.literal("Default"), Inheritance.fieldPointer(StringUtil.getInstance().?, "EMPTY_STRING").*, Command.SCREEN, 1 });
     }
     
 
@@ -48,7 +49,7 @@ pub const InGameOptionsForm = struct {
         const this = allocator.create(Self) catch unreachable;
         this.* = .{};
         this.base = Inheritance.callStatic(CommandForm, "create4", .{ commandListener, title, backgrounBasicColor, foregroundBasicColor }).*;
-        _ = Inheritance.call(Inheritance.fieldPointer(this, "logUtil").*.?, "putF", .{ Inheritance.fieldPointer(this, "commonStrings").*.?.START, this, Inheritance.fieldPointer(this, "commonStrings").*.?.CONSTRUCTOR });
+        _ = Inheritance.call(Inheritance.fieldPointer(this, "logUtil").*.?, "putF", .{ Inheritance.fieldPointer(Inheritance.fieldPointer(this, "commonStrings").*.?, "START").*, this, Inheritance.fieldPointer(Inheritance.fieldPointer(this, "commonStrings").*.?, "CONSTRUCTOR").* });
         const gameFeatureFormUtil: ?*GameFeatureFormUtil = Inheritance.upcast(?*GameFeatureFormUtil, GameFeatureFormUtil.getInstance());
         _ = Inheritance.call(gameFeatureFormUtil.?, "addChoiceGroup", .{ this, Inheritance.receiverOf(InGameFeatureChoiceGroups.getExclusiveInstance().?, "get").get(), Choice.EXCLUSIVE });
         _ = Inheritance.call(gameFeatureFormUtil.?, "addChoiceGroup", .{ this, Inheritance.receiverOf(InGameFeatureChoiceGroups.getMultipleInstance().?, "get").get(), Choice.MULTIPLE });
@@ -60,7 +61,7 @@ pub const InGameOptionsForm = struct {
 
     pub fn initCommands(self: *Self, cmdListener: ?*CommandListener) void {
         _ = Inheritance.receiver(self, "removeAllCommands").removeAllCommands();
-        _ = Inheritance.call(self, "addCommand", .{ GameCommandsFactory.getInstance().?.CLOSE_AND_SHOW_GAME_CANVAS });
+        _ = Inheritance.call(self, "addCommand", .{ Inheritance.fieldPointer(GameCommandsFactory.getInstance().?, "CLOSE_AND_SHOW_GAME_CANVAS").* });
         _ = Inheritance.call(self, "addCommand", .{ InGameOptionsForm.DEFAULT });
         _ = Inheritance.call(self, "setCommandListener", .{ cmdListener });
     }

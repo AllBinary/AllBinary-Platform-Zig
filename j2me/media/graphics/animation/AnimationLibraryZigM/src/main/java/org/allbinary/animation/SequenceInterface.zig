@@ -26,8 +26,8 @@ pub const SequenceInterface = struct {
     pointer: *anyopaque,
     object: Object,
     toStringFn: *const fn (pointer: *anyopaque) ?*String,
-    setSequenceFn: *const fn (pointer: *anyopaque, sequence: []i32) void,
-    getSequenceFn: *const fn (pointer: *anyopaque) []i32,
+    setSequenceFn: *const fn (interface_pointer: *anyopaque, sequence: []i32) void,
+    getSequenceFn: *const fn (interface_pointer: *anyopaque) []i32,
 
     pub fn setSequence(self: *Self, sequence: []i32) void {
         return self.setSequenceFn(self.pointer, sequence);
@@ -43,18 +43,18 @@ pub const SequenceInterface = struct {
 
     // The interface value of an object with the methods. Like a Java class a method can be declared by the object or a superclass.
     pub fn of(object: anytype) ?*Self {
-        const Implementation = @TypeOf(object);
+        const ImplementationType = @TypeOf(object);
         const Methods = struct {
             fn toString(pointer: *anyopaque) ?*String {
-                const implementation: Implementation = @ptrCast(@alignCast(pointer));
+                const implementation: ImplementationType = @ptrCast(@alignCast(pointer));
                 return String.valueOf(implementation);
             }
-            fn setSequence(pointer: *anyopaque, sequence: []i32) void {
-                const implementation: Implementation = @ptrCast(@alignCast(pointer));
-                return Inheritance.receiver(implementation, "setSequence").setSequence(sequence);
+            fn setSequence(interface_pointer: *anyopaque, sequence: []i32) void {
+                const implementation: ImplementationType = @ptrCast(@alignCast(interface_pointer));
+                return Inheritance.call(implementation, "setSequence", .{ sequence });
             }
-            fn getSequence(pointer: *anyopaque) []i32 {
-                const implementation: Implementation = @ptrCast(@alignCast(pointer));
+            fn getSequence(interface_pointer: *anyopaque) []i32 {
+                const implementation: ImplementationType = @ptrCast(@alignCast(interface_pointer));
                 return Inheritance.receiver(implementation, "getSequence").getSequence();
             }
         };

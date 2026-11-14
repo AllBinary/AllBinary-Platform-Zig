@@ -27,6 +27,7 @@ const PointFactory = @import("org/allbinary/graphics/PointFactory.zig").PointFac
 const Rectangle = @import("org/allbinary/graphics/Rectangle.zig").Rectangle;
 const AllBinaryLayerManager = @import("org/allbinary/layer/AllBinaryLayerManager.zig").AllBinaryLayerManager;
 const ViewPosition = @import("org/allbinary/view/ViewPosition.zig").ViewPosition;
+const Exception = @import("java/lang/Exception.zig").Exception;
 
 pub const FallingPickupLayer = struct {
     const Self = @This();
@@ -39,7 +40,7 @@ pub const FallingPickupLayer = struct {
     pub fn create1(remoteInfo: ?*RemoteInfo) *Self {
         const this = allocator.create(Self) catch unreachable;
         this.* = .{};
-        this.base = Inheritance.callStatic(PickupLayer, "create7", .{ FallingPickupLayer.NAME, remoteInfo, 0, CountedPickedUpLayerInterfaceFactory.NULL_COUNTED_PICKUP_LAYER_FACTORY, Inheritance.call(NullAnimationFactory.getFactoryInstance().?, "getInstance", .{ 0 }), Inheritance.callStatic(Rectangle, "create3", .{ PointFactory.getInstance().?.ZERO_ZERO, 0, 0 }), ViewPosition.getInstanceD() }).*;
+        this.base = Inheritance.callStatic(PickupLayer, "create7", .{ FallingPickupLayer.NAME, remoteInfo, 0, CountedPickedUpLayerInterfaceFactory.NULL_COUNTED_PICKUP_LAYER_FACTORY, Inheritance.call(NullAnimationFactory.getFactoryInstance().?, "getInstance", .{ 0 }), Inheritance.callStatic(Rectangle, "create3", .{ Inheritance.fieldPointer(PointFactory.getInstance().?, "ZERO_ZERO").*, 0, 0 }), ViewPosition.getInstanceD() }).*;
         Inheritance.bindOverrides(this);
         return this;
     }

@@ -18,10 +18,10 @@ const allocator = std.heap.page_allocator;
 const String = @import("java/lang/String.zig").String;
 const Object = @import("java/lang/Object.zig").Object;
 const Inheritance = @import("zig/Inheritance.zig");
-// const GL = @import("javax/microedition/khronos/opengles/GL.zig").GL;
-// const GL10 = @import("javax/microedition/khronos/opengles/GL10.zig").GL10;
-// const Image = @import("javax/microedition/lcdui/Image.zig").Image;
-// const NullImage = @import("javax/microedition/lcdui/NullImage.zig").NullImage;
+const GL = @import("javax/microedition/khronos/opengles/GL.zig").GL;
+const GL10 = @import("javax/microedition/khronos/opengles/GL10.zig").GL10;
+const Image = @import("javax/microedition/lcdui/Image.zig").Image;
+const NullImage = @import("javax/microedition/lcdui/NullImage.zig").NullImage;
 const PlatformBitmapBase = @import("org/allbinary/platform/graphics/PlatformBitmapBase.zig").PlatformBitmapBase;
 const PlatformBitmapBaseFactory = @import("org/allbinary/platform/graphics/PlatformBitmapBaseFactory.zig").PlatformBitmapBaseFactory;
 const PlatformTextureBaseFactory = @import("org/allbinary/platform/opengles/PlatformTextureBaseFactory.zig").PlatformTextureBaseFactory;
@@ -32,6 +32,7 @@ const OpenGLESImageProcessor = @import("org/allbinary/image/opengles/OpenGLESIma
 const OpenGLESImageProperties = @import("org/allbinary/image/opengles/OpenGLESImageProperties.zig").OpenGLESImageProperties;
 const OpenGLESImageTranslate = @import("org/allbinary/image/opengles/OpenGLESImageTranslate.zig").OpenGLESImageTranslate;
 const OpenGLSurfaceChangedInterface = @import("org/allbinary/image/opengles/OpenGLSurfaceChangedInterface.zig").OpenGLSurfaceChangedInterface;
+const Exception = @import("java/lang/Exception.zig").Exception;
 
 //OpenGLESNullImageJavaLibrary
 pub const OpenGLESImage = struct {
@@ -81,7 +82,7 @@ pub const OpenGLESImage = struct {
     // throws Exception
     pub fn set(self: *Self, gl: ?*GL) void {
         _ = gl;
-        std.debug.panic("{any}", .{exception: { _ = self.commonStrings.?.NOT_IMPLEMENTED; break :exception error.Exception; }});
+        std.debug.panic("{any}", .{exception: { _ = Inheritance.fieldPointer(self.commonStrings.?, "NOT_IMPLEMENTED").*; break :exception error.Exception; }});
     }
     
 

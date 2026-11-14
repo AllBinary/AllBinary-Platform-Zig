@@ -23,6 +23,7 @@ const AllBinaryLayerManager = @import("org/allbinary/layer/AllBinaryLayerManager
 const LayerProcessor = @import("org/allbinary/layer/LayerProcessor.zig").LayerProcessor;
 const TickableInterface = @import("org/allbinary/game/tick/TickableInterface.zig").TickableInterface;
 const TickableLayerManager = @import("org/allbinary/game/tick/TickableLayerManager.zig").TickableLayerManager;
+const Exception = @import("java/lang/Exception.zig").Exception;
 
 pub const TickableLayerProcessor = struct {
     const Self = @This();

@@ -30,7 +30,7 @@ pub const GameKey = struct {
 
     // Static fields with runtime initializers: call staticInit once at startup
     pub fn staticInit() void {
-        NULL_GAME_KEY = Inheritance.callStatic(GameKey, "create2", .{ -1, StringUtil.getInstance().?.NULL_STRING });
+        NULL_GAME_KEY = Inheritance.callStatic(GameKey, "create2", .{ -1, Inheritance.fieldPointer(StringUtil.getInstance().?, "NULL_STRING").* });
     }
     
 
@@ -44,7 +44,7 @@ pub const GameKey = struct {
     
 
     pub fn toString(self: *Self) ?*String {
-        return Inheritance.upcast(?*String, Object.toString(Object.of(Inheritance.call(Inheritance.call(StringMaker.create(), "append", .{ String.literal("GameKey ") }).?, "append", .{ self.base.toString() }))));
+        return Inheritance.upcast(?*String, Object.toString(Object.of(Inheritance.call(Inheritance.call(StringMaker.create(), "append", .{ String.literal("GameKey ") }).?, "append", .{ String.valueOf(&self.base) }))));
     }
 };
 

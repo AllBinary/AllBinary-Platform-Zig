@@ -18,10 +18,13 @@ pub const AllBinaryMidletViewInterface = struct {
     pointer: *anyopaque,
     object: Object,
     base: MidletCompositeInterface,
+    base2: EmulatorViewInterface,
+    base3: DemoGameMidletEventListener,
+    base4: GameInitializedListenerInterface,
     toStringFn: *const fn (pointer: *anyopaque) ?*String,
-    onResumeFn: *const fn (pointer: *anyopaque) void,
-    onPauseFn: *const fn (pointer: *anyopaque) void,
-    onDestroyFn: *const fn (pointer: *anyopaque) void,
+    onResumeFn: *const fn (interface_pointer: *anyopaque) void,
+    onPauseFn: *const fn (interface_pointer: *anyopaque) void,
+    onDestroyFn: *const fn (interface_pointer: *anyopaque) void,
 
     pub fn onResume(self: *Self) void {
         return self.onResumeFn(self.pointer);
@@ -41,27 +44,27 @@ pub const AllBinaryMidletViewInterface = struct {
 
     // The interface value of an object with the methods. Like a Java class a method can be declared by the object or a superclass.
     pub fn of(object: anytype) ?*Self {
-        const Implementation = @TypeOf(object);
+        const ImplementationType = @TypeOf(object);
         const Methods = struct {
             fn toString(pointer: *anyopaque) ?*String {
-                const implementation: Implementation = @ptrCast(@alignCast(pointer));
+                const implementation: ImplementationType = @ptrCast(@alignCast(pointer));
                 return String.valueOf(implementation);
             }
-            fn onResume(pointer: *anyopaque) void {
-                const implementation: Implementation = @ptrCast(@alignCast(pointer));
+            fn onResume(interface_pointer: *anyopaque) void {
+                const implementation: ImplementationType = @ptrCast(@alignCast(interface_pointer));
                 return Inheritance.receiver(implementation, "onResume").onResume();
             }
-            fn onPause(pointer: *anyopaque) void {
-                const implementation: Implementation = @ptrCast(@alignCast(pointer));
+            fn onPause(interface_pointer: *anyopaque) void {
+                const implementation: ImplementationType = @ptrCast(@alignCast(interface_pointer));
                 return Inheritance.receiver(implementation, "onPause").onPause();
             }
-            fn onDestroy(pointer: *anyopaque) void {
-                const implementation: Implementation = @ptrCast(@alignCast(pointer));
+            fn onDestroy(interface_pointer: *anyopaque) void {
+                const implementation: ImplementationType = @ptrCast(@alignCast(interface_pointer));
                 return Inheritance.receiver(implementation, "onDestroy").onDestroy();
             }
         };
         const this = allocator.create(Self) catch unreachable;
-        this.* = .{ .pointer = object, .object = Object.of(object).?, .base = MidletCompositeInterface.of(object).?.*, .toStringFn = Methods.toString, .onResumeFn = Methods.onResume, .onPauseFn = Methods.onPause, .onDestroyFn = Methods.onDestroy };
+        this.* = .{ .pointer = object, .object = Object.of(object).?, .base = MidletCompositeInterface.of(object).?.*, .base2 = EmulatorViewInterface.of(object).?.*, .base3 = DemoGameMidletEventListener.of(object).?.*, .base4 = GameInitializedListenerInterface.of(object).?.*, .toStringFn = Methods.toString, .onResumeFn = Methods.onResume, .onPauseFn = Methods.onPause, .onDestroyFn = Methods.onDestroy };
         return this;
     }
 };

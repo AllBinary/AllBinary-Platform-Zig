@@ -71,7 +71,7 @@ pub const BottomLimiter = struct {
         } else {
             self.deltaY = self.lower;
         }
-        self.bottom = displayInfo.?.getLastHeight() - self.deltaY;
+        self.bottom = Inheritance.arithmetic(.subtract, displayInfo.?.getLastHeight(), self.deltaY);
     }
     
 

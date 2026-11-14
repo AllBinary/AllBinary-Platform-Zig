@@ -20,6 +20,7 @@ const Object = @import("java/lang/Object.zig").Object;
 const Inheritance = @import("zig/Inheritance.zig");
 const CommonStrings = @import("org/allbinary/string/CommonStrings.zig").CommonStrings;
 const DestroyableInterface = @import("org/allbinary/game/combat/destroy/DestroyableInterface.zig").DestroyableInterface;
+const Exception = @import("java/lang/Exception.zig").Exception;
 
 pub const DestroyableBaseBehavior = struct {
     const Self = @This();
@@ -53,7 +54,7 @@ pub const DestroyableBaseBehavior = struct {
     // throws Exception
     pub fn isDestroyed(self: *Self) bool {
         _ = self;
-        std.debug.panic("{any}", .{exception: { _ = CommonStrings.getInstance().?.NOT_IMPLEMENTED; break :exception error.Exception; }});
+        std.debug.panic("{any}", .{exception: { _ = Inheritance.fieldPointer(CommonStrings.getInstance().?, "NOT_IMPLEMENTED").*; break :exception error.Exception; }});
     }
     
 

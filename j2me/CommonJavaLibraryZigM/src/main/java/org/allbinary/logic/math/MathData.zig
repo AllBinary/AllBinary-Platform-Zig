@@ -58,9 +58,9 @@ pub const MathData = struct {
         this.initFields();
         const commonSeps: ?*CommonSeps = Inheritance.upcast(?*CommonSeps, CommonSeps.getInstance());
         this.EQUALS = Inheritance.upcast(@TypeOf(this.EQUALS), commonSeps.?.EQUALS);
-        this.MINUS = Inheritance.upcast(@TypeOf(this.MINUS), commonSeps.?.DASH);
-        this.DIVIDE = Inheritance.upcast(@TypeOf(this.DIVIDE), commonSeps.?.FORWARD_SLASH);
-        this.MULTIPLY = Inheritance.upcast(@TypeOf(this.MULTIPLY), CommonPhoneStrings.getInstance().?.STAR);
+        this.MINUS = Inheritance.upcast(@TypeOf(this.MINUS), Inheritance.fieldPointer(commonSeps.?, "DASH").*);
+        this.DIVIDE = Inheritance.upcast(@TypeOf(this.DIVIDE), Inheritance.fieldPointer(commonSeps.?, "FORWARD_SLASH").*);
+        this.MULTIPLY = Inheritance.upcast(@TypeOf(this.MULTIPLY), Inheritance.fieldPointer(CommonPhoneStrings.getInstance().?, "STAR").*);
         return this;
     }
 };

@@ -23,6 +23,7 @@ const AllBinaryLayer = @import("org/allbinary/layer/AllBinaryLayer.zig").AllBina
 const AllBinaryLayerManager = @import("org/allbinary/layer/AllBinaryLayerManager.zig").AllBinaryLayerManager;
 const LayerManager = @import("org/allbinary/layer/LayerManager.zig").LayerManager;
 const LayerProcessorInterface = @import("org/allbinary/layer/LayerProcessorInterface.zig").LayerProcessorInterface;
+const Exception = @import("java/lang/Exception.zig").Exception;
 
 pub const LayerProcessor = struct {
     const Self = @This();
@@ -52,14 +53,14 @@ pub const LayerProcessor = struct {
         _ = allBinaryLayerManager;
         _ = layerInterface;
         _ = index;
-        std.debug.panic("{any}", .{exception: { _ = self.commonStrings.?.NOT_IMPLEMENTED; break :exception error.Exception; }});
+        std.debug.panic("{any}", .{exception: { _ = Inheritance.fieldPointer(self.commonStrings.?, "NOT_IMPLEMENTED").*; break :exception error.Exception; }});
     }
     
 
     // throws Exception
     pub fn isProcessorLayer(self: *Self, layerInterface: ?*AllBinaryLayer) bool {
         _ = layerInterface;
-        std.debug.panic("{any}", .{exception: { _ = self.commonStrings.?.NOT_IMPLEMENTED; break :exception error.Exception; }});
+        std.debug.panic("{any}", .{exception: { _ = Inheritance.fieldPointer(self.commonStrings.?, "NOT_IMPLEMENTED").*; break :exception error.Exception; }});
     }
     
 

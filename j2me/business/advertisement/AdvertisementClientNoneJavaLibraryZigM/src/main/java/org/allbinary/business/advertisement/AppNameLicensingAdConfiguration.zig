@@ -18,7 +18,7 @@ pub const AppNameLicensingAdConfiguration = struct {
     pub fn create() *Self {
         const this = allocator.create(Self) catch unreachable;
         this.* = .{};
-        this.base = Inheritance.callStatic(AdConfiguration, "create1", .{ @constCast(&[_]?Object{ StringUtil.getInstance().?.EMPTY_STRING, StringUtil.getInstance().?.EMPTY_STRING, StringUtil.getInstance().?.EMPTY_STRING })[0..] }).*;
+        this.base = Inheritance.callStatic(AdConfiguration, "create1", .{ @constCast(&[_]?Object{ Inheritance.upcast(?Object, Inheritance.fieldPointer(StringUtil.getInstance().?, "EMPTY_STRING").*), Inheritance.upcast(?Object, Inheritance.fieldPointer(StringUtil.getInstance().?, "EMPTY_STRING").*), Inheritance.upcast(?Object, Inheritance.fieldPointer(StringUtil.getInstance().?, "EMPTY_STRING").*) })[0..] }).*;
         Inheritance.bindOverrides(this);
         return this;
     }

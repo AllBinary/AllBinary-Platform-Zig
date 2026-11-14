@@ -31,6 +31,8 @@ const ThreadObjectUtil = @import("org/allbinary/thread/ThreadObjectUtil.zig").Th
 const ThreadPoolStrings = @import("org/allbinary/thread/ThreadPoolStrings.zig").ThreadPoolStrings;
 const Thread = @import("java/lang/Thread.zig").Thread;
 const Runnable = @import("java/lang/Runnable.zig").Runnable;
+const Exception = @import("java/lang/Exception.zig").Exception;
+const RuntimeException = @import("java/lang/RuntimeException.zig").RuntimeException;
 
 pub const ThreadPool = struct {
     const Self = @This();
@@ -113,21 +115,21 @@ pub const ThreadPool = struct {
             if (!self.isAlive) {
                 _ = self.init();
             }
-            if (task != null) {
+            if (!Object.isNull(task)) {
                 const size: i32 = self.taskQueue.?.size();
                 var runnable: ?*PriorityRunnable = null;
-                var lowerPriorityRunnable: ?*PriorityRunnable = Inheritance.upcast(?*PriorityRunnable, self.threadObjectUtil.?.NULL_PRIORITY_RUNNABLE);
+                var lowerPriorityRunnable: ?*PriorityRunnable = Inheritance.upcast(?*PriorityRunnable, Inheritance.fieldPointer(self.threadObjectUtil.?, "NULL_PRIORITY_RUNNABLE").*);
                 {
                     var index: i32 = 0;
                     while (index < size) : (index += 1) {
                     runnable = Inheritance.cast(?*PriorityRunnable, Inheritance.call(self.taskQueue.?, "get", .{ index }));
-                    if (Inheritance.receiver(runnable.?, "getPriority").getPriority() > Inheritance.receiver(task.?, "getPriority").getPriority()) {
+                    if (Inheritance.arithmetic(.greater, Inheritance.receiver(runnable.?, "getPriority").getPriority(), Inheritance.receiver(task.?, "getPriority").getPriority())) {
                         lowerPriorityRunnable = runnable;
                         break;
                     }
                     }
                 }
-                if (Object.same(lowerPriorityRunnable, self.threadObjectUtil.?.NULL_PRIORITY_RUNNABLE)) {
+                if (Object.same(lowerPriorityRunnable, Inheritance.fieldPointer(self.threadObjectUtil.?, "NULL_PRIORITY_RUNNABLE").*)) {
                     _ = Inheritance.call(self.taskQueue.?, "add", .{ task });
                 } else {
                     const index: i32 = Inheritance.call(self.taskQueue.?, "indexOf", .{ lowerPriorityRunnable });
@@ -146,7 +148,7 @@ pub const ThreadPool = struct {
             if (!self.isAlive) {
                 _ = self.init();
             }
-            if (task != null) {
+            if (!Object.isNull(task)) {
                 _ = Inheritance.call(self.taskQueue.?, "add", .{ task });
                 _ = Object.monitor(self).notify();
             }
@@ -166,7 +168,7 @@ pub const ThreadPool = struct {
                 _ = Object.monitor(self).wait(0);
             }
             const runnable: ?*Runnable = Inheritance.cast(?*Runnable, Inheritance.call(self.taskQueue.?, "removeAt", .{ 0 }));
-            return Inheritance.upcast(?*Runnable, runnable);
+            return runnable;
         }
     }
     

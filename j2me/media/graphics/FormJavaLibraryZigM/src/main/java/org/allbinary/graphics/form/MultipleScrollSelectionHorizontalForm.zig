@@ -6,8 +6,8 @@ const allocator = std.heap.page_allocator;
 const String = @import("java/lang/String.zig").String;
 const Object = @import("java/lang/Object.zig").Object;
 const Inheritance = @import("zig/Inheritance.zig");
-// const Font = @import("javax/microedition/lcdui/Font.zig").Font;
-// const Graphics = @import("javax/microedition/lcdui/Graphics.zig").Graphics;
+const Font = @import("javax/microedition/lcdui/Font.zig").Font;
+const Graphics = @import("javax/microedition/lcdui/Graphics.zig").Graphics;
 const J2MEUtil = @import("org/allbinary/J2MEUtil.zig").J2MEUtil;
 const Rectangle = @import("org/allbinary/graphics/Rectangle.zig").Rectangle;
 const BasicColor = @import("org/allbinary/graphics/color/BasicColor.zig").BasicColor;
@@ -24,7 +24,11 @@ const FormType = @import("org/allbinary/graphics/form/FormType.zig").FormType;
 const FormTypeFactory = @import("org/allbinary/graphics/form/FormTypeFactory.zig").FormTypeFactory;
 const ItemIndexPaintable = @import("org/allbinary/graphics/form/ItemIndexPaintable.zig").ItemIndexPaintable;
 const ItemPaintableFactory = @import("org/allbinary/graphics/form/ItemPaintableFactory.zig").ItemPaintableFactory;
+const MultipleScrollSelectionFormHorizontalPaintable = @import("org/allbinary/graphics/form/MultipleScrollSelectionFormHorizontalPaintable.zig").MultipleScrollSelectionFormHorizontalPaintable;
+const MultipleScrollSelectionFormRectPaintable = @import("org/allbinary/graphics/form/MultipleScrollSelectionFormRectPaintable.zig").MultipleScrollSelectionFormRectPaintable;
+const MultipleScrollSelectionFormVerticalPaintable = @import("org/allbinary/graphics/form/MultipleScrollSelectionFormVerticalPaintable.zig").MultipleScrollSelectionFormVerticalPaintable;
 const ScrollSelectionForm = @import("org/allbinary/graphics/form/ScrollSelectionForm.zig").ScrollSelectionForm;
+const Exception = @import("java/lang/Exception.zig").Exception;
 
 pub const MultipleScrollSelectionHorizontalForm = struct {
     const Self = @This();
@@ -41,7 +45,7 @@ pub const MultipleScrollSelectionHorizontalForm = struct {
     fn initFields(this: *Self) void {
         this.rectPaintable = Inheritance.upcast(?*Paintable, NullPaintable.getInstance());
         this.multipleScrollSelectionHorizontalFormTypeItemIndexPaintable = Inheritance.upcast(?*ItemIndexPaintable, ItemIndexPaintable.getInstance());
-        this.backgroundColor = Inheritance.receiverOf(BasicColorFactory.getInstance().?.TRANSPARENT_GREY.?, "intValue").intValue();
+        this.backgroundColor = Inheritance.receiverOf(Inheritance.fieldPointer(BasicColorFactory.getInstance().?, "TRANSPARENT_GREY").*.?, "intValue").intValue();
         this.myFontProcessor = Inheritance.upcast(?*MyFontProcessor, Inheritance.callStatic(UpdateMyFontProcessor, "create1", .{ this }));
         this.logged = false;
         this.fontHeight = 0;
@@ -63,25 +67,7 @@ pub const MultipleScrollSelectionHorizontalForm = struct {
         this.initFields();
         if (J2MEUtil.isJ2ME() or J2MEUtil.isHTML()) {
         } else {
-            const MPaintable = struct {
-                const Self = @This();
-                pub const java_name = "org.allbinary.graphics.form.MPaintable";
-                base: Paintable = undefined,
-
-    pub fn create() *Self {
-        const this = allocator.create(Self) catch unreachable;
-        this.* = .{};
-        this.base = Paintable.create().*;
-        Inheritance.bindOverrides(this);
-        return this;
-    }
-                
-
-                pub fn paint(self: *Self, graphics: ?*Graphics) void {
-                    _ = Inheritance.call(self, "fillRect", .{ graphics });
-                }
-            };
-            this.rectPaintable = Inheritance.upcast(@TypeOf(this.rectPaintable), MPaintable.create());
+            this.rectPaintable = Inheritance.upcast(@TypeOf(this.rectPaintable), Inheritance.callStatic(MultipleScrollSelectionFormRectPaintable, "create1", .{ this }));
         }
         Inheritance.bindOverrides(this);
         return this;
@@ -90,7 +76,7 @@ pub const MultipleScrollSelectionHorizontalForm = struct {
 
     pub fn fillRect(self: *Self, graphics: ?*Graphics) void {
         _ = Inheritance.call(graphics.?, "setColor", .{ self.backgroundColor });
-        _ = Inheritance.call(graphics.?, "fillRect", .{ Inheritance.fieldPointer(self, "x").*, Inheritance.fieldPointer(self, "y").*, Inheritance.fieldPointer(self, "rectangle").*.?.getWidth(), Inheritance.fieldPointer(self, "rectangle").*.?.getHeight() });
+        _ = Inheritance.call(graphics.?, "fillRect", .{ Inheritance.fieldPointer(self, "x").*, Inheritance.fieldPointer(self, "y").*, Inheritance.receiver(Inheritance.fieldPointer(self, "rectangle").*.?, "getWidth").getWidth(), Inheritance.receiver(Inheritance.fieldPointer(self, "rectangle").*.?, "getHeight").getHeight() });
     }
     
 
@@ -98,13 +84,13 @@ pub const MultipleScrollSelectionHorizontalForm = struct {
     pub fn init(self: *Self, rectangle: ?*Rectangle, formType: ?*FormType) void {
         _ = Inheritance.call(&self.base, "init", .{ rectangle, formType });
         const formTypeFactory: ?*FormTypeFactory = Inheritance.upcast(?*FormTypeFactory, FormTypeFactory.getInstance());
-        if (Object.same(formType, formTypeFactory.?.HORIZONTAL_FORM)) {
+        if (Object.same(formType, Inheritance.fieldPointer(formTypeFactory.?, "HORIZONTAL_FORM").*)) {
             self.multipleScrollSelectionHorizontalFormTypeItemIndexPaintable = Inheritance.upcast(@TypeOf(self.multipleScrollSelectionHorizontalFormTypeItemIndexPaintable), Inheritance.callStatic(MultipleScrollSelectionFormHorizontalPaintable, "create1", .{ self }));
-        } else if (Object.same(formType, formTypeFactory.?.VERTICAL_CENTER_FORM)) {
+        } else if (Object.same(formType, Inheritance.fieldPointer(formTypeFactory.?, "VERTICAL_CENTER_FORM").*)) {
             self.multipleScrollSelectionHorizontalFormTypeItemIndexPaintable = Inheritance.upcast(@TypeOf(self.multipleScrollSelectionHorizontalFormTypeItemIndexPaintable), Inheritance.callStatic(MultipleScrollSelectionFormVerticalPaintable, "create1", .{ self }));
-        } else if (Object.same(formType, formTypeFactory.?.NULL_FORM_TYPE)) {
+        } else if (Object.same(formType, Inheritance.fieldPointer(formTypeFactory.?, "NULL_FORM_TYPE").*)) {
         } else {
-            std.debug.panic("{any}", .{exception: { _ = formTypeFactory.?.UNK; break :exception error.Exception; }});
+            std.debug.panic("{any}", .{exception: { _ = Inheritance.fieldPointer(formTypeFactory.?, "UNK").*; break :exception error.Exception; }});
         }
     }
     
@@ -119,7 +105,7 @@ pub const MultipleScrollSelectionHorizontalForm = struct {
     // throws Exception
     pub fn paintHorizontal(self: *Self, graphics: ?*Graphics, index: i32, item: ?*ABCustomItem, dxParameter: i32, dy: i32) i32 {
         var dx = dxParameter;
-        const dx2: i32 = Inheritance.call(self, "paintItem", .{ graphics, index, item, dx, dy }) + Inheritance.fieldPointer(self, "border").*;
+        const dx2: i32 = Inheritance.plus(Inheritance.call(self, "paintItem", .{ graphics, index, item, dx, dy }), Inheritance.fieldPointer(self, "border").*);
         _ = Inheritance.call(Inheritance.fieldPointer(self, "paintable").*.?, "paint", .{ graphics, index, dx, dy });
         dx = dx2;
         return dx;
@@ -147,17 +133,17 @@ pub const MultipleScrollSelectionHorizontalForm = struct {
             var dx: i32 = Inheritance.fieldPointer(self, "x").*;
             const dy: i32 = Inheritance.fieldPointer(self, "y").*;
             _ = Inheritance.call(self.rectPaintable.?, "paint", .{ graphics });
-            _ = Inheritance.call(graphics.?, "drawString", .{ Inheritance.receiver(self, "getTitle").getTitle(), Inheritance.fieldPointer(self, "x").*, Inheritance.fieldPointer(self, "y").* - self.fontHeight, 0 });
+            _ = Inheritance.call(graphics.?, "drawString", .{ Inheritance.receiver(self, "getTitle").getTitle(), Inheritance.fieldPointer(self, "x").*, Inheritance.arithmetic(.subtract, Inheritance.fieldPointer(self, "y").*, self.fontHeight), 0 });
             var item: ?*ABCustomItem = null;
             {
                 var index: i32 = start;
                 while (index < size) : (index += 1) {
                 item = Inheritance.upcast(@TypeOf(item), Inheritance.call(self, "get", .{ index }));
-                if (dx >= Inheritance.fieldPointer(self, "rectangle").*.?.getMaxX()) {
+                if (Inheritance.arithmetic(.greater_equal, dx, Inheritance.receiver(Inheritance.fieldPointer(self, "rectangle").*.?, "getMaxX").getMaxX())) {
                     if (self.logged) {
                     } else {
                         self.logged = true;
-                        _ = Inheritance.callStatic(PreLogUtil, "put", .{ Object.toString(Object.of(Inheritance.call(Inheritance.call(StringMaker.create(), "append", .{ String.literal("painting beyond maxx: ") }).?, "appendint", .{ @as(i32, @intCast(Inheritance.fieldPointer(self, "rectangle").*.?.getMaxX())) }))), self, Inheritance.fieldPointer(self, "canvasStrings").*.?.PAINT });
+                        _ = Inheritance.callStatic(PreLogUtil, "put", .{ Object.toString(Object.of(Inheritance.call(Inheritance.call(StringMaker.create(), "append", .{ String.literal("painting beyond maxx: ") }).?, "appendint", .{ Inheritance.number(i32, Inheritance.receiver(Inheritance.fieldPointer(self, "rectangle").*.?, "getMaxX").getMaxX()) }))), self, Inheritance.fieldPointer(Inheritance.fieldPointer(self, "canvasStrings").*.?, "PAINT").* });
                     }
                 }
                 dx = Inheritance.call(self.multipleScrollSelectionHorizontalFormTypeItemIndexPaintable.?, "paint", .{ graphics, index, item, dx, dy });
@@ -165,63 +151,7 @@ pub const MultipleScrollSelectionHorizontalForm = struct {
             }
         }
         // catch (Exception e):
-//             _ = Inheritance.callStatic(PreLogUtil, "put", .{ Inheritance.fieldPointer(self, "commonStrings").*.?.EXCEPTION, self, Inheritance.fieldPointer(self, "canvasStrings").*.?.PAINT });
+//             _ = Inheritance.callStatic(PreLogUtil, "put", .{ Inheritance.fieldPointer(Inheritance.fieldPointer(self, "commonStrings").*.?, "EXCEPTION").*, self, Inheritance.fieldPointer(Inheritance.fieldPointer(self, "canvasStrings").*.?, "PAINT").* });
     }
-    pub const MultipleScrollSelectionFormHorizontalPaintable = struct {
-        const Self = @This();
-        pub const java_name = "org.allbinary.graphics.form.MultipleScrollSelectionFormHorizontalPaintable";
-        base: ItemIndexPaintable = undefined,
-        multipleScrollSelectionForm: ?*MultipleScrollSelectionHorizontalForm = null,
-
-    fn initFields(this: *Self) void {
-        _ = this;
-            
-    }
-        
-
-        pub fn create1(multipleScrollSelectionForm: ?*MultipleScrollSelectionHorizontalForm) *Self {
-            const this = allocator.create(Self) catch unreachable;
-            this.* = .{};
-        this.base = ItemIndexPaintable.create().*;
-            this.initFields();
-            Inheritance.fieldPointer(this, "multipleScrollSelectionForm").* = multipleScrollSelectionForm;
-            Inheritance.bindOverrides(this);
-            return this;
-        }
-        
-
-        // throws Exception
-        pub fn paint(self: *Self, graphics: ?*Graphics, index: i32, item: ?*ABCustomItem, dx: i32, dy: i32) i32 {
-            return Inheritance.call(Inheritance.fieldPointer(self, "multipleScrollSelectionForm").*.?, "paintHorizontal", .{ graphics, index, item, dx, dy });
-        }
-    };
-    pub const MultipleScrollSelectionFormVerticalPaintable = struct {
-        const Self = @This();
-        pub const java_name = "org.allbinary.graphics.form.MultipleScrollSelectionFormVerticalPaintable";
-        base: ItemIndexPaintable = undefined,
-        multipleScrollSelectionForm: ?*MultipleScrollSelectionHorizontalForm = null,
-
-    fn initFields(this: *Self) void {
-        _ = this;
-            
-    }
-        
-
-        pub fn create1(multipleScrollSelectionForm: ?*MultipleScrollSelectionHorizontalForm) *Self {
-            const this = allocator.create(Self) catch unreachable;
-            this.* = .{};
-        this.base = ItemIndexPaintable.create().*;
-            this.initFields();
-            Inheritance.fieldPointer(this, "multipleScrollSelectionForm").* = multipleScrollSelectionForm;
-            Inheritance.bindOverrides(this);
-            return this;
-        }
-        
-
-        // throws Exception
-        pub fn paint(self: *Self, graphics: ?*Graphics, index: i32, item: ?*ABCustomItem, dx: i32, dy: i32) i32 {
-            return Inheritance.call(Inheritance.fieldPointer(self, "multipleScrollSelectionForm").*.?, "paintVertical", .{ graphics, index, item, dx, dy });
-        }
-    };
 };
 

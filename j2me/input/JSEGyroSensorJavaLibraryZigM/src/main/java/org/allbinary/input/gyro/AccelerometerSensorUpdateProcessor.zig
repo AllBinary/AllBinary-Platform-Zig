@@ -24,6 +24,7 @@ const SensorFeatureFactory = @import("org/allbinary/game/configuration/feature/S
 const NoCompleteMotionGestureInputEventListener = @import("org/allbinary/game/input/motion/action/NoCompleteMotionGestureInputEventListener.zig").NoCompleteMotionGestureInputEventListener;
 const SingleKeyPressGameKeyFromMotionGestureEventListener = @import("org/allbinary/game/input/motion/action/SingleKeyPressGameKeyFromMotionGestureEventListener.zig").SingleKeyPressGameKeyFromMotionGestureEventListener;
 const AccelerometerSensorFactory = @import("org/allbinary/input/accelerometer/AccelerometerSensorFactory.zig").AccelerometerSensorFactory;
+const Exception = @import("java/lang/Exception.zig").Exception;
 
 pub const AccelerometerSensorUpdateProcessor = struct {
     const Self = @This();
@@ -43,11 +44,11 @@ pub const AccelerometerSensorUpdateProcessor = struct {
     pub fn process(self: *Self) void {
         _ = self;
         const sensorFeatureFactory: ?*SensorFeatureFactory = Inheritance.upcast(?*SensorFeatureFactory, SensorFeatureFactory.getInstance());
-        if (Inheritance.call(Features.getInstance().?, "isFeature", .{ sensorFeatureFactory.?.ORIENTATION_SENSORS })) {
+        if (Inheritance.call(Features.getInstance().?, "isFeature", .{ Inheritance.fieldPointer(sensorFeatureFactory.?, "ORIENTATION_SENSORS").* })) {
             _ = Inheritance.call(AccelerometerSensorFactory.getInstance().?, "setCompleteMotionGestureInputEventListener", .{ SingleKeyPressGameKeyFromMotionGestureEventListener.create() });
-        } else if (Inheritance.call(Features.getInstance().?, "isFeature", .{ sensorFeatureFactory.?.SIMULATED_ORIENTATION_SENSORS })) {
+        } else if (Inheritance.call(Features.getInstance().?, "isFeature", .{ Inheritance.fieldPointer(sensorFeatureFactory.?, "SIMULATED_ORIENTATION_SENSORS").* })) {
             _ = Inheritance.call(AccelerometerSensorFactory.getInstance().?, "setCompleteMotionGestureInputEventListener", .{ SingleKeyPressGameKeyFromMotionGestureEventListener.create() });
-        } else if (Inheritance.call(Features.getInstance().?, "isFeature", .{ sensorFeatureFactory.?.NO_ORIENTATION })) {
+        } else if (Inheritance.call(Features.getInstance().?, "isFeature", .{ Inheritance.fieldPointer(sensorFeatureFactory.?, "NO_ORIENTATION").* })) {
             _ = Inheritance.call(AccelerometerSensorFactory.getInstance().?, "setCompleteMotionGestureInputEventListener", .{ NoCompleteMotionGestureInputEventListener.getInstance() });
         } else {
             std.debug.panic("{any}", .{exception: { _ = String.literal("Sensor Feature Not Set"); break :exception error.Exception; }});

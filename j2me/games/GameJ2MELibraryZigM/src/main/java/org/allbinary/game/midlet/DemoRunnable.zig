@@ -29,6 +29,7 @@ const DemoGameMidletEvent = @import("org/allbinary/game/midlet/DemoGameMidletEve
 const DemoGameMidletEventHandler = @import("org/allbinary/game/midlet/DemoGameMidletEventHandler.zig").DemoGameMidletEventHandler;
 const DemoGameMidletStateFactory = @import("org/allbinary/game/midlet/DemoGameMidletStateFactory.zig").DemoGameMidletStateFactory;
 const Runnable = @import("java/lang/Runnable.zig").Runnable;
+const Exception = @import("java/lang/Exception.zig").Exception;
 
 pub const DemoRunnable = struct {
     const Self = @This();
@@ -53,24 +54,24 @@ pub const DemoRunnable = struct {
         this.* = .{};
         this.initFields();
         this.demoGameMidlet = demoGameMidlet;
-        this.startDemoGameMidletEvent = Inheritance.callStatic(DemoGameMidletEvent, "create2", .{ this.demoGameMidlet, DemoGameMidletStateFactory.getInstance().?.START_DEMO });
+        this.startDemoGameMidletEvent = Inheritance.callStatic(DemoGameMidletEvent, "create2", .{ this.demoGameMidlet, Inheritance.fieldPointer(DemoGameMidletStateFactory.getInstance().?, "START_DEMO").* });
         return this;
     }
     
 
     pub fn run(self: *Self) void {
         { // try
-            _ = Inheritance.call(self.logUtil.?, "putF", .{ Object.toString(Object.of(Inheritance.call(Inheritance.call(StringMaker.create(), "append", .{ CommonLabels.getInstance().?.START_LABEL }).?, "append", .{ String.literal("GameCanvasRunnableInterface") }))), self, self.commonStrings.?.RUN });
-            _ = Inheritance.call(self.demoGameMidlet.?, "commandAction", .{ MyCommandsFactory.getInstance().?.SET_DISPLAYABLE, ProgressCanvasFactory.getInstance() });
+            _ = Inheritance.call(self.logUtil.?, "putF", .{ Object.toString(Object.of(Inheritance.call(Inheritance.call(StringMaker.create(), "append", .{ Inheritance.fieldPointer(CommonLabels.getInstance().?, "START_LABEL").* }).?, "append", .{ String.literal("GameCanvasRunnableInterface") }))), self, Inheritance.fieldPointer(self.commonStrings.?, "RUN").* });
+            _ = Inheritance.call(self.demoGameMidlet.?, "commandAction", .{ Inheritance.fieldPointer(MyCommandsFactory.getInstance().?, "SET_DISPLAYABLE").*, ProgressCanvasFactory.getInstance() });
             _ = Inheritance.call(self.demoGameMidlet.?, "setGameCanvasRunnableInterface", .{ Inheritance.receiver(self.demoGameMidlet.?, "createDemoGameCanvasRunnableInterface").createDemoGameCanvasRunnableInterface() });
             _ = Inheritance.receiver(self.demoGameMidlet.?, "demoSetup").demoSetup();
             _ = Inheritance.call(DemoGameMidletEventHandler.getInstance().?, "fireEvent", .{ self.startDemoGameMidletEvent });
             _ = Inheritance.receiver(self.demoGameMidlet.?, "startGameCanvasRunnableInterface").startGameCanvasRunnableInterface();
             _ = Inheritance.receiver(self.demoGameMidlet.?, "postDemoSetup").postDemoSetup();
-            _ = Inheritance.call(self.logUtil.?, "putF", .{ self.commonStrings.?.END_RUNNABLE, self, self.commonStrings.?.RUN });
+            _ = Inheritance.call(self.logUtil.?, "putF", .{ Inheritance.fieldPointer(self.commonStrings.?, "END_RUNNABLE").*, self, Inheritance.fieldPointer(self.commonStrings.?, "RUN").* });
         }
         // catch (Exception e):
-//             _ = Inheritance.call(self.logUtil.?, "put", .{ self.commonStrings.?.EXCEPTION, self, self.commonStrings.?.RUN, e });
+//             _ = Inheritance.call(self.logUtil.?, "put", .{ Inheritance.fieldPointer(self.commonStrings.?, "EXCEPTION").*, self, Inheritance.fieldPointer(self.commonStrings.?, "RUN").*, e });
     }
 };
 

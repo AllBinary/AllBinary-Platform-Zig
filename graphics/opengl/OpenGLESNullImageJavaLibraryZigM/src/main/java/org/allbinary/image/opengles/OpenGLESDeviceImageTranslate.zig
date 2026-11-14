@@ -18,7 +18,7 @@ const allocator = std.heap.page_allocator;
 const String = @import("java/lang/String.zig").String;
 const Object = @import("java/lang/Object.zig").Object;
 const Inheritance = @import("zig/Inheritance.zig");
-// const GL10 = @import("javax/microedition/khronos/opengles/GL10.zig").GL10;
+const GL10 = @import("javax/microedition/khronos/opengles/GL10.zig").GL10;
 const OpenGLESImage = @import("org/allbinary/image/opengles/OpenGLESImage.zig").OpenGLESImage;
 const OpenGLESImageTranslate = @import("org/allbinary/image/opengles/OpenGLESImageTranslate.zig").OpenGLESImageTranslate;
 
@@ -49,12 +49,12 @@ pub const OpenGLESDeviceImageTranslate = struct {
     
 
     pub fn translate(self: *Self, gl: ?*GL10, openGLESImage: ?*OpenGLESImage, x: f32, y: f32) void {
-        _ = Inheritance.call(openGLESImage.?.imageProcessor.?, "translate", .{ gl, self.translateX + (openGLESImage.?.openGLESImageProperties.?.scaleX * x), self.translateY + (openGLESImage.?.openGLESImageProperties.?.scaleY * y) });
+        _ = Inheritance.call(Inheritance.fieldPointer(openGLESImage.?, "imageProcessor").*.?, "translate", .{ gl, self.translateX + Inheritance.number(f32, (Inheritance.number(f32, Inheritance.fieldPointer(Inheritance.fieldPointer(openGLESImage.?, "openGLESImageProperties").*.?, "scaleX").*) * x)), self.translateY + Inheritance.number(f32, (Inheritance.number(f32, Inheritance.fieldPointer(Inheritance.fieldPointer(openGLESImage.?, "openGLESImageProperties").*.?, "scaleY").*) * y)) });
     }
     
 
     pub fn translate2(self: *Self, gl: ?*GL10, openGLESImage: ?*OpenGLESImage) void {
-        _ = Inheritance.call(openGLESImage.?.imageProcessor.?, "translate", .{ gl, self.translateX2, self.translateY2 });
+        _ = Inheritance.call(Inheritance.fieldPointer(openGLESImage.?, "imageProcessor").*.?, "translate", .{ gl, self.translateX2, self.translateY2 });
     }
 };
 

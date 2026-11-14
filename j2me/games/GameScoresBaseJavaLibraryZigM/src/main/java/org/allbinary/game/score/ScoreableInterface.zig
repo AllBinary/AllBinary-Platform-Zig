@@ -26,9 +26,9 @@ pub const ScoreableInterface = struct {
     pointer: *anyopaque,
     object: Object,
     toStringFn: *const fn (pointer: *anyopaque) ?*String,
-    getPointsFn: *const fn (pointer: *anyopaque) i32,
-    addPointsFn: *const fn (pointer: *anyopaque, points: i32) void,
-    removePointsFn: *const fn (pointer: *anyopaque, points: i32) void,
+    getPointsFn: *const fn (interface_pointer: *anyopaque) i32,
+    addPointsFn: *const fn (interface_pointer: *anyopaque, points: i32) void,
+    removePointsFn: *const fn (interface_pointer: *anyopaque, points: i32) void,
 
     pub fn getPoints(self: *Self) i32 {
         return self.getPointsFn(self.pointer);
@@ -48,23 +48,23 @@ pub const ScoreableInterface = struct {
 
     // The interface value of an object with the methods. Like a Java class a method can be declared by the object or a superclass.
     pub fn of(object: anytype) ?*Self {
-        const Implementation = @TypeOf(object);
+        const ImplementationType = @TypeOf(object);
         const Methods = struct {
             fn toString(pointer: *anyopaque) ?*String {
-                const implementation: Implementation = @ptrCast(@alignCast(pointer));
+                const implementation: ImplementationType = @ptrCast(@alignCast(pointer));
                 return String.valueOf(implementation);
             }
-            fn getPoints(pointer: *anyopaque) i32 {
-                const implementation: Implementation = @ptrCast(@alignCast(pointer));
+            fn getPoints(interface_pointer: *anyopaque) i32 {
+                const implementation: ImplementationType = @ptrCast(@alignCast(interface_pointer));
                 return Inheritance.receiver(implementation, "getPoints").getPoints();
             }
-            fn addPoints(pointer: *anyopaque, points: i32) void {
-                const implementation: Implementation = @ptrCast(@alignCast(pointer));
-                return Inheritance.receiver(implementation, "addPoints").addPoints(points);
+            fn addPoints(interface_pointer: *anyopaque, points: i32) void {
+                const implementation: ImplementationType = @ptrCast(@alignCast(interface_pointer));
+                return Inheritance.call(implementation, "addPoints", .{ points });
             }
-            fn removePoints(pointer: *anyopaque, points: i32) void {
-                const implementation: Implementation = @ptrCast(@alignCast(pointer));
-                return Inheritance.receiver(implementation, "removePoints").removePoints(points);
+            fn removePoints(interface_pointer: *anyopaque, points: i32) void {
+                const implementation: ImplementationType = @ptrCast(@alignCast(interface_pointer));
+                return Inheritance.call(implementation, "removePoints", .{ points });
             }
         };
         const this = allocator.create(Self) catch unreachable;

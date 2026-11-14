@@ -18,8 +18,8 @@ const allocator = std.heap.page_allocator;
 const String = @import("java/lang/String.zig").String;
 const Object = @import("java/lang/Object.zig").Object;
 const Inheritance = @import("zig/Inheritance.zig");
-// const InputStream = @import("java/io/InputStream.zig").InputStream;
-// const OutputStream = @import("java/io/OutputStream.zig").OutputStream;
+const InputStream = @import("java/io/InputStream.zig").InputStream;
+const OutputStream = @import("java/io/OutputStream.zig").OutputStream;
 const LicenseInitInfoUtil = @import("org/allbinary/business/init/LicenseInitInfoUtil.zig").LicenseInitInfoUtil;
 const ResourceUtil = @import("org/allbinary/data/resource/ResourceUtil.zig").ResourceUtil;
 const LogUtil = @import("org/allbinary/logic/communication/log/LogUtil.zig").LogUtil;
@@ -29,6 +29,7 @@ const FileFactory = @import("org/allbinary/logic/io/file/FileFactory.zig").FileF
 const SimpleFileUtil = @import("org/allbinary/logic/io/file/SimpleFileUtil.zig").SimpleFileUtil;
 const StringUtil = @import("org/allbinary/logic/string/StringUtil.zig").StringUtil;
 const CommonStrings = @import("org/allbinary/string/CommonStrings.zig").CommonStrings;
+const Exception = @import("java/lang/Exception.zig").Exception;
 
 pub const LicenseServerInitFileUtil = struct {
     const Self = @This();
@@ -53,16 +54,16 @@ pub const LicenseServerInitFileUtil = struct {
 
     pub fn init(self: *Self) void {
         { // try
-            const filePath: ?*String = Inheritance.upcast(?*String, LicenseInitInfoUtil.getInstance().?.INITFILENAME);
-            _ = Inheritance.call(LicenseInitInfoUtil.getInstance().?, "setFilePath", .{ StringUtil.getInstance().?.EMPTY_STRING });
+            const filePath: ?*String = Inheritance.upcast(?*String, Inheritance.fieldPointer(LicenseInitInfoUtil.getInstance().?, "INITFILENAME").*);
+            _ = Inheritance.call(LicenseInitInfoUtil.getInstance().?, "setFilePath", .{ Inheritance.fieldPointer(StringUtil.getInstance().?, "EMPTY_STRING").* });
             if (Inheritance.call(FileFactory.getInstance().?, "isFile", .{ filePath })) {
-                _ = Inheritance.call(self.logUtil.?, "putF", .{ String.literal("Using Existing License File"), self, self.commonStrings.?.INIT });
+                _ = Inheritance.call(self.logUtil.?, "putF", .{ String.literal("Using Existing License File"), self, Inheritance.fieldPointer(self.commonStrings.?, "INIT").* });
             } else {
                 _ = self.write();
             }
         }
         // catch (Exception e):
-//             _ = Inheritance.call(self.logUtil.?, "put", .{ self.commonStrings.?.EXCEPTION, self, self.commonStrings.?.INIT, e });
+//             _ = Inheritance.call(self.logUtil.?, "put", .{ Inheritance.fieldPointer(self.commonStrings.?, "EXCEPTION").*, self, Inheritance.fieldPointer(self.commonStrings.?, "INIT").*, e });
     }
     
 
@@ -70,11 +71,11 @@ pub const LicenseServerInitFileUtil = struct {
         var fileOutputStream: ?*OutputStream = self.NULL_OUTPUT_STREAM;
         { // try
             const resourceUtil: ?*ResourceUtil = Inheritance.upcast(?*ResourceUtil, ResourceUtil.getInstance());
-            const filePath: ?*String = Inheritance.upcast(?*String, LicenseInitInfoUtil.getInstance().?.INITFILENAME);
+            const filePath: ?*String = Inheritance.upcast(?*String, Inheritance.fieldPointer(LicenseInitInfoUtil.getInstance().?, "INITFILENAME").*);
             const inputStream: ?*InputStream = Inheritance.upcast(?*InputStream, Inheritance.call(resourceUtil.?, "getResourceAsStream", .{ filePath }));
-            _ = Inheritance.call(self.logUtil.?, "putF", .{ String.literal("Writing Default License File"), self, self.commonStrings.?.INIT });
+            _ = Inheritance.call(self.logUtil.?, "putF", .{ String.literal("Writing Default License File"), self, Inheritance.fieldPointer(self.commonStrings.?, "INIT").* });
             const fileStreamFactory: ?*FileStreamFactory = Inheritance.upcast(?*FileStreamFactory, FileStreamFactory.getInstance());
-            fileOutputStream = Inheritance.upcast(@TypeOf(fileOutputStream), Inheritance.call(fileStreamFactory.?, "getFileOutputStreamInstance", .{ StringUtil.getInstance().?.EMPTY_STRING, filePath }));
+            fileOutputStream = Inheritance.upcast(@TypeOf(fileOutputStream), Inheritance.call(fileStreamFactory.?, "getFileOutputStreamInstance", .{ Inheritance.fieldPointer(StringUtil.getInstance().?, "EMPTY_STRING").*, filePath }));
             var b: i32 = 0;
             var index: i32 = 0;
             while (true) {
@@ -85,11 +86,11 @@ pub const LicenseServerInitFileUtil = struct {
                 _ = Inheritance.call(fileOutputStream.?, "write", .{ b });
                 index += 1;
             }
-            _ = Inheritance.call(self.logUtil.?, "putF", .{ String.plus(String.literal("Wrote Bytes: "), index), self, self.commonStrings.?.INIT });
+            _ = Inheritance.call(self.logUtil.?, "putF", .{ String.plus(String.literal("Wrote Bytes: "), index), self, Inheritance.fieldPointer(self.commonStrings.?, "INIT").* });
             _ = fileOutputStream.?.flush();
         }
         // catch (Exception e):
-//             _ = Inheritance.call(self.logUtil.?, "put", .{ self.commonStrings.?.EXCEPTION, self, self.commonStrings.?.INIT, e });
+//             _ = Inheritance.call(self.logUtil.?, "put", .{ Inheritance.fieldPointer(self.commonStrings.?, "EXCEPTION").*, self, Inheritance.fieldPointer(self.commonStrings.?, "INIT").*, e });
         { // finally
             _ = Inheritance.call(StreamUtil.getInstance().?, "close", .{ fileOutputStream });
         }

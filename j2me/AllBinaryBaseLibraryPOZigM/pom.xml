@@ -66,7 +66,7 @@
         <module>../lib/BasicMathLibraryZigM</module>
         
         <module>../../allbinary_src/ThreadLibraryZigM</module>
-        <module>../../allbinary_src/ThreadHTMLLibraryZigM</module>
+        <!--<module>../../allbinary_src/ThreadHTMLLibraryZigM</module>-->
         <module>../../replace_these_stub_projects/allbinary_src/NoneOnlyJavaLibraryZigM</module>
         <module>../../allbinary_src/ThreadJ2MELibraryZigM</module>
         <module>../time/TimeJavaLibraryZigM</module>

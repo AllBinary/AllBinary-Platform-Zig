@@ -18,7 +18,7 @@ const allocator = std.heap.page_allocator;
 const String = @import("java/lang/String.zig").String;
 const Object = @import("java/lang/Object.zig").Object;
 const Inheritance = @import("zig/Inheritance.zig");
-// const Command = @import("javax/microedition/lcdui/Command.zig").Command;
+const Command = @import("javax/microedition/lcdui/Command.zig").Command;
 
 // Java interface: an implementation is a pointer and a table of functions
 pub const MyCommandInterface = struct {
@@ -27,8 +27,8 @@ pub const MyCommandInterface = struct {
     pointer: *anyopaque,
     object: Object,
     toStringFn: *const fn (pointer: *anyopaque) ?*String,
-    addCommandFn: *const fn (pointer: *anyopaque, command: ?*Command) void,
-    removeAllCommandsFn: *const fn (pointer: *anyopaque) void,
+    addCommandFn: *const fn (interface_pointer: *anyopaque, command: ?*Command) void,
+    removeAllCommandsFn: *const fn (interface_pointer: *anyopaque) void,
 
     pub fn addCommand(self: *Self, command: ?*Command) void {
         return self.addCommandFn(self.pointer, command);
@@ -44,18 +44,18 @@ pub const MyCommandInterface = struct {
 
     // The interface value of an object with the methods. Like a Java class a method can be declared by the object or a superclass.
     pub fn of(object: anytype) ?*Self {
-        const Implementation = @TypeOf(object);
+        const ImplementationType = @TypeOf(object);
         const Methods = struct {
             fn toString(pointer: *anyopaque) ?*String {
-                const implementation: Implementation = @ptrCast(@alignCast(pointer));
+                const implementation: ImplementationType = @ptrCast(@alignCast(pointer));
                 return String.valueOf(implementation);
             }
-            fn addCommand(pointer: *anyopaque, command: ?*Command) void {
-                const implementation: Implementation = @ptrCast(@alignCast(pointer));
-                return Inheritance.receiver(implementation, "addCommand").addCommand(command);
+            fn addCommand(interface_pointer: *anyopaque, command: ?*Command) void {
+                const implementation: ImplementationType = @ptrCast(@alignCast(interface_pointer));
+                return Inheritance.call(implementation, "addCommand", .{ command });
             }
-            fn removeAllCommands(pointer: *anyopaque) void {
-                const implementation: Implementation = @ptrCast(@alignCast(pointer));
+            fn removeAllCommands(interface_pointer: *anyopaque) void {
+                const implementation: ImplementationType = @ptrCast(@alignCast(interface_pointer));
                 return Inheritance.receiver(implementation, "removeAllCommands").removeAllCommands();
             }
         };

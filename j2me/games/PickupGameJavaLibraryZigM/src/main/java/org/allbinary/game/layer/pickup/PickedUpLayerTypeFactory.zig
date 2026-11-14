@@ -42,7 +42,7 @@ pub const PickedUpLayerTypeFactory = struct {
     }
 
     fn initFields(this: *Self) void {
-        this.NONE = Inheritance.callStatic(PickedUpLayerType, "create1", .{ StringUtil.getInstance().?.NULL_STRING });
+        this.NONE = Inheritance.callStatic(PickedUpLayerType, "create1", .{ Inheritance.fieldPointer(StringUtil.getInstance().?, "NULL_STRING").* });
         this.BEAM = Inheritance.callStatic(PickedUpLayerType, "create1", .{ String.literal("BEAM") });
         this.MINE = Inheritance.callStatic(PickedUpLayerType, "create1", .{ String.literal("MINE") });
         this.PROJECTILE = Inheritance.callStatic(PickedUpLayerType, "create1", .{ String.literal("PROJECTILE") });

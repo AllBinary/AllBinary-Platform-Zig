@@ -30,6 +30,7 @@ const IconLayer = @import("org/allbinary/game/layer/pickup/IconLayer.zig").IconL
 const PickedUpLayerInterfaceFactory = @import("org/allbinary/game/layer/pickup/PickedUpLayerInterfaceFactory.zig").PickedUpLayerInterfaceFactory;
 const PickedUpLayerType = @import("org/allbinary/game/layer/pickup/PickedUpLayerType.zig").PickedUpLayerType;
 const PickedUpLayerTypeFactory = @import("org/allbinary/game/layer/pickup/PickedUpLayerTypeFactory.zig").PickedUpLayerTypeFactory;
+const Exception = @import("java/lang/Exception.zig").Exception;
 
 pub const CountedPickedUpLayerInterfaceFactory = struct {
     const Self = @This();
@@ -42,7 +43,7 @@ pub const CountedPickedUpLayerInterfaceFactory = struct {
 
     // Static fields with runtime initializers: call staticInit once at startup
     pub fn staticInit() void {
-        NULL_COUNTED_PICKUP_LAYER_FACTORY = Inheritance.callStatic(CountedPickedUpLayerInterfaceFactory, "create3", .{ PickedUpLayerTypeFactory.getInstance().?.NONE, IconLayer.NULL_ICON_LAYER, Inheritance.call(NullAnimationFactory.getFactoryInstance().?, "getInstance", .{ 0 }) });
+        NULL_COUNTED_PICKUP_LAYER_FACTORY = Inheritance.callStatic(CountedPickedUpLayerInterfaceFactory, "create3", .{ Inheritance.fieldPointer(PickedUpLayerTypeFactory.getInstance().?, "NONE").*, IconLayer.NULL_ICON_LAYER, Inheritance.call(NullAnimationFactory.getFactoryInstance().?, "getInstance", .{ 0 }) });
     }
 
     fn initFields(this: *Self) void {
@@ -71,7 +72,7 @@ pub const CountedPickedUpLayerInterfaceFactory = struct {
         _ = y;
         _ = z;
         _ = self;
-        std.debug.panic("{any}", .{exception: { _ = CommonStrings.getInstance().?.NOT_IMPLEMENTED; break :exception error.Exception; }});
+        std.debug.panic("{any}", .{exception: { _ = Inheritance.fieldPointer(CommonStrings.getInstance().?, "NOT_IMPLEMENTED").*; break :exception error.Exception; }});
     }
     
 

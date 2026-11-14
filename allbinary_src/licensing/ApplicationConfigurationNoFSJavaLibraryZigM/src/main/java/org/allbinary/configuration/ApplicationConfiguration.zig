@@ -13,6 +13,7 @@ const NullUtil = @import("org/allbinary/logic/NullUtil.zig").NullUtil;
 const LogUtil = @import("org/allbinary/logic/communication/log/LogUtil.zig").LogUtil;
 const StringMaker = @import("org/allbinary/logic/string/StringMaker.zig").StringMaker;
 const CommonStrings = @import("org/allbinary/string/CommonStrings.zig").CommonStrings;
+const Exception = @import("java/lang/Exception.zig").Exception;
 
 pub const ApplicationConfiguration = struct {
     const Self = @This();
@@ -25,7 +26,7 @@ pub const ApplicationConfiguration = struct {
 
     // Static fields with runtime initializers: call staticInit once at startup
     pub fn staticInit() void {
-        instance = Inheritance.upcast(?Object, NullUtil.getInstance().?.NULL_OBJECT);
+        instance = Inheritance.upcast(?Object, Inheritance.fieldPointer(NullUtil.getInstance().?, "NULL_OBJECT").*);
     }
 
     fn initFields(this: *Self) void {
@@ -37,7 +38,7 @@ pub const ApplicationConfiguration = struct {
     
 
     pub fn getInstance() ?*ApplicationConfiguration {
-        if (Object.same(ApplicationConfiguration.instance, NullUtil.getInstance().?.NULL_OBJECT)) {
+        if (Object.same(ApplicationConfiguration.instance, Inheritance.fieldPointer(NullUtil.getInstance().?, "NULL_OBJECT").*)) {
             ApplicationConfiguration.instance = Inheritance.upcast(@TypeOf(ApplicationConfiguration.instance), ApplicationConfiguration.create());
         }
         return Inheritance.cast(?*ApplicationConfiguration, ApplicationConfiguration.instance);
@@ -53,7 +54,7 @@ pub const ApplicationConfiguration = struct {
         }
         // catch (Exception e):
 //             const commonStrings: ?*CommonStrings = Inheritance.upcast(?*CommonStrings, CommonStrings.getInstance()); _ = commonStrings;
-//             _ = Inheritance.call(this.logUtil.?, "put", .{ commonStrings.?.EXCEPTION, this, commonStrings.?.CONSTRUCTOR, e });
+//             _ = Inheritance.call(this.logUtil.?, "put", .{ Inheritance.fieldPointer(commonStrings.?, "EXCEPTION").*, this, Inheritance.fieldPointer(commonStrings.?, "CONSTRUCTOR").*, e });
         return this;
     }
     
@@ -75,7 +76,7 @@ pub const ApplicationConfiguration = struct {
 
     // throws Exception
     pub fn update(self: *Self, gameFeature: ?*Feature) void {
-        if (Object.same(gameFeature, MainFeatureFactory.getInstance().?.FULL_SCREEN)) {
+        if (Object.same(gameFeature, Inheritance.fieldPointer(MainFeatureFactory.getInstance().?, "FULL_SCREEN").*)) {
             const features: ?*Features = Inheritance.upcast(?*Features, Features.getInstance());
             if (Inheritance.call(features.?, "isFeature", .{ gameFeature })) {
                 if (!self.isFullscreen()) {

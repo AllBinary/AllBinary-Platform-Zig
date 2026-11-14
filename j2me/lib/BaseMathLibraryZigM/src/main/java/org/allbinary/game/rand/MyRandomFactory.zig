@@ -27,6 +27,7 @@ const StringMaker = @import("org/allbinary/logic/string/StringMaker.zig").String
 const CommonSeps = @import("org/allbinary/string/CommonSeps.zig").CommonSeps;
 const System = @import("java/lang/System.zig").System;
 const Integer = @import("java/lang/Integer.zig").Integer;
+const RuntimeException = @import("java/lang/RuntimeException.zig").RuntimeException;
 
 //Do not use in client code for money related things.
 pub const MyRandomFactory = struct {
@@ -68,7 +69,7 @@ pub const MyRandomFactory = struct {
 
     pub fn getNextInt(self: *Self, range: i32) i32 {
         const div: i32 = (@divTrunc(@as(i32, std.math.maxInt(i32)), range)) + 1;
-        return @as(i32, @intCast(((divide_N66208: { const left_N66208 = self.rand.?.nextInt(); const right_N66208 = div; break :divide_N66208 if (comptime @typeInfo(@TypeOf(left_N66208)) == .int or @TypeOf(left_N66208) == comptime_int) @divTrunc(left_N66208, right_N66208) else left_N66208 / right_N66208; }))));
+        return Inheritance.number(i32, ((divide_N66208: { const left_N66208 = self.rand.?.nextInt(); const right_N66208 = div; break :divide_N66208 if (comptime @typeInfo(@TypeOf(left_N66208)) == .int or @TypeOf(left_N66208) == comptime_int) @divTrunc(left_N66208, right_N66208) else left_N66208 / right_N66208; })));
     }
     
 
@@ -145,7 +146,7 @@ pub const MyRandomFactory = struct {
         {
             var index: i32 = 0;
             while (index < size2) : (index += 1) {
-            _ = Inheritance.call(Inheritance.call(stringBuilder.?, "appendint", .{ @as(i32, @intCast(Inheritance.call(randomFactory.?, "getAbsoluteNextInt", .{ 3 }))) }).?, "append", .{ commonSeps.?.COMMA });
+            _ = Inheritance.call(Inheritance.call(stringBuilder.?, "appendint", .{ Inheritance.number(i32, Inheritance.call(randomFactory.?, "getAbsoluteNextInt", .{ 3 })) }).?, "append", .{ Inheritance.fieldPointer(commonSeps.?, "COMMA").* });
             }
         }
         _ = std.debug.print("{s}\n", .{String.text(Object.toString(Object.of(stringBuilder)))});
@@ -164,7 +165,7 @@ pub const MyRandomFactory = struct {
         {
             var index: i32 = 0;
             while (index < size) : (index += 1) {
-            _ = Inheritance.call(Inheritance.call(stringBuilder.?, "appendint", .{ intArray[@intCast(index)] }).?, "append", .{ commonSeps.?.COMMA });
+            _ = Inheritance.call(Inheritance.call(stringBuilder.?, "appendint", .{ intArray[@intCast(index)] }).?, "append", .{ Inheritance.fieldPointer(commonSeps.?, "COMMA").* });
             }
         }
         _ = std.debug.print("{s}\n", .{String.text(Object.toString(Object.of(stringBuilder)))});
@@ -172,7 +173,7 @@ pub const MyRandomFactory = struct {
         {
             var index: i32 = 0;
             while (index < size) : (index += 1) {
-            _ = Inheritance.call(Inheritance.call(stringBuilder.?, "appendint", .{ intArray2[@intCast(index)] }).?, "append", .{ commonSeps.?.COMMA });
+            _ = Inheritance.call(Inheritance.call(stringBuilder.?, "appendint", .{ intArray2[@intCast(index)] }).?, "append", .{ Inheritance.fieldPointer(commonSeps.?, "COMMA").* });
             }
         }
         _ = std.debug.print("{s}\n", .{String.text(Object.toString(Object.of(stringBuilder)))});

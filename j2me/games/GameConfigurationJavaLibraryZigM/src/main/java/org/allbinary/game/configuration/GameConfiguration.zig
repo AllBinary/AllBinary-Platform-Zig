@@ -27,6 +27,7 @@ const StringUtil = @import("org/allbinary/logic/string/StringUtil.zig").StringUt
 const GameConfigurationSingleton = @import("org/allbinary/game/configuration/GameConfigurationSingleton.zig").GameConfigurationSingleton;
 const Integer = @import("java/lang/Integer.zig").Integer;
 const Boolean = @import("java/lang/Boolean.zig").Boolean;
+const Exception = @import("java/lang/Exception.zig").Exception;
 
 pub const GameConfiguration = struct {
     const Self = @This();
@@ -45,12 +46,12 @@ pub const GameConfiguration = struct {
     }
 
     fn initFields(this: *Self) void {
-        this.name = Inheritance.upcast(?*String, StringUtil.getInstance().?.EMPTY_STRING);
+        this.name = Inheritance.upcast(?*String, Inheritance.fieldPointer(StringUtil.getInstance().?, "EMPTY_STRING").*);
         this.defaultValue = Inheritance.upcast(?*Integer, Inheritance.call(SmallIntegerSingletonFactory.getInstance().?, "getAt", .{ 0 }));
         this.value = Inheritance.upcast(?*Integer, GameConfiguration.MIN_VALUE);
         this.minValue = this.defaultValue;
         this.maxValue = this.defaultValue;
-        this.modifiable = Inheritance.upcast(?*Boolean, BooleanFactory.getInstance().?.TRUE);
+        this.modifiable = Inheritance.upcast(?*Boolean, Inheritance.fieldPointer(BooleanFactory.getInstance().?, "TRUE").*);
     }
     
 
@@ -73,7 +74,7 @@ pub const GameConfiguration = struct {
         if (!Object.same(self.value, value)) {
             const oldValue: ?*Integer = self.value;
             self.value = value;
-            _ = Inheritance.call(GameFeatureEventHandler.getInstance().?, "fireEvent", .{ Inheritance.callStatic(GameFeatureEvent, "create2", .{ self, Object.toString(Object.of(Inheritance.call(Inheritance.call(Inheritance.call(Inheritance.call(Inheritance.call(StringMaker.create(), "append", .{ self.name }).?, "append", .{ String.literal(" value: from: ") }).?, "appendint", .{ @as(i32, @intCast(oldValue.?.intValue())) }).?, "append", .{ String.literal(" to ") }).?, "appendint", .{ @as(i32, @intCast(self.value.?.intValue())) }))) }) });
+            _ = Inheritance.call(GameFeatureEventHandler.getInstance().?, "fireEvent", .{ Inheritance.callStatic(GameFeatureEvent, "create2", .{ self, Object.toString(Object.of(Inheritance.call(Inheritance.call(Inheritance.call(Inheritance.call(Inheritance.call(StringMaker.create(), "append", .{ self.name }).?, "append", .{ String.literal(" value: from: ") }).?, "appendint", .{ Inheritance.number(i32, oldValue.?.intValue()) }).?, "append", .{ String.literal(" to ") }).?, "appendint", .{ Inheritance.number(i32, self.value.?.intValue()) }))) }) });
         }
     }
     
@@ -134,13 +135,13 @@ pub const GameConfiguration = struct {
         _ = Inheritance.call(stringBuffer.?, "append", .{ String.literal("Name: ") });
         _ = Inheritance.call(stringBuffer.?, "append", .{ self.name });
         _ = Inheritance.call(stringBuffer.?, "append", .{ String.literal(" Min: ") });
-        _ = Inheritance.call(stringBuffer.?, "appendint", .{ @as(i32, @intCast(Inheritance.receiverOf(self.getMinValue().?, "intValue").intValue())) });
+        _ = Inheritance.call(stringBuffer.?, "appendint", .{ Inheritance.number(i32, Inheritance.receiverOf(self.getMinValue().?, "intValue").intValue()) });
         _ = Inheritance.call(stringBuffer.?, "append", .{ String.literal(" Max: ") });
-        _ = Inheritance.call(stringBuffer.?, "appendint", .{ @as(i32, @intCast(Inheritance.receiverOf(self.getMaxValue().?, "intValue").intValue())) });
+        _ = Inheritance.call(stringBuffer.?, "appendint", .{ Inheritance.number(i32, Inheritance.receiverOf(self.getMaxValue().?, "intValue").intValue()) });
         _ = Inheritance.call(stringBuffer.?, "append", .{ String.literal(" Value: ") });
-        _ = Inheritance.call(stringBuffer.?, "appendint", .{ @as(i32, @intCast(Inheritance.receiverOf(self.getValue().?, "intValue").intValue())) });
+        _ = Inheritance.call(stringBuffer.?, "appendint", .{ Inheritance.number(i32, Inheritance.receiverOf(self.getValue().?, "intValue").intValue()) });
         _ = Inheritance.call(stringBuffer.?, "append", .{ String.literal(" Default: ") });
-        _ = Inheritance.call(stringBuffer.?, "appendint", .{ @as(i32, @intCast(Inheritance.receiverOf(self.getDefaultValue().?, "intValue").intValue())) });
+        _ = Inheritance.call(stringBuffer.?, "appendint", .{ Inheritance.number(i32, Inheritance.receiverOf(self.getDefaultValue().?, "intValue").intValue()) });
         _ = Inheritance.call(stringBuffer.?, "append", .{ String.literal(" Modifiable: ") });
         _ = Inheritance.call(stringBuffer.?, "appendboolean", .{ Inheritance.receiverOf(self.isModifiable().?, "booleanValue").booleanValue() });
         return Inheritance.upcast(?*String, Object.toString(Object.of(stringBuffer)));

@@ -63,7 +63,7 @@ pub const NumberTextFieldItemValidator = struct {
     pub fn isNumberValid(self: *Self, value: ?*Integer) ?*Boolean {
         _ = value;
         _ = self;
-        return Inheritance.upcast(?*Boolean, BooleanFactory.getInstance().?.TRUE);
+        return Inheritance.upcast(?*Boolean, Inheritance.fieldPointer(BooleanFactory.getInstance().?, "TRUE").*);
     }
     
 
@@ -75,7 +75,7 @@ pub const NumberTextFieldItemValidator = struct {
     
 
     pub fn isValid(self: *Self) ?*Boolean {
-        var result: ?*Boolean = Inheritance.upcast(?*Boolean, BooleanFactory.getInstance().?.TRUE);
+        var result: ?*Boolean = Inheritance.upcast(?*Boolean, Inheritance.fieldPointer(BooleanFactory.getInstance().?, "TRUE").*);
         const string: ?*String = Inheritance.upcast(?*String, Inheritance.receiver(self.textFieldItem.?, "getString").getString());
         const textLength: i32 = string.?.length();
         if (textLength > 0 and textLength < self.maxChars) {
@@ -83,12 +83,12 @@ pub const NumberTextFieldItemValidator = struct {
                 _ = (std.fmt.parseInt(i32, Inheritance.receiver(self.textFieldItem.?, "getString").getString().?.bytes, 10) catch @panic("java.lang.NumberFormatException"));
             }
             // catch (NumberFormatException e):
-//                 result = Inheritance.upcast(@TypeOf(result), BooleanFactory.getInstance().?.FALSE);
+//                 result = Inheritance.upcast(@TypeOf(result), Inheritance.fieldPointer(BooleanFactory.getInstance().?, "FALSE").*);
         } else {
             if (textLength < 1) {
-                result = Inheritance.upcast(@TypeOf(result), BooleanFactory.getInstance().?.FALSE);
+                result = Inheritance.upcast(@TypeOf(result), Inheritance.fieldPointer(BooleanFactory.getInstance().?, "FALSE").*);
             } else if (textLength > self.maxChars) {
-                result = Inheritance.upcast(@TypeOf(result), BooleanFactory.getInstance().?.FALSE);
+                result = Inheritance.upcast(@TypeOf(result), Inheritance.fieldPointer(BooleanFactory.getInstance().?, "FALSE").*);
             }
         }
         return result;
@@ -106,10 +106,10 @@ pub const NumberTextFieldItemValidator = struct {
         if (textLength > 0 and textLength < self.maxChars) {
             { // try
                 const number: ?*Integer = Inheritance.upcast(?*Integer, Inheritance.call(smallIntegerSingletonFactory.?, "createInstance", .{ (std.fmt.parseInt(i32, Inheritance.receiver(self.textFieldItem.?, "getString").getString().?.bytes, 10) catch @panic("java.lang.NumberFormatException")) }));
-                if (number.?.intValue() > self.min) {
+                if (Inheritance.arithmetic(.greater, number.?.intValue(), self.min)) {
                     _ = Inheritance.call(stringMaker.?, "delete", .{ 0, stringMaker.?.length() });
                     _ = Inheritance.call(list.?, "add", .{ Object.toString(Object.of(Inheritance.call(Inheritance.call(stringMaker.?, "append", .{ name }).?, "append", .{ String.literal(" is to small") }))) });
-                } else if (number.?.intValue() > self.max) {
+                } else if (Inheritance.arithmetic(.greater, number.?.intValue(), self.max)) {
                     _ = Inheritance.call(stringMaker.?, "delete", .{ 0, stringMaker.?.length() });
                     _ = Inheritance.call(list.?, "add", .{ Object.toString(Object.of(Inheritance.call(Inheritance.call(stringMaker.?, "append", .{ name }).?, "append", .{ String.literal(" is to large") }))) });
                 }

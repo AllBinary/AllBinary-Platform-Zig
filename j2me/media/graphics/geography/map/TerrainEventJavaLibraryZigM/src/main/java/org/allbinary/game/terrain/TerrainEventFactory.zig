@@ -38,7 +38,7 @@ pub const TerrainEventFactory = struct {
 
     pub fn getInstance(self: *Self) ?*AllBinaryEventObject {
         _ = self;
-        return Inheritance.upcast(?*AllBinaryEventObject, Inheritance.callStatic(TerrainEvent, "create1", .{ NullUtil.getInstance().?.NULL_OBJECT }));
+        return Inheritance.upcast(?*AllBinaryEventObject, Inheritance.callStatic(TerrainEvent, "create1", .{ Inheritance.fieldPointer(NullUtil.getInstance().?, "NULL_OBJECT").* }));
     }
 };
 

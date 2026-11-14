@@ -27,6 +27,7 @@ const OperatingSystems = @import("org/allbinary/logic/system/os/OperatingSystems
 const SystemProperties = @import("org/allbinary/logic/system/os/SystemProperties.zig").SystemProperties;
 const CommonStrings = @import("org/allbinary/string/CommonStrings.zig").CommonStrings;
 const LinuxOS = @import("org/allbinary/logic/system/os/linux/LinuxOS.zig").LinuxOS;
+const Exception = @import("java/lang/Exception.zig").Exception;
 
 pub const LinuxOperatingSystemFactory = struct {
     const Self = @This();
@@ -63,7 +64,7 @@ pub const LinuxOperatingSystemFactory = struct {
             const operatingSystems: ?*OperatingSystems = Inheritance.upcast(?*OperatingSystems, OperatingSystems.getInstance());
             const osName: ?*String = Inheritance.upcast(?*String, Inheritance.receiverOf(SystemProperties.getInstance().?, "getName").getName());
             var operatingSystemInterface: ?*GenericOperatingSystem = null;
-            if (Inheritance.call(osName.?, "compareTo", .{ operatingSystems.?.LINUX }) == 0) {
+            if (Inheritance.call(osName.?, "compareTo", .{ Inheritance.fieldPointer(operatingSystems.?, "LINUX").* }) == 0) {
                 operatingSystemInterface = Inheritance.upcast(@TypeOf(operatingSystemInterface), LinuxOS.create());
             } else {
                 if (operatingSystems.?.isUnknownSpecificOSAllowed()) {
@@ -75,9 +76,9 @@ pub const LinuxOperatingSystemFactory = struct {
             return operatingSystemInterface;
         }
         // catch (Exception e):
-//             if (Inheritance.call(LogConfigTypes.LOGGING.?, "contains", .{ LogConfigTypeFactory.getInstance().?.FACTORYERROR })) {
+//             if (Inheritance.call(LogConfigTypes.LOGGING.?, "contains", .{ Inheritance.fieldPointer(LogConfigTypeFactory.getInstance().?, "FACTORYERROR").* })) {
 //                 const commonStrings: ?*CommonStrings = Inheritance.upcast(?*CommonStrings, CommonStrings.getInstance()); _ = commonStrings;
-//                 _ = Inheritance.call(self.logUtil.?, "put", .{ commonStrings.?.EXCEPTION, self, commonStrings.?.GET_INSTANCE, e });
+//                 _ = Inheritance.call(self.logUtil.?, "put", .{ Inheritance.fieldPointer(commonStrings.?, "EXCEPTION").*, self, Inheritance.fieldPointer(commonStrings.?, "GET_INSTANCE").*, e });
 //             }
 //             return Inheritance.upcast(?*GenericOperatingSystem, NoOperatingSystem.NO_OPERATING_SYSTEM);
     }

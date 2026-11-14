@@ -73,7 +73,7 @@ pub const ViewPosition = struct {
     
 
     pub fn getZ2(self: *Self) i32 {
-        return @as(i32, @intCast((self.getZ() + Inheritance.receiver(self.allbinaryLayer.?, "getDepth").getDepth())));
+        return Inheritance.number(i32, (self.getZ() + Inheritance.receiver(self.allbinaryLayer.?, "getDepth").getDepth()));
     }
     
 

@@ -18,9 +18,10 @@ const allocator = std.heap.page_allocator;
 const String = @import("java/lang/String.zig").String;
 const Object = @import("java/lang/Object.zig").Object;
 const Inheritance = @import("zig/Inheritance.zig");
-// const Graphics = @import("javax/microedition/lcdui/Graphics.zig").Graphics;
+const Graphics = @import("javax/microedition/lcdui/Graphics.zig").Graphics;
 const AllBinaryLayer = @import("org/allbinary/layer/AllBinaryLayer.zig").AllBinaryLayer;
 const HealthBarAnimation = @import("org/allbinary/game/health/HealthBarAnimation.zig").HealthBarAnimation;
+const Exception = @import("java/lang/Exception.zig").Exception;
 
 pub const HealthBarTwodAnimation = struct {
     const Self = @This();
@@ -42,7 +43,7 @@ pub const HealthBarTwodAnimation = struct {
         _ = y;
         const ax: i32 = Inheritance.receiverOf(Inheritance.receiverOf(Inheritance.fieldPointer(self, "allbinaryLayer").*.?, "getViewPosition").getViewPosition().?, "getX").getX();
         _ = Inheritance.call(Inheritance.fieldPointer(self, "basicSetColorUtil").*.?, "setBasicColorP3", .{ graphics, Inheritance.fieldPointer(self, "basicColor").*, Inheritance.fieldPointer(self, "colorP").* });
-        _ = Inheritance.call(graphics.?, "fillRect", .{ ax, Inheritance.receiver(self, "getY").getY() - 1, Inheritance.fieldPointer(self, "x2").*, Inheritance.fieldPointer(self, "thickness").* });
+        _ = Inheritance.call(graphics.?, "fillRect", .{ ax, Inheritance.arithmetic(.subtract, Inheritance.receiver(self, "getY").getY(), 1), Inheritance.fieldPointer(self, "x2").*, Inheritance.fieldPointer(self, "thickness").* });
     }
 };
 

@@ -22,6 +22,7 @@ const PointFactory = @import("org/allbinary/graphics/PointFactory.zig").PointFac
 const AllBinaryLayer = @import("org/allbinary/layer/AllBinaryLayer.zig").AllBinaryLayer;
 const BasicArrayListUtil = @import("org/allbinary/util/BasicArrayListUtil.zig").BasicArrayListUtil;
 const RelativeLayerRelationship = @import("org/allbinary/layer/relationship/RelativeLayerRelationship.zig").RelativeLayerRelationship;
+const Exception = @import("java/lang/Exception.zig").Exception;
 
 pub const MiddleRelativeLayerRelationship = struct {
     const Self = @This();

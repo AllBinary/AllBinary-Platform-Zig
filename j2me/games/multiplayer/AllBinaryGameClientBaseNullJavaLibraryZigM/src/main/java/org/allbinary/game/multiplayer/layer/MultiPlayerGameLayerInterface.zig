@@ -27,7 +27,7 @@ pub const MultiPlayerGameLayerInterface = struct {
     pointer: *anyopaque,
     object: Object,
     toStringFn: *const fn (pointer: *anyopaque) ?*String,
-    getMultiplayerBehaviorFn: *const fn (pointer: *anyopaque) ?*MultiplayerBehavior,
+    getMultiplayerBehaviorFn: *const fn (interface_pointer: *anyopaque) ?*MultiplayerBehavior,
 
     pub fn getMultiplayerBehavior(self: *Self) ?*MultiplayerBehavior {
         return self.getMultiplayerBehaviorFn(self.pointer);
@@ -39,14 +39,14 @@ pub const MultiPlayerGameLayerInterface = struct {
 
     // The interface value of an object with the methods. Like a Java class a method can be declared by the object or a superclass.
     pub fn of(object: anytype) ?*Self {
-        const Implementation = @TypeOf(object);
+        const ImplementationType = @TypeOf(object);
         const Methods = struct {
             fn toString(pointer: *anyopaque) ?*String {
-                const implementation: Implementation = @ptrCast(@alignCast(pointer));
+                const implementation: ImplementationType = @ptrCast(@alignCast(pointer));
                 return String.valueOf(implementation);
             }
-            fn getMultiplayerBehavior(pointer: *anyopaque) ?*MultiplayerBehavior {
-                const implementation: Implementation = @ptrCast(@alignCast(pointer));
+            fn getMultiplayerBehavior(interface_pointer: *anyopaque) ?*MultiplayerBehavior {
+                const implementation: ImplementationType = @ptrCast(@alignCast(interface_pointer));
                 return Inheritance.upcast(?*MultiplayerBehavior, Inheritance.receiver(implementation, "getMultiplayerBehavior").getMultiplayerBehavior());
             }
         };

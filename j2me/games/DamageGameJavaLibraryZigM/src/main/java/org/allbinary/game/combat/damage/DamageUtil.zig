@@ -23,6 +23,7 @@ const CollidableDestroyableDamageableLayer = @import("org/allbinary/game/layer/s
 const LogUtil = @import("org/allbinary/logic/communication/log/LogUtil.zig").LogUtil;
 const StringMaker = @import("org/allbinary/logic/string/StringMaker.zig").StringMaker;
 const DamageableInterface = @import("org/allbinary/game/combat/damage/DamageableInterface.zig").DamageableInterface;
+const Exception = @import("java/lang/Exception.zig").Exception;
 
 pub const DamageUtil = struct {
     const Self = @This();

@@ -19,13 +19,14 @@ const String = @import("java/lang/String.zig").String;
 const Object = @import("java/lang/Object.zig").Object;
 const Inheritance = @import("zig/Inheritance.zig");
 const File = @import("java/io/File.zig").File;
-// const FileInputStream = @import("java/io/FileInputStream.zig").FileInputStream;
-// const InputStream = @import("java/io/InputStream.zig").InputStream;
+const FileInputStream = @import("java/io/FileInputStream.zig").FileInputStream;
+const InputStream = @import("java/io/InputStream.zig").InputStream;
 const NullUtil = @import("org/allbinary/logic/NullUtil.zig").NullUtil;
 const LogUtil = @import("org/allbinary/logic/communication/log/LogUtil.zig").LogUtil;
 const StringUtil = @import("org/allbinary/logic/string/StringUtil.zig").StringUtil;
 const CommonStrings = @import("org/allbinary/string/CommonStrings.zig").CommonStrings;
 const System = @import("java/lang/System.zig").System;
+const Exception = @import("java/lang/Exception.zig").Exception;
 
 //J2SEForJ2ME
 pub const AbFileSystem = struct {
@@ -89,7 +90,7 @@ pub const AbFileSystem = struct {
     
 
     pub fn readAsString2(self: *Self, fileName: ?*String, bytes: []i8) ?*String {
-        var closeable: ?Object = Inheritance.upcast(?Object, NullUtil.getInstance().?.NULL_OBJECT);
+        var closeable: ?Object = Inheritance.upcast(?Object, Inheritance.fieldPointer(NullUtil.getInstance().?, "NULL_OBJECT").*);
         { // try
             const idFile: ?*InputStream = Inheritance.upcast(?*InputStream, Inheritance.callStatic(FileInputStream, "create1", .{ fileName }));
             closeable = Inheritance.upcast(@TypeOf(closeable), idFile);
@@ -99,25 +100,25 @@ pub const AbFileSystem = struct {
             }
         }
         // catch (Exception e):
-//             _ = Inheritance.call(self.logUtil.?, "put", .{ self.commonStrings.?.EXCEPTION, self, String.literal("readAsString"), e });
+//             _ = Inheritance.call(self.logUtil.?, "put", .{ Inheritance.fieldPointer(self.commonStrings.?, "EXCEPTION").*, self, String.literal("readAsString"), e });
         { // finally
             _ = Inheritance.call(self, "close", .{ closeable });
         }
-        return Inheritance.upcast(?*String, StringUtil.getInstance().?.EMPTY_STRING);
+        return Inheritance.upcast(?*String, Inheritance.fieldPointer(StringUtil.getInstance().?, "EMPTY_STRING").*);
     }
     
 
     pub fn close(self: *Self, closeable: ?Object) bool {
         _ = self;
         { // try
-            if (closeable != null) {
+            if (!Object.isNull(closeable)) {
                 const inputStream: ?*InputStream = Inheritance.upcast(?*InputStream, (Inheritance.cast(?*InputStream, closeable)));
                 _ = inputStream.?.close();
             }
             return true;
         }
         // catch (Exception e):
-//             _ = Inheritance.call(self.logUtil.?, "put", .{ self.commonStrings.?.EXCEPTION, self, self.commonStrings.?.CLOSE, e });
+//             _ = Inheritance.call(self.logUtil.?, "put", .{ Inheritance.fieldPointer(self.commonStrings.?, "EXCEPTION").*, self, Inheritance.fieldPointer(self.commonStrings.?, "CLOSE").*, e });
 //             return false;
     }
     

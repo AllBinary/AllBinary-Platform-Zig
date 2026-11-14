@@ -18,8 +18,8 @@ const allocator = std.heap.page_allocator;
 const String = @import("java/lang/String.zig").String;
 const Object = @import("java/lang/Object.zig").Object;
 const Inheritance = @import("zig/Inheritance.zig");
-// const Graphics = @import("javax/microedition/lcdui/Graphics.zig").Graphics;
-// const Player = @import("javax/microedition/media/Player.zig").Player;
+const Graphics = @import("javax/microedition/lcdui/Graphics.zig").Graphics;
+const Player = @import("javax/microedition/media/Player.zig").Player;
 const Animation = @import("org/allbinary/animation/Animation.zig").Animation;
 const AnimationBehavior = @import("org/allbinary/animation/AnimationBehavior.zig").AnimationBehavior;
 const AnimationEventHandler = @import("org/allbinary/animation/AnimationEventHandler.zig").AnimationEventHandler;
@@ -28,6 +28,7 @@ const PrimitiveIntUtil = @import("org/allbinary/logic/math/PrimitiveIntUtil.zig"
 const AllBinaryEventObject = @import("org/allbinary/logic/util/event/AllBinaryEventObject.zig").AllBinaryEventObject;
 const GameTickTimeDelayHelperFactory = @import("org/allbinary/time/GameTickTimeDelayHelperFactory.zig").GameTickTimeDelayHelperFactory;
 const TimeDelayHelper = @import("org/allbinary/time/TimeDelayHelper.zig").TimeDelayHelper;
+const Exception = @import("java/lang/Exception.zig").Exception;
 
 pub const CaptionIndexedAnimation = struct {
     const Self = @This();
@@ -75,7 +76,7 @@ pub const CaptionIndexedAnimation = struct {
         const timePerFrame: i32 = @divTrunc(this.time, this.getSize());
         this.timeDelayHelper = Inheritance.callStatic(TimeDelayHelper, "create1", .{ timePerFrame });
         this.player = player;
-        _ = this.player.?.start();
+        _ = Inheritance.receiver(this.player.?, "start").start();
         Inheritance.bindOverrides(this);
         return this;
     }
@@ -83,7 +84,7 @@ pub const CaptionIndexedAnimation = struct {
 
     // throws Exception
     pub fn nextFrame(self: *Self) void {
-        if (Inheritance.call(self.timeDelayHelper.?, "isTime", .{ GameTickTimeDelayHelperFactory.getInstance().?.startTime })) {
+        if (Inheritance.call(self.timeDelayHelper.?, "isTime", .{ Inheritance.fieldPointer(GameTickTimeDelayHelperFactory.getInstance().?, "startTime").* })) {
             _ = Inheritance.receiver(self.movieIndexedAnimationInterface.?, "nextFrame").nextFrame();
         }
         if (self.isLastFrame()) {

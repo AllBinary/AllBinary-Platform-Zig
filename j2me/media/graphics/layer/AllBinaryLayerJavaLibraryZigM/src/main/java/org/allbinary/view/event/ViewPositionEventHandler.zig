@@ -27,6 +27,7 @@ const BasicArrayList = @import("org/allbinary/util/BasicArrayList.zig").BasicArr
 const BasicArrayListD = @import("org/allbinary/util/BasicArrayListD.zig").BasicArrayListD;
 const ViewPositionEvent = @import("org/allbinary/view/event/ViewPositionEvent.zig").ViewPositionEvent;
 const ViewPositionEventListenerInterface = @import("org/allbinary/view/event/ViewPositionEventListenerInterface.zig").ViewPositionEventListenerInterface;
+const Exception = @import("java/lang/Exception.zig").Exception;
 
 pub const ViewPositionEventHandler = struct {
     const Self = @This();
@@ -69,7 +70,7 @@ pub const ViewPositionEventHandler = struct {
 
     pub fn removeAllListeners(self: *Self) void {
         _ = self.list.?.clear();
-        _ = self.base.removeAllListeners();
+        _ = Inheritance.receiver(&self.base, "removeAllListeners").removeAllListeners();
     }
     
 
@@ -85,11 +86,11 @@ pub const ViewPositionEventHandler = struct {
             var index: i32 = self.list.?.size();
             while (value_N66550: { index -= 1; break :value_N66550 index; } >= 0) {
             { // try
-                const layerInterface: ?*AllBinaryLayer = Inheritance.cast(?*AllBinaryLayer, self.list.?.objectArray[@intCast(index)]);
+                const layerInterface: ?*AllBinaryLayer = Inheritance.cast(?*AllBinaryLayer, Inheritance.fieldPointer(self.list.?, "objectArray").*[@intCast(index)]);
                 _ = Inheritance.call(layerInterface.?, "onChangeEvent", .{ Inheritance.cast(?*ViewPositionEvent, eventObject) });
             }
             // catch (Exception e):
-//                 _ = Inheritance.call(Inheritance.fieldPointer(self, "logUtil").*.?, "put", .{ Inheritance.fieldPointer(self, "commonStrings").*.?.EXCEPTION, self, EventStrings.getInstance().?.FIRE_EVENT, e });
+//                 _ = Inheritance.call(Inheritance.fieldPointer(self, "logUtil").*.?, "put", .{ Inheritance.fieldPointer(Inheritance.fieldPointer(self, "commonStrings").*.?, "EXCEPTION").*, self, Inheritance.fieldPointer(EventStrings.getInstance().?, "FIRE_EVENT").*, e });
             }
         }
         _ = Inheritance.call(&self.base, "fireEvent", .{ eventObject });

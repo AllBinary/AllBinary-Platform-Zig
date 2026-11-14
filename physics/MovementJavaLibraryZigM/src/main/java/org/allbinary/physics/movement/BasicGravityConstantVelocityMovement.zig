@@ -23,6 +23,7 @@ const GravityUtil = @import("org/allbinary/game/physics/acceleration/GravityUtil
 const VelocityProperties = @import("org/allbinary/game/physics/velocity/VelocityProperties.zig").VelocityProperties;
 const BasicDecimal = @import("org/allbinary/logic/math/BasicDecimal.zig").BasicDecimal;
 const BasicConstantVelocityMovement = @import("org/allbinary/physics/movement/BasicConstantVelocityMovement.zig").BasicConstantVelocityMovement;
+const Exception = @import("java/lang/Exception.zig").Exception;
 
 pub const BasicGravityConstantVelocityMovement = struct {
     const Self = @This();
@@ -38,7 +39,7 @@ pub const BasicGravityConstantVelocityMovement = struct {
     pub fn create1(speedBasicDecimal: ?*BasicDecimal) *Self {
         const this = allocator.create(Self) catch unreachable;
         this.* = .{};
-        this.base = Inheritance.callStatic(BasicConstantVelocityMovement, "create2", .{ speedBasicDecimal, Inheritance.callStatic(VelocityProperties, "create2", .{ @as(i32, @intCast(speedBasicDecimal.?.getUnscaled())), @as(i32, @intCast(speedBasicDecimal.?.getUnscaled())) }) }).*;
+        this.base = Inheritance.callStatic(BasicConstantVelocityMovement, "create2", .{ speedBasicDecimal, Inheritance.callStatic(VelocityProperties, "create2", .{ Inheritance.number(i32, speedBasicDecimal.?.getUnscaled()), Inheritance.number(i32, speedBasicDecimal.?.getUnscaled()) }) }).*;
         this.initFields();
         Inheritance.bindOverrides(this);
         return this;
@@ -48,7 +49,7 @@ pub const BasicGravityConstantVelocityMovement = struct {
     // throws Exception
     pub fn process(self: *Self, layer: ?*AllBinaryGameLayer) void {
         _ = Inheritance.call(&self.base, "process", .{ layer });
-        _ = Inheritance.call(self.gravityUtil.?, "process", .{ Inheritance.receiver(self, "getVelocityProperties").getVelocityProperties(), self.gravityUtil.?.GAME_GRAVITY_VELOCITY });
+        _ = Inheritance.call(self.gravityUtil.?, "process", .{ Inheritance.receiver(self, "getVelocityProperties").getVelocityProperties(), Inheritance.fieldPointer(self.gravityUtil.?, "GAME_GRAVITY_VELOCITY").* });
     }
 };
 

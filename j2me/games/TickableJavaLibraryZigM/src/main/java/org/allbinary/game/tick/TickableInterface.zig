@@ -20,6 +20,7 @@ const Object = @import("java/lang/Object.zig").Object;
 const Inheritance = @import("zig/Inheritance.zig");
 const AllBinaryLayerManager = @import("org/allbinary/layer/AllBinaryLayerManager.zig").AllBinaryLayerManager;
 const NamedInterface = @import("org/allbinary/layer/NamedInterface.zig").NamedInterface;
+const Exception = @import("java/lang/Exception.zig").Exception;
 
 // Java interface: an implementation is a pointer and a table of functions
 pub const TickableInterface = struct {
@@ -29,7 +30,7 @@ pub const TickableInterface = struct {
     object: Object,
     base: NamedInterface,
     toStringFn: *const fn (pointer: *anyopaque) ?*String,
-    processTickFn: *const fn (pointer: *anyopaque, allBinaryLayerManager: ?*AllBinaryLayerManager) void,
+    processTickFn: *const fn (interface_pointer: *anyopaque, allBinaryLayerManager: ?*AllBinaryLayerManager) void,
 
     pub fn processTick(self: *Self, allBinaryLayerManager: ?*AllBinaryLayerManager) void {
         return self.processTickFn(self.pointer, allBinaryLayerManager);
@@ -41,15 +42,15 @@ pub const TickableInterface = struct {
 
     // The interface value of an object with the methods. Like a Java class a method can be declared by the object or a superclass.
     pub fn of(object: anytype) ?*Self {
-        const Implementation = @TypeOf(object);
+        const ImplementationType = @TypeOf(object);
         const Methods = struct {
             fn toString(pointer: *anyopaque) ?*String {
-                const implementation: Implementation = @ptrCast(@alignCast(pointer));
+                const implementation: ImplementationType = @ptrCast(@alignCast(pointer));
                 return String.valueOf(implementation);
             }
-            fn processTick(pointer: *anyopaque, allBinaryLayerManager: ?*AllBinaryLayerManager) void {
-                const implementation: Implementation = @ptrCast(@alignCast(pointer));
-                return Inheritance.receiver(implementation, "processTick").processTick(allBinaryLayerManager);
+            fn processTick(interface_pointer: *anyopaque, allBinaryLayerManager: ?*AllBinaryLayerManager) void {
+                const implementation: ImplementationType = @ptrCast(@alignCast(interface_pointer));
+                return Inheritance.call(implementation, "processTick", .{ allBinaryLayerManager });
             }
         };
         const this = allocator.create(Self) catch unreachable;

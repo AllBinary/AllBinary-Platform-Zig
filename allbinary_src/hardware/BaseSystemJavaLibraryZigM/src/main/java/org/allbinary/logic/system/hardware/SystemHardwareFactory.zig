@@ -26,6 +26,7 @@ const CommonStrings = @import("org/allbinary/string/CommonStrings.zig").CommonSt
 const HardwareFactory = @import("org/allbinary/logic/system/hardware/HardwareFactory.zig").HardwareFactory;
 const HardwareInterface = @import("org/allbinary/logic/system/hardware/HardwareInterface.zig").HardwareInterface;
 const NoHardware = @import("org/allbinary/logic/system/hardware/NoHardware.zig").NoHardware;
+const Exception = @import("java/lang/Exception.zig").Exception;
 
 pub const SystemHardwareFactory = struct {
     const Self = @This();
@@ -65,10 +66,10 @@ pub const SystemHardwareFactory = struct {
             if (Object.same(self.hardwareInterface, NoHardware.getInstance())) {
                 self.hardwareInterface = Inheritance.upcast(@TypeOf(self.hardwareInterface), Inheritance.call(HardwareFactory.getInstance().?, "getInstance", .{ operatingSystemInterface }));
             }
-            _ = Inheritance.call(self.logUtil.?, "putF", .{ String.literal("Found Hardware"), self, self.commonStrings.?.CONSTRUCTOR });
+            _ = Inheritance.call(self.logUtil.?, "putF", .{ String.literal("Found Hardware"), self, Inheritance.fieldPointer(self.commonStrings.?, "CONSTRUCTOR").* });
         }
         // catch (Exception e):
-//             _ = Inheritance.call(self.logUtil.?, "put", .{ self.commonStrings.?.EXCEPTION, self, self.commonStrings.?.CONSTRUCTOR, e });
+//             _ = Inheritance.call(self.logUtil.?, "put", .{ Inheritance.fieldPointer(self.commonStrings.?, "EXCEPTION").*, self, Inheritance.fieldPointer(self.commonStrings.?, "CONSTRUCTOR").*, e });
         return self.hardwareInterface;
     }
     
@@ -77,10 +78,10 @@ pub const SystemHardwareFactory = struct {
         const systemHardwareFactory: ?*SystemHardwareFactory = Inheritance.upcast(?*SystemHardwareFactory, SystemHardwareFactory.getInstance());
         const osBuffer: ?*StringMaker = StringMaker.create();
         _ = Inheritance.call(osBuffer.?, "append", .{ String.literal("Hardware Info: \n") });
-        if (systemHardwareFactory.?.hardwareInterface != null) {
+        if (!Object.isNull(systemHardwareFactory.?.hardwareInterface)) {
             _ = Inheritance.call(osBuffer.?, "append", .{ Object.toString(Object.of(systemHardwareFactory.?.hardwareInterface)) });
         } else {
-            _ = Inheritance.call(osBuffer.?, "append", .{ StringUtil.getInstance().?.NULL_STRING });
+            _ = Inheritance.call(osBuffer.?, "append", .{ Inheritance.fieldPointer(StringUtil.getInstance().?, "NULL_STRING").* });
         }
         return Inheritance.upcast(?*String, Object.toString(Object.of(osBuffer)));
     }

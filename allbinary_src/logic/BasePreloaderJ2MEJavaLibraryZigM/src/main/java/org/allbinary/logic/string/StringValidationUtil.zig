@@ -54,7 +54,7 @@ pub const StringValidationUtil = struct {
 
     pub fn containsSpaces(self: *Self, value: ?*String) bool {
         _ = self;
-        if (Inheritance.call(value.?, "indexOf", .{ ' ' }) >= 0) {
+        if (Inheritance.arithmetic(.greater_equal, Inheritance.call(value.?, "indexOf", .{ ' ' }), 0)) {
             return true;
         }
         return false;
@@ -93,7 +93,7 @@ pub const StringValidationUtil = struct {
 
     pub fn isValidRequired(self: *Self, value: ?*String, min: i32, max: i32) bool {
         _ = self;
-        if (value == null or value.?.length() < min or value.?.length() > max) {
+        if (value.?.length() < min or value.?.length() > max) {
             return false;
         }
         return true;
@@ -113,7 +113,7 @@ pub const StringValidationUtil = struct {
 
     pub fn isValidNotRequired(self: *Self, value: ?*String, min: i32, max: i32) bool {
         _ = self;
-        if (value != null) {
+        if (value.?.length() > 0) {
             if (value.?.length() < min or value.?.length() > max) {
                 return false;
             }
@@ -123,8 +123,8 @@ pub const StringValidationUtil = struct {
     
 
     pub fn isValidNotRequiredNumber(self: *Self, value: ?*String, min: i32, max: i32) bool {
-        if (value != null) {
-            if (Inheritance.call(self.tsUtil.?, "compareTo", .{ value, self.stringUtil.?.NULL_STRING }) == 0 or value.?.length() < min or value.?.length() > max) {
+        if (value.?.length() > 0) {
+            if (Inheritance.call(self.tsUtil.?, "compareTo", .{ value, Inheritance.fieldPointer(self.stringUtil.?, "NULL_STRING").* }) == 0 or value.?.length() < min or value.?.length() > max) {
                 return false;
             }
             if (!Inheritance.call(self, "isNumber", .{ value })) {
@@ -136,7 +136,7 @@ pub const StringValidationUtil = struct {
     
 
     pub fn isEmpty(self: *Self, string: ?*String) bool {
-        if (string != null and Inheritance.call(self.tsUtil.?, "compareTo", .{ string, self.stringUtil.?.NULL_STRING }) != 0 and Inheritance.call(self.tsUtil.?, "compareTo", .{ string, self.stringUtil.?.EMPTY_STRING }) != 0) {
+        if (Inheritance.call(self.tsUtil.?, "compareTo", .{ string, Inheritance.fieldPointer(self.stringUtil.?, "NULL_STRING").* }) != 0 and Inheritance.call(self.tsUtil.?, "compareTo", .{ string, Inheritance.fieldPointer(self.stringUtil.?, "EMPTY_STRING").* }) != 0) {
             return false;
         } else {
             return true;

@@ -18,7 +18,7 @@ const allocator = std.heap.page_allocator;
 const String = @import("java/lang/String.zig").String;
 const Object = @import("java/lang/Object.zig").Object;
 const Inheritance = @import("zig/Inheritance.zig");
-// const Displayable = @import("javax/microedition/lcdui/Displayable.zig").Displayable;
+const Displayable = @import("javax/microedition/lcdui/Displayable.zig").Displayable;
 const J2MEUtil = @import("org/allbinary/J2MEUtil.zig").J2MEUtil;
 const Processor = @import("org/allbinary/canvas/Processor.zig").Processor;
 const ScreenRepaintProcessor = @import("org/allbinary/graphics/displayable/screen/ScreenRepaintProcessor.zig").ScreenRepaintProcessor;
@@ -46,7 +46,7 @@ pub const ScreenRepaintProcessorFactory = struct {
     }
     
 
-    pub fn create(self: *Self, displayable: ?*Displayable) ?*Processor {
+    pub fn create_Method(self: *Self, displayable: ?*Displayable) ?*Processor {
         _ = self;
         if (!J2MEUtil.isJ2ME()) {
             return Inheritance.upcast(?*Processor, Inheritance.callStatic(ScreenRepaintProcessor, "create1", .{ displayable }));

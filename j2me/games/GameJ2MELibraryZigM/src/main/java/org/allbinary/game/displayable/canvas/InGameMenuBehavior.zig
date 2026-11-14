@@ -22,6 +22,7 @@ const DisplayChangeEvent = @import("org/allbinary/graphics/displayable/event/Dis
 const AllBinaryGameCanvas = @import("org/allbinary/game/displayable/canvas/AllBinaryGameCanvas.zig").AllBinaryGameCanvas;
 const BaseMenuBehavior = @import("org/allbinary/game/displayable/canvas/BaseMenuBehavior.zig").BaseMenuBehavior;
 const GameCanvasNonBotPaintable = @import("org/allbinary/game/displayable/canvas/GameCanvasNonBotPaintable.zig").GameCanvasNonBotPaintable;
+const Exception = @import("java/lang/Exception.zig").Exception;
 
 pub const InGameMenuBehavior = struct {
     const Self = @This();

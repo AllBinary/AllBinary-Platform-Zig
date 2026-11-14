@@ -26,6 +26,7 @@ const BasicArrayList = @import("org/allbinary/util/BasicArrayList.zig").BasicArr
 const BasicArrayListD = @import("org/allbinary/util/BasicArrayListD.zig").BasicArrayListD;
 const AnalogControllerConfigurationEvent = @import("org/allbinary/android/input/motion/event/AnalogControllerConfigurationEvent.zig").AnalogControllerConfigurationEvent;
 const AnalogControllerConfigurationEventListenerInterface = @import("org/allbinary/android/input/motion/event/AnalogControllerConfigurationEventListenerInterface.zig").AnalogControllerConfigurationEventListenerInterface;
+const Exception = @import("java/lang/Exception.zig").Exception;
 
 pub const AnalogControllerConfigurationEventHandler = struct {
     const Self = @This();
@@ -68,7 +69,7 @@ pub const AnalogControllerConfigurationEventHandler = struct {
 
     pub fn removeAllListeners(self: *Self) void {
         _ = self.list.?.clear();
-        _ = self.base.removeAllListeners();
+        _ = Inheritance.receiver(&self.base, "removeAllListeners").removeAllListeners();
     }
     
 
@@ -84,11 +85,11 @@ pub const AnalogControllerConfigurationEventHandler = struct {
             var index: i32 = self.list.?.size();
             while (value_N66543: { index -= 1; break :value_N66543 index; } >= 0) {
             { // try
-                const playerGameInput: ?*AnalogControllerConfigurationEventListenerInterface = Inheritance.cast(?*AnalogControllerConfigurationEventListenerInterface, self.list.?.objectArray[@intCast(index)]);
+                const playerGameInput: ?*AnalogControllerConfigurationEventListenerInterface = Inheritance.cast(?*AnalogControllerConfigurationEventListenerInterface, Inheritance.fieldPointer(self.list.?, "objectArray").*[@intCast(index)]);
                 _ = Inheritance.call(playerGameInput.?, "onAnalogControllerConfigurationEvent", .{ Inheritance.cast(?*AnalogControllerConfigurationEvent, eventObject) });
             }
             // catch (Exception e):
-//                 _ = Inheritance.call(Inheritance.fieldPointer(self, "logUtil").*.?, "put", .{ Inheritance.fieldPointer(self, "commonStrings").*.?.EXCEPTION, self, EventStrings.getInstance().?.FIRE_EVENT, e });
+//                 _ = Inheritance.call(Inheritance.fieldPointer(self, "logUtil").*.?, "put", .{ Inheritance.fieldPointer(Inheritance.fieldPointer(self, "commonStrings").*.?, "EXCEPTION").*, self, Inheritance.fieldPointer(EventStrings.getInstance().?, "FIRE_EVENT").*, e });
             }
         }
         _ = Inheritance.call(&self.base, "fireEvent", .{ eventObject });

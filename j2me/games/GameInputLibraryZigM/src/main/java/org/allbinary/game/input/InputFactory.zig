@@ -39,7 +39,7 @@ pub const InputFactory = struct {
 
     // Static fields with runtime initializers: call staticInit once at startup
     pub fn staticInit() void {
-        instance = Inheritance.upcast(?Object, NullUtil.getInstance().?.NULL_OBJECT);
+        instance = Inheritance.upcast(?Object, Inheritance.fieldPointer(NullUtil.getInstance().?, "NULL_OBJECT").*);
     }
 
     fn initFields(this: *Self) void {
@@ -49,12 +49,12 @@ pub const InputFactory = struct {
         this.DEVICE_ID_LABEL = String.literal("DeviceId: ");
         this.MAX = Inheritance.receiverOf(SmallIntegerSingletonFactory.getInstance().?, "getMin").getMin();
         this.inputIntegerArray = array_N66202: { const array_N66202_array = allocator.alloc(?*Input, @intCast(this.MAX)) catch unreachable; @memset(array_N66202_array, null); break :array_N66202 array_N66202_array; };
-        this.NO_INPUT = Inheritance.callStatic(Input, "create2", .{ 0, this.commonStrings.?.UNKNOWN });
+        this.NO_INPUT = Inheritance.callStatic(Input, "create2", .{ 0, Inheritance.fieldPointer(this.commonStrings.?, "UNKNOWN").* });
     }
     
 
     pub fn getInstance() ?*InputFactory {
-        if (Object.same(InputFactory.instance, NullUtil.getInstance().?.NULL_OBJECT)) {
+        if (Object.same(InputFactory.instance, Inheritance.fieldPointer(NullUtil.getInstance().?, "NULL_OBJECT").*)) {
             InputFactory.instance = Inheritance.upcast(@TypeOf(InputFactory.instance), InputFactory.create());
         }
         return Inheritance.cast(?*InputFactory, InputFactory.instance);
@@ -87,7 +87,7 @@ pub const InputFactory = struct {
             id = -id;
         }
         if (id > @as(i32, @intCast(self.inputIntegerArray.len))) {
-            _ = Inheritance.call(self.logUtil.?, "putF", .{ Object.toString(Object.of(Inheritance.call(Inheritance.call(StringMaker.create(), "append", .{ String.literal("Warning id: ") }).?, "appendint", .{ id }))), self, self.commonStrings.?.GET_INSTANCE });
+            _ = Inheritance.call(self.logUtil.?, "putF", .{ Object.toString(Object.of(Inheritance.call(Inheritance.call(StringMaker.create(), "append", .{ String.literal("Warning id: ") }).?, "appendint", .{ id }))), self, Inheritance.fieldPointer(self.commonStrings.?, "GET_INSTANCE").* });
             return self.NO_INPUT;
         }
         return Inheritance.upcast(?*Input, self.inputIntegerArray[@intCast(id)]);

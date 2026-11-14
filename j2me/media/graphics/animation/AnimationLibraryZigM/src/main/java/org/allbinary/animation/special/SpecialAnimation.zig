@@ -53,7 +53,7 @@ pub const SpecialAnimation = struct {
 
     pub fn nextFrame(self: *Self) void {
         const indexedAnimationBehavior: ?*IndexedAnimationBehavior = Inheritance.upcast(?*IndexedAnimationBehavior, (Inheritance.cast(?*IndexedAnimationBehavior, Inheritance.fieldPointer(self, "animationBehaviorP").*)));
-        indexedAnimationBehavior.?.loopIndex += 1;
+        Inheritance.fieldPointer(indexedAnimationBehavior.?, "loopIndex").* += 1;
     }
     
 

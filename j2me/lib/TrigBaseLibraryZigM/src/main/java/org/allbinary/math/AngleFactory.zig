@@ -30,6 +30,7 @@ const JsProperty = @import("jsinterop/annotations/JsProperty.zig").JsProperty;
 const Angle = @import("org/allbinary/math/Angle.zig").Angle;
 const FrameUtil = @import("org/allbinary/math/FrameUtil.zig").FrameUtil;
 const NamedAngle = @import("org/allbinary/math/NamedAngle.zig").NamedAngle;
+const RuntimeException = @import("java/lang/RuntimeException.zig").RuntimeException;
 
 pub const AngleFactory = struct {
     const Self = @This();
@@ -58,7 +59,7 @@ pub const AngleFactory = struct {
         this.QUARTER_TOTAL_ANGLE = 90;
         this.angleArray = array_N66083: { const array_N66083_array = allocator.alloc(?*Angle, @intCast(@as(i32, @intCast(this.TOTAL_ANGLE)))) catch unreachable; @memset(array_N66083_array, null); break :array_N66083 array_N66083_array; };
         this.NEGATIVE_ONE = @as(i16, @intCast(-1));
-        this.NOT_ANGLE = Inheritance.callStatic(NamedAngle, "create2", .{ this.NEGATIVE_ONE, CommonStrings.getInstance().?.EMPTY });
+        this.NOT_ANGLE = Inheritance.callStatic(NamedAngle, "create2", .{ this.NEGATIVE_ONE, Inheritance.fieldPointer(CommonStrings.getInstance().?, "EMPTY").* });
         
         
         
@@ -115,7 +116,7 @@ pub const AngleFactory = struct {
     
 
     pub fn getAt(self: *Self, index: i32) ?*Angle {
-        const adjustedIndex: i32 = @as(i32, @intCast(Inheritance.call(self.frameUtil.?, "adjustAngleToFrameAngle", .{ index })));
+        const adjustedIndex: i32 = Inheritance.number(i32, Inheritance.call(self.frameUtil.?, "adjustAngleToFrameAngle", .{ index }));
         return Inheritance.upcast(?*Angle, self.angleArray[@intCast(adjustedIndex)]);
     }
     
@@ -146,7 +147,7 @@ pub const AngleFactory = struct {
         {
             var index: i32 = 0;
             while (index < 360) : (index += 1) {
-            _ = Inheritance.call(Inheritance.call(Inheritance.call(Inheritance.call(stringMaker.?, "appendint", .{ index }).?, "append", .{ CommonSeps.getInstance().?.FORWARD_SLASH }).?, "appendshort", .{ @as(i16, @intCast(Inheritance.receiverOf(Inheritance.call(angleFactory.?, "getClosestDirection", .{ index }).?, "getValue").getValue())) }).?, "append", .{ CommonSeps.getInstance().?.NEW_LINE });
+            _ = Inheritance.call(Inheritance.call(Inheritance.call(Inheritance.call(stringMaker.?, "appendint", .{ index }).?, "append", .{ Inheritance.fieldPointer(CommonSeps.getInstance().?, "FORWARD_SLASH").* }).?, "appendshort", .{ Inheritance.number(i16, Inheritance.receiverOf(Inheritance.call(angleFactory.?, "getClosestDirection", .{ index }).?, "getValue").getValue()) }).?, "append", .{ Inheritance.fieldPointer(CommonSeps.getInstance().?, "NEW_LINE").* });
             }
         }
         _ = Inheritance.call(LogUtil.getInstance().?, "putF", .{ Object.toString(Object.of(stringMaker)), String.literal("main"), String.literal("main") });

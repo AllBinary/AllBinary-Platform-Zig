@@ -23,6 +23,7 @@ const GameInput = @import("org/allbinary/game/input/GameInput.zig").GameInput;
 const DisplayInfoSingleton = @import("org/allbinary/graphics/displayable/DisplayInfoSingleton.zig").DisplayInfoSingleton;
 const AllBinaryLayer = @import("org/allbinary/layer/AllBinaryLayer.zig").AllBinaryLayer;
 const AllBinaryLayerManager = @import("org/allbinary/layer/AllBinaryLayerManager.zig").AllBinaryLayerManager;
+const Exception = @import("java/lang/Exception.zig").Exception;
 
 pub const ScrollOverAllowOutsideAtEndAI = struct {
     const Self = @This();
@@ -48,10 +49,10 @@ pub const ScrollOverAllowOutsideAtEndAI = struct {
         const width: i32 = Inheritance.receiver(ownerLayerInterface.?, "getWidth").getWidth();
         const height: i32 = Inheritance.receiver(ownerLayerInterface.?, "getHeight").getHeight();
         const displayInfo: ?*DisplayInfoSingleton = Inheritance.upcast(?*DisplayInfoSingleton, DisplayInfoSingleton.getInstance());
-        if (x > displayInfo.?.getLastWidth()) {
+        if (Inheritance.arithmetic(.greater, x, displayInfo.?.getLastWidth())) {
             _ = Inheritance.call(ownerLayerInterface.?, "setPosition", .{ -width, y, Inheritance.receiver(ownerLayerInterface.?, "getZP").getZP() });
         }
-        if (y > displayInfo.?.getLastHeight()) {
+        if (Inheritance.arithmetic(.greater, y, displayInfo.?.getLastHeight())) {
             _ = Inheritance.call(ownerLayerInterface.?, "setPosition", .{ x, -height, Inheritance.receiver(ownerLayerInterface.?, "getZP").getZP() });
         }
         if (x < -width) {

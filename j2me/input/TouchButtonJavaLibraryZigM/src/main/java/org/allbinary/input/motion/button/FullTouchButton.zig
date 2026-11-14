@@ -27,6 +27,7 @@ const Rectangle = @import("org/allbinary/graphics/Rectangle.zig").Rectangle;
 const TouchButton = @import("org/allbinary/input/motion/button/TouchButton.zig").TouchButton;
 const TouchButtonInput = @import("org/allbinary/input/motion/button/TouchButtonInput.zig").TouchButtonInput;
 const TouchButtonResource = @import("org/allbinary/input/motion/button/TouchButtonResource.zig").TouchButtonResource;
+const Exception = @import("java/lang/Exception.zig").Exception;
 
 pub const FullTouchButton = struct {
     const Self = @This();
@@ -36,7 +37,7 @@ pub const FullTouchButton = struct {
 
     // throws Exception
     pub fn createButton(touchButtonInput: ?*TouchButtonInput, touchButtonResource: ?*TouchButtonResource, rawRectangle: ?*Rectangle, cellPosition: ?*CellPosition, xBorder: i32, yBorder: i32) ?*FullTouchButton {
-        return Inheritance.callStatic(FullTouchButton, "create7", .{ touchButtonInput, Inheritance.call(Inheritance.call(FeaturedAnimationInterfaceFactoryInterfaceFactory.getInstance().?, "get", .{ touchButtonResource.?.RESOURCE }).?, "getInstance", .{ 0 }), Inheritance.call(Inheritance.call(FeaturedAnimationInterfaceFactoryInterfaceFactory.getInstance().?, "get", .{ touchButtonResource.?.HINT }).?, "getInstance", .{ 0 }), rawRectangle, cellPosition, xBorder, yBorder });
+        return Inheritance.callStatic(FullTouchButton, "create7", .{ touchButtonInput, Inheritance.call(Inheritance.call(FeaturedAnimationInterfaceFactoryInterfaceFactory.getInstance().?, "get", .{ Inheritance.fieldPointer(touchButtonResource.?, "RESOURCE").* }).?, "getInstance", .{ 0 }), Inheritance.call(Inheritance.call(FeaturedAnimationInterfaceFactoryInterfaceFactory.getInstance().?, "get", .{ Inheritance.fieldPointer(touchButtonResource.?, "HINT").* }).?, "getInstance", .{ 0 }), rawRectangle, cellPosition, xBorder, yBorder });
     }
     
 
@@ -52,16 +53,16 @@ pub const FullTouchButton = struct {
     pub fn updateRectangle(self: *Self) void {
         { // try
             const pointFactory: ?*PointFactory = Inheritance.upcast(?*PointFactory, PointFactory.getInstance());
-            const x: i32 = Inheritance.fieldPointer(self, "rawRectangle").*.?.getWidth() * Inheritance.receiverOf(Inheritance.fieldPointer(self, "cellPositionP").*.?, "getColumn").getColumn();
-            const y: i32 = Inheritance.fieldPointer(self, "rawRectangle").*.?.getHeight() * Inheritance.receiverOf(Inheritance.fieldPointer(self, "cellPositionP").*.?, "getRow").getRow();
-            Inheritance.fieldPointer(self, "rectangleP").* = Inheritance.upcast(@TypeOf(Inheritance.fieldPointer(self, "rectangleP").*), Inheritance.callStatic(Rectangle, "create3", .{ Inheritance.call(pointFactory.?, "createXY", .{ x, y }), Inheritance.fieldPointer(self, "rawRectangle").*.?.getWidth() + (2 * Inheritance.fieldPointer(self, "xBorder").*), Inheritance.fieldPointer(self, "rawRectangle").*.?.getHeight() + (2 * Inheritance.fieldPointer(self, "yBorder").*) }));
+            const x: i32 = Inheritance.arithmetic(.multiply, Inheritance.receiver(Inheritance.fieldPointer(self, "rawRectangle").*.?, "getWidth").getWidth(), Inheritance.receiverOf(Inheritance.fieldPointer(self, "cellPositionP").*.?, "getColumn").getColumn());
+            const y: i32 = Inheritance.arithmetic(.multiply, Inheritance.receiver(Inheritance.fieldPointer(self, "rawRectangle").*.?, "getHeight").getHeight(), Inheritance.receiverOf(Inheritance.fieldPointer(self, "cellPositionP").*.?, "getRow").getRow());
+            Inheritance.fieldPointer(self, "rectangleP").* = Inheritance.upcast(@TypeOf(Inheritance.fieldPointer(self, "rectangleP").*), Inheritance.callStatic(Rectangle, "create3", .{ Inheritance.call(pointFactory.?, "createXY", .{ x, y }), Inheritance.plus(Inheritance.receiver(Inheritance.fieldPointer(self, "rawRectangle").*.?, "getWidth").getWidth(), (Inheritance.arithmetic(.multiply, 2, Inheritance.fieldPointer(self, "xBorder").*))), Inheritance.plus(Inheritance.receiver(Inheritance.fieldPointer(self, "rawRectangle").*.?, "getHeight").getHeight(), (Inheritance.arithmetic(.multiply, 2, Inheritance.fieldPointer(self, "yBorder").*))) }));
             const point: ?*GPoint = Inheritance.upcast(?*GPoint, Inheritance.receiverOf(Inheritance.fieldPointer(self, "rectangleP").*.?, "getPoint").getPoint());
-            Inheritance.fieldPointer(self, "animationX").* = Inheritance.upcast(@TypeOf(Inheritance.fieldPointer(self, "animationX").*), point.?.getX() + Inheritance.fieldPointer(self, "xBorder").*);
-            Inheritance.fieldPointer(self, "animationY").* = Inheritance.upcast(@TypeOf(Inheritance.fieldPointer(self, "animationY").*), point.?.getY() + Inheritance.fieldPointer(self, "yBorder").*);
-            Inheritance.fieldPointer(self, "hintAnimationY").* = Inheritance.upcast(@TypeOf(Inheritance.fieldPointer(self, "hintAnimationY").*), Inheritance.fieldPointer(self, "animationY").* - Inheritance.receiverOf(Inheritance.fieldPointer(self, "rectangleP").*.?, "getHeight").getHeight() >> @intCast(1));
+            Inheritance.fieldPointer(self, "animationX").* = Inheritance.upcast(@TypeOf(Inheritance.fieldPointer(self, "animationX").*), Inheritance.plus(point.?.getX(), Inheritance.fieldPointer(self, "xBorder").*));
+            Inheritance.fieldPointer(self, "animationY").* = Inheritance.upcast(@TypeOf(Inheritance.fieldPointer(self, "animationY").*), Inheritance.plus(point.?.getY(), Inheritance.fieldPointer(self, "yBorder").*));
+            Inheritance.fieldPointer(self, "hintAnimationY").* = Inheritance.upcast(@TypeOf(Inheritance.fieldPointer(self, "hintAnimationY").*), Inheritance.arithmetic(.subtract, Inheritance.fieldPointer(self, "animationY").*, Inheritance.receiverOf(Inheritance.fieldPointer(self, "rectangleP").*.?, "getHeight").getHeight()) >> @intCast(1));
         }
         // catch (Exception e):
-//             _ = Inheritance.call(Inheritance.fieldPointer(self, "logUtil").*.?, "put", .{ Inheritance.fieldPointer(self, "commonStrings").*.?.EXCEPTION, self, String.literal("updateRectangle"), e });
+//             _ = Inheritance.call(Inheritance.fieldPointer(self, "logUtil").*.?, "put", .{ Inheritance.fieldPointer(Inheritance.fieldPointer(self, "commonStrings").*.?, "EXCEPTION").*, self, String.literal("updateRectangle"), e });
     }
 };
 

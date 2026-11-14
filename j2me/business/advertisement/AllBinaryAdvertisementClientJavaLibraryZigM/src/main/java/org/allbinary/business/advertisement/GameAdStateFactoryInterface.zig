@@ -20,6 +20,7 @@ const Object = @import("java/lang/Object.zig").Object;
 const Inheritance = @import("zig/Inheritance.zig");
 const SoftwareInformation = @import("org/allbinary/logic/system/SoftwareInformation.zig").SoftwareInformation;
 const GameAdStateBase = @import("org/allbinary/business/advertisement/GameAdStateBase.zig").GameAdStateBase;
+const Exception = @import("java/lang/Exception.zig").Exception;
 
 // Java interface: an implementation is a pointer and a table of functions
 pub const GameAdStateFactoryInterface = struct {
@@ -28,7 +29,7 @@ pub const GameAdStateFactoryInterface = struct {
     pointer: *anyopaque,
     object: Object,
     toStringFn: *const fn (pointer: *anyopaque) ?*String,
-    getInstanceForAppFn: *const fn (pointer: *anyopaque, softwareInformation: ?*SoftwareInformation) ?*GameAdStateBase,
+    getInstanceForAppFn: *const fn (interface_pointer: *anyopaque, softwareInformation: ?*SoftwareInformation) ?*GameAdStateBase,
 
     pub fn getInstanceForApp(self: *Self, softwareInformation: ?*SoftwareInformation) ?*GameAdStateBase {
         return self.getInstanceForAppFn(self.pointer, softwareInformation);
@@ -40,15 +41,15 @@ pub const GameAdStateFactoryInterface = struct {
 
     // The interface value of an object with the methods. Like a Java class a method can be declared by the object or a superclass.
     pub fn of(object: anytype) ?*Self {
-        const Implementation = @TypeOf(object);
+        const ImplementationType = @TypeOf(object);
         const Methods = struct {
             fn toString(pointer: *anyopaque) ?*String {
-                const implementation: Implementation = @ptrCast(@alignCast(pointer));
+                const implementation: ImplementationType = @ptrCast(@alignCast(pointer));
                 return String.valueOf(implementation);
             }
-            fn getInstanceForApp(pointer: *anyopaque, softwareInformation: ?*SoftwareInformation) ?*GameAdStateBase {
-                const implementation: Implementation = @ptrCast(@alignCast(pointer));
-                return Inheritance.upcast(?*GameAdStateBase, Inheritance.receiver(implementation, "getInstanceForApp").getInstanceForApp(softwareInformation));
+            fn getInstanceForApp(interface_pointer: *anyopaque, softwareInformation: ?*SoftwareInformation) ?*GameAdStateBase {
+                const implementation: ImplementationType = @ptrCast(@alignCast(interface_pointer));
+                return Inheritance.upcast(?*GameAdStateBase, Inheritance.call(implementation, "getInstanceForApp", .{ softwareInformation }));
             }
         };
         const this = allocator.create(Self) catch unreachable;

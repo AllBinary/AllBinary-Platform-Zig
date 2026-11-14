@@ -60,15 +60,15 @@ pub const TextFieldItemValidator = struct {
 
     pub fn isValid(self: *Self) ?*Boolean {
         const booleanFactory: ?*BooleanFactory = Inheritance.upcast(?*BooleanFactory, BooleanFactory.getInstance());
-        var result: ?*Boolean = Inheritance.upcast(?*Boolean, booleanFactory.?.TRUE);
+        var result: ?*Boolean = Inheritance.upcast(?*Boolean, Inheritance.fieldPointer(booleanFactory.?, "TRUE").*);
         const string: ?*String = Inheritance.upcast(?*String, Inheritance.receiver(self.textFieldItem.?, "getString").getString());
         const textLength: i32 = string.?.length();
         if ((textLength == 0 and self.allowOnEmpty) or textLength > self.min and textLength < self.max) {
         } else {
             if (textLength < self.min) {
-                result = Inheritance.upcast(@TypeOf(result), booleanFactory.?.FALSE);
+                result = Inheritance.upcast(@TypeOf(result), Inheritance.fieldPointer(booleanFactory.?, "FALSE").*);
             } else if (textLength > self.max) {
-                result = Inheritance.upcast(@TypeOf(result), booleanFactory.?.FALSE);
+                result = Inheritance.upcast(@TypeOf(result), Inheritance.fieldPointer(booleanFactory.?, "FALSE").*);
             }
         }
         return result;

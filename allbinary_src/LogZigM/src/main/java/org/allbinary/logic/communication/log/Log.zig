@@ -72,9 +72,9 @@ pub const Log = struct {
     
 
     pub fn toString(self: *Self) ?*String {
-        var className: ?*String = Inheritance.upcast(?*String, CommonStrings.getInstance().?.EMPTY);
+        var className: ?*String = Inheritance.upcast(?*String, Inheritance.fieldPointer(CommonStrings.getInstance().?, "EMPTY").*);
         const clazz: ?*anyopaque = Inheritance.upcast(?*anyopaque, @as(?*anyopaque, @ptrCast(@constCast(Object.of(self.anyType).?.class))));
-        if (String.fromBytes(@as(*const Object.Class, @ptrCast(@alignCast(clazz.?))).name) != null) {
+        if (!Object.isNull(String.fromBytes(@as(*const Object.Class, @ptrCast(@alignCast(clazz.?))).name))) {
             className = Inheritance.upcast(@TypeOf(className), String.fromBytes(@as(*const Object.Class, @ptrCast(@alignCast(clazz.?))).name));
         }
         return Inheritance.upcast(?*String, Inheritance.call(self.logFormatUtil.?, "get", .{ className, self.functionName, self.specialMessage, self.exception }));

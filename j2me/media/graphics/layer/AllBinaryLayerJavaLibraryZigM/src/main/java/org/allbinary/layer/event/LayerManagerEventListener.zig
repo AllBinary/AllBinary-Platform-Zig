@@ -21,6 +21,7 @@ const Inheritance = @import("zig/Inheritance.zig");
 const AllBinaryEventObject = @import("org/allbinary/logic/util/event/AllBinaryEventObject.zig").AllBinaryEventObject;
 const LayerManagerEvent = @import("org/allbinary/layer/event/LayerManagerEvent.zig").LayerManagerEvent;
 const LayerManagerEventListenerInterface = @import("org/allbinary/layer/event/LayerManagerEventListenerInterface.zig").LayerManagerEventListenerInterface;
+const Exception = @import("java/lang/Exception.zig").Exception;
 
 pub const LayerManagerEventListener = struct {
     const Self = @This();

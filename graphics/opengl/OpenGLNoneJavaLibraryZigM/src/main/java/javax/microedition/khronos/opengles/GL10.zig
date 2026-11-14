@@ -6,9 +6,9 @@ const allocator = std.heap.page_allocator;
 const String = @import("java/lang/String.zig").String;
 const Object = @import("java/lang/Object.zig").Object;
 const Inheritance = @import("zig/Inheritance.zig");
-// const Buffer = @import("java/nio/Buffer.zig").Buffer;
-// const FloatBuffer = @import("java/nio/FloatBuffer.zig").FloatBuffer;
-// const IntBuffer = @import("java/nio/IntBuffer.zig").IntBuffer;
+const Buffer = @import("java/nio/Buffer.zig").Buffer;
+const FloatBuffer = @import("java/nio/FloatBuffer.zig").FloatBuffer;
+const IntBuffer = @import("java/nio/IntBuffer.zig").IntBuffer;
 const GL = @import("javax/microedition/khronos/opengles/GL.zig").GL;
 
 // Java interface: an implementation is a pointer and a table of functions
@@ -19,100 +19,100 @@ pub const GL10 = struct {
     object: Object,
     base: GL,
     toStringFn: *const fn (pointer: *anyopaque) ?*String,
-    glActiveTextureFn: *const fn (pointer: *anyopaque, texture: i32) void,
-    glAlphaFuncFn: *const fn (pointer: *anyopaque, func: i32, ref: f32) void,
-    glBindTextureFn: *const fn (pointer: *anyopaque, target: i32, texture: i32) void,
-    glBlendFuncFn: *const fn (pointer: *anyopaque, sfactor: i32, dfactor: i32) void,
-    glClearFn: *const fn (pointer: *anyopaque, mask: i32) void,
-    glClearColorFn: *const fn (pointer: *anyopaque, red: f32, green: f32, blue: f32, alpha: f32) void,
-    glClearDepthfFn: *const fn (pointer: *anyopaque, depth: f32) void,
-    glClearStencilFn: *const fn (pointer: *anyopaque, s: i32) void,
-    glClientActiveTextureFn: *const fn (pointer: *anyopaque, texture: i32) void,
-    glColor4fFn: *const fn (pointer: *anyopaque, red: f32, green: f32, blue: f32, alpha: f32) void,
-    glColorMaskFn: *const fn (pointer: *anyopaque, red: bool, green: bool, blue: bool, alpha: bool) void,
-    glColorPointerFn: *const fn (pointer: *anyopaque, size: i32, @"type": i32, stride: i32, pointer: ?*Buffer) void,
-    glCompressedTexImage2DFn: *const fn (pointer: *anyopaque, target: i32, level: i32, internalformat: i32, width: i32, height: i32, border: i32, imageSize: i32, data: ?*Buffer) void,
-    glCompressedTexSubImage2DFn: *const fn (pointer: *anyopaque, target: i32, level: i32, xoffset: i32, yoffset: i32, width: i32, height: i32, format: i32, imageSize: i32, data: ?*Buffer) void,
-    glCopyTexImage2DFn: *const fn (pointer: *anyopaque, target: i32, level: i32, internalformat: i32, x: i32, y: i32, width: i32, height: i32, border: i32) void,
-    glCopyTexSubImage2DFn: *const fn (pointer: *anyopaque, target: i32, level: i32, xoffset: i32, yoffset: i32, x: i32, y: i32, width: i32, height: i32) void,
-    glCullFaceFn: *const fn (pointer: *anyopaque, mode: i32) void,
-    glDeleteTexturesFn: *const fn (pointer: *anyopaque, n: i32, textures: []i32, offset: i32) void,
-    glDeleteTexturesFn: *const fn (pointer: *anyopaque, n: i32, textures: ?*IntBuffer) void,
-    glDepthFuncFn: *const fn (pointer: *anyopaque, func: i32) void,
-    glDepthMaskFn: *const fn (pointer: *anyopaque, flag: bool) void,
-    glDepthRangefFn: *const fn (pointer: *anyopaque, zNear: f32, zFar: f32) void,
-    glDisableFn: *const fn (pointer: *anyopaque, cap: i32) void,
-    glDisableClientStateFn: *const fn (pointer: *anyopaque, array: i32) void,
-    glDrawArraysFn: *const fn (pointer: *anyopaque, mode: i32, first: i32, count: i32) void,
-    glDrawElementsFn: *const fn (pointer: *anyopaque, mode: i32, count: i32, @"type": i32, indices: ?*Buffer) void,
-    glEnableFn: *const fn (pointer: *anyopaque, cap: i32) void,
-    glEnableClientStateFn: *const fn (pointer: *anyopaque, array: i32) void,
-    glFinishFn: *const fn (pointer: *anyopaque) void,
-    glFlushFn: *const fn (pointer: *anyopaque) void,
-    glFogfFn: *const fn (pointer: *anyopaque, pname: i32, param: f32) void,
-    glFogfvFn: *const fn (pointer: *anyopaque, pname: i32, params: []f32, offset: i32) void,
-    glFogfvFn: *const fn (pointer: *anyopaque, pname: i32, params: ?*FloatBuffer) void,
-    glFrontFaceFn: *const fn (pointer: *anyopaque, mode: i32) void,
-    glFrustumfFn: *const fn (pointer: *anyopaque, left: f32, right: f32, bottom: f32, top: f32, zNear: f32, zFar: f32) void,
-    glGenTexturesFn: *const fn (pointer: *anyopaque, n: i32, textures: []i32, offset: i32) void,
-    glGenTexturesFn: *const fn (pointer: *anyopaque, n: i32, textures: ?*IntBuffer) void,
-    glGetErrorFn: *const fn (pointer: *anyopaque) i32,
-    glGetIntegervFn: *const fn (pointer: *anyopaque, pname: i32, params: []i32, offset: i32) void,
-    glGetIntegervFn: *const fn (pointer: *anyopaque, pname: i32, params: ?*IntBuffer) void,
-    glGetStringFn: *const fn (pointer: *anyopaque, name: i32) ?*String,
-    glHintFn: *const fn (pointer: *anyopaque, target: i32, mode: i32) void,
-    glLightModelfFn: *const fn (pointer: *anyopaque, pname: i32, param: f32) void,
-    glLightModelfvFn: *const fn (pointer: *anyopaque, pname: i32, params: []f32, offset: i32) void,
-    glLightModelfvFn: *const fn (pointer: *anyopaque, pname: i32, params: ?*FloatBuffer) void,
-    glLightfFn: *const fn (pointer: *anyopaque, light: i32, pname: i32, param: f32) void,
-    glLightfvFn: *const fn (pointer: *anyopaque, light: i32, pname: i32, params: []f32, offset: i32) void,
-    glLightfvFn: *const fn (pointer: *anyopaque, light: i32, pname: i32, params: ?*FloatBuffer) void,
-    glLineWidthFn: *const fn (pointer: *anyopaque, width: f32) void,
-    glLoadIdentityFn: *const fn (pointer: *anyopaque) void,
-    glLoadMatrixfFn: *const fn (pointer: *anyopaque, m: []f32, offset: i32) void,
-    glLoadMatrixfFn: *const fn (pointer: *anyopaque, m: ?*FloatBuffer) void,
-    glLogicOpFn: *const fn (pointer: *anyopaque, opcode: i32) void,
-    glMaterialfFn: *const fn (pointer: *anyopaque, face: i32, pname: i32, param: f32) void,
-    glMaterialfvFn: *const fn (pointer: *anyopaque, face: i32, pname: i32, params: []f32, offset: i32) void,
-    glMaterialfvFn: *const fn (pointer: *anyopaque, face: i32, pname: i32, params: ?*FloatBuffer) void,
-    glMatrixModeFn: *const fn (pointer: *anyopaque, mode: i32) void,
-    glMultMatrixfFn: *const fn (pointer: *anyopaque, m: []f32, offset: i32) void,
-    glMultMatrixfFn: *const fn (pointer: *anyopaque, m: ?*FloatBuffer) void,
-    glMultiTexCoord4fFn: *const fn (pointer: *anyopaque, target: i32, s: f32, t: f32, r: f32, q: f32) void,
-    glNormal3fFn: *const fn (pointer: *anyopaque, nx: f32, ny: f32, nz: f32) void,
-    glNormalPointerFn: *const fn (pointer: *anyopaque, @"type": i32, stride: i32, pointer: ?*Buffer) void,
-    glOrthofFn: *const fn (pointer: *anyopaque, left: f32, right: f32, bottom: f32, top: f32, zNear: f32, zFar: f32) void,
-    glPixelStoreiFn: *const fn (pointer: *anyopaque, pname: i32, param: i32) void,
-    glPointSizeFn: *const fn (pointer: *anyopaque, size: f32) void,
-    glPolygonOffsetFn: *const fn (pointer: *anyopaque, factor: f32, units: f32) void,
-    glPopMatrixFn: *const fn (pointer: *anyopaque) void,
-    glPushMatrixFn: *const fn (pointer: *anyopaque) void,
-    glReadPixelsFn: *const fn (pointer: *anyopaque, x: i32, y: i32, width: i32, height: i32, format: i32, @"type": i32, pixels: ?*Buffer) void,
-    glRotatefFn: *const fn (pointer: *anyopaque, angle: f32, x: f32, y: f32, z: f32) void,
-    glRotatexFn: *const fn (pointer: *anyopaque, angle: i32, x: i32, y: i32, z: i32) void,
-    glSampleCoverageFn: *const fn (pointer: *anyopaque, value: f32, invert: bool) void,
-    glScalefFn: *const fn (pointer: *anyopaque, x: f32, y: f32, z: f32) void,
-    glScalexFn: *const fn (pointer: *anyopaque, x: i32, y: i32, z: i32) void,
-    glScissorFn: *const fn (pointer: *anyopaque, x: i32, y: i32, width: i32, height: i32) void,
-    glShadeModelFn: *const fn (pointer: *anyopaque, mode: i32) void,
-    glStencilFuncFn: *const fn (pointer: *anyopaque, func: i32, ref: i32, mask: i32) void,
-    glStencilMaskFn: *const fn (pointer: *anyopaque, mask: i32) void,
-    glStencilOpFn: *const fn (pointer: *anyopaque, fail: i32, zfail: i32, zpass: i32) void,
-    glTexCoordPointerFn: *const fn (pointer: *anyopaque, size: i32, @"type": i32, stride: i32, pointer: ?*Buffer) void,
-    glTexEnvfFn: *const fn (pointer: *anyopaque, target: i32, pname: i32, param: f32) void,
-    glTexEnvfvFn: *const fn (pointer: *anyopaque, target: i32, pname: i32, params: []f32, offset: i32) void,
-    glTexEnvfvFn: *const fn (pointer: *anyopaque, target: i32, pname: i32, params: ?*FloatBuffer) void,
-    glTexImage2DFn: *const fn (pointer: *anyopaque, target: i32, level: i32, internalformat: i32, width: i32, height: i32, border: i32, format: i32, @"type": i32, pixels: ?*Buffer) void,
-    glTexParameterfFn: *const fn (pointer: *anyopaque, target: i32, pname: i32, param: f32) void,
-    glTexParameteriFn: *const fn (pointer: *anyopaque, target: i32, pname: i32, param: i32) void,
-    glTexSubImage2DFn: *const fn (pointer: *anyopaque, target: i32, level: i32, xoffset: i32, yoffset: i32, width: i32, height: i32, format: i32, @"type": i32, pixels: ?*Buffer) void,
-    glTranslatefFn: *const fn (pointer: *anyopaque, x: f32, y: f32, z: f32) void,
-    glVertexPointerFn: *const fn (pointer: *anyopaque, size: i32, @"type": i32, stride: i32, pointer: ?*Buffer) void,
-    glViewportFn: *const fn (pointer: *anyopaque, x: i32, y: i32, width: i32, height: i32) void,
-    glBeginFn: *const fn (pointer: *anyopaque, i: i32) void,
-    glEndFn: *const fn (pointer: *anyopaque) void,
-    glVertex3fFn: *const fn (pointer: *anyopaque, f: f32, f2: f32, f3: f32) void,
-    glPolygonModeFn: *const fn (pointer: *anyopaque, i: i32, i1: i32) void,
+    glActiveTextureFn: *const fn (interface_pointer: *anyopaque, texture: i32) void,
+    glAlphaFuncFn: *const fn (interface_pointer: *anyopaque, func: i32, ref: f32) void,
+    glBindTextureFn: *const fn (interface_pointer: *anyopaque, target: i32, texture: i32) void,
+    glBlendFuncFn: *const fn (interface_pointer: *anyopaque, sfactor: i32, dfactor: i32) void,
+    glClearFn: *const fn (interface_pointer: *anyopaque, mask: i32) void,
+    glClearColorFn: *const fn (interface_pointer: *anyopaque, red: f32, green: f32, blue: f32, alpha: f32) void,
+    glClearDepthfFn: *const fn (interface_pointer: *anyopaque, depth: f32) void,
+    glClearStencilFn: *const fn (interface_pointer: *anyopaque, s: i32) void,
+    glClientActiveTextureFn: *const fn (interface_pointer: *anyopaque, texture: i32) void,
+    glColor4fFn: *const fn (interface_pointer: *anyopaque, red: f32, green: f32, blue: f32, alpha: f32) void,
+    glColorMaskFn: *const fn (interface_pointer: *anyopaque, red: bool, green: bool, blue: bool, alpha: bool) void,
+    glColorPointerFn: *const fn (interface_pointer: *anyopaque, size: i32, @"type": i32, stride: i32, pointer: ?*Buffer) void,
+    glCompressedTexImage2DFn: *const fn (interface_pointer: *anyopaque, target: i32, level: i32, internalformat: i32, width: i32, height: i32, border: i32, imageSize: i32, data: ?*Buffer) void,
+    glCompressedTexSubImage2DFn: *const fn (interface_pointer: *anyopaque, target: i32, level: i32, xoffset: i32, yoffset: i32, width: i32, height: i32, format: i32, imageSize: i32, data: ?*Buffer) void,
+    glCopyTexImage2DFn: *const fn (interface_pointer: *anyopaque, target: i32, level: i32, internalformat: i32, x: i32, y: i32, width: i32, height: i32, border: i32) void,
+    glCopyTexSubImage2DFn: *const fn (interface_pointer: *anyopaque, target: i32, level: i32, xoffset: i32, yoffset: i32, x: i32, y: i32, width: i32, height: i32) void,
+    glCullFaceFn: *const fn (interface_pointer: *anyopaque, mode: i32) void,
+    glDeleteTextures3Fn: *const fn (interface_pointer: *anyopaque, n: i32, textures: []i32, offset: i32) void,
+    glDeleteTexturesFn: *const fn (interface_pointer: *anyopaque, n: i32, textures: ?*IntBuffer) void,
+    glDepthFuncFn: *const fn (interface_pointer: *anyopaque, func: i32) void,
+    glDepthMaskFn: *const fn (interface_pointer: *anyopaque, flag: bool) void,
+    glDepthRangefFn: *const fn (interface_pointer: *anyopaque, zNear: f32, zFar: f32) void,
+    glDisableFn: *const fn (interface_pointer: *anyopaque, cap: i32) void,
+    glDisableClientStateFn: *const fn (interface_pointer: *anyopaque, array: i32) void,
+    glDrawArraysFn: *const fn (interface_pointer: *anyopaque, mode: i32, first: i32, count: i32) void,
+    glDrawElementsFn: *const fn (interface_pointer: *anyopaque, mode: i32, count: i32, @"type": i32, indices: ?*Buffer) void,
+    glEnableFn: *const fn (interface_pointer: *anyopaque, cap: i32) void,
+    glEnableClientStateFn: *const fn (interface_pointer: *anyopaque, array: i32) void,
+    glFinishFn: *const fn (interface_pointer: *anyopaque) void,
+    glFlushFn: *const fn (interface_pointer: *anyopaque) void,
+    glFogfFn: *const fn (interface_pointer: *anyopaque, pname: i32, param: f32) void,
+    glFogfv3Fn: *const fn (interface_pointer: *anyopaque, pname: i32, params: []f32, offset: i32) void,
+    glFogfvFn: *const fn (interface_pointer: *anyopaque, pname: i32, params: ?*FloatBuffer) void,
+    glFrontFaceFn: *const fn (interface_pointer: *anyopaque, mode: i32) void,
+    glFrustumfFn: *const fn (interface_pointer: *anyopaque, left: f32, right: f32, bottom: f32, top: f32, zNear: f32, zFar: f32) void,
+    glGenTextures3Fn: *const fn (interface_pointer: *anyopaque, n: i32, textures: []i32, offset: i32) void,
+    glGenTexturesFn: *const fn (interface_pointer: *anyopaque, n: i32, textures: ?*IntBuffer) void,
+    glGetErrorFn: *const fn (interface_pointer: *anyopaque) i32,
+    glGetIntegerv3Fn: *const fn (interface_pointer: *anyopaque, pname: i32, params: []i32, offset: i32) void,
+    glGetIntegervFn: *const fn (interface_pointer: *anyopaque, pname: i32, params: ?*IntBuffer) void,
+    glGetStringFn: *const fn (interface_pointer: *anyopaque, name: i32) ?*String,
+    glHintFn: *const fn (interface_pointer: *anyopaque, target: i32, mode: i32) void,
+    glLightModelfFn: *const fn (interface_pointer: *anyopaque, pname: i32, param: f32) void,
+    glLightModelfv3Fn: *const fn (interface_pointer: *anyopaque, pname: i32, params: []f32, offset: i32) void,
+    glLightModelfvFn: *const fn (interface_pointer: *anyopaque, pname: i32, params: ?*FloatBuffer) void,
+    glLightfFn: *const fn (interface_pointer: *anyopaque, light: i32, pname: i32, param: f32) void,
+    glLightfv4Fn: *const fn (interface_pointer: *anyopaque, light: i32, pname: i32, params: []f32, offset: i32) void,
+    glLightfvFn: *const fn (interface_pointer: *anyopaque, light: i32, pname: i32, params: ?*FloatBuffer) void,
+    glLineWidthFn: *const fn (interface_pointer: *anyopaque, width: f32) void,
+    glLoadIdentityFn: *const fn (interface_pointer: *anyopaque) void,
+    glLoadMatrixf2Fn: *const fn (interface_pointer: *anyopaque, m: []f32, offset: i32) void,
+    glLoadMatrixfFn: *const fn (interface_pointer: *anyopaque, m: ?*FloatBuffer) void,
+    glLogicOpFn: *const fn (interface_pointer: *anyopaque, opcode: i32) void,
+    glMaterialfFn: *const fn (interface_pointer: *anyopaque, face: i32, pname: i32, param: f32) void,
+    glMaterialfv4Fn: *const fn (interface_pointer: *anyopaque, face: i32, pname: i32, params: []f32, offset: i32) void,
+    glMaterialfvFn: *const fn (interface_pointer: *anyopaque, face: i32, pname: i32, params: ?*FloatBuffer) void,
+    glMatrixModeFn: *const fn (interface_pointer: *anyopaque, mode: i32) void,
+    glMultMatrixf2Fn: *const fn (interface_pointer: *anyopaque, m: []f32, offset: i32) void,
+    glMultMatrixfFn: *const fn (interface_pointer: *anyopaque, m: ?*FloatBuffer) void,
+    glMultiTexCoord4fFn: *const fn (interface_pointer: *anyopaque, target: i32, s: f32, t: f32, r: f32, q: f32) void,
+    glNormal3fFn: *const fn (interface_pointer: *anyopaque, nx: f32, ny: f32, nz: f32) void,
+    glNormalPointerFn: *const fn (interface_pointer: *anyopaque, @"type": i32, stride: i32, pointer: ?*Buffer) void,
+    glOrthofFn: *const fn (interface_pointer: *anyopaque, left: f32, right: f32, bottom: f32, top: f32, zNear: f32, zFar: f32) void,
+    glPixelStoreiFn: *const fn (interface_pointer: *anyopaque, pname: i32, param: i32) void,
+    glPointSizeFn: *const fn (interface_pointer: *anyopaque, size: f32) void,
+    glPolygonOffsetFn: *const fn (interface_pointer: *anyopaque, factor: f32, units: f32) void,
+    glPopMatrixFn: *const fn (interface_pointer: *anyopaque) void,
+    glPushMatrixFn: *const fn (interface_pointer: *anyopaque) void,
+    glReadPixelsFn: *const fn (interface_pointer: *anyopaque, x: i32, y: i32, width: i32, height: i32, format: i32, @"type": i32, pixels: ?*Buffer) void,
+    glRotatefFn: *const fn (interface_pointer: *anyopaque, angle: f32, x: f32, y: f32, z: f32) void,
+    glRotatexFn: *const fn (interface_pointer: *anyopaque, angle: i32, x: i32, y: i32, z: i32) void,
+    glSampleCoverageFn: *const fn (interface_pointer: *anyopaque, value: f32, invert: bool) void,
+    glScalefFn: *const fn (interface_pointer: *anyopaque, x: f32, y: f32, z: f32) void,
+    glScalexFn: *const fn (interface_pointer: *anyopaque, x: i32, y: i32, z: i32) void,
+    glScissorFn: *const fn (interface_pointer: *anyopaque, x: i32, y: i32, width: i32, height: i32) void,
+    glShadeModelFn: *const fn (interface_pointer: *anyopaque, mode: i32) void,
+    glStencilFuncFn: *const fn (interface_pointer: *anyopaque, func: i32, ref: i32, mask: i32) void,
+    glStencilMaskFn: *const fn (interface_pointer: *anyopaque, mask: i32) void,
+    glStencilOpFn: *const fn (interface_pointer: *anyopaque, fail: i32, zfail: i32, zpass: i32) void,
+    glTexCoordPointerFn: *const fn (interface_pointer: *anyopaque, size: i32, @"type": i32, stride: i32, pointer: ?*Buffer) void,
+    glTexEnvfFn: *const fn (interface_pointer: *anyopaque, target: i32, pname: i32, param: f32) void,
+    glTexEnvfv4Fn: *const fn (interface_pointer: *anyopaque, target: i32, pname: i32, params: []f32, offset: i32) void,
+    glTexEnvfvFn: *const fn (interface_pointer: *anyopaque, target: i32, pname: i32, params: ?*FloatBuffer) void,
+    glTexImage2DFn: *const fn (interface_pointer: *anyopaque, target: i32, level: i32, internalformat: i32, width: i32, height: i32, border: i32, format: i32, @"type": i32, pixels: ?*Buffer) void,
+    glTexParameterfFn: *const fn (interface_pointer: *anyopaque, target: i32, pname: i32, param: f32) void,
+    glTexParameteriFn: *const fn (interface_pointer: *anyopaque, target: i32, pname: i32, param: i32) void,
+    glTexSubImage2DFn: *const fn (interface_pointer: *anyopaque, target: i32, level: i32, xoffset: i32, yoffset: i32, width: i32, height: i32, format: i32, @"type": i32, pixels: ?*Buffer) void,
+    glTranslatefFn: *const fn (interface_pointer: *anyopaque, x: f32, y: f32, z: f32) void,
+    glVertexPointerFn: *const fn (interface_pointer: *anyopaque, size: i32, @"type": i32, stride: i32, pointer: ?*Buffer) void,
+    glViewportFn: *const fn (interface_pointer: *anyopaque, x: i32, y: i32, width: i32, height: i32) void,
+    glBeginFn: *const fn (interface_pointer: *anyopaque, i: i32) void,
+    glEndFn: *const fn (interface_pointer: *anyopaque) void,
+    glVertex3fFn: *const fn (interface_pointer: *anyopaque, f: f32, f2: f32, f3: f32) void,
+    glPolygonModeFn: *const fn (interface_pointer: *anyopaque, i: i32, i1_: i32) void,
 
     pub fn glActiveTexture(self: *Self, texture: i32) void {
         return self.glActiveTextureFn(self.pointer, texture);
@@ -182,8 +182,8 @@ pub const GL10 = struct {
         return self.glCullFaceFn(self.pointer, mode);
     }
 
-    pub fn glDeleteTextures(self: *Self, n: i32, textures: []i32, offset: i32) void {
-        return self.glDeleteTexturesFn(self.pointer, n, textures, offset);
+    pub fn glDeleteTextures3(self: *Self, n: i32, textures: []i32, offset: i32) void {
+        return self.glDeleteTextures3Fn(self.pointer, n, textures, offset);
     }
 
     pub fn glDeleteTextures(self: *Self, n: i32, textures: ?*IntBuffer) void {
@@ -238,8 +238,8 @@ pub const GL10 = struct {
         return self.glFogfFn(self.pointer, pname, param);
     }
 
-    pub fn glFogfv(self: *Self, pname: i32, params: []f32, offset: i32) void {
-        return self.glFogfvFn(self.pointer, pname, params, offset);
+    pub fn glFogfv3(self: *Self, pname: i32, params: []f32, offset: i32) void {
+        return self.glFogfv3Fn(self.pointer, pname, params, offset);
     }
 
     pub fn glFogfv(self: *Self, pname: i32, params: ?*FloatBuffer) void {
@@ -254,8 +254,8 @@ pub const GL10 = struct {
         return self.glFrustumfFn(self.pointer, left, right, bottom, top, zNear, zFar);
     }
 
-    pub fn glGenTextures(self: *Self, n: i32, textures: []i32, offset: i32) void {
-        return self.glGenTexturesFn(self.pointer, n, textures, offset);
+    pub fn glGenTextures3(self: *Self, n: i32, textures: []i32, offset: i32) void {
+        return self.glGenTextures3Fn(self.pointer, n, textures, offset);
     }
 
     pub fn glGenTextures(self: *Self, n: i32, textures: ?*IntBuffer) void {
@@ -266,8 +266,8 @@ pub const GL10 = struct {
         return self.glGetErrorFn(self.pointer);
     }
 
-    pub fn glGetIntegerv(self: *Self, pname: i32, params: []i32, offset: i32) void {
-        return self.glGetIntegervFn(self.pointer, pname, params, offset);
+    pub fn glGetIntegerv3(self: *Self, pname: i32, params: []i32, offset: i32) void {
+        return self.glGetIntegerv3Fn(self.pointer, pname, params, offset);
     }
 
     pub fn glGetIntegerv(self: *Self, pname: i32, params: ?*IntBuffer) void {
@@ -286,8 +286,8 @@ pub const GL10 = struct {
         return self.glLightModelfFn(self.pointer, pname, param);
     }
 
-    pub fn glLightModelfv(self: *Self, pname: i32, params: []f32, offset: i32) void {
-        return self.glLightModelfvFn(self.pointer, pname, params, offset);
+    pub fn glLightModelfv3(self: *Self, pname: i32, params: []f32, offset: i32) void {
+        return self.glLightModelfv3Fn(self.pointer, pname, params, offset);
     }
 
     pub fn glLightModelfv(self: *Self, pname: i32, params: ?*FloatBuffer) void {
@@ -298,8 +298,8 @@ pub const GL10 = struct {
         return self.glLightfFn(self.pointer, light, pname, param);
     }
 
-    pub fn glLightfv(self: *Self, light: i32, pname: i32, params: []f32, offset: i32) void {
-        return self.glLightfvFn(self.pointer, light, pname, params, offset);
+    pub fn glLightfv4(self: *Self, light: i32, pname: i32, params: []f32, offset: i32) void {
+        return self.glLightfv4Fn(self.pointer, light, pname, params, offset);
     }
 
     pub fn glLightfv(self: *Self, light: i32, pname: i32, params: ?*FloatBuffer) void {
@@ -314,8 +314,8 @@ pub const GL10 = struct {
         return self.glLoadIdentityFn(self.pointer);
     }
 
-    pub fn glLoadMatrixf(self: *Self, m: []f32, offset: i32) void {
-        return self.glLoadMatrixfFn(self.pointer, m, offset);
+    pub fn glLoadMatrixf2(self: *Self, m: []f32, offset: i32) void {
+        return self.glLoadMatrixf2Fn(self.pointer, m, offset);
     }
 
     pub fn glLoadMatrixf(self: *Self, m: ?*FloatBuffer) void {
@@ -330,8 +330,8 @@ pub const GL10 = struct {
         return self.glMaterialfFn(self.pointer, face, pname, param);
     }
 
-    pub fn glMaterialfv(self: *Self, face: i32, pname: i32, params: []f32, offset: i32) void {
-        return self.glMaterialfvFn(self.pointer, face, pname, params, offset);
+    pub fn glMaterialfv4(self: *Self, face: i32, pname: i32, params: []f32, offset: i32) void {
+        return self.glMaterialfv4Fn(self.pointer, face, pname, params, offset);
     }
 
     pub fn glMaterialfv(self: *Self, face: i32, pname: i32, params: ?*FloatBuffer) void {
@@ -342,8 +342,8 @@ pub const GL10 = struct {
         return self.glMatrixModeFn(self.pointer, mode);
     }
 
-    pub fn glMultMatrixf(self: *Self, m: []f32, offset: i32) void {
-        return self.glMultMatrixfFn(self.pointer, m, offset);
+    pub fn glMultMatrixf2(self: *Self, m: []f32, offset: i32) void {
+        return self.glMultMatrixf2Fn(self.pointer, m, offset);
     }
 
     pub fn glMultMatrixf(self: *Self, m: ?*FloatBuffer) void {
@@ -438,8 +438,8 @@ pub const GL10 = struct {
         return self.glTexEnvfFn(self.pointer, target, pname, param);
     }
 
-    pub fn glTexEnvfv(self: *Self, target: i32, pname: i32, params: []f32, offset: i32) void {
-        return self.glTexEnvfvFn(self.pointer, target, pname, params, offset);
+    pub fn glTexEnvfv4(self: *Self, target: i32, pname: i32, params: []f32, offset: i32) void {
+        return self.glTexEnvfv4Fn(self.pointer, target, pname, params, offset);
     }
 
     pub fn glTexEnvfv(self: *Self, target: i32, pname: i32, params: ?*FloatBuffer) void {
@@ -486,8 +486,8 @@ pub const GL10 = struct {
         return self.glVertex3fFn(self.pointer, f, f2, f3);
     }
 
-    pub fn glPolygonMode(self: *Self, i: i32, i1: i32) void {
-        return self.glPolygonModeFn(self.pointer, i, i1);
+    pub fn glPolygonMode(self: *Self, i: i32, i1_: i32) void {
+        return self.glPolygonModeFn(self.pointer, i, i1_);
     }
 
     pub fn toString(self: *Self) ?*String {
@@ -496,391 +496,391 @@ pub const GL10 = struct {
 
     // The interface value of an object with the methods. Like a Java class a method can be declared by the object or a superclass.
     pub fn of(object: anytype) ?*Self {
-        const Implementation = @TypeOf(object);
+        const ImplementationType = @TypeOf(object);
         const Methods = struct {
             fn toString(pointer: *anyopaque) ?*String {
-                const implementation: Implementation = @ptrCast(@alignCast(pointer));
+                const implementation: ImplementationType = @ptrCast(@alignCast(pointer));
                 return String.valueOf(implementation);
             }
-            fn glActiveTexture(pointer: *anyopaque, texture: i32) void {
-                const implementation: Implementation = @ptrCast(@alignCast(pointer));
-                return Inheritance.receiver(implementation, "glActiveTexture").glActiveTexture(texture);
+            fn glActiveTexture(interface_pointer: *anyopaque, texture: i32) void {
+                const implementation: ImplementationType = @ptrCast(@alignCast(interface_pointer));
+                return Inheritance.call(implementation, "glActiveTexture", .{ texture });
             }
-            fn glAlphaFunc(pointer: *anyopaque, func: i32, ref: f32) void {
-                const implementation: Implementation = @ptrCast(@alignCast(pointer));
-                return Inheritance.receiver(implementation, "glAlphaFunc").glAlphaFunc(func, ref);
+            fn glAlphaFunc(interface_pointer: *anyopaque, func: i32, ref: f32) void {
+                const implementation: ImplementationType = @ptrCast(@alignCast(interface_pointer));
+                return Inheritance.call(implementation, "glAlphaFunc", .{ func, ref });
             }
-            fn glBindTexture(pointer: *anyopaque, target: i32, texture: i32) void {
-                const implementation: Implementation = @ptrCast(@alignCast(pointer));
-                return Inheritance.receiver(implementation, "glBindTexture").glBindTexture(target, texture);
+            fn glBindTexture(interface_pointer: *anyopaque, target: i32, texture: i32) void {
+                const implementation: ImplementationType = @ptrCast(@alignCast(interface_pointer));
+                return Inheritance.call(implementation, "glBindTexture", .{ target, texture });
             }
-            fn glBlendFunc(pointer: *anyopaque, sfactor: i32, dfactor: i32) void {
-                const implementation: Implementation = @ptrCast(@alignCast(pointer));
-                return Inheritance.receiver(implementation, "glBlendFunc").glBlendFunc(sfactor, dfactor);
+            fn glBlendFunc(interface_pointer: *anyopaque, sfactor: i32, dfactor: i32) void {
+                const implementation: ImplementationType = @ptrCast(@alignCast(interface_pointer));
+                return Inheritance.call(implementation, "glBlendFunc", .{ sfactor, dfactor });
             }
-            fn glClear(pointer: *anyopaque, mask: i32) void {
-                const implementation: Implementation = @ptrCast(@alignCast(pointer));
-                return Inheritance.receiver(implementation, "glClear").glClear(mask);
+            fn glClear(interface_pointer: *anyopaque, mask: i32) void {
+                const implementation: ImplementationType = @ptrCast(@alignCast(interface_pointer));
+                return Inheritance.call(implementation, "glClear", .{ mask });
             }
-            fn glClearColor(pointer: *anyopaque, red: f32, green: f32, blue: f32, alpha: f32) void {
-                const implementation: Implementation = @ptrCast(@alignCast(pointer));
-                return Inheritance.receiver(implementation, "glClearColor").glClearColor(red, green, blue, alpha);
+            fn glClearColor(interface_pointer: *anyopaque, red: f32, green: f32, blue: f32, alpha: f32) void {
+                const implementation: ImplementationType = @ptrCast(@alignCast(interface_pointer));
+                return Inheritance.call(implementation, "glClearColor", .{ red, green, blue, alpha });
             }
-            fn glClearDepthf(pointer: *anyopaque, depth: f32) void {
-                const implementation: Implementation = @ptrCast(@alignCast(pointer));
-                return Inheritance.receiver(implementation, "glClearDepthf").glClearDepthf(depth);
+            fn glClearDepthf(interface_pointer: *anyopaque, depth: f32) void {
+                const implementation: ImplementationType = @ptrCast(@alignCast(interface_pointer));
+                return Inheritance.call(implementation, "glClearDepthf", .{ depth });
             }
-            fn glClearStencil(pointer: *anyopaque, s: i32) void {
-                const implementation: Implementation = @ptrCast(@alignCast(pointer));
-                return Inheritance.receiver(implementation, "glClearStencil").glClearStencil(s);
+            fn glClearStencil(interface_pointer: *anyopaque, s: i32) void {
+                const implementation: ImplementationType = @ptrCast(@alignCast(interface_pointer));
+                return Inheritance.call(implementation, "glClearStencil", .{ s });
             }
-            fn glClientActiveTexture(pointer: *anyopaque, texture: i32) void {
-                const implementation: Implementation = @ptrCast(@alignCast(pointer));
-                return Inheritance.receiver(implementation, "glClientActiveTexture").glClientActiveTexture(texture);
+            fn glClientActiveTexture(interface_pointer: *anyopaque, texture: i32) void {
+                const implementation: ImplementationType = @ptrCast(@alignCast(interface_pointer));
+                return Inheritance.call(implementation, "glClientActiveTexture", .{ texture });
             }
-            fn glColor4f(pointer: *anyopaque, red: f32, green: f32, blue: f32, alpha: f32) void {
-                const implementation: Implementation = @ptrCast(@alignCast(pointer));
-                return Inheritance.receiver(implementation, "glColor4f").glColor4f(red, green, blue, alpha);
+            fn glColor4f(interface_pointer: *anyopaque, red: f32, green: f32, blue: f32, alpha: f32) void {
+                const implementation: ImplementationType = @ptrCast(@alignCast(interface_pointer));
+                return Inheritance.call(implementation, "glColor4f", .{ red, green, blue, alpha });
             }
-            fn glColorMask(pointer: *anyopaque, red: bool, green: bool, blue: bool, alpha: bool) void {
-                const implementation: Implementation = @ptrCast(@alignCast(pointer));
-                return Inheritance.receiver(implementation, "glColorMask").glColorMask(red, green, blue, alpha);
+            fn glColorMask(interface_pointer: *anyopaque, red: bool, green: bool, blue: bool, alpha: bool) void {
+                const implementation: ImplementationType = @ptrCast(@alignCast(interface_pointer));
+                return Inheritance.call(implementation, "glColorMask", .{ red, green, blue, alpha });
             }
-            fn glColorPointer(pointer: *anyopaque, size: i32, @"type": i32, stride: i32, pointer: ?*Buffer) void {
-                const implementation: Implementation = @ptrCast(@alignCast(pointer));
-                return Inheritance.receiver(implementation, "glColorPointer").glColorPointer(size, @"type", stride, pointer);
+            fn glColorPointer(interface_pointer: *anyopaque, size: i32, @"type": i32, stride: i32, pointer: ?*Buffer) void {
+                const implementation: ImplementationType = @ptrCast(@alignCast(interface_pointer));
+                return Inheritance.call(implementation, "glColorPointer", .{ size, @"type", stride, pointer });
             }
-            fn glCompressedTexImage2D(pointer: *anyopaque, target: i32, level: i32, internalformat: i32, width: i32, height: i32, border: i32, imageSize: i32, data: ?*Buffer) void {
-                const implementation: Implementation = @ptrCast(@alignCast(pointer));
-                return Inheritance.receiver(implementation, "glCompressedTexImage2D").glCompressedTexImage2D(target, level, internalformat, width, height, border, imageSize, data);
+            fn glCompressedTexImage2D(interface_pointer: *anyopaque, target: i32, level: i32, internalformat: i32, width: i32, height: i32, border: i32, imageSize: i32, data: ?*Buffer) void {
+                const implementation: ImplementationType = @ptrCast(@alignCast(interface_pointer));
+                return Inheritance.call(implementation, "glCompressedTexImage2D", .{ target, level, internalformat, width, height, border, imageSize, data });
             }
-            fn glCompressedTexSubImage2D(pointer: *anyopaque, target: i32, level: i32, xoffset: i32, yoffset: i32, width: i32, height: i32, format: i32, imageSize: i32, data: ?*Buffer) void {
-                const implementation: Implementation = @ptrCast(@alignCast(pointer));
-                return Inheritance.receiver(implementation, "glCompressedTexSubImage2D").glCompressedTexSubImage2D(target, level, xoffset, yoffset, width, height, format, imageSize, data);
+            fn glCompressedTexSubImage2D(interface_pointer: *anyopaque, target: i32, level: i32, xoffset: i32, yoffset: i32, width: i32, height: i32, format: i32, imageSize: i32, data: ?*Buffer) void {
+                const implementation: ImplementationType = @ptrCast(@alignCast(interface_pointer));
+                return Inheritance.call(implementation, "glCompressedTexSubImage2D", .{ target, level, xoffset, yoffset, width, height, format, imageSize, data });
             }
-            fn glCopyTexImage2D(pointer: *anyopaque, target: i32, level: i32, internalformat: i32, x: i32, y: i32, width: i32, height: i32, border: i32) void {
-                const implementation: Implementation = @ptrCast(@alignCast(pointer));
-                return Inheritance.receiver(implementation, "glCopyTexImage2D").glCopyTexImage2D(target, level, internalformat, x, y, width, height, border);
+            fn glCopyTexImage2D(interface_pointer: *anyopaque, target: i32, level: i32, internalformat: i32, x: i32, y: i32, width: i32, height: i32, border: i32) void {
+                const implementation: ImplementationType = @ptrCast(@alignCast(interface_pointer));
+                return Inheritance.call(implementation, "glCopyTexImage2D", .{ target, level, internalformat, x, y, width, height, border });
             }
-            fn glCopyTexSubImage2D(pointer: *anyopaque, target: i32, level: i32, xoffset: i32, yoffset: i32, x: i32, y: i32, width: i32, height: i32) void {
-                const implementation: Implementation = @ptrCast(@alignCast(pointer));
-                return Inheritance.receiver(implementation, "glCopyTexSubImage2D").glCopyTexSubImage2D(target, level, xoffset, yoffset, x, y, width, height);
+            fn glCopyTexSubImage2D(interface_pointer: *anyopaque, target: i32, level: i32, xoffset: i32, yoffset: i32, x: i32, y: i32, width: i32, height: i32) void {
+                const implementation: ImplementationType = @ptrCast(@alignCast(interface_pointer));
+                return Inheritance.call(implementation, "glCopyTexSubImage2D", .{ target, level, xoffset, yoffset, x, y, width, height });
             }
-            fn glCullFace(pointer: *anyopaque, mode: i32) void {
-                const implementation: Implementation = @ptrCast(@alignCast(pointer));
-                return Inheritance.receiver(implementation, "glCullFace").glCullFace(mode);
+            fn glCullFace(interface_pointer: *anyopaque, mode: i32) void {
+                const implementation: ImplementationType = @ptrCast(@alignCast(interface_pointer));
+                return Inheritance.call(implementation, "glCullFace", .{ mode });
             }
-            fn glDeleteTextures(pointer: *anyopaque, n: i32, textures: []i32, offset: i32) void {
-                const implementation: Implementation = @ptrCast(@alignCast(pointer));
-                return Inheritance.receiver(implementation, "glDeleteTextures").glDeleteTextures(n, textures, offset);
+            fn glDeleteTextures3(interface_pointer: *anyopaque, n: i32, textures: []i32, offset: i32) void {
+                const implementation: ImplementationType = @ptrCast(@alignCast(interface_pointer));
+                return Inheritance.call(implementation, "glDeleteTextures", .{ n, textures, offset });
             }
-            fn glDeleteTextures(pointer: *anyopaque, n: i32, textures: ?*IntBuffer) void {
-                const implementation: Implementation = @ptrCast(@alignCast(pointer));
-                return Inheritance.receiver(implementation, "glDeleteTextures").glDeleteTextures(n, textures);
+            fn glDeleteTextures(interface_pointer: *anyopaque, n: i32, textures: ?*IntBuffer) void {
+                const implementation: ImplementationType = @ptrCast(@alignCast(interface_pointer));
+                return Inheritance.call(implementation, "glDeleteTextures", .{ n, textures });
             }
-            fn glDepthFunc(pointer: *anyopaque, func: i32) void {
-                const implementation: Implementation = @ptrCast(@alignCast(pointer));
-                return Inheritance.receiver(implementation, "glDepthFunc").glDepthFunc(func);
+            fn glDepthFunc(interface_pointer: *anyopaque, func: i32) void {
+                const implementation: ImplementationType = @ptrCast(@alignCast(interface_pointer));
+                return Inheritance.call(implementation, "glDepthFunc", .{ func });
             }
-            fn glDepthMask(pointer: *anyopaque, flag: bool) void {
-                const implementation: Implementation = @ptrCast(@alignCast(pointer));
-                return Inheritance.receiver(implementation, "glDepthMask").glDepthMask(flag);
+            fn glDepthMask(interface_pointer: *anyopaque, flag: bool) void {
+                const implementation: ImplementationType = @ptrCast(@alignCast(interface_pointer));
+                return Inheritance.call(implementation, "glDepthMask", .{ flag });
             }
-            fn glDepthRangef(pointer: *anyopaque, zNear: f32, zFar: f32) void {
-                const implementation: Implementation = @ptrCast(@alignCast(pointer));
-                return Inheritance.receiver(implementation, "glDepthRangef").glDepthRangef(zNear, zFar);
+            fn glDepthRangef(interface_pointer: *anyopaque, zNear: f32, zFar: f32) void {
+                const implementation: ImplementationType = @ptrCast(@alignCast(interface_pointer));
+                return Inheritance.call(implementation, "glDepthRangef", .{ zNear, zFar });
             }
-            fn glDisable(pointer: *anyopaque, cap: i32) void {
-                const implementation: Implementation = @ptrCast(@alignCast(pointer));
-                return Inheritance.receiver(implementation, "glDisable").glDisable(cap);
+            fn glDisable(interface_pointer: *anyopaque, cap: i32) void {
+                const implementation: ImplementationType = @ptrCast(@alignCast(interface_pointer));
+                return Inheritance.call(implementation, "glDisable", .{ cap });
             }
-            fn glDisableClientState(pointer: *anyopaque, array: i32) void {
-                const implementation: Implementation = @ptrCast(@alignCast(pointer));
-                return Inheritance.receiver(implementation, "glDisableClientState").glDisableClientState(array);
+            fn glDisableClientState(interface_pointer: *anyopaque, array: i32) void {
+                const implementation: ImplementationType = @ptrCast(@alignCast(interface_pointer));
+                return Inheritance.call(implementation, "glDisableClientState", .{ array });
             }
-            fn glDrawArrays(pointer: *anyopaque, mode: i32, first: i32, count: i32) void {
-                const implementation: Implementation = @ptrCast(@alignCast(pointer));
-                return Inheritance.receiver(implementation, "glDrawArrays").glDrawArrays(mode, first, count);
+            fn glDrawArrays(interface_pointer: *anyopaque, mode: i32, first: i32, count: i32) void {
+                const implementation: ImplementationType = @ptrCast(@alignCast(interface_pointer));
+                return Inheritance.call(implementation, "glDrawArrays", .{ mode, first, count });
             }
-            fn glDrawElements(pointer: *anyopaque, mode: i32, count: i32, @"type": i32, indices: ?*Buffer) void {
-                const implementation: Implementation = @ptrCast(@alignCast(pointer));
-                return Inheritance.receiver(implementation, "glDrawElements").glDrawElements(mode, count, @"type", indices);
+            fn glDrawElements(interface_pointer: *anyopaque, mode: i32, count: i32, @"type": i32, indices: ?*Buffer) void {
+                const implementation: ImplementationType = @ptrCast(@alignCast(interface_pointer));
+                return Inheritance.call(implementation, "glDrawElements", .{ mode, count, @"type", indices });
             }
-            fn glEnable(pointer: *anyopaque, cap: i32) void {
-                const implementation: Implementation = @ptrCast(@alignCast(pointer));
-                return Inheritance.receiver(implementation, "glEnable").glEnable(cap);
+            fn glEnable(interface_pointer: *anyopaque, cap: i32) void {
+                const implementation: ImplementationType = @ptrCast(@alignCast(interface_pointer));
+                return Inheritance.call(implementation, "glEnable", .{ cap });
             }
-            fn glEnableClientState(pointer: *anyopaque, array: i32) void {
-                const implementation: Implementation = @ptrCast(@alignCast(pointer));
-                return Inheritance.receiver(implementation, "glEnableClientState").glEnableClientState(array);
+            fn glEnableClientState(interface_pointer: *anyopaque, array: i32) void {
+                const implementation: ImplementationType = @ptrCast(@alignCast(interface_pointer));
+                return Inheritance.call(implementation, "glEnableClientState", .{ array });
             }
-            fn glFinish(pointer: *anyopaque) void {
-                const implementation: Implementation = @ptrCast(@alignCast(pointer));
+            fn glFinish(interface_pointer: *anyopaque) void {
+                const implementation: ImplementationType = @ptrCast(@alignCast(interface_pointer));
                 return Inheritance.receiver(implementation, "glFinish").glFinish();
             }
-            fn glFlush(pointer: *anyopaque) void {
-                const implementation: Implementation = @ptrCast(@alignCast(pointer));
+            fn glFlush(interface_pointer: *anyopaque) void {
+                const implementation: ImplementationType = @ptrCast(@alignCast(interface_pointer));
                 return Inheritance.receiver(implementation, "glFlush").glFlush();
             }
-            fn glFogf(pointer: *anyopaque, pname: i32, param: f32) void {
-                const implementation: Implementation = @ptrCast(@alignCast(pointer));
-                return Inheritance.receiver(implementation, "glFogf").glFogf(pname, param);
+            fn glFogf(interface_pointer: *anyopaque, pname: i32, param: f32) void {
+                const implementation: ImplementationType = @ptrCast(@alignCast(interface_pointer));
+                return Inheritance.call(implementation, "glFogf", .{ pname, param });
             }
-            fn glFogfv(pointer: *anyopaque, pname: i32, params: []f32, offset: i32) void {
-                const implementation: Implementation = @ptrCast(@alignCast(pointer));
-                return Inheritance.receiver(implementation, "glFogfv").glFogfv(pname, params, offset);
+            fn glFogfv3(interface_pointer: *anyopaque, pname: i32, params: []f32, offset: i32) void {
+                const implementation: ImplementationType = @ptrCast(@alignCast(interface_pointer));
+                return Inheritance.call(implementation, "glFogfv", .{ pname, params, offset });
             }
-            fn glFogfv(pointer: *anyopaque, pname: i32, params: ?*FloatBuffer) void {
-                const implementation: Implementation = @ptrCast(@alignCast(pointer));
-                return Inheritance.receiver(implementation, "glFogfv").glFogfv(pname, params);
+            fn glFogfv(interface_pointer: *anyopaque, pname: i32, params: ?*FloatBuffer) void {
+                const implementation: ImplementationType = @ptrCast(@alignCast(interface_pointer));
+                return Inheritance.call(implementation, "glFogfv", .{ pname, params });
             }
-            fn glFrontFace(pointer: *anyopaque, mode: i32) void {
-                const implementation: Implementation = @ptrCast(@alignCast(pointer));
-                return Inheritance.receiver(implementation, "glFrontFace").glFrontFace(mode);
+            fn glFrontFace(interface_pointer: *anyopaque, mode: i32) void {
+                const implementation: ImplementationType = @ptrCast(@alignCast(interface_pointer));
+                return Inheritance.call(implementation, "glFrontFace", .{ mode });
             }
-            fn glFrustumf(pointer: *anyopaque, left: f32, right: f32, bottom: f32, top: f32, zNear: f32, zFar: f32) void {
-                const implementation: Implementation = @ptrCast(@alignCast(pointer));
-                return Inheritance.receiver(implementation, "glFrustumf").glFrustumf(left, right, bottom, top, zNear, zFar);
+            fn glFrustumf(interface_pointer: *anyopaque, left: f32, right: f32, bottom: f32, top: f32, zNear: f32, zFar: f32) void {
+                const implementation: ImplementationType = @ptrCast(@alignCast(interface_pointer));
+                return Inheritance.call(implementation, "glFrustumf", .{ left, right, bottom, top, zNear, zFar });
             }
-            fn glGenTextures(pointer: *anyopaque, n: i32, textures: []i32, offset: i32) void {
-                const implementation: Implementation = @ptrCast(@alignCast(pointer));
-                return Inheritance.receiver(implementation, "glGenTextures").glGenTextures(n, textures, offset);
+            fn glGenTextures3(interface_pointer: *anyopaque, n: i32, textures: []i32, offset: i32) void {
+                const implementation: ImplementationType = @ptrCast(@alignCast(interface_pointer));
+                return Inheritance.call(implementation, "glGenTextures", .{ n, textures, offset });
             }
-            fn glGenTextures(pointer: *anyopaque, n: i32, textures: ?*IntBuffer) void {
-                const implementation: Implementation = @ptrCast(@alignCast(pointer));
-                return Inheritance.receiver(implementation, "glGenTextures").glGenTextures(n, textures);
+            fn glGenTextures(interface_pointer: *anyopaque, n: i32, textures: ?*IntBuffer) void {
+                const implementation: ImplementationType = @ptrCast(@alignCast(interface_pointer));
+                return Inheritance.call(implementation, "glGenTextures", .{ n, textures });
             }
-            fn glGetError(pointer: *anyopaque) i32 {
-                const implementation: Implementation = @ptrCast(@alignCast(pointer));
+            fn glGetError(interface_pointer: *anyopaque) i32 {
+                const implementation: ImplementationType = @ptrCast(@alignCast(interface_pointer));
                 return Inheritance.receiver(implementation, "glGetError").glGetError();
             }
-            fn glGetIntegerv(pointer: *anyopaque, pname: i32, params: []i32, offset: i32) void {
-                const implementation: Implementation = @ptrCast(@alignCast(pointer));
-                return Inheritance.receiver(implementation, "glGetIntegerv").glGetIntegerv(pname, params, offset);
+            fn glGetIntegerv3(interface_pointer: *anyopaque, pname: i32, params: []i32, offset: i32) void {
+                const implementation: ImplementationType = @ptrCast(@alignCast(interface_pointer));
+                return Inheritance.call(implementation, "glGetIntegerv", .{ pname, params, offset });
             }
-            fn glGetIntegerv(pointer: *anyopaque, pname: i32, params: ?*IntBuffer) void {
-                const implementation: Implementation = @ptrCast(@alignCast(pointer));
-                return Inheritance.receiver(implementation, "glGetIntegerv").glGetIntegerv(pname, params);
+            fn glGetIntegerv(interface_pointer: *anyopaque, pname: i32, params: ?*IntBuffer) void {
+                const implementation: ImplementationType = @ptrCast(@alignCast(interface_pointer));
+                return Inheritance.call(implementation, "glGetIntegerv", .{ pname, params });
             }
-            fn glGetString(pointer: *anyopaque, name: i32) ?*String {
-                const implementation: Implementation = @ptrCast(@alignCast(pointer));
-                return Inheritance.upcast(?*String, Inheritance.receiver(implementation, "glGetString").glGetString(name));
+            fn glGetString(interface_pointer: *anyopaque, name: i32) ?*String {
+                const implementation: ImplementationType = @ptrCast(@alignCast(interface_pointer));
+                return Inheritance.upcast(?*String, Inheritance.call(implementation, "glGetString", .{ name }));
             }
-            fn glHint(pointer: *anyopaque, target: i32, mode: i32) void {
-                const implementation: Implementation = @ptrCast(@alignCast(pointer));
-                return Inheritance.receiver(implementation, "glHint").glHint(target, mode);
+            fn glHint(interface_pointer: *anyopaque, target: i32, mode: i32) void {
+                const implementation: ImplementationType = @ptrCast(@alignCast(interface_pointer));
+                return Inheritance.call(implementation, "glHint", .{ target, mode });
             }
-            fn glLightModelf(pointer: *anyopaque, pname: i32, param: f32) void {
-                const implementation: Implementation = @ptrCast(@alignCast(pointer));
-                return Inheritance.receiver(implementation, "glLightModelf").glLightModelf(pname, param);
+            fn glLightModelf(interface_pointer: *anyopaque, pname: i32, param: f32) void {
+                const implementation: ImplementationType = @ptrCast(@alignCast(interface_pointer));
+                return Inheritance.call(implementation, "glLightModelf", .{ pname, param });
             }
-            fn glLightModelfv(pointer: *anyopaque, pname: i32, params: []f32, offset: i32) void {
-                const implementation: Implementation = @ptrCast(@alignCast(pointer));
-                return Inheritance.receiver(implementation, "glLightModelfv").glLightModelfv(pname, params, offset);
+            fn glLightModelfv3(interface_pointer: *anyopaque, pname: i32, params: []f32, offset: i32) void {
+                const implementation: ImplementationType = @ptrCast(@alignCast(interface_pointer));
+                return Inheritance.call(implementation, "glLightModelfv", .{ pname, params, offset });
             }
-            fn glLightModelfv(pointer: *anyopaque, pname: i32, params: ?*FloatBuffer) void {
-                const implementation: Implementation = @ptrCast(@alignCast(pointer));
-                return Inheritance.receiver(implementation, "glLightModelfv").glLightModelfv(pname, params);
+            fn glLightModelfv(interface_pointer: *anyopaque, pname: i32, params: ?*FloatBuffer) void {
+                const implementation: ImplementationType = @ptrCast(@alignCast(interface_pointer));
+                return Inheritance.call(implementation, "glLightModelfv", .{ pname, params });
             }
-            fn glLightf(pointer: *anyopaque, light: i32, pname: i32, param: f32) void {
-                const implementation: Implementation = @ptrCast(@alignCast(pointer));
-                return Inheritance.receiver(implementation, "glLightf").glLightf(light, pname, param);
+            fn glLightf(interface_pointer: *anyopaque, light: i32, pname: i32, param: f32) void {
+                const implementation: ImplementationType = @ptrCast(@alignCast(interface_pointer));
+                return Inheritance.call(implementation, "glLightf", .{ light, pname, param });
             }
-            fn glLightfv(pointer: *anyopaque, light: i32, pname: i32, params: []f32, offset: i32) void {
-                const implementation: Implementation = @ptrCast(@alignCast(pointer));
-                return Inheritance.receiver(implementation, "glLightfv").glLightfv(light, pname, params, offset);
+            fn glLightfv4(interface_pointer: *anyopaque, light: i32, pname: i32, params: []f32, offset: i32) void {
+                const implementation: ImplementationType = @ptrCast(@alignCast(interface_pointer));
+                return Inheritance.call(implementation, "glLightfv", .{ light, pname, params, offset });
             }
-            fn glLightfv(pointer: *anyopaque, light: i32, pname: i32, params: ?*FloatBuffer) void {
-                const implementation: Implementation = @ptrCast(@alignCast(pointer));
-                return Inheritance.receiver(implementation, "glLightfv").glLightfv(light, pname, params);
+            fn glLightfv(interface_pointer: *anyopaque, light: i32, pname: i32, params: ?*FloatBuffer) void {
+                const implementation: ImplementationType = @ptrCast(@alignCast(interface_pointer));
+                return Inheritance.call(implementation, "glLightfv", .{ light, pname, params });
             }
-            fn glLineWidth(pointer: *anyopaque, width: f32) void {
-                const implementation: Implementation = @ptrCast(@alignCast(pointer));
-                return Inheritance.receiver(implementation, "glLineWidth").glLineWidth(width);
+            fn glLineWidth(interface_pointer: *anyopaque, width: f32) void {
+                const implementation: ImplementationType = @ptrCast(@alignCast(interface_pointer));
+                return Inheritance.call(implementation, "glLineWidth", .{ width });
             }
-            fn glLoadIdentity(pointer: *anyopaque) void {
-                const implementation: Implementation = @ptrCast(@alignCast(pointer));
+            fn glLoadIdentity(interface_pointer: *anyopaque) void {
+                const implementation: ImplementationType = @ptrCast(@alignCast(interface_pointer));
                 return Inheritance.receiver(implementation, "glLoadIdentity").glLoadIdentity();
             }
-            fn glLoadMatrixf(pointer: *anyopaque, m: []f32, offset: i32) void {
-                const implementation: Implementation = @ptrCast(@alignCast(pointer));
-                return Inheritance.receiver(implementation, "glLoadMatrixf").glLoadMatrixf(m, offset);
+            fn glLoadMatrixf2(interface_pointer: *anyopaque, m: []f32, offset: i32) void {
+                const implementation: ImplementationType = @ptrCast(@alignCast(interface_pointer));
+                return Inheritance.call(implementation, "glLoadMatrixf", .{ m, offset });
             }
-            fn glLoadMatrixf(pointer: *anyopaque, m: ?*FloatBuffer) void {
-                const implementation: Implementation = @ptrCast(@alignCast(pointer));
-                return Inheritance.receiver(implementation, "glLoadMatrixf").glLoadMatrixf(m);
+            fn glLoadMatrixf(interface_pointer: *anyopaque, m: ?*FloatBuffer) void {
+                const implementation: ImplementationType = @ptrCast(@alignCast(interface_pointer));
+                return Inheritance.call(implementation, "glLoadMatrixf", .{ m });
             }
-            fn glLogicOp(pointer: *anyopaque, opcode: i32) void {
-                const implementation: Implementation = @ptrCast(@alignCast(pointer));
-                return Inheritance.receiver(implementation, "glLogicOp").glLogicOp(opcode);
+            fn glLogicOp(interface_pointer: *anyopaque, opcode: i32) void {
+                const implementation: ImplementationType = @ptrCast(@alignCast(interface_pointer));
+                return Inheritance.call(implementation, "glLogicOp", .{ opcode });
             }
-            fn glMaterialf(pointer: *anyopaque, face: i32, pname: i32, param: f32) void {
-                const implementation: Implementation = @ptrCast(@alignCast(pointer));
-                return Inheritance.receiver(implementation, "glMaterialf").glMaterialf(face, pname, param);
+            fn glMaterialf(interface_pointer: *anyopaque, face: i32, pname: i32, param: f32) void {
+                const implementation: ImplementationType = @ptrCast(@alignCast(interface_pointer));
+                return Inheritance.call(implementation, "glMaterialf", .{ face, pname, param });
             }
-            fn glMaterialfv(pointer: *anyopaque, face: i32, pname: i32, params: []f32, offset: i32) void {
-                const implementation: Implementation = @ptrCast(@alignCast(pointer));
-                return Inheritance.receiver(implementation, "glMaterialfv").glMaterialfv(face, pname, params, offset);
+            fn glMaterialfv4(interface_pointer: *anyopaque, face: i32, pname: i32, params: []f32, offset: i32) void {
+                const implementation: ImplementationType = @ptrCast(@alignCast(interface_pointer));
+                return Inheritance.call(implementation, "glMaterialfv", .{ face, pname, params, offset });
             }
-            fn glMaterialfv(pointer: *anyopaque, face: i32, pname: i32, params: ?*FloatBuffer) void {
-                const implementation: Implementation = @ptrCast(@alignCast(pointer));
-                return Inheritance.receiver(implementation, "glMaterialfv").glMaterialfv(face, pname, params);
+            fn glMaterialfv(interface_pointer: *anyopaque, face: i32, pname: i32, params: ?*FloatBuffer) void {
+                const implementation: ImplementationType = @ptrCast(@alignCast(interface_pointer));
+                return Inheritance.call(implementation, "glMaterialfv", .{ face, pname, params });
             }
-            fn glMatrixMode(pointer: *anyopaque, mode: i32) void {
-                const implementation: Implementation = @ptrCast(@alignCast(pointer));
-                return Inheritance.receiver(implementation, "glMatrixMode").glMatrixMode(mode);
+            fn glMatrixMode(interface_pointer: *anyopaque, mode: i32) void {
+                const implementation: ImplementationType = @ptrCast(@alignCast(interface_pointer));
+                return Inheritance.call(implementation, "glMatrixMode", .{ mode });
             }
-            fn glMultMatrixf(pointer: *anyopaque, m: []f32, offset: i32) void {
-                const implementation: Implementation = @ptrCast(@alignCast(pointer));
-                return Inheritance.receiver(implementation, "glMultMatrixf").glMultMatrixf(m, offset);
+            fn glMultMatrixf2(interface_pointer: *anyopaque, m: []f32, offset: i32) void {
+                const implementation: ImplementationType = @ptrCast(@alignCast(interface_pointer));
+                return Inheritance.call(implementation, "glMultMatrixf", .{ m, offset });
             }
-            fn glMultMatrixf(pointer: *anyopaque, m: ?*FloatBuffer) void {
-                const implementation: Implementation = @ptrCast(@alignCast(pointer));
-                return Inheritance.receiver(implementation, "glMultMatrixf").glMultMatrixf(m);
+            fn glMultMatrixf(interface_pointer: *anyopaque, m: ?*FloatBuffer) void {
+                const implementation: ImplementationType = @ptrCast(@alignCast(interface_pointer));
+                return Inheritance.call(implementation, "glMultMatrixf", .{ m });
             }
-            fn glMultiTexCoord4f(pointer: *anyopaque, target: i32, s: f32, t: f32, r: f32, q: f32) void {
-                const implementation: Implementation = @ptrCast(@alignCast(pointer));
-                return Inheritance.receiver(implementation, "glMultiTexCoord4f").glMultiTexCoord4f(target, s, t, r, q);
+            fn glMultiTexCoord4f(interface_pointer: *anyopaque, target: i32, s: f32, t: f32, r: f32, q: f32) void {
+                const implementation: ImplementationType = @ptrCast(@alignCast(interface_pointer));
+                return Inheritance.call(implementation, "glMultiTexCoord4f", .{ target, s, t, r, q });
             }
-            fn glNormal3f(pointer: *anyopaque, nx: f32, ny: f32, nz: f32) void {
-                const implementation: Implementation = @ptrCast(@alignCast(pointer));
-                return Inheritance.receiver(implementation, "glNormal3f").glNormal3f(nx, ny, nz);
+            fn glNormal3f(interface_pointer: *anyopaque, nx: f32, ny: f32, nz: f32) void {
+                const implementation: ImplementationType = @ptrCast(@alignCast(interface_pointer));
+                return Inheritance.call(implementation, "glNormal3f", .{ nx, ny, nz });
             }
-            fn glNormalPointer(pointer: *anyopaque, @"type": i32, stride: i32, pointer: ?*Buffer) void {
-                const implementation: Implementation = @ptrCast(@alignCast(pointer));
-                return Inheritance.receiver(implementation, "glNormalPointer").glNormalPointer(@"type", stride, pointer);
+            fn glNormalPointer(interface_pointer: *anyopaque, @"type": i32, stride: i32, pointer: ?*Buffer) void {
+                const implementation: ImplementationType = @ptrCast(@alignCast(interface_pointer));
+                return Inheritance.call(implementation, "glNormalPointer", .{ @"type", stride, pointer });
             }
-            fn glOrthof(pointer: *anyopaque, left: f32, right: f32, bottom: f32, top: f32, zNear: f32, zFar: f32) void {
-                const implementation: Implementation = @ptrCast(@alignCast(pointer));
-                return Inheritance.receiver(implementation, "glOrthof").glOrthof(left, right, bottom, top, zNear, zFar);
+            fn glOrthof(interface_pointer: *anyopaque, left: f32, right: f32, bottom: f32, top: f32, zNear: f32, zFar: f32) void {
+                const implementation: ImplementationType = @ptrCast(@alignCast(interface_pointer));
+                return Inheritance.call(implementation, "glOrthof", .{ left, right, bottom, top, zNear, zFar });
             }
-            fn glPixelStorei(pointer: *anyopaque, pname: i32, param: i32) void {
-                const implementation: Implementation = @ptrCast(@alignCast(pointer));
-                return Inheritance.receiver(implementation, "glPixelStorei").glPixelStorei(pname, param);
+            fn glPixelStorei(interface_pointer: *anyopaque, pname: i32, param: i32) void {
+                const implementation: ImplementationType = @ptrCast(@alignCast(interface_pointer));
+                return Inheritance.call(implementation, "glPixelStorei", .{ pname, param });
             }
-            fn glPointSize(pointer: *anyopaque, size: f32) void {
-                const implementation: Implementation = @ptrCast(@alignCast(pointer));
-                return Inheritance.receiver(implementation, "glPointSize").glPointSize(size);
+            fn glPointSize(interface_pointer: *anyopaque, size: f32) void {
+                const implementation: ImplementationType = @ptrCast(@alignCast(interface_pointer));
+                return Inheritance.call(implementation, "glPointSize", .{ size });
             }
-            fn glPolygonOffset(pointer: *anyopaque, factor: f32, units: f32) void {
-                const implementation: Implementation = @ptrCast(@alignCast(pointer));
-                return Inheritance.receiver(implementation, "glPolygonOffset").glPolygonOffset(factor, units);
+            fn glPolygonOffset(interface_pointer: *anyopaque, factor: f32, units: f32) void {
+                const implementation: ImplementationType = @ptrCast(@alignCast(interface_pointer));
+                return Inheritance.call(implementation, "glPolygonOffset", .{ factor, units });
             }
-            fn glPopMatrix(pointer: *anyopaque) void {
-                const implementation: Implementation = @ptrCast(@alignCast(pointer));
+            fn glPopMatrix(interface_pointer: *anyopaque) void {
+                const implementation: ImplementationType = @ptrCast(@alignCast(interface_pointer));
                 return Inheritance.receiver(implementation, "glPopMatrix").glPopMatrix();
             }
-            fn glPushMatrix(pointer: *anyopaque) void {
-                const implementation: Implementation = @ptrCast(@alignCast(pointer));
+            fn glPushMatrix(interface_pointer: *anyopaque) void {
+                const implementation: ImplementationType = @ptrCast(@alignCast(interface_pointer));
                 return Inheritance.receiver(implementation, "glPushMatrix").glPushMatrix();
             }
-            fn glReadPixels(pointer: *anyopaque, x: i32, y: i32, width: i32, height: i32, format: i32, @"type": i32, pixels: ?*Buffer) void {
-                const implementation: Implementation = @ptrCast(@alignCast(pointer));
-                return Inheritance.receiver(implementation, "glReadPixels").glReadPixels(x, y, width, height, format, @"type", pixels);
+            fn glReadPixels(interface_pointer: *anyopaque, x: i32, y: i32, width: i32, height: i32, format: i32, @"type": i32, pixels: ?*Buffer) void {
+                const implementation: ImplementationType = @ptrCast(@alignCast(interface_pointer));
+                return Inheritance.call(implementation, "glReadPixels", .{ x, y, width, height, format, @"type", pixels });
             }
-            fn glRotatef(pointer: *anyopaque, angle: f32, x: f32, y: f32, z: f32) void {
-                const implementation: Implementation = @ptrCast(@alignCast(pointer));
-                return Inheritance.receiver(implementation, "glRotatef").glRotatef(angle, x, y, z);
+            fn glRotatef(interface_pointer: *anyopaque, angle: f32, x: f32, y: f32, z: f32) void {
+                const implementation: ImplementationType = @ptrCast(@alignCast(interface_pointer));
+                return Inheritance.call(implementation, "glRotatef", .{ angle, x, y, z });
             }
-            fn glRotatex(pointer: *anyopaque, angle: i32, x: i32, y: i32, z: i32) void {
-                const implementation: Implementation = @ptrCast(@alignCast(pointer));
-                return Inheritance.receiver(implementation, "glRotatex").glRotatex(angle, x, y, z);
+            fn glRotatex(interface_pointer: *anyopaque, angle: i32, x: i32, y: i32, z: i32) void {
+                const implementation: ImplementationType = @ptrCast(@alignCast(interface_pointer));
+                return Inheritance.call(implementation, "glRotatex", .{ angle, x, y, z });
             }
-            fn glSampleCoverage(pointer: *anyopaque, value: f32, invert: bool) void {
-                const implementation: Implementation = @ptrCast(@alignCast(pointer));
-                return Inheritance.receiver(implementation, "glSampleCoverage").glSampleCoverage(value, invert);
+            fn glSampleCoverage(interface_pointer: *anyopaque, value: f32, invert: bool) void {
+                const implementation: ImplementationType = @ptrCast(@alignCast(interface_pointer));
+                return Inheritance.call(implementation, "glSampleCoverage", .{ value, invert });
             }
-            fn glScalef(pointer: *anyopaque, x: f32, y: f32, z: f32) void {
-                const implementation: Implementation = @ptrCast(@alignCast(pointer));
-                return Inheritance.receiver(implementation, "glScalef").glScalef(x, y, z);
+            fn glScalef(interface_pointer: *anyopaque, x: f32, y: f32, z: f32) void {
+                const implementation: ImplementationType = @ptrCast(@alignCast(interface_pointer));
+                return Inheritance.call(implementation, "glScalef", .{ x, y, z });
             }
-            fn glScalex(pointer: *anyopaque, x: i32, y: i32, z: i32) void {
-                const implementation: Implementation = @ptrCast(@alignCast(pointer));
-                return Inheritance.receiver(implementation, "glScalex").glScalex(x, y, z);
+            fn glScalex(interface_pointer: *anyopaque, x: i32, y: i32, z: i32) void {
+                const implementation: ImplementationType = @ptrCast(@alignCast(interface_pointer));
+                return Inheritance.call(implementation, "glScalex", .{ x, y, z });
             }
-            fn glScissor(pointer: *anyopaque, x: i32, y: i32, width: i32, height: i32) void {
-                const implementation: Implementation = @ptrCast(@alignCast(pointer));
-                return Inheritance.receiver(implementation, "glScissor").glScissor(x, y, width, height);
+            fn glScissor(interface_pointer: *anyopaque, x: i32, y: i32, width: i32, height: i32) void {
+                const implementation: ImplementationType = @ptrCast(@alignCast(interface_pointer));
+                return Inheritance.call(implementation, "glScissor", .{ x, y, width, height });
             }
-            fn glShadeModel(pointer: *anyopaque, mode: i32) void {
-                const implementation: Implementation = @ptrCast(@alignCast(pointer));
-                return Inheritance.receiver(implementation, "glShadeModel").glShadeModel(mode);
+            fn glShadeModel(interface_pointer: *anyopaque, mode: i32) void {
+                const implementation: ImplementationType = @ptrCast(@alignCast(interface_pointer));
+                return Inheritance.call(implementation, "glShadeModel", .{ mode });
             }
-            fn glStencilFunc(pointer: *anyopaque, func: i32, ref: i32, mask: i32) void {
-                const implementation: Implementation = @ptrCast(@alignCast(pointer));
-                return Inheritance.receiver(implementation, "glStencilFunc").glStencilFunc(func, ref, mask);
+            fn glStencilFunc(interface_pointer: *anyopaque, func: i32, ref: i32, mask: i32) void {
+                const implementation: ImplementationType = @ptrCast(@alignCast(interface_pointer));
+                return Inheritance.call(implementation, "glStencilFunc", .{ func, ref, mask });
             }
-            fn glStencilMask(pointer: *anyopaque, mask: i32) void {
-                const implementation: Implementation = @ptrCast(@alignCast(pointer));
-                return Inheritance.receiver(implementation, "glStencilMask").glStencilMask(mask);
+            fn glStencilMask(interface_pointer: *anyopaque, mask: i32) void {
+                const implementation: ImplementationType = @ptrCast(@alignCast(interface_pointer));
+                return Inheritance.call(implementation, "glStencilMask", .{ mask });
             }
-            fn glStencilOp(pointer: *anyopaque, fail: i32, zfail: i32, zpass: i32) void {
-                const implementation: Implementation = @ptrCast(@alignCast(pointer));
-                return Inheritance.receiver(implementation, "glStencilOp").glStencilOp(fail, zfail, zpass);
+            fn glStencilOp(interface_pointer: *anyopaque, fail: i32, zfail: i32, zpass: i32) void {
+                const implementation: ImplementationType = @ptrCast(@alignCast(interface_pointer));
+                return Inheritance.call(implementation, "glStencilOp", .{ fail, zfail, zpass });
             }
-            fn glTexCoordPointer(pointer: *anyopaque, size: i32, @"type": i32, stride: i32, pointer: ?*Buffer) void {
-                const implementation: Implementation = @ptrCast(@alignCast(pointer));
-                return Inheritance.receiver(implementation, "glTexCoordPointer").glTexCoordPointer(size, @"type", stride, pointer);
+            fn glTexCoordPointer(interface_pointer: *anyopaque, size: i32, @"type": i32, stride: i32, pointer: ?*Buffer) void {
+                const implementation: ImplementationType = @ptrCast(@alignCast(interface_pointer));
+                return Inheritance.call(implementation, "glTexCoordPointer", .{ size, @"type", stride, pointer });
             }
-            fn glTexEnvf(pointer: *anyopaque, target: i32, pname: i32, param: f32) void {
-                const implementation: Implementation = @ptrCast(@alignCast(pointer));
-                return Inheritance.receiver(implementation, "glTexEnvf").glTexEnvf(target, pname, param);
+            fn glTexEnvf(interface_pointer: *anyopaque, target: i32, pname: i32, param: f32) void {
+                const implementation: ImplementationType = @ptrCast(@alignCast(interface_pointer));
+                return Inheritance.call(implementation, "glTexEnvf", .{ target, pname, param });
             }
-            fn glTexEnvfv(pointer: *anyopaque, target: i32, pname: i32, params: []f32, offset: i32) void {
-                const implementation: Implementation = @ptrCast(@alignCast(pointer));
-                return Inheritance.receiver(implementation, "glTexEnvfv").glTexEnvfv(target, pname, params, offset);
+            fn glTexEnvfv4(interface_pointer: *anyopaque, target: i32, pname: i32, params: []f32, offset: i32) void {
+                const implementation: ImplementationType = @ptrCast(@alignCast(interface_pointer));
+                return Inheritance.call(implementation, "glTexEnvfv", .{ target, pname, params, offset });
             }
-            fn glTexEnvfv(pointer: *anyopaque, target: i32, pname: i32, params: ?*FloatBuffer) void {
-                const implementation: Implementation = @ptrCast(@alignCast(pointer));
-                return Inheritance.receiver(implementation, "glTexEnvfv").glTexEnvfv(target, pname, params);
+            fn glTexEnvfv(interface_pointer: *anyopaque, target: i32, pname: i32, params: ?*FloatBuffer) void {
+                const implementation: ImplementationType = @ptrCast(@alignCast(interface_pointer));
+                return Inheritance.call(implementation, "glTexEnvfv", .{ target, pname, params });
             }
-            fn glTexImage2D(pointer: *anyopaque, target: i32, level: i32, internalformat: i32, width: i32, height: i32, border: i32, format: i32, @"type": i32, pixels: ?*Buffer) void {
-                const implementation: Implementation = @ptrCast(@alignCast(pointer));
-                return Inheritance.receiver(implementation, "glTexImage2D").glTexImage2D(target, level, internalformat, width, height, border, format, @"type", pixels);
+            fn glTexImage2D(interface_pointer: *anyopaque, target: i32, level: i32, internalformat: i32, width: i32, height: i32, border: i32, format: i32, @"type": i32, pixels: ?*Buffer) void {
+                const implementation: ImplementationType = @ptrCast(@alignCast(interface_pointer));
+                return Inheritance.call(implementation, "glTexImage2D", .{ target, level, internalformat, width, height, border, format, @"type", pixels });
             }
-            fn glTexParameterf(pointer: *anyopaque, target: i32, pname: i32, param: f32) void {
-                const implementation: Implementation = @ptrCast(@alignCast(pointer));
-                return Inheritance.receiver(implementation, "glTexParameterf").glTexParameterf(target, pname, param);
+            fn glTexParameterf(interface_pointer: *anyopaque, target: i32, pname: i32, param: f32) void {
+                const implementation: ImplementationType = @ptrCast(@alignCast(interface_pointer));
+                return Inheritance.call(implementation, "glTexParameterf", .{ target, pname, param });
             }
-            fn glTexParameteri(pointer: *anyopaque, target: i32, pname: i32, param: i32) void {
-                const implementation: Implementation = @ptrCast(@alignCast(pointer));
-                return Inheritance.receiver(implementation, "glTexParameteri").glTexParameteri(target, pname, param);
+            fn glTexParameteri(interface_pointer: *anyopaque, target: i32, pname: i32, param: i32) void {
+                const implementation: ImplementationType = @ptrCast(@alignCast(interface_pointer));
+                return Inheritance.call(implementation, "glTexParameteri", .{ target, pname, param });
             }
-            fn glTexSubImage2D(pointer: *anyopaque, target: i32, level: i32, xoffset: i32, yoffset: i32, width: i32, height: i32, format: i32, @"type": i32, pixels: ?*Buffer) void {
-                const implementation: Implementation = @ptrCast(@alignCast(pointer));
-                return Inheritance.receiver(implementation, "glTexSubImage2D").glTexSubImage2D(target, level, xoffset, yoffset, width, height, format, @"type", pixels);
+            fn glTexSubImage2D(interface_pointer: *anyopaque, target: i32, level: i32, xoffset: i32, yoffset: i32, width: i32, height: i32, format: i32, @"type": i32, pixels: ?*Buffer) void {
+                const implementation: ImplementationType = @ptrCast(@alignCast(interface_pointer));
+                return Inheritance.call(implementation, "glTexSubImage2D", .{ target, level, xoffset, yoffset, width, height, format, @"type", pixels });
             }
-            fn glTranslatef(pointer: *anyopaque, x: f32, y: f32, z: f32) void {
-                const implementation: Implementation = @ptrCast(@alignCast(pointer));
-                return Inheritance.receiver(implementation, "glTranslatef").glTranslatef(x, y, z);
+            fn glTranslatef(interface_pointer: *anyopaque, x: f32, y: f32, z: f32) void {
+                const implementation: ImplementationType = @ptrCast(@alignCast(interface_pointer));
+                return Inheritance.call(implementation, "glTranslatef", .{ x, y, z });
             }
-            fn glVertexPointer(pointer: *anyopaque, size: i32, @"type": i32, stride: i32, pointer: ?*Buffer) void {
-                const implementation: Implementation = @ptrCast(@alignCast(pointer));
-                return Inheritance.receiver(implementation, "glVertexPointer").glVertexPointer(size, @"type", stride, pointer);
+            fn glVertexPointer(interface_pointer: *anyopaque, size: i32, @"type": i32, stride: i32, pointer: ?*Buffer) void {
+                const implementation: ImplementationType = @ptrCast(@alignCast(interface_pointer));
+                return Inheritance.call(implementation, "glVertexPointer", .{ size, @"type", stride, pointer });
             }
-            fn glViewport(pointer: *anyopaque, x: i32, y: i32, width: i32, height: i32) void {
-                const implementation: Implementation = @ptrCast(@alignCast(pointer));
-                return Inheritance.receiver(implementation, "glViewport").glViewport(x, y, width, height);
+            fn glViewport(interface_pointer: *anyopaque, x: i32, y: i32, width: i32, height: i32) void {
+                const implementation: ImplementationType = @ptrCast(@alignCast(interface_pointer));
+                return Inheritance.call(implementation, "glViewport", .{ x, y, width, height });
             }
-            fn glBegin(pointer: *anyopaque, i: i32) void {
-                const implementation: Implementation = @ptrCast(@alignCast(pointer));
-                return Inheritance.receiver(implementation, "glBegin").glBegin(i);
+            fn glBegin(interface_pointer: *anyopaque, i: i32) void {
+                const implementation: ImplementationType = @ptrCast(@alignCast(interface_pointer));
+                return Inheritance.call(implementation, "glBegin", .{ i });
             }
-            fn glEnd(pointer: *anyopaque) void {
-                const implementation: Implementation = @ptrCast(@alignCast(pointer));
+            fn glEnd(interface_pointer: *anyopaque) void {
+                const implementation: ImplementationType = @ptrCast(@alignCast(interface_pointer));
                 return Inheritance.receiver(implementation, "glEnd").glEnd();
             }
-            fn glVertex3f(pointer: *anyopaque, f: f32, f2: f32, f3: f32) void {
-                const implementation: Implementation = @ptrCast(@alignCast(pointer));
-                return Inheritance.receiver(implementation, "glVertex3f").glVertex3f(f, f2, f3);
+            fn glVertex3f(interface_pointer: *anyopaque, f: f32, f2: f32, f3: f32) void {
+                const implementation: ImplementationType = @ptrCast(@alignCast(interface_pointer));
+                return Inheritance.call(implementation, "glVertex3f", .{ f, f2, f3 });
             }
-            fn glPolygonMode(pointer: *anyopaque, i: i32, i1: i32) void {
-                const implementation: Implementation = @ptrCast(@alignCast(pointer));
-                return Inheritance.receiver(implementation, "glPolygonMode").glPolygonMode(i, i1);
+            fn glPolygonMode(interface_pointer: *anyopaque, i: i32, i1_: i32) void {
+                const implementation: ImplementationType = @ptrCast(@alignCast(interface_pointer));
+                return Inheritance.call(implementation, "glPolygonMode", .{ i, i1_ });
             }
         };
         const this = allocator.create(Self) catch unreachable;
-        this.* = .{ .pointer = object, .object = Object.of(object).?, .base = GL.of(object).?.*, .toStringFn = Methods.toString, .glActiveTextureFn = Methods.glActiveTexture, .glAlphaFuncFn = Methods.glAlphaFunc, .glBindTextureFn = Methods.glBindTexture, .glBlendFuncFn = Methods.glBlendFunc, .glClearFn = Methods.glClear, .glClearColorFn = Methods.glClearColor, .glClearDepthfFn = Methods.glClearDepthf, .glClearStencilFn = Methods.glClearStencil, .glClientActiveTextureFn = Methods.glClientActiveTexture, .glColor4fFn = Methods.glColor4f, .glColorMaskFn = Methods.glColorMask, .glColorPointerFn = Methods.glColorPointer, .glCompressedTexImage2DFn = Methods.glCompressedTexImage2D, .glCompressedTexSubImage2DFn = Methods.glCompressedTexSubImage2D, .glCopyTexImage2DFn = Methods.glCopyTexImage2D, .glCopyTexSubImage2DFn = Methods.glCopyTexSubImage2D, .glCullFaceFn = Methods.glCullFace, .glDeleteTexturesFn = Methods.glDeleteTextures, .glDeleteTexturesFn = Methods.glDeleteTextures, .glDepthFuncFn = Methods.glDepthFunc, .glDepthMaskFn = Methods.glDepthMask, .glDepthRangefFn = Methods.glDepthRangef, .glDisableFn = Methods.glDisable, .glDisableClientStateFn = Methods.glDisableClientState, .glDrawArraysFn = Methods.glDrawArrays, .glDrawElementsFn = Methods.glDrawElements, .glEnableFn = Methods.glEnable, .glEnableClientStateFn = Methods.glEnableClientState, .glFinishFn = Methods.glFinish, .glFlushFn = Methods.glFlush, .glFogfFn = Methods.glFogf, .glFogfvFn = Methods.glFogfv, .glFogfvFn = Methods.glFogfv, .glFrontFaceFn = Methods.glFrontFace, .glFrustumfFn = Methods.glFrustumf, .glGenTexturesFn = Methods.glGenTextures, .glGenTexturesFn = Methods.glGenTextures, .glGetErrorFn = Methods.glGetError, .glGetIntegervFn = Methods.glGetIntegerv, .glGetIntegervFn = Methods.glGetIntegerv, .glGetStringFn = Methods.glGetString, .glHintFn = Methods.glHint, .glLightModelfFn = Methods.glLightModelf, .glLightModelfvFn = Methods.glLightModelfv, .glLightModelfvFn = Methods.glLightModelfv, .glLightfFn = Methods.glLightf, .glLightfvFn = Methods.glLightfv, .glLightfvFn = Methods.glLightfv, .glLineWidthFn = Methods.glLineWidth, .glLoadIdentityFn = Methods.glLoadIdentity, .glLoadMatrixfFn = Methods.glLoadMatrixf, .glLoadMatrixfFn = Methods.glLoadMatrixf, .glLogicOpFn = Methods.glLogicOp, .glMaterialfFn = Methods.glMaterialf, .glMaterialfvFn = Methods.glMaterialfv, .glMaterialfvFn = Methods.glMaterialfv, .glMatrixModeFn = Methods.glMatrixMode, .glMultMatrixfFn = Methods.glMultMatrixf, .glMultMatrixfFn = Methods.glMultMatrixf, .glMultiTexCoord4fFn = Methods.glMultiTexCoord4f, .glNormal3fFn = Methods.glNormal3f, .glNormalPointerFn = Methods.glNormalPointer, .glOrthofFn = Methods.glOrthof, .glPixelStoreiFn = Methods.glPixelStorei, .glPointSizeFn = Methods.glPointSize, .glPolygonOffsetFn = Methods.glPolygonOffset, .glPopMatrixFn = Methods.glPopMatrix, .glPushMatrixFn = Methods.glPushMatrix, .glReadPixelsFn = Methods.glReadPixels, .glRotatefFn = Methods.glRotatef, .glRotatexFn = Methods.glRotatex, .glSampleCoverageFn = Methods.glSampleCoverage, .glScalefFn = Methods.glScalef, .glScalexFn = Methods.glScalex, .glScissorFn = Methods.glScissor, .glShadeModelFn = Methods.glShadeModel, .glStencilFuncFn = Methods.glStencilFunc, .glStencilMaskFn = Methods.glStencilMask, .glStencilOpFn = Methods.glStencilOp, .glTexCoordPointerFn = Methods.glTexCoordPointer, .glTexEnvfFn = Methods.glTexEnvf, .glTexEnvfvFn = Methods.glTexEnvfv, .glTexEnvfvFn = Methods.glTexEnvfv, .glTexImage2DFn = Methods.glTexImage2D, .glTexParameterfFn = Methods.glTexParameterf, .glTexParameteriFn = Methods.glTexParameteri, .glTexSubImage2DFn = Methods.glTexSubImage2D, .glTranslatefFn = Methods.glTranslatef, .glVertexPointerFn = Methods.glVertexPointer, .glViewportFn = Methods.glViewport, .glBeginFn = Methods.glBegin, .glEndFn = Methods.glEnd, .glVertex3fFn = Methods.glVertex3f, .glPolygonModeFn = Methods.glPolygonMode };
+        this.* = .{ .pointer = object, .object = Object.of(object).?, .base = GL.of(object).?.*, .toStringFn = Methods.toString, .glActiveTextureFn = Methods.glActiveTexture, .glAlphaFuncFn = Methods.glAlphaFunc, .glBindTextureFn = Methods.glBindTexture, .glBlendFuncFn = Methods.glBlendFunc, .glClearFn = Methods.glClear, .glClearColorFn = Methods.glClearColor, .glClearDepthfFn = Methods.glClearDepthf, .glClearStencilFn = Methods.glClearStencil, .glClientActiveTextureFn = Methods.glClientActiveTexture, .glColor4fFn = Methods.glColor4f, .glColorMaskFn = Methods.glColorMask, .glColorPointerFn = Methods.glColorPointer, .glCompressedTexImage2DFn = Methods.glCompressedTexImage2D, .glCompressedTexSubImage2DFn = Methods.glCompressedTexSubImage2D, .glCopyTexImage2DFn = Methods.glCopyTexImage2D, .glCopyTexSubImage2DFn = Methods.glCopyTexSubImage2D, .glCullFaceFn = Methods.glCullFace, .glDeleteTextures3Fn = Methods.glDeleteTextures3, .glDeleteTexturesFn = Methods.glDeleteTextures, .glDepthFuncFn = Methods.glDepthFunc, .glDepthMaskFn = Methods.glDepthMask, .glDepthRangefFn = Methods.glDepthRangef, .glDisableFn = Methods.glDisable, .glDisableClientStateFn = Methods.glDisableClientState, .glDrawArraysFn = Methods.glDrawArrays, .glDrawElementsFn = Methods.glDrawElements, .glEnableFn = Methods.glEnable, .glEnableClientStateFn = Methods.glEnableClientState, .glFinishFn = Methods.glFinish, .glFlushFn = Methods.glFlush, .glFogfFn = Methods.glFogf, .glFogfv3Fn = Methods.glFogfv3, .glFogfvFn = Methods.glFogfv, .glFrontFaceFn = Methods.glFrontFace, .glFrustumfFn = Methods.glFrustumf, .glGenTextures3Fn = Methods.glGenTextures3, .glGenTexturesFn = Methods.glGenTextures, .glGetErrorFn = Methods.glGetError, .glGetIntegerv3Fn = Methods.glGetIntegerv3, .glGetIntegervFn = Methods.glGetIntegerv, .glGetStringFn = Methods.glGetString, .glHintFn = Methods.glHint, .glLightModelfFn = Methods.glLightModelf, .glLightModelfv3Fn = Methods.glLightModelfv3, .glLightModelfvFn = Methods.glLightModelfv, .glLightfFn = Methods.glLightf, .glLightfv4Fn = Methods.glLightfv4, .glLightfvFn = Methods.glLightfv, .glLineWidthFn = Methods.glLineWidth, .glLoadIdentityFn = Methods.glLoadIdentity, .glLoadMatrixf2Fn = Methods.glLoadMatrixf2, .glLoadMatrixfFn = Methods.glLoadMatrixf, .glLogicOpFn = Methods.glLogicOp, .glMaterialfFn = Methods.glMaterialf, .glMaterialfv4Fn = Methods.glMaterialfv4, .glMaterialfvFn = Methods.glMaterialfv, .glMatrixModeFn = Methods.glMatrixMode, .glMultMatrixf2Fn = Methods.glMultMatrixf2, .glMultMatrixfFn = Methods.glMultMatrixf, .glMultiTexCoord4fFn = Methods.glMultiTexCoord4f, .glNormal3fFn = Methods.glNormal3f, .glNormalPointerFn = Methods.glNormalPointer, .glOrthofFn = Methods.glOrthof, .glPixelStoreiFn = Methods.glPixelStorei, .glPointSizeFn = Methods.glPointSize, .glPolygonOffsetFn = Methods.glPolygonOffset, .glPopMatrixFn = Methods.glPopMatrix, .glPushMatrixFn = Methods.glPushMatrix, .glReadPixelsFn = Methods.glReadPixels, .glRotatefFn = Methods.glRotatef, .glRotatexFn = Methods.glRotatex, .glSampleCoverageFn = Methods.glSampleCoverage, .glScalefFn = Methods.glScalef, .glScalexFn = Methods.glScalex, .glScissorFn = Methods.glScissor, .glShadeModelFn = Methods.glShadeModel, .glStencilFuncFn = Methods.glStencilFunc, .glStencilMaskFn = Methods.glStencilMask, .glStencilOpFn = Methods.glStencilOp, .glTexCoordPointerFn = Methods.glTexCoordPointer, .glTexEnvfFn = Methods.glTexEnvf, .glTexEnvfv4Fn = Methods.glTexEnvfv4, .glTexEnvfvFn = Methods.glTexEnvfv, .glTexImage2DFn = Methods.glTexImage2D, .glTexParameterfFn = Methods.glTexParameterf, .glTexParameteriFn = Methods.glTexParameteri, .glTexSubImage2DFn = Methods.glTexSubImage2D, .glTranslatefFn = Methods.glTranslatef, .glVertexPointerFn = Methods.glVertexPointer, .glViewportFn = Methods.glViewport, .glBeginFn = Methods.glBegin, .glEndFn = Methods.glEnd, .glVertex3fFn = Methods.glVertex3f, .glPolygonModeFn = Methods.glPolygonMode };
         return this;
     }
     pub const GL_ADD: i32 = 260;

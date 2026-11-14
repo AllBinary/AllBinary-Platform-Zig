@@ -23,6 +23,7 @@ const AbstractArrayListPool = @import("org/allbinary/logic/util/cache/AbstractAr
 const BasicArrayListCacheable = @import("org/allbinary/logic/util/cache/BasicArrayListCacheable.zig").BasicArrayListCacheable;
 const CacheableInterface = @import("org/allbinary/logic/util/cache/CacheableInterface.zig").CacheableInterface;
 const CacheableInterfaceFactoryInterface = @import("org/allbinary/logic/util/cache/CacheableInterfaceFactoryInterface.zig").CacheableInterfaceFactoryInterface;
+const Exception = @import("java/lang/Exception.zig").Exception;
 
 pub const BasicArrayListPool = struct {
     const Self = @This();
@@ -60,7 +61,7 @@ pub const BasicArrayListPool = struct {
         {
             var index: i32 = usedList.?.size();
             while (value_N66094: { index -= 1; break :value_N66094 index; } >= 0) {
-            const anyType: ?*CacheableInterface = Inheritance.cast(?*CacheableInterface, usedList.?.objectArray[@intCast(index)]);
+            const anyType: ?*CacheableInterface = Inheritance.cast(?*CacheableInterface, Inheritance.fieldPointer(usedList.?, "objectArray").*[@intCast(index)]);
             _ = Inheritance.call(self, "add", .{ anyType });
             }
         }
@@ -73,7 +74,7 @@ pub const BasicArrayListPool = struct {
         {
             var index: i32 = usedList.?.size();
             while (value_N66401: { index -= 1; break :value_N66401 index; } >= 0) {
-            const list: ?*BasicArrayListCacheable = Inheritance.cast(?*BasicArrayListCacheable, usedList.?.objectArray[@intCast(index)]);
+            const list: ?*BasicArrayListCacheable = Inheritance.cast(?*BasicArrayListCacheable, Inheritance.fieldPointer(usedList.?, "objectArray").*[@intCast(index)]);
             if (Inheritance.receiver(list.?, "size").size() == 0) {
                 _ = Inheritance.call(usedList.?, "removeAt", .{ index });
                 _ = Inheritance.call(self, "add", .{ list });

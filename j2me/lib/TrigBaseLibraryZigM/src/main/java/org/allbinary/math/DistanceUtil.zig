@@ -51,7 +51,7 @@ pub const DistanceUtil = struct {
     pub fn getDistance(self: *Self, x1: i32, y1: i32, x2: i32, y2: i32) i32 {
         const dx: i32 = x1 - x2;
         const dy: i32 = y1 - y2;
-        return @as(i32, @intCast(Inheritance.call(self.mathUtil.?, "sqrt", .{ (dx * dx) + (dy * dy) })));
+        return Inheritance.number(i32, Inheritance.call(self.mathUtil.?, "sqrt", .{ (dx * dx) + (dy * dy) }));
     }
 };
 

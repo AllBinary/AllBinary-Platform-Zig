@@ -18,10 +18,10 @@ const allocator = std.heap.page_allocator;
 const String = @import("java/lang/String.zig").String;
 const Object = @import("java/lang/Object.zig").Object;
 const Inheritance = @import("zig/Inheritance.zig");
-// const Command = @import("javax/microedition/lcdui/Command.zig").Command;
-// const CommandListener = @import("javax/microedition/lcdui/CommandListener.zig").CommandListener;
-// const Form = @import("javax/microedition/lcdui/Form.zig").Form;
-// const NullCommandListener = @import("javax/microedition/lcdui/NullCommandListener.zig").NullCommandListener;
+const Command = @import("javax/microedition/lcdui/Command.zig").Command;
+const CommandListener = @import("javax/microedition/lcdui/CommandListener.zig").CommandListener;
+const Form = @import("javax/microedition/lcdui/Form.zig").Form;
+const NullCommandListener = @import("javax/microedition/lcdui/NullCommandListener.zig").NullCommandListener;
 const Processor = @import("org/allbinary/canvas/Processor.zig").Processor;
 const MenuListener = @import("org/allbinary/game/displayable/canvas/MenuListener.zig").MenuListener;
 const BasicColor = @import("org/allbinary/graphics/color/BasicColor.zig").BasicColor;
@@ -34,6 +34,7 @@ const CommonStrings = @import("org/allbinary/string/CommonStrings.zig").CommonSt
 const StdUtil = @import("org/allbinary/logic/StdUtil.zig").StdUtil;
 const ABStack = @import("org/allbinary/util/ABStack.zig").ABStack;
 const ScreenRepaintProcessorFactory = @import("org/allbinary/graphics/displayable/screen/ScreenRepaintProcessorFactory.zig").ScreenRepaintProcessorFactory;
+const Exception = @import("java/lang/Exception.zig").Exception;
 
 pub const CommandForm = struct {
     const Self = @This();
@@ -49,20 +50,20 @@ pub const CommandForm = struct {
 
     // Static fields with runtime initializers: call staticInit once at startup
     pub fn staticInit() void {
-        NULL_COMMAND_FORM = Inheritance.upcast(?Object, NullUtil.getInstance().?.NULL_OBJECT);
+        NULL_COMMAND_FORM = Inheritance.upcast(?Object, Inheritance.fieldPointer(NullUtil.getInstance().?, "NULL_OBJECT").*);
     }
 
     fn initFields(this: *Self) void {
         this.logUtil = Inheritance.upcast(?*LogUtil, LogUtil.getInstance());
         this.commonStrings = Inheritance.upcast(?*CommonStrings, CommonStrings.getInstance());
-        this.repaintProcessor = Inheritance.upcast(?*Processor, Inheritance.call(ScreenRepaintProcessorFactory.getInstance().?, "create", .{ this }));
+        this.repaintProcessor = Inheritance.upcast(?*Processor, Inheritance.call(ScreenRepaintProcessorFactory.getInstance().?, "create_Method", .{ this }));
         
     }
     
 
     pub fn getNullCommandForm() ?*CommandForm {
-        if (Object.same(CommandForm.NULL_COMMAND_FORM, NullUtil.getInstance().?.NULL_OBJECT)) {
-            CommandForm.NULL_COMMAND_FORM = Inheritance.upcast(@TypeOf(CommandForm.NULL_COMMAND_FORM), Inheritance.callStatic(CommandForm, "create4", .{ NullCommandListener.NULL_COMMAND_LISTENER, StringUtil.getInstance().?.EMPTY_STRING, BasicColorFactory.getInstance().?.BLACK, BasicColorFactory.getInstance().?.WHITE }));
+        if (Object.same(CommandForm.NULL_COMMAND_FORM, Inheritance.fieldPointer(NullUtil.getInstance().?, "NULL_OBJECT").*)) {
+            CommandForm.NULL_COMMAND_FORM = Inheritance.upcast(@TypeOf(CommandForm.NULL_COMMAND_FORM), Inheritance.callStatic(CommandForm, "create4", .{ NullCommandListener.NULL_COMMAND_LISTENER, Inheritance.fieldPointer(StringUtil.getInstance().?, "EMPTY_STRING").*, Inheritance.fieldPointer(BasicColorFactory.getInstance().?, "BLACK").*, Inheritance.fieldPointer(BasicColorFactory.getInstance().?, "WHITE").* }));
         }
         return Inheritance.cast(?*CommandForm, CommandForm.NULL_COMMAND_FORM);
     }
@@ -81,7 +82,7 @@ pub const CommandForm = struct {
             _ = this.repaintProcessor.?.process();
         }
         // catch (Exception e):
-//             _ = Inheritance.call(this.logUtil.?, "put", .{ this.commonStrings.?.EXCEPTION, this, this.commonStrings.?.CONSTRUCTOR, e });
+//             _ = Inheritance.call(this.logUtil.?, "put", .{ Inheritance.fieldPointer(this.commonStrings.?, "EXCEPTION").*, this, Inheritance.fieldPointer(this.commonStrings.?, "CONSTRUCTOR").*, e });
         Inheritance.bindOverrides(this);
         return this;
     }
@@ -94,13 +95,13 @@ pub const CommandForm = struct {
     
 
     pub fn open(self: *Self) void {
-        _ = Inheritance.call(self.logUtil.?, "putF", .{ self.commonStrings.?.START, self, String.literal("open") });
+        _ = Inheritance.call(self.logUtil.?, "putF", .{ Inheritance.fieldPointer(self.commonStrings.?, "START").*, self, String.literal("open") });
     }
     
 
     // throws Exception
     pub fn close(self: *Self) void {
-        _ = Inheritance.call(self.logUtil.?, "putF", .{ self.commonStrings.?.START, self, self.commonStrings.?.CLOSE });
+        _ = Inheritance.call(self.logUtil.?, "putF", .{ Inheritance.fieldPointer(self.commonStrings.?, "START").*, self, Inheritance.fieldPointer(self.commonStrings.?, "CLOSE").* });
     }
     
 

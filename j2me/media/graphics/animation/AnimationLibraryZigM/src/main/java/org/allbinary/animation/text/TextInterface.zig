@@ -27,11 +27,11 @@ pub const TextInterface = struct {
     pointer: *anyopaque,
     object: Object,
     toStringFn: *const fn (pointer: *anyopaque) ?*String,
-    setTextWithOnMeasureFn: *const fn (pointer: *anyopaque, text: ?*String, textChangeListener: ?*TextChangeListener) void,
-    getTextFn: *const fn (pointer: *anyopaque) ?*String,
-    setTextFn: *const fn (pointer: *anyopaque, text: ?*String) void,
-    getFontHeightFn: *const fn (pointer: *anyopaque) i32,
-    getWidthFn: *const fn (pointer: *anyopaque) i32,
+    setTextWithOnMeasureFn: *const fn (interface_pointer: *anyopaque, text: ?*String, textChangeListener: ?*TextChangeListener) void,
+    getTextFn: *const fn (interface_pointer: *anyopaque) ?*String,
+    setTextFn: *const fn (interface_pointer: *anyopaque, text: ?*String) void,
+    getFontHeightFn: *const fn (interface_pointer: *anyopaque) i32,
+    getWidthFn: *const fn (interface_pointer: *anyopaque) i32,
 
     pub fn setTextWithOnMeasure(self: *Self, text: ?*String, textChangeListener: ?*TextChangeListener) void {
         return self.setTextWithOnMeasureFn(self.pointer, text, textChangeListener);
@@ -59,30 +59,30 @@ pub const TextInterface = struct {
 
     // The interface value of an object with the methods. Like a Java class a method can be declared by the object or a superclass.
     pub fn of(object: anytype) ?*Self {
-        const Implementation = @TypeOf(object);
+        const ImplementationType = @TypeOf(object);
         const Methods = struct {
             fn toString(pointer: *anyopaque) ?*String {
-                const implementation: Implementation = @ptrCast(@alignCast(pointer));
+                const implementation: ImplementationType = @ptrCast(@alignCast(pointer));
                 return String.valueOf(implementation);
             }
-            fn setTextWithOnMeasure(pointer: *anyopaque, text: ?*String, textChangeListener: ?*TextChangeListener) void {
-                const implementation: Implementation = @ptrCast(@alignCast(pointer));
-                return Inheritance.receiver(implementation, "setTextWithOnMeasure").setTextWithOnMeasure(text, textChangeListener);
+            fn setTextWithOnMeasure(interface_pointer: *anyopaque, text: ?*String, textChangeListener: ?*TextChangeListener) void {
+                const implementation: ImplementationType = @ptrCast(@alignCast(interface_pointer));
+                return Inheritance.call(implementation, "setTextWithOnMeasure", .{ text, textChangeListener });
             }
-            fn getText(pointer: *anyopaque) ?*String {
-                const implementation: Implementation = @ptrCast(@alignCast(pointer));
+            fn getText(interface_pointer: *anyopaque) ?*String {
+                const implementation: ImplementationType = @ptrCast(@alignCast(interface_pointer));
                 return Inheritance.upcast(?*String, Inheritance.receiver(implementation, "getText").getText());
             }
-            fn setText(pointer: *anyopaque, text: ?*String) void {
-                const implementation: Implementation = @ptrCast(@alignCast(pointer));
-                return Inheritance.receiver(implementation, "setText").setText(text);
+            fn setText(interface_pointer: *anyopaque, text: ?*String) void {
+                const implementation: ImplementationType = @ptrCast(@alignCast(interface_pointer));
+                return Inheritance.call(implementation, "setText", .{ text });
             }
-            fn getFontHeight(pointer: *anyopaque) i32 {
-                const implementation: Implementation = @ptrCast(@alignCast(pointer));
+            fn getFontHeight(interface_pointer: *anyopaque) i32 {
+                const implementation: ImplementationType = @ptrCast(@alignCast(interface_pointer));
                 return Inheritance.receiver(implementation, "getFontHeight").getFontHeight();
             }
-            fn getWidth(pointer: *anyopaque) i32 {
-                const implementation: Implementation = @ptrCast(@alignCast(pointer));
+            fn getWidth(interface_pointer: *anyopaque) i32 {
+                const implementation: ImplementationType = @ptrCast(@alignCast(interface_pointer));
                 return Inheritance.receiver(implementation, "getWidth").getWidth();
             }
         };

@@ -29,9 +29,9 @@ pub const DemoGameMidletEventListener = struct {
     object: Object,
     base: EventListenerInterface,
     toStringFn: *const fn (pointer: *anyopaque) ?*String,
-    onDemoStartFn: *const fn (pointer: *anyopaque) void,
-    onGameStartFn: *const fn (pointer: *anyopaque) void,
-    onDemoGameMidletEventFn: *const fn (pointer: *anyopaque, demoGameMidletEvent: ?*DemoGameMidletEvent) void,
+    onDemoStartFn: *const fn (interface_pointer: *anyopaque) void,
+    onGameStartFn: *const fn (interface_pointer: *anyopaque) void,
+    onDemoGameMidletEventFn: *const fn (interface_pointer: *anyopaque, demoGameMidletEvent: ?*DemoGameMidletEvent) void,
 
     pub fn onDemoStart(self: *Self) void {
         return self.onDemoStartFn(self.pointer);
@@ -51,23 +51,23 @@ pub const DemoGameMidletEventListener = struct {
 
     // The interface value of an object with the methods. Like a Java class a method can be declared by the object or a superclass.
     pub fn of(object: anytype) ?*Self {
-        const Implementation = @TypeOf(object);
+        const ImplementationType = @TypeOf(object);
         const Methods = struct {
             fn toString(pointer: *anyopaque) ?*String {
-                const implementation: Implementation = @ptrCast(@alignCast(pointer));
+                const implementation: ImplementationType = @ptrCast(@alignCast(pointer));
                 return String.valueOf(implementation);
             }
-            fn onDemoStart(pointer: *anyopaque) void {
-                const implementation: Implementation = @ptrCast(@alignCast(pointer));
+            fn onDemoStart(interface_pointer: *anyopaque) void {
+                const implementation: ImplementationType = @ptrCast(@alignCast(interface_pointer));
                 return Inheritance.receiver(implementation, "onDemoStart").onDemoStart();
             }
-            fn onGameStart(pointer: *anyopaque) void {
-                const implementation: Implementation = @ptrCast(@alignCast(pointer));
+            fn onGameStart(interface_pointer: *anyopaque) void {
+                const implementation: ImplementationType = @ptrCast(@alignCast(interface_pointer));
                 return Inheritance.receiver(implementation, "onGameStart").onGameStart();
             }
-            fn onDemoGameMidletEvent(pointer: *anyopaque, demoGameMidletEvent: ?*DemoGameMidletEvent) void {
-                const implementation: Implementation = @ptrCast(@alignCast(pointer));
-                return Inheritance.receiver(implementation, "onDemoGameMidletEvent").onDemoGameMidletEvent(demoGameMidletEvent);
+            fn onDemoGameMidletEvent(interface_pointer: *anyopaque, demoGameMidletEvent: ?*DemoGameMidletEvent) void {
+                const implementation: ImplementationType = @ptrCast(@alignCast(interface_pointer));
+                return Inheritance.call(implementation, "onDemoGameMidletEvent", .{ demoGameMidletEvent });
             }
         };
         const this = allocator.create(Self) catch unreachable;

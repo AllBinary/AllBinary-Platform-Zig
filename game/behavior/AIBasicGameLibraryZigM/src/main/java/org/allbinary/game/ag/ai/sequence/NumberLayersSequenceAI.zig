@@ -23,6 +23,7 @@ const GameInput = @import("org/allbinary/game/input/GameInput.zig").GameInput;
 const AllBinaryLayer = @import("org/allbinary/layer/AllBinaryLayer.zig").AllBinaryLayer;
 const AllBinaryLayerManager = @import("org/allbinary/layer/AllBinaryLayerManager.zig").AllBinaryLayerManager;
 const SequenceAI = @import("org/allbinary/game/ag/ai/sequence/SequenceAI.zig").SequenceAI;
+const Exception = @import("java/lang/Exception.zig").Exception;
 
 pub const NumberLayersSequenceAI = struct {
     const Self = @This();
@@ -50,7 +51,7 @@ pub const NumberLayersSequenceAI = struct {
     // throws Exception
     pub fn processAI(self: *Self, allBinaryLayerManager: ?*AllBinaryLayerManager) void {
         if (Inheritance.receiver(self, "getIndex").getIndex() == 0) {
-            if (Inheritance.receiver(allBinaryLayerManager.?, "getSize").getSize() < self.numberOfLayersLeft) {
+            if (Inheritance.arithmetic(.less, Inheritance.receiver(allBinaryLayerManager.?, "getSize").getSize(), self.numberOfLayersLeft)) {
                 _ = Inheritance.call(self, "setIndex", .{ 1 });
             }
         }

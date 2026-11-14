@@ -27,14 +27,14 @@ pub const HealthInterface = struct {
     pointer: *anyopaque,
     object: Object,
     toStringFn: *const fn (pointer: *anyopaque) ?*String,
-    isAliveFn: *const fn (pointer: *anyopaque) bool,
-    damageFn: *const fn (pointer: *anyopaque, ahealth: i32) void,
-    healFn: *const fn (pointer: *anyopaque, ahealth: i32) void,
-    healMaxFn: *const fn (pointer: *anyopaque) void,
-    getMaxHealthFn: *const fn (pointer: *anyopaque) i32,
-    setMaxHealthFn: *const fn (pointer: *anyopaque, maxHealth: i32) void,
-    getHealthFn: *const fn (pointer: *anyopaque) i32,
-    addListenerFn: *const fn (pointer: *anyopaque, healthListenerInterface: ?*HealthListenerInterface) void,
+    isAliveFn: *const fn (interface_pointer: *anyopaque) bool,
+    damageFn: *const fn (interface_pointer: *anyopaque, ahealth: i32) void,
+    healFn: *const fn (interface_pointer: *anyopaque, ahealth: i32) void,
+    healMaxFn: *const fn (interface_pointer: *anyopaque) void,
+    getMaxHealthFn: *const fn (interface_pointer: *anyopaque) i32,
+    setMaxHealthFn: *const fn (interface_pointer: *anyopaque, maxHealth: i32) void,
+    getHealthFn: *const fn (interface_pointer: *anyopaque) i32,
+    addListenerFn: *const fn (interface_pointer: *anyopaque, healthListenerInterface: ?*HealthListenerInterface) void,
 
     pub fn isAlive(self: *Self) bool {
         return self.isAliveFn(self.pointer);
@@ -74,43 +74,43 @@ pub const HealthInterface = struct {
 
     // The interface value of an object with the methods. Like a Java class a method can be declared by the object or a superclass.
     pub fn of(object: anytype) ?*Self {
-        const Implementation = @TypeOf(object);
+        const ImplementationType = @TypeOf(object);
         const Methods = struct {
             fn toString(pointer: *anyopaque) ?*String {
-                const implementation: Implementation = @ptrCast(@alignCast(pointer));
+                const implementation: ImplementationType = @ptrCast(@alignCast(pointer));
                 return String.valueOf(implementation);
             }
-            fn isAlive(pointer: *anyopaque) bool {
-                const implementation: Implementation = @ptrCast(@alignCast(pointer));
+            fn isAlive(interface_pointer: *anyopaque) bool {
+                const implementation: ImplementationType = @ptrCast(@alignCast(interface_pointer));
                 return Inheritance.receiver(implementation, "isAlive").isAlive();
             }
-            fn damage(pointer: *anyopaque, ahealth: i32) void {
-                const implementation: Implementation = @ptrCast(@alignCast(pointer));
-                return Inheritance.receiver(implementation, "damage").damage(ahealth);
+            fn damage(interface_pointer: *anyopaque, ahealth: i32) void {
+                const implementation: ImplementationType = @ptrCast(@alignCast(interface_pointer));
+                return Inheritance.call(implementation, "damage", .{ ahealth });
             }
-            fn heal(pointer: *anyopaque, ahealth: i32) void {
-                const implementation: Implementation = @ptrCast(@alignCast(pointer));
-                return Inheritance.receiver(implementation, "heal").heal(ahealth);
+            fn heal(interface_pointer: *anyopaque, ahealth: i32) void {
+                const implementation: ImplementationType = @ptrCast(@alignCast(interface_pointer));
+                return Inheritance.call(implementation, "heal", .{ ahealth });
             }
-            fn healMax(pointer: *anyopaque) void {
-                const implementation: Implementation = @ptrCast(@alignCast(pointer));
+            fn healMax(interface_pointer: *anyopaque) void {
+                const implementation: ImplementationType = @ptrCast(@alignCast(interface_pointer));
                 return Inheritance.receiver(implementation, "healMax").healMax();
             }
-            fn getMaxHealth(pointer: *anyopaque) i32 {
-                const implementation: Implementation = @ptrCast(@alignCast(pointer));
+            fn getMaxHealth(interface_pointer: *anyopaque) i32 {
+                const implementation: ImplementationType = @ptrCast(@alignCast(interface_pointer));
                 return Inheritance.receiver(implementation, "getMaxHealth").getMaxHealth();
             }
-            fn setMaxHealth(pointer: *anyopaque, maxHealth: i32) void {
-                const implementation: Implementation = @ptrCast(@alignCast(pointer));
-                return Inheritance.receiver(implementation, "setMaxHealth").setMaxHealth(maxHealth);
+            fn setMaxHealth(interface_pointer: *anyopaque, maxHealth: i32) void {
+                const implementation: ImplementationType = @ptrCast(@alignCast(interface_pointer));
+                return Inheritance.call(implementation, "setMaxHealth", .{ maxHealth });
             }
-            fn getHealth(pointer: *anyopaque) i32 {
-                const implementation: Implementation = @ptrCast(@alignCast(pointer));
+            fn getHealth(interface_pointer: *anyopaque) i32 {
+                const implementation: ImplementationType = @ptrCast(@alignCast(interface_pointer));
                 return Inheritance.receiver(implementation, "getHealth").getHealth();
             }
-            fn addListener(pointer: *anyopaque, healthListenerInterface: ?*HealthListenerInterface) void {
-                const implementation: Implementation = @ptrCast(@alignCast(pointer));
-                return Inheritance.receiver(implementation, "addListener").addListener(healthListenerInterface);
+            fn addListener(interface_pointer: *anyopaque, healthListenerInterface: ?*HealthListenerInterface) void {
+                const implementation: ImplementationType = @ptrCast(@alignCast(interface_pointer));
+                return Inheritance.call(implementation, "addListener", .{ healthListenerInterface });
             }
         };
         const this = allocator.create(Self) catch unreachable;

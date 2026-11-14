@@ -18,15 +18,15 @@ const allocator = std.heap.page_allocator;
 const String = @import("java/lang/String.zig").String;
 const Object = @import("java/lang/Object.zig").Object;
 const Inheritance = @import("zig/Inheritance.zig");
-// const ByteArrayInputStream = @import("java/io/ByteArrayInputStream.zig").ByteArrayInputStream;
-// const DataInputStream = @import("java/io/DataInputStream.zig").DataInputStream;
+const ByteArrayInputStream = @import("java/io/ByteArrayInputStream.zig").ByteArrayInputStream;
+const DataInputStream = @import("java/io/DataInputStream.zig").DataInputStream;
 // const EOFException = @import("java/io/EOFException.zig").EOFException;
-// const IOException = @import("java/io/IOException.zig").IOException;
-// const RecordComparator = @import("javax/microedition/rms/RecordComparator.zig").RecordComparator;
-// const RecordEnumeration = @import("javax/microedition/rms/RecordEnumeration.zig").RecordEnumeration;
-// const RecordStore = @import("javax/microedition/rms/RecordStore.zig").RecordStore;
-// const RecordStoreException = @import("javax/microedition/rms/RecordStoreException.zig").RecordStoreException;
-// const RecordStoreNotFoundException = @import("javax/microedition/rms/RecordStoreNotFoundException.zig").RecordStoreNotFoundException;
+const IOException = @import("java/io/IOException.zig").IOException;
+const RecordComparator = @import("javax/microedition/rms/RecordComparator.zig").RecordComparator;
+const RecordEnumeration = @import("javax/microedition/rms/RecordEnumeration.zig").RecordEnumeration;
+const RecordStore = @import("javax/microedition/rms/RecordStore.zig").RecordStore;
+const RecordStoreException = @import("javax/microedition/rms/RecordStoreException.zig").RecordStoreException;
+const RecordStoreNotFoundException = @import("javax/microedition/rms/RecordStoreNotFoundException.zig").RecordStoreNotFoundException;
 const TsUtil = @import("org/allbinary/TsUtil.zig").TsUtil;
 const GameInfo = @import("org/allbinary/game/GameInfo.zig").GameInfo;
 const NullRecordComparator = @import("org/allbinary/game/configuration/persistance/NullRecordComparator.zig").NullRecordComparator;
@@ -46,6 +46,7 @@ const BasicArrayListD = @import("org/allbinary/util/BasicArrayListD.zig").BasicA
 const HighScore = @import("org/allbinary/game/score/HighScore.zig").HighScore;
 const HighScores = @import("org/allbinary/game/score/HighScores.zig").HighScores;
 const ScoreComparator = @import("org/allbinary/game/score/ScoreComparator.zig").ScoreComparator;
+const Exception = @import("java/lang/Exception.zig").Exception;
 
 pub const RecordStoreHighScores = struct {
     const Self = @This();
@@ -99,7 +100,7 @@ pub const RecordStoreHighScores = struct {
         const javaMonitor = Object.classMonitor(Self).enter();
         defer javaMonitor.exit();
         const highScoresCanBeNull: ?Object = Inheritance.upcast(?Object, Inheritance.call(RecordStoreHighScores.hashTable.?, "get", .{ Inheritance.cast(?Object, highScoreName) }));
-        if (highScoresCanBeNull == null) {
+        if (Object.isNull(highScoresCanBeNull)) {
             const highScores: ?*HighScores = Inheritance.upcast(?*HighScores, Inheritance.callStatic(RecordStoreHighScores, "create6", .{ abeClientInformation, gameInfo, highScoreName, heading, columnTwoHeading, recordComparatorInterface }));
             _ = Inheritance.call(RecordStoreHighScores.hashTable.?, "put", .{ highScores.?.getName(), highScores });
             return highScores;
@@ -109,7 +110,7 @@ pub const RecordStoreHighScores = struct {
     
 
     pub fn getRecordId(self: *Self, abeClientInformation: ?*AbeClientInformationInterface) ?*String {
-        return Inheritance.upcast(?*String, Inheritance.call(self.platformRecordIdUtil.?, "getRecordId", .{ abeClientInformation, Object.toString(Object.of(Inheritance.call(Inheritance.call(Inheritance.call(StringMaker.create(), "append", .{ CommonSeps.getInstance().?.UNDERSCORE }).?, "append", .{ Inheritance.receiver(self, "getName").getName() }).?, "append", .{ self.RECORD_ID }))) }));
+        return Inheritance.upcast(?*String, Inheritance.call(self.platformRecordIdUtil.?, "getRecordId", .{ abeClientInformation, Object.toString(Object.of(Inheritance.call(Inheritance.call(Inheritance.call(StringMaker.create(), "append", .{ Inheritance.fieldPointer(CommonSeps.getInstance().?, "UNDERSCORE").* }).?, "append", .{ Inheritance.receiver(self, "getName").getName() }).?, "append", .{ self.RECORD_ID }))) }));
     }
     
 
@@ -119,9 +120,9 @@ pub const RecordStoreHighScores = struct {
         defer javaMonitor.exit();
         var recordStore: ?*RecordStore = Inheritance.upcast(?*RecordStore, NullRecordStore.NULL_RECORD_STORE);
         { // try
-            _ = Inheritance.call(self.logUtil.?, "putF", .{ Object.toString(Object.of(Inheritance.call(Inheritance.call(StringMaker.create(), "append", .{ String.literal("Adding HighScore: ") }).?, "appendlong", .{ @as(i64, @intCast(newHighScore.?.getScore())) }))), self, self.commonStrings.?.ADD });
+            _ = Inheritance.call(self.logUtil.?, "putF", .{ Object.toString(Object.of(Inheritance.call(Inheritance.call(StringMaker.create(), "append", .{ String.literal("Adding HighScore: ") }).?, "appendlong", .{ Inheritance.number(i64, newHighScore.?.getScore()) }))), self, Inheritance.fieldPointer(self.commonStrings.?, "ADD").* });
             if (self.isTooManyHighScores()) {
-                _ = Inheritance.call(self.logUtil.?, "putF", .{ String.literal("Removing Lowest Score"), self, self.commonStrings.?.ADD });
+                _ = Inheritance.call(self.logUtil.?, "putF", .{ String.literal("Removing Lowest Score"), self, Inheritance.fieldPointer(self.commonStrings.?, "ADD").* });
                 _ = self.removeLowestHighScore();
             }
             recordStore = Inheritance.upcast(@TypeOf(recordStore), Inheritance.callStatic(RecordStore, "openRecordStore", .{ Inheritance.call(self, "getRecordId", .{ self.abeClientInformation }), true }));
@@ -130,20 +131,20 @@ pub const RecordStoreHighScores = struct {
             _ = self.load();
         }
         // catch (RecordStoreException e):
-//             _ = Inheritance.call(self.logUtil.?, "put", .{ self.commonStrings.?.EXCEPTION, self, self.commonStrings.?.ADD, e });
+//             _ = Inheritance.call(self.logUtil.?, "put", .{ Inheritance.fieldPointer(self.commonStrings.?, "EXCEPTION").*, self, Inheritance.fieldPointer(self.commonStrings.?, "ADD").*, e });
         // catch (IOException e):
-//             _ = Inheritance.call(self.logUtil.?, "put", .{ self.commonStrings.?.EXCEPTION, self, self.commonStrings.?.ADD, e });
+//             _ = Inheritance.call(self.logUtil.?, "put", .{ Inheritance.fieldPointer(self.commonStrings.?, "EXCEPTION").*, self, Inheritance.fieldPointer(self.commonStrings.?, "ADD").*, e });
         // catch (Exception e):
-//             _ = Inheritance.call(self.logUtil.?, "put", .{ self.commonStrings.?.EXCEPTION, self, self.commonStrings.?.ADD, e });
+//             _ = Inheritance.call(self.logUtil.?, "put", .{ Inheritance.fieldPointer(self.commonStrings.?, "EXCEPTION").*, self, Inheritance.fieldPointer(self.commonStrings.?, "ADD").*, e });
         { // finally
             { // try
-                if (recordStore != null) {
-                    _ = Inheritance.callStatic(PreLogUtil, "put", .{ String.literal("Closing RecordStore"), self, self.commonStrings.?.ADD });
+                if (!Object.isNull(recordStore)) {
+                    _ = Inheritance.callStatic(PreLogUtil, "put", .{ String.literal("Closing RecordStore"), self, Inheritance.fieldPointer(self.commonStrings.?, "ADD").* });
                     _ = recordStore.?.closeRecordStore();
                 }
             }
             // catch (RecordStoreException e):
-//                 _ = Inheritance.call(self.logUtil.?, "put", .{ self.commonStrings.?.EXCEPTION, self, self.commonStrings.?.ADD, e });
+//                 _ = Inheritance.call(self.logUtil.?, "put", .{ Inheritance.fieldPointer(self.commonStrings.?, "EXCEPTION").*, self, Inheritance.fieldPointer(self.commonStrings.?, "ADD").*, e });
         }
     }
     
@@ -161,7 +162,7 @@ pub const RecordStoreHighScores = struct {
             while (recordEnum.?.hasNextElement()) {
                 const id: i32 = recordEnum.?.nextRecordId();
                 recordAsBytes = Inheritance.upcast(@TypeOf(recordAsBytes), Inheritance.call(self.tsUtil.?, "getRecord", .{ recordStore, id }));
-                if (recordAsBytes != null) {
+                if (!Object.isNull(recordAsBytes)) {
                     byteArrayInputStream = Inheritance.callStatic(ByteArrayInputStream, "create1", .{ recordAsBytes });
                     inputStream = Inheritance.callStatic(DataInputStream, "create1", .{ byteArrayInputStream });
                     const name: ?*String = Inheritance.upcast(?*String, inputStream.?.readUTF());
@@ -173,23 +174,23 @@ pub const RecordStoreHighScores = struct {
                 }
             }
             if (bestHighScore.?.getId() != -1) {
-                _ = Inheritance.call(self.logUtil.?, "putF", .{ Object.toString(Object.of(Inheritance.call(Inheritance.call(StringMaker.create(), "append", .{ String.literal("Removing Lowest HighScore: ") }).?, "appendlong", .{ @as(i64, @intCast(bestHighScore.?.getScore())) }))), self, self.commonStrings.?.LOAD });
+                _ = Inheritance.call(self.logUtil.?, "putF", .{ Object.toString(Object.of(Inheritance.call(Inheritance.call(StringMaker.create(), "append", .{ String.literal("Removing Lowest HighScore: ") }).?, "appendlong", .{ Inheritance.number(i64, bestHighScore.?.getScore()) }))), self, Inheritance.fieldPointer(self.commonStrings.?, "LOAD").* });
                 _ = Inheritance.call(recordStore.?, "deleteRecord", .{ bestHighScore.?.getId() });
             }
         }
         // catch (RecordStoreException e):
-//             _ = Inheritance.call(self.logUtil.?, "put", .{ self.commonStrings.?.EXCEPTION, self, String.literal("removeLowestHighScore"), e });
+//             _ = Inheritance.call(self.logUtil.?, "put", .{ Inheritance.fieldPointer(self.commonStrings.?, "EXCEPTION").*, self, String.literal("removeLowestHighScore"), e });
         // catch (Exception e):
-//             _ = Inheritance.call(self.logUtil.?, "put", .{ self.commonStrings.?.EXCEPTION, self, String.literal("removeLowestHighScore"), e });
+//             _ = Inheritance.call(self.logUtil.?, "put", .{ Inheritance.fieldPointer(self.commonStrings.?, "EXCEPTION").*, self, String.literal("removeLowestHighScore"), e });
         { // finally
             { // try
-                if (recordStore != null) {
+                if (!Object.isNull(recordStore)) {
                     _ = Inheritance.callStatic(PreLogUtil, "put", .{ String.literal("Closing RecordStore"), self, String.literal("removeLowestHighScore") });
                     _ = recordStore.?.closeRecordStore();
                 }
             }
             // catch (RecordStoreException e):
-//                 _ = Inheritance.call(self.logUtil.?, "put", .{ self.commonStrings.?.EXCEPTION, self, String.literal("removeLowestHighScore"), e });
+//                 _ = Inheritance.call(self.logUtil.?, "put", .{ Inheritance.fieldPointer(self.commonStrings.?, "EXCEPTION").*, self, String.literal("removeLowestHighScore"), e });
         }
     }
     
@@ -206,7 +207,7 @@ pub const RecordStoreHighScores = struct {
             while (recordEnum.?.hasNextElement()) {
                 const id: i32 = recordEnum.?.nextRecordId();
                 recordAsBytes = Inheritance.upcast(@TypeOf(recordAsBytes), Inheritance.call(self.tsUtil.?, "getRecord", .{ recordStore, id }));
-                if (recordAsBytes != null) {
+                if (!Object.isNull(recordAsBytes)) {
                     byteArrayInputStream = Inheritance.callStatic(ByteArrayInputStream, "create1", .{ recordAsBytes });
                     inputStream = Inheritance.callStatic(DataInputStream, "create1", .{ byteArrayInputStream });
                     { // try
@@ -219,7 +220,7 @@ pub const RecordStoreHighScores = struct {
                         {
                             var index: i32 = 0;
                             while (index < size) : (index += 1) {
-                            const highScore: ?*HighScore = Inheritance.cast(?*HighScore, list.?.objectArray[@intCast(index)]);
+                            const highScore: ?*HighScore = Inheritance.cast(?*HighScore, Inheritance.fieldPointer(list.?, "objectArray").*[@intCast(index)]);
                             if (Object.same(Inheritance.call(self.recordComparatorInterface.?, "compare", .{ newHighScore.?.getAsBytes(), highScore.?.getAsBytes() }), RecordComparator.PRECEDES)) {
                                 lastIndex = index;
                                 break;
@@ -229,34 +230,34 @@ pub const RecordStoreHighScores = struct {
                         _ = Inheritance.call(list.?, "addAt", .{ lastIndex, newHighScore });
                     }
                     // catch (EOFException e):
-//                         _ = Inheritance.call(self.logUtil.?, "put", .{ String.literal("EOF"), self, self.commonStrings.?.LOAD, e });
+//                         _ = Inheritance.call(self.logUtil.?, "put", .{ String.literal("EOF"), self, Inheritance.fieldPointer(self.commonStrings.?, "LOAD").*, e });
 //                         std.debug.panic("{any}", .{e});
                 }
             }
         }
         // catch (RecordStoreNotFoundException e):
-//             _ = Inheritance.call(self.logUtil.?, "put", .{ String.literal("No High Scores"), self, self.commonStrings.?.LOAD, e });
+//             _ = Inheritance.call(self.logUtil.?, "put", .{ String.literal("No High Scores"), self, Inheritance.fieldPointer(self.commonStrings.?, "LOAD").*, e });
         // catch (RecordStoreException e):
-//             _ = Inheritance.call(self.logUtil.?, "put", .{ self.commonStrings.?.UNKNOWN, self, self.commonStrings.?.LOAD, e });
+//             _ = Inheritance.call(self.logUtil.?, "put", .{ Inheritance.fieldPointer(self.commonStrings.?, "UNKNOWN").*, self, Inheritance.fieldPointer(self.commonStrings.?, "LOAD").*, e });
         // catch (IOException e):
-//             _ = Inheritance.call(self.logUtil.?, "put", .{ self.commonStrings.?.UNKNOWN, self, self.commonStrings.?.LOAD, e });
+//             _ = Inheritance.call(self.logUtil.?, "put", .{ Inheritance.fieldPointer(self.commonStrings.?, "UNKNOWN").*, self, Inheritance.fieldPointer(self.commonStrings.?, "LOAD").*, e });
         // catch (Exception e):
-//             _ = Inheritance.call(self.logUtil.?, "put", .{ self.commonStrings.?.UNKNOWN, self, self.commonStrings.?.LOAD, e });
+//             _ = Inheritance.call(self.logUtil.?, "put", .{ Inheritance.fieldPointer(self.commonStrings.?, "UNKNOWN").*, self, Inheritance.fieldPointer(self.commonStrings.?, "LOAD").*, e });
         { // finally
             { // try
-                if (recordStore != null) {
-                    _ = Inheritance.callStatic(PreLogUtil, "put", .{ String.literal("Closing RecordStore"), self, self.commonStrings.?.LOAD });
+                if (!Object.isNull(recordStore)) {
+                    _ = Inheritance.callStatic(PreLogUtil, "put", .{ String.literal("Closing RecordStore"), self, Inheritance.fieldPointer(self.commonStrings.?, "LOAD").* });
                     _ = recordStore.?.closeRecordStore();
                 }
             }
             // catch (RecordStoreException e):
-//                 _ = Inheritance.call(self.logUtil.?, "put", .{ self.commonStrings.?.EXCEPTION, self, self.commonStrings.?.LOAD, e });
+//                 _ = Inheritance.call(self.logUtil.?, "put", .{ Inheritance.fieldPointer(self.commonStrings.?, "EXCEPTION").*, self, Inheritance.fieldPointer(self.commonStrings.?, "LOAD").*, e });
         }
     }
     
 
     pub fn isTooManyHighScores(self: *Self) bool {
-        if (Inheritance.receiver(self, "getList").getList() != null and Inheritance.receiverOf(Inheritance.receiver(self, "getList").getList().?, "size").size() < self.MAXHIGHSCORES) {
+        if (!Object.isNull(Inheritance.receiver(self, "getList").getList()) and Inheritance.receiverOf(Inheritance.receiver(self, "getList").getList().?, "size").size() < self.MAXHIGHSCORES) {
             return false;
         } else {
             _ = Inheritance.call(self.logUtil.?, "putF", .{ Object.toString(Object.of(Inheritance.call(Inheritance.call(StringMaker.create(), "append", .{ String.literal("HighScores RecordStore Max Reached: ") }).?, "appendint", .{ self.MAXHIGHSCORES }))), self, String.literal("isTooManyHighScores") });
@@ -280,7 +281,7 @@ pub const RecordStoreHighScores = struct {
                 {
                     var index: i32 = 0;
                     while (index < size) : (index += 1) {
-                    const highScore: ?*HighScore = Inheritance.cast(?*HighScore, list.?.objectArray[@intCast(index)]);
+                    const highScore: ?*HighScore = Inheritance.cast(?*HighScore, Inheritance.fieldPointer(list.?, "objectArray").*[@intCast(index)]);
                     if (Object.same(Inheritance.call(self.recordComparatorInterface.?, "compare", .{ newHighScore.?.getAsBytes(), highScore.?.getAsBytes() }), RecordComparator.FOLLOWS)) {
                         _ = Inheritance.call(self.logUtil.?, "putF", .{ String.literal("Obtained a High Score"), self, String.literal("isBestScore") });
                         return true;
@@ -292,22 +293,22 @@ pub const RecordStoreHighScores = struct {
             return false;
         }
         // catch (Exception e):
-//             _ = Inheritance.call(self.logUtil.?, "put", .{ self.commonStrings.?.EXCEPTION, self, self.commonStrings.?.ADD, e });
+//             _ = Inheritance.call(self.logUtil.?, "put", .{ Inheritance.fieldPointer(self.commonStrings.?, "EXCEPTION").*, self, Inheritance.fieldPointer(self.commonStrings.?, "ADD").*, e });
 //             std.debug.panic("{any}", .{e});
     }
     
 
     pub fn toString(self: *Self) ?*String {
         const stringBuffer: ?*StringMaker = StringMaker.create();
-        _ = Inheritance.call(stringBuffer.?, "append", .{ self.base.toString() });
+        _ = Inheritance.call(stringBuffer.?, "append", .{ String.valueOf(&self.base) });
         const list: ?*BasicArrayList = Inheritance.upcast(?*BasicArrayList, Inheritance.receiver(self, "getList").getList());
         const size: i32 = list.?.size();
         {
             var index: i32 = 0;
             while (index < size) : (index += 1) {
-            const highScore: ?*HighScore = Inheritance.cast(?*HighScore, list.?.objectArray[@intCast(index)]);
+            const highScore: ?*HighScore = Inheritance.cast(?*HighScore, Inheritance.fieldPointer(list.?, "objectArray").*[@intCast(index)]);
             _ = Inheritance.call(stringBuffer.?, "append", .{ highScore.?.getScoreString() });
-            _ = Inheritance.call(stringBuffer.?, "append", .{ CommonSeps.getInstance().?.COMMA_SEP });
+            _ = Inheritance.call(stringBuffer.?, "append", .{ Inheritance.fieldPointer(CommonSeps.getInstance().?, "COMMA_SEP").* });
             }
         }
         return Inheritance.upcast(?*String, Object.toString(Object.of(stringBuffer)));

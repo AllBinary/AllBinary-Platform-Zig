@@ -18,7 +18,7 @@ const allocator = std.heap.page_allocator;
 const String = @import("java/lang/String.zig").String;
 const Object = @import("java/lang/Object.zig").Object;
 const Inheritance = @import("zig/Inheritance.zig");
-// const Command = @import("javax/microedition/lcdui/Command.zig").Command;
+const Command = @import("javax/microedition/lcdui/Command.zig").Command;
 const StringUtil = @import("org/allbinary/logic/string/StringUtil.zig").StringUtil;
 
 pub const MyCommandsFactory = struct {
@@ -37,11 +37,11 @@ pub const MyCommandsFactory = struct {
     }
 
     fn initFields(this: *Self) void {
-        this.NO_COMMAND = Inheritance.callStatic(Command, "create4", .{ StringUtil.getInstance().?.EMPTY_STRING, StringUtil.getInstance().?.EMPTY_STRING, -1, -1 });
-        this.GAUGE_CHANGE = Inheritance.callStatic(Command, "create4", .{ String.literal("GAUGE_CHANGE"), StringUtil.getInstance().?.EMPTY_STRING, Command.ITEM, 1 });
-        this.SET_DISPLAYABLE = Inheritance.callStatic(Command, "create4", .{ String.literal("Display"), StringUtil.getInstance().?.EMPTY_STRING, Command.SCREEN, 2 });
-        this.PAUSE_COMMAND = Inheritance.callStatic(Command, "create4", .{ String.literal("Pause"), StringUtil.getInstance().?.EMPTY_STRING, Command.SCREEN, 0 });
-        this.RESUME_COMMAND = Inheritance.callStatic(Command, "create4", .{ String.literal("Resume"), StringUtil.getInstance().?.EMPTY_STRING, Command.SCREEN, 0 });
+        this.NO_COMMAND = Inheritance.callStatic(Command, "create4", .{ Inheritance.fieldPointer(StringUtil.getInstance().?, "EMPTY_STRING").*, Inheritance.fieldPointer(StringUtil.getInstance().?, "EMPTY_STRING").*, -1, -1 });
+        this.GAUGE_CHANGE = Inheritance.callStatic(Command, "create4", .{ String.literal("GAUGE_CHANGE"), Inheritance.fieldPointer(StringUtil.getInstance().?, "EMPTY_STRING").*, Command.ITEM, 1 });
+        this.SET_DISPLAYABLE = Inheritance.callStatic(Command, "create4", .{ String.literal("Display"), Inheritance.fieldPointer(StringUtil.getInstance().?, "EMPTY_STRING").*, Command.SCREEN, 2 });
+        this.PAUSE_COMMAND = Inheritance.callStatic(Command, "create4", .{ String.literal("Pause"), Inheritance.fieldPointer(StringUtil.getInstance().?, "EMPTY_STRING").*, Command.SCREEN, 0 });
+        this.RESUME_COMMAND = Inheritance.callStatic(Command, "create4", .{ String.literal("Resume"), Inheritance.fieldPointer(StringUtil.getInstance().?, "EMPTY_STRING").*, Command.SCREEN, 0 });
     }
     
 

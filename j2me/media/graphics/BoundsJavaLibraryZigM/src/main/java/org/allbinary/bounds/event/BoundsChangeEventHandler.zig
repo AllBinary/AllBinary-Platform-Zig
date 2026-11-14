@@ -23,6 +23,7 @@ const EventListenerInterface = @import("org/allbinary/logic/util/event/EventList
 const BasicEventHandler = @import("org/allbinary/logic/util/event/handler/BasicEventHandler.zig").BasicEventHandler;
 const BoundsChangeEvent = @import("org/allbinary/bounds/event/BoundsChangeEvent.zig").BoundsChangeEvent;
 const BoundsChangeEventListener = @import("org/allbinary/bounds/event/BoundsChangeEventListener.zig").BoundsChangeEventListener;
+const Exception = @import("java/lang/Exception.zig").Exception;
 
 pub const BoundsChangeEventHandler = struct {
     const Self = @This();

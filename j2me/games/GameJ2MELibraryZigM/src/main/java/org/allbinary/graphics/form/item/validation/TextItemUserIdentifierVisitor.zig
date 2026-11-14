@@ -24,6 +24,7 @@ const BooleanFactory = @import("org/allbinary/logic/java/bool/BooleanFactory.zig
 const StringValidationUtil = @import("org/allbinary/logic/string/StringValidationUtil.zig").StringValidationUtil;
 const Visitor = @import("org/allbinary/logic/util/visitor/Visitor.zig").Visitor;
 const CommonStrings = @import("org/allbinary/string/CommonStrings.zig").CommonStrings;
+const Exception = @import("java/lang/Exception.zig").Exception;
 
 pub const TextItemUserIdentifierVisitor = struct {
     const Self = @This();
@@ -52,20 +53,20 @@ pub const TextItemUserIdentifierVisitor = struct {
             const charValue: u16 = Inheritance.call(value.?, "charAt", .{ 0 });
             const stringValidationUtil: ?*StringValidationUtil = Inheritance.upcast(?*StringValidationUtil, StringValidationUtil.getInstance());
             if (Inheritance.call(stringValidationUtil.?, "isNumber", .{ value })) {
-                return Inheritance.upcast(?Object, BooleanFactory.getInstance().?.TRUE);
+                return Inheritance.upcast(?Object, Inheritance.fieldPointer(BooleanFactory.getInstance().?, "TRUE").*);
             } else if (Inheritance.call(self, "isLetter", .{ charValue })) {
-                return Inheritance.upcast(?Object, BooleanFactory.getInstance().?.TRUE);
+                return Inheritance.upcast(?Object, Inheritance.fieldPointer(BooleanFactory.getInstance().?, "TRUE").*);
             } else {
                 { // try
                     _ = Inheritance.call(TextNotificationUtil.getInstance().?, "fireError", .{ String.literal("Only Letters & Numbers Allowed") });
                 }
                 // catch (Exception e):
 //                     const commonStrings: ?*CommonStrings = Inheritance.upcast(?*CommonStrings, CommonStrings.getInstance()); _ = commonStrings;
-//                     _ = Inheritance.call(self.logUtil.?, "put", .{ commonStrings.?.EXCEPTION, self, commonStrings.?.VISIT, e });
-                return Inheritance.upcast(?Object, BooleanFactory.getInstance().?.FALSE);
+//                     _ = Inheritance.call(self.logUtil.?, "put", .{ Inheritance.fieldPointer(commonStrings.?, "EXCEPTION").*, self, Inheritance.fieldPointer(commonStrings.?, "VISIT").*, e });
+                return Inheritance.upcast(?Object, Inheritance.fieldPointer(BooleanFactory.getInstance().?, "FALSE").*);
             }
         } else {
-            return Inheritance.upcast(?Object, BooleanFactory.getInstance().?.FALSE);
+            return Inheritance.upcast(?Object, Inheritance.fieldPointer(BooleanFactory.getInstance().?, "FALSE").*);
         }
     }
     

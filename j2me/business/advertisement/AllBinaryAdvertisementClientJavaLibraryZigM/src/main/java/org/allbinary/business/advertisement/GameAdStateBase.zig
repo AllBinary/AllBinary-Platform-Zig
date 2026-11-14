@@ -25,6 +25,7 @@ const AllBinaryEventObject = @import("org/allbinary/logic/util/event/AllBinaryEv
 const EventStrings = @import("org/allbinary/logic/util/event/EventStrings.zig").EventStrings;
 const AdConfiguration = @import("org/allbinary/business/advertisement/AdConfiguration.zig").AdConfiguration;
 const Advertisements = @import("org/allbinary/business/advertisement/Advertisements.zig").Advertisements;
+const Exception = @import("java/lang/Exception.zig").Exception;
 
 pub const GameAdStateBase = struct {
     const Self = @This();
@@ -91,7 +92,7 @@ pub const GameAdStateBase = struct {
 
     pub fn onEvent(self: *Self, eventObject: ?*AllBinaryEventObject) void {
         _ = eventObject;
-        _ = Inheritance.callStatic(ForcedLogUtil, "log", .{ EventStrings.getInstance().?.PERFORMANCE_MESSAGE, self });
+        _ = Inheritance.callStatic(ForcedLogUtil, "log", .{ Inheritance.fieldPointer(EventStrings.getInstance().?, "PERFORMANCE_MESSAGE").*, self });
     }
     
 

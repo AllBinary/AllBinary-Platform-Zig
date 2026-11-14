@@ -25,6 +25,7 @@ const BasicArrayList = @import("org/allbinary/util/BasicArrayList.zig").BasicArr
 const BasicArrayListD = @import("org/allbinary/util/BasicArrayListD.zig").BasicArrayListD;
 const BasicArrayListUtil = @import("org/allbinary/util/BasicArrayListUtil.zig").BasicArrayListUtil;
 const ResourceRelativeRelationshipFactoryInterface = @import("org/allbinary/game/resource/ResourceRelativeRelationshipFactoryInterface.zig").ResourceRelativeRelationshipFactoryInterface;
+const Exception = @import("java/lang/Exception.zig").Exception;
 
 pub const ResourceRelativeRelationshipFactory = struct {
     const Self = @This();
@@ -59,7 +60,7 @@ pub const ResourceRelativeRelationshipFactory = struct {
     // throws Exception
     pub fn getResourceRelativeRelationshipList(self: *Self, resource: ?*String) ?*BasicArrayList {
         const listCanBeNull: ?Object = Inheritance.upcast(?Object, Inheritance.call(self.hashtable.?, "get", .{ resource }));
-        if (listCanBeNull == null) {
+        if (Object.isNull(listCanBeNull)) {
             return Inheritance.upcast(?*BasicArrayList, self.basicArrayListUtil.?.getImmutableInstance());
         }
         return Inheritance.cast(?*BasicArrayList, listCanBeNull);

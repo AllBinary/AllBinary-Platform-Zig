@@ -69,9 +69,9 @@ pub const LogUtil = struct {
     
 
     pub fn putF(self: *Self, specialMessage: ?*String, anyType: ?Object, functionName: ?*String) void {
-        var className: ?*String = Inheritance.upcast(?*String, CommonStrings.getInstance().?.EMPTY);
-        if (String.fromBytes(@as(*const Object.Class, @ptrCast(@alignCast(@as(?*anyopaque, @ptrCast(@constCast(Object.of(anyType).?.class))).?))).name) != null) {
-            className = Inheritance.callStatic(String, "create1", .{ Object.toString(Object.of(Inheritance.call(Inheritance.call(Inheritance.call(StringMaker.create(), "append", .{ String.fromBytes(@as(*const Object.Class, @ptrCast(@alignCast(@as(?*anyopaque, @ptrCast(@constCast(Object.of(anyType).?.class))).?))).name) }).?, "append", .{ CommonSeps.getInstance().?.COLON }).?, "append", .{ String.fromBytes(std.fmt.allocPrint(allocator, "{x}", .{@as(u32, @bitCast(@as(i32, Inheritance.call(TsUtil.getInstance().?, "hashCode", .{ anyType }))))}) catch unreachable) }))) });
+        var className: ?*String = Inheritance.upcast(?*String, Inheritance.fieldPointer(CommonStrings.getInstance().?, "EMPTY").*);
+        if (!Object.isNull(String.fromBytes(@as(*const Object.Class, @ptrCast(@alignCast(@as(?*anyopaque, @ptrCast(@constCast(Object.of(anyType).?.class))).?))).name))) {
+            className = Inheritance.callStatic(String, "create1", .{ Object.toString(Object.of(Inheritance.call(Inheritance.call(Inheritance.call(StringMaker.create(), "append", .{ String.fromBytes(@as(*const Object.Class, @ptrCast(@alignCast(@as(?*anyopaque, @ptrCast(@constCast(Object.of(anyType).?.class))).?))).name) }).?, "append", .{ Inheritance.fieldPointer(CommonSeps.getInstance().?, "COLON").* }).?, "append", .{ String.fromBytes(std.fmt.allocPrint(allocator, "{x}", .{@as(u32, @bitCast(@as(i32, Inheritance.call(TsUtil.getInstance().?, "hashCode", .{ anyType }))))}) catch unreachable) }))) });
         }
         const message: ?*String = Inheritance.upcast(?*String, Inheritance.call(self.logFormatUtil.?, "getS", .{ className, functionName, specialMessage }));
         _ = std.debug.print("{s}", .{String.text(self.LOG_SUCCESS)});
@@ -87,11 +87,11 @@ pub const LogUtil = struct {
     
 
     pub fn put(self: *Self, specialMessage: ?*String, anyType: ?Object, functionName: ?*String, exception: ?Object) void {
-        var className: ?*String = Inheritance.upcast(?*String, CommonStrings.getInstance().?.EMPTY);
-        if (String.fromBytes(@as(*const Object.Class, @ptrCast(@alignCast(@as(?*anyopaque, @ptrCast(@constCast(Object.of(anyType).?.class))).?))).name) != null) {
+        var className: ?*String = Inheritance.upcast(?*String, Inheritance.fieldPointer(CommonStrings.getInstance().?, "EMPTY").*);
+        if (!Object.isNull(String.fromBytes(@as(*const Object.Class, @ptrCast(@alignCast(@as(?*anyopaque, @ptrCast(@constCast(Object.of(anyType).?.class))).?))).name))) {
             const hashCodeValue: i32 = Inheritance.call(TsUtil.getInstance().?, "hashCode", .{ anyType });
             const hexString: ?*String = Inheritance.upcast(?*String, String.fromBytes(std.fmt.allocPrint(allocator, "{x}", .{@as(u32, @bitCast(@as(i32, hashCodeValue)))}) catch unreachable));
-            className = Inheritance.callStatic(String, "create1", .{ Object.toString(Object.of(Inheritance.call(Inheritance.call(Inheritance.call(StringMaker.create(), "append", .{ String.fromBytes(@as(*const Object.Class, @ptrCast(@alignCast(@as(?*anyopaque, @ptrCast(@constCast(Object.of(anyType).?.class))).?))).name) }).?, "append", .{ CommonSeps.getInstance().?.COLON }).?, "append", .{ hexString }))) });
+            className = Inheritance.callStatic(String, "create1", .{ Object.toString(Object.of(Inheritance.call(Inheritance.call(Inheritance.call(StringMaker.create(), "append", .{ String.fromBytes(@as(*const Object.Class, @ptrCast(@alignCast(@as(?*anyopaque, @ptrCast(@constCast(Object.of(anyType).?.class))).?))).name) }).?, "append", .{ Inheritance.fieldPointer(CommonSeps.getInstance().?, "COLON").* }).?, "append", .{ hexString }))) });
         }
         const message: ?*String = Inheritance.upcast(?*String, Inheritance.call(self.logFormatUtil.?, "get", .{ className, functionName, specialMessage, exception }));
         _ = std.debug.print("{s}", .{String.text(self.LOG_SUCCESS)});

@@ -27,6 +27,7 @@ const BasicArrayListD = @import("org/allbinary/util/BasicArrayListD.zig").BasicA
 const BasicArrayListS = @import("org/allbinary/util/BasicArrayListS.zig").BasicArrayListS;
 const VectorAnimationUtil = @import("org/allbinary/animation/VectorAnimationUtil.zig").VectorAnimationUtil;
 const VectorExplosionType = @import("org/allbinary/animation/VectorExplosionType.zig").VectorExplosionType;
+const Exception = @import("java/lang/Exception.zig").Exception;
 
 pub const VectorExplosionGenerator = struct {
     const Self = @This();
@@ -71,7 +72,7 @@ pub const VectorExplosionGenerator = struct {
         {
             var index: i32 = 0;
             while (index < size) : (index += 1) {
-            point = Inheritance.cast(?*GPoint, list.?.objectArray[@intCast(index)]);
+            point = Inheritance.cast(?*GPoint, Inheritance.fieldPointer(list.?, "objectArray").*[@intCast(index)]);
             points[@intCast(index)][@intCast(0)] = Inheritance.upcast(@TypeOf(points[@intCast(index)][@intCast(0)]), point.?.getX());
             points[@intCast(index)][@intCast(1)] = Inheritance.upcast(@TypeOf(points[@intCast(index)][@intCast(1)]), point.?.getY());
             }
@@ -83,7 +84,7 @@ pub const VectorExplosionGenerator = struct {
     // throws Exception
     pub fn getInstance3(self: *Self, points: [][]i32, howMuch: i32, @"type": ?*VectorExplosionType) [][][]i32 {
         const pointsBasicArrayList: ?*BasicArrayList = Inheritance.upcast(?*BasicArrayList, Inheritance.call(self, "getInstanceStartFrame", .{ points, howMuch, @"type", true }));
-        const tempBasicArrayList: ?*BasicArrayList = Inheritance.cast(?*BasicArrayList, pointsBasicArrayList.?.objectArray[@intCast(0)]);
+        const tempBasicArrayList: ?*BasicArrayList = Inheritance.cast(?*BasicArrayList, Inheritance.fieldPointer(pointsBasicArrayList.?, "objectArray").*[@intCast(0)]);
         const newPoints: [][][]i32 = Inheritance.call(self.vectorAnimationUtil.?, "toAnimationArrayFromListOfPointListWithPointsPerFrame", .{ pointsBasicArrayList, tempBasicArrayList.?.size() });
         return newPoints;
     }
@@ -98,7 +99,7 @@ pub const VectorExplosionGenerator = struct {
             var tempBasicArrayList: ?*BasicArrayList = null;
             var pointBasicArrayList: ?*BasicArrayList = null;
             while (frameIndex < howMuch) {
-                tempBasicArrayList = Inheritance.cast(?*BasicArrayList, pointsBasicArrayList.?.objectArray[@intCast(frameIndex)]);
+                tempBasicArrayList = Inheritance.cast(?*BasicArrayList, Inheritance.fieldPointer(pointsBasicArrayList.?, "objectArray").*[@intCast(frameIndex)]);
                 pointBasicArrayList = Inheritance.upcast(@TypeOf(pointBasicArrayList), Inheritance.call(self, "createListFromPoints", .{ tempBasicArrayList, points, howMuch, @"type" }));
                 _ = Inheritance.call(pointsBasicArrayList.?, "add", .{ pointBasicArrayList });
                 frameIndex += 1;
@@ -121,7 +122,7 @@ pub const VectorExplosionGenerator = struct {
         while (index < @as(i32, @intCast(points.len))) {
             sectionBasicArrayList = Inheritance.upcast(@TypeOf(sectionBasicArrayList), BasicArrayListD.create());
             while (points[@intCast(index)][@intCast(0)] != 1000) {
-                _ = Inheritance.call(sectionBasicArrayList.?, "add", .{ tempBasicArrayList.?.objectArray[@intCast(index)] });
+                _ = Inheritance.call(sectionBasicArrayList.?, "add", .{ Inheritance.fieldPointer(tempBasicArrayList.?, "objectArray").*[@intCast(index)] });
                 index += 1;
                 if (index >= @as(i32, @intCast(points.len))) {
                     break;
@@ -135,13 +136,13 @@ pub const VectorExplosionGenerator = struct {
             {
                 var index2: i32 = 0;
                 while (index2 < size) : (index2 += 1) {
-                _ = Inheritance.call(pointBasicArrayList.?, "add", .{ sectionBasicArrayList.?.objectArray[@intCast(index2)] });
+                _ = Inheritance.call(pointBasicArrayList.?, "add", .{ Inheritance.fieldPointer(sectionBasicArrayList.?, "objectArray").*[@intCast(index2)] });
                 }
             }
             if (index >= @as(i32, @intCast(points.len))) {
                 break;
             } else if (points[@intCast(index)][@intCast(0)] == 1000) {
-                _ = Inheritance.call(pointBasicArrayList.?, "add", .{ tempBasicArrayList.?.objectArray[@intCast(index)] });
+                _ = Inheritance.call(pointBasicArrayList.?, "add", .{ Inheritance.fieldPointer(tempBasicArrayList.?, "objectArray").*[@intCast(index)] });
                 index += 1;
             }
         }

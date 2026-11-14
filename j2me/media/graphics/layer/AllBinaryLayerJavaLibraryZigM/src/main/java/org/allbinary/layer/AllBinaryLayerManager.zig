@@ -24,6 +24,7 @@ const AllBinaryLayer = @import("org/allbinary/layer/AllBinaryLayer.zig").AllBina
 const LayerManager = @import("org/allbinary/layer/LayerManager.zig").LayerManager;
 const LayerManagerNoDebug = @import("org/allbinary/layer/LayerManagerNoDebug.zig").LayerManagerNoDebug;
 const LayerProcessor = @import("org/allbinary/layer/LayerProcessor.zig").LayerProcessor;
+const Exception = @import("java/lang/Exception.zig").Exception;
 
 pub const AllBinaryLayerManager = struct {
     const Self = @This();
@@ -36,8 +37,8 @@ pub const AllBinaryLayerManager = struct {
 
     fn initFields(this: *Self) void {
         this.layerManagerEventHandler = Inheritance.upcast(?*LayerManagerEventHandler, LayerManagerEventHandler.getInstance());
-        this.createLayerManagerEvent = Inheritance.callStatic(LayerManagerEvent, "create2", .{ this, this.layerManagerEventHandler.?.CREATE });
-        this.deleteLayerManagerEvent = Inheritance.callStatic(LayerManagerEvent, "create2", .{ this, this.layerManagerEventHandler.?.DELETE });
+        this.createLayerManagerEvent = Inheritance.callStatic(LayerManagerEvent, "create2", .{ this, Inheritance.fieldPointer(this.layerManagerEventHandler.?, "CREATE").* });
+        this.deleteLayerManagerEvent = Inheritance.callStatic(LayerManagerEvent, "create2", .{ this, Inheritance.fieldPointer(this.layerManagerEventHandler.?, "DELETE").* });
         this.basicLayerProcessorArray = array_N65860: { const array_N65860_array = allocator.alloc(?*LayerProcessor, @intCast(0)) catch unreachable; @memset(array_N65860_array, null); break :array_N65860 array_N65860_array; };
     }
     
@@ -152,7 +153,7 @@ pub const AllBinaryLayerManager = struct {
             _ = Inheritance.receiverOf(layerProcessorInterface.?.getLayerManager().?, "cleanup").cleanup();
             }
         }
-        _ = self.base.cleanup();
+        _ = Inheritance.receiver(&self.base, "cleanup").cleanup();
     }
 };
 

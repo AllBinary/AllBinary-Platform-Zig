@@ -51,14 +51,14 @@ pub const SpecialMessageUtil = struct {
         _ = self;
         const stringBuffer: ?*StringMaker = StringMaker.create();
         _ = Inheritance.call(stringBuffer.?, "append", .{ Memory.getInfo() });
-        _ = Inheritance.call(stringBuffer.?, "append", .{ CommonSeps.getInstance().?.SPACE });
+        _ = Inheritance.call(stringBuffer.?, "append", .{ Inheritance.fieldPointer(CommonSeps.getInstance().?, "SPACE").* });
         _ = Inheritance.call(stringBuffer.?, "append", .{ Object.toString(Object.of(GameStatisticsFactory.getInstance())) });
-        _ = Inheritance.call(stringBuffer.?, "append", .{ CommonSeps.getInstance().?.SPACE });
+        _ = Inheritance.call(stringBuffer.?, "append", .{ Inheritance.fieldPointer(CommonSeps.getInstance().?, "SPACE").* });
         _ = Inheritance.call(stringBuffer.?, "append", .{ String.literal(" Option: ") });
-        if (Inheritance.call(Features.getInstance().?, "isDefault", .{ OpenGLFeatureFactory.getInstance().?.OPENGL_AUTO_SELECT })) {
-            _ = Inheritance.call(stringBuffer.?, "append", .{ Inheritance.receiverOf(OpenGLFeatureFactory.getInstance().?.OPENGL_AUTO_SELECT.?, "getName").getName() });
+        if (Inheritance.call(Features.getInstance().?, "isDefault", .{ Inheritance.fieldPointer(OpenGLFeatureFactory.getInstance().?, "OPENGL_AUTO_SELECT").* })) {
+            _ = Inheritance.call(stringBuffer.?, "append", .{ Inheritance.receiverOf(Inheritance.fieldPointer(OpenGLFeatureFactory.getInstance().?, "OPENGL_AUTO_SELECT").*.?, "getName").getName() });
         } else {
-            _ = Inheritance.call(stringBuffer.?, "append", .{ Inheritance.receiverOf(OpenGLFeatureFactory.getInstance().?.OPENGL_MINIMUM.?, "getName").getName() });
+            _ = Inheritance.call(stringBuffer.?, "append", .{ Inheritance.receiverOf(Inheritance.fieldPointer(OpenGLFeatureFactory.getInstance().?, "OPENGL_MINIMUM").*.?, "getName").getName() });
         }
         return Inheritance.upcast(?*String, Object.toString(Object.of(stringBuffer)));
     }

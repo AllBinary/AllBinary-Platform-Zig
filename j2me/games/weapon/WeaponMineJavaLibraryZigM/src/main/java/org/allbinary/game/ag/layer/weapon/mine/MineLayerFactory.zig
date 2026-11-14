@@ -22,6 +22,7 @@ const AllBinaryLayer = @import("org/allbinary/layer/AllBinaryLayer.zig").AllBina
 const AllBinaryLayerFactoryInterface = @import("org/allbinary/layer/AllBinaryLayerFactoryInterface.zig").AllBinaryLayerFactoryInterface;
 const ViewPositionFactoryInterface = @import("org/allbinary/view/ViewPositionFactoryInterface.zig").ViewPositionFactoryInterface;
 const MineLayer = @import("org/allbinary/game/ag/layer/weapon/mine/MineLayer.zig").MineLayer;
+const Exception = @import("java/lang/Exception.zig").Exception;
 
 pub const MineLayerFactory = struct {
     const Self = @This();

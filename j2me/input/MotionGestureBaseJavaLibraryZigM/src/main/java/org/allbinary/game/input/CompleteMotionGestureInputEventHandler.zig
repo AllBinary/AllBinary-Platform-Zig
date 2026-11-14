@@ -27,6 +27,7 @@ const BasicArrayListD = @import("org/allbinary/util/BasicArrayListD.zig").BasicA
 const CompleteMotionGestureInputEvent = @import("org/allbinary/game/input/CompleteMotionGestureInputEvent.zig").CompleteMotionGestureInputEvent;
 const CompleteMotionGestureInputEventListener = @import("org/allbinary/game/input/CompleteMotionGestureInputEventListener.zig").CompleteMotionGestureInputEventListener;
 const CompleteMotionGestureInputEventListenerInterface = @import("org/allbinary/game/input/CompleteMotionGestureInputEventListenerInterface.zig").CompleteMotionGestureInputEventListenerInterface;
+const Exception = @import("java/lang/Exception.zig").Exception;
 
 pub const CompleteMotionGestureInputEventHandler = struct {
     const Self = @This();
@@ -69,7 +70,7 @@ pub const CompleteMotionGestureInputEventHandler = struct {
 
     pub fn removeAllListeners(self: *Self) void {
         _ = self.list.?.clear();
-        _ = self.base.removeAllListeners();
+        _ = Inheritance.receiver(&self.base, "removeAllListeners").removeAllListeners();
     }
     
 
@@ -85,11 +86,11 @@ pub const CompleteMotionGestureInputEventHandler = struct {
             var index: i32 = self.list.?.size();
             while (value_N66529: { index -= 1; break :value_N66529 index; } >= 0) {
             { // try
-                const completeMotionGestureInputEventListener: ?*CompleteMotionGestureInputEventListener = Inheritance.cast(?*CompleteMotionGestureInputEventListener, self.list.?.objectArray[@intCast(index)]);
+                const completeMotionGestureInputEventListener: ?*CompleteMotionGestureInputEventListener = Inheritance.cast(?*CompleteMotionGestureInputEventListener, Inheritance.fieldPointer(self.list.?, "objectArray").*[@intCast(index)]);
                 _ = Inheritance.call(completeMotionGestureInputEventListener.?, "onCompleteMotionGestureInputEvent", .{ Inheritance.cast(?*CompleteMotionGestureInputEvent, eventObject) });
             }
             // catch (Exception e):
-//                 _ = Inheritance.call(Inheritance.fieldPointer(self, "logUtil").*.?, "put", .{ Inheritance.fieldPointer(self, "commonStrings").*.?.EXCEPTION, self, EventStrings.getInstance().?.FIRE_EVENT, e });
+//                 _ = Inheritance.call(Inheritance.fieldPointer(self, "logUtil").*.?, "put", .{ Inheritance.fieldPointer(Inheritance.fieldPointer(self, "commonStrings").*.?, "EXCEPTION").*, self, Inheritance.fieldPointer(EventStrings.getInstance().?, "FIRE_EVENT").*, e });
             }
         }
         _ = Inheritance.call(&self.base, "fireEvent", .{ eventObject });

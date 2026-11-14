@@ -28,6 +28,7 @@ const BasicArrayList = @import("org/allbinary/util/BasicArrayList.zig").BasicArr
 const BasicArrayListD = @import("org/allbinary/util/BasicArrayListD.zig").BasicArrayListD;
 const GameKeyEvent = @import("org/allbinary/game/input/event/GameKeyEvent.zig").GameKeyEvent;
 const PressGameKeyEventListenerInterface = @import("org/allbinary/game/input/event/PressGameKeyEventListenerInterface.zig").PressGameKeyEventListenerInterface;
+const Exception = @import("java/lang/Exception.zig").Exception;
 
 pub const PressGameKeyEventHandler = struct {
     const Self = @This();
@@ -70,7 +71,7 @@ pub const PressGameKeyEventHandler = struct {
 
     pub fn removeAllListeners(self: *Self) void {
         _ = self.list.?.clear();
-        _ = self.base.removeAllListeners();
+        _ = Inheritance.receiver(&self.base, "removeAllListeners").removeAllListeners();
     }
     
 
@@ -86,11 +87,11 @@ pub const PressGameKeyEventHandler = struct {
             var index: i32 = self.list.?.size();
             while (value_N66603: { index -= 1; break :value_N66603 index; } >= 0) {
             { // try
-                const playerGameInput: ?*PlayerGameInput = Inheritance.cast(?*PlayerGameInput, self.list.?.objectArray[@intCast(index)]);
+                const playerGameInput: ?*PlayerGameInput = Inheritance.cast(?*PlayerGameInput, Inheritance.fieldPointer(self.list.?, "objectArray").*[@intCast(index)]);
                 _ = Inheritance.call(playerGameInput.?, "onPressGameKeyEvent", .{ Inheritance.cast(?*GameKeyEvent, eventObject) });
             }
             // catch (Exception e):
-//                 _ = Inheritance.call(Inheritance.fieldPointer(self, "logUtil").*.?, "put", .{ Inheritance.fieldPointer(self, "commonStrings").*.?.EXCEPTION, self, EventStrings.getInstance().?.FIRE_EVENT, e });
+//                 _ = Inheritance.call(Inheritance.fieldPointer(self, "logUtil").*.?, "put", .{ Inheritance.fieldPointer(Inheritance.fieldPointer(self, "commonStrings").*.?, "EXCEPTION").*, self, Inheritance.fieldPointer(EventStrings.getInstance().?, "FIRE_EVENT").*, e });
             }
         }
         _ = Inheritance.call(&self.base, "fireEvent", .{ eventObject });

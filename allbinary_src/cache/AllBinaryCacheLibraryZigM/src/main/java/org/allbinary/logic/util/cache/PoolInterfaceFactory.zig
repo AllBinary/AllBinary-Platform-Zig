@@ -22,6 +22,7 @@ const CachePolicy = @import("org/allbinary/logic/util/cache/CachePolicy.zig").Ca
 const CacheableInterfaceFactoryInterface = @import("org/allbinary/logic/util/cache/CacheableInterfaceFactoryInterface.zig").CacheableInterfaceFactoryInterface;
 const PoolInterface = @import("org/allbinary/logic/util/cache/PoolInterface.zig").PoolInterface;
 const PoolType = @import("org/allbinary/logic/util/cache/PoolType.zig").PoolType;
+const Exception = @import("java/lang/Exception.zig").Exception;
 
 pub const PoolInterfaceFactory = struct {
     const Self = @This();

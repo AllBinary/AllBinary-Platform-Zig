@@ -18,7 +18,7 @@ const allocator = std.heap.page_allocator;
 const String = @import("java/lang/String.zig").String;
 const Object = @import("java/lang/Object.zig").Object;
 const Inheritance = @import("zig/Inheritance.zig");
-// const Graphics = @import("javax/microedition/lcdui/Graphics.zig").Graphics;
+const Graphics = @import("javax/microedition/lcdui/Graphics.zig").Graphics;
 const BoundsVisitorInterface = @import("org/allbinary/bounds/BoundsVisitorInterface.zig").BoundsVisitorInterface;
 const LayerBounds = @import("org/allbinary/bounds/LayerBounds.zig").LayerBounds;
 const BasicAI = @import("org/allbinary/game/ai/BasicAI.zig").BasicAI;
@@ -26,6 +26,7 @@ const GameInput = @import("org/allbinary/game/input/GameInput.zig").GameInput;
 const Rectangle = @import("org/allbinary/graphics/Rectangle.zig").Rectangle;
 const AllBinaryLayer = @import("org/allbinary/layer/AllBinaryLayer.zig").AllBinaryLayer;
 const AllBinaryLayerManager = @import("org/allbinary/layer/AllBinaryLayerManager.zig").AllBinaryLayerManager;
+const Exception = @import("java/lang/Exception.zig").Exception;
 
 pub const BoundBounceAI = struct {
     const Self = @This();
@@ -56,7 +57,7 @@ pub const BoundBounceAI = struct {
 
     pub fn paint(self: *Self, graphics: ?*Graphics) void {
         const rectange: ?*Rectangle = Inheritance.upcast(?*Rectangle, self.layerBounds.?.getRectangleP());
-        _ = Inheritance.call(graphics.?, "drawRect", .{ Inheritance.receiverOf(rectange.?.getPoint().?, "getX").getX(), Inheritance.receiverOf(rectange.?.getPoint().?, "getY").getY(), rectange.?.getWidth(), rectange.?.getHeight() });
+        _ = Inheritance.call(graphics.?, "drawRect", .{ Inheritance.receiverOf(Inheritance.receiver(rectange.?, "getPoint").getPoint().?, "getX").getX(), Inheritance.receiverOf(Inheritance.receiver(rectange.?, "getPoint").getPoint().?, "getY").getY(), Inheritance.receiver(rectange.?, "getWidth").getWidth(), Inheritance.receiver(rectange.?, "getHeight").getHeight() });
     }
     
 

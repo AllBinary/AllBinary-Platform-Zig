@@ -19,14 +19,15 @@ const String = @import("java/lang/String.zig").String;
 const Object = @import("java/lang/Object.zig").Object;
 const Inheritance = @import("zig/Inheritance.zig");
 const File = @import("java/io/File.zig").File;
-// const FileFilter = @import("java/io/FileFilter.zig").FileFilter;
-// const FilenameFilter = @import("java/io/FilenameFilter.zig").FilenameFilter;
-// const IOException = @import("java/io/IOException.zig").IOException;
-// const URI = @import("java/net/URI.zig").URI;
+const FileFilter = @import("java/io/FileFilter.zig").FileFilter;
+const FilenameFilter = @import("java/io/FilenameFilter.zig").FilenameFilter;
+const IOException = @import("java/io/IOException.zig").IOException;
+const URI = @import("java/net/URI.zig").URI;
 const TsUtil = @import("org/allbinary/TsUtil.zig").TsUtil;
 const AbPath = @import("org/allbinary/logic/io/path/AbPath.zig").AbPath;
 const StringUtil = @import("org/allbinary/logic/string/StringUtil.zig").StringUtil;
 const AbFileInterface = @import("org/allbinary/logic/io/file/AbFileInterface.zig").AbFileInterface;
+const Exception = @import("java/lang/Exception.zig").Exception;
 
 pub const AbFile = struct {
     const Self = @This();
@@ -38,7 +39,7 @@ pub const AbFile = struct {
 
     // Static fields with runtime initializers: call staticInit once at startup
     pub fn staticInit() void {
-        NULL_FILE = Inheritance.upcast(?*AbFile, Inheritance.callStatic(AbFile, "createAbFileFromRawPath", .{ StringUtil.getInstance().?.EMPTY_STRING }));
+        NULL_FILE = Inheritance.upcast(?*AbFile, Inheritance.callStatic(AbFile, "createAbFileFromRawPath", .{ Inheritance.fieldPointer(StringUtil.getInstance().?, "EMPTY_STRING").* }));
     }
 
     fn initFields(this: *Self) void {
@@ -55,13 +56,13 @@ pub const AbFile = struct {
 
     // throws Exception
     pub fn createAbFile(filePath: ?*String) ?*AbFile {
-        return Inheritance.callStatic(AbFile, "create1", .{ Inheritance.callStatic(File, "create1", .{ Inheritance.callStatic(AbPath, "create2", .{ filePath, StringUtil.getInstance().?.EMPTY_STRING }).toFileSystemString() }) });
+        return Inheritance.callStatic(AbFile, "create1", .{ Inheritance.callStatic(File, "create1", .{ Inheritance.callStatic(AbPath, "create2", .{ filePath, Inheritance.fieldPointer(StringUtil.getInstance().?, "EMPTY_STRING").* }).toFileSystemString() }) });
     }
     
 
     // throws Exception
     pub fn createAbFilePathAndName(filePath: ?*String, fileName: ?*String) ?*AbFile {
-        return Inheritance.callStatic(AbFile, "create1", .{ Inheritance.callStatic(File, "create2", .{ Inheritance.callStatic(AbPath, "create2", .{ filePath, StringUtil.getInstance().?.EMPTY_STRING }).toFileSystemString(), fileName }) });
+        return Inheritance.callStatic(AbFile, "create1", .{ Inheritance.callStatic(File, "create2", .{ Inheritance.callStatic(AbPath, "create2", .{ filePath, Inheritance.fieldPointer(StringUtil.getInstance().?, "EMPTY_STRING").* }).toFileSystemString(), fileName }) });
     }
     
 
@@ -85,7 +86,7 @@ pub const AbFile = struct {
     
 
     pub fn getFile(self: *Self) ?*File {
-        return Inheritance.upcast(?*File, self.file);
+        return self.file;
     }
     
 

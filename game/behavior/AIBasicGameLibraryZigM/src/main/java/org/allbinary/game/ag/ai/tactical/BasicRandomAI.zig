@@ -18,7 +18,7 @@ const allocator = std.heap.page_allocator;
 const String = @import("java/lang/String.zig").String;
 const Object = @import("java/lang/Object.zig").Object;
 const Inheritance = @import("zig/Inheritance.zig");
-// const Canvas = @import("javax/microedition/lcdui/Canvas.zig").Canvas;
+const Canvas = @import("javax/microedition/lcdui/Canvas.zig").Canvas;
 const BasicAI = @import("org/allbinary/game/ai/BasicAI.zig").BasicAI;
 const InputProbability = @import("org/allbinary/game/ag/ai/InputProbability.zig").InputProbability;
 const GameInput = @import("org/allbinary/game/input/GameInput.zig").GameInput;
@@ -28,6 +28,7 @@ const AllBinaryLayerManager = @import("org/allbinary/layer/AllBinaryLayerManager
 const Visitor = @import("org/allbinary/logic/util/visitor/Visitor.zig").Visitor;
 const GameTickTimeDelayHelperFactory = @import("org/allbinary/time/GameTickTimeDelayHelperFactory.zig").GameTickTimeDelayHelperFactory;
 const Integer = @import("java/lang/Integer.zig").Integer;
+const Exception = @import("java/lang/Exception.zig").Exception;
 
 pub const BasicRandomAI = struct {
     const Self = @This();
@@ -63,11 +64,11 @@ pub const BasicRandomAI = struct {
     // throws Exception
     pub fn processAI(self: *Self, allBinaryLayerManager: ?*AllBinaryLayerManager) void {
         _ = allBinaryLayerManager;
-        if (Inheritance.call(self.inputProbability.?.getTimeDelayHelper().?, "isTime", .{ GameTickTimeDelayHelperFactory.getInstance().?.startTime })) {
+        if (Inheritance.call(self.inputProbability.?.getTimeDelayHelper().?, "isTime", .{ Inheritance.fieldPointer(GameTickTimeDelayHelperFactory.getInstance().?, "startTime").* })) {
             self.i_random = Inheritance.call(self.myRandomFactory.?, "getAbsoluteNextInt", .{ self.inputProbability.?.getMax() });
             var repeat: bool = false;
             const repeatLikelyhoodIntegerArray: []?*Integer = self.inputProbability.?.getRepeatLikelyhoodIntegerArray();
-            if (Inheritance.receiver(self, "getLastKey").getLastKey() != -1 and repeatLikelyhoodIntegerArray[@intCast(Inheritance.receiver(self, "getLastKey").getLastKey())].?.intValue() >= self.i_random) {
+            if (Inheritance.receiver(self, "getLastKey").getLastKey() != -1 and Inheritance.arithmetic(.greater_equal, repeatLikelyhoodIntegerArray[@intCast(Inheritance.receiver(self, "getLastKey").getLastKey())].?.intValue(), self.i_random)) {
                 repeat = true;
             }
             if (!repeat) {
@@ -80,8 +81,8 @@ pub const BasicRandomAI = struct {
                     while (index < size) : (index += 1) {
                     const key: i32 = self.keyArray[@intCast(index)];
                     likelyhoodIntegerKeyArray = Inheritance.upcast(@TypeOf(likelyhoodIntegerKeyArray), likelyhoodIntegerArray[@intCast(key)]);
-                    if (@as(i32, @intCast(likelyhoodIntegerArray.len)) >= key and likelyhoodIntegerKeyArray[@intCast(0)] != null) {
-                        if (self.i_random >= likelyhoodIntegerKeyArray[@intCast(0)].?.intValue() and self.i_random < likelyhoodIntegerKeyArray[@intCast(1)].?.intValue()) {
+                    if (@as(i32, @intCast(likelyhoodIntegerArray.len)) >= key and !Object.isNull(likelyhoodIntegerKeyArray[@intCast(0)])) {
+                        if (Inheritance.arithmetic(.greater_equal, self.i_random, likelyhoodIntegerKeyArray[@intCast(0)].?.intValue()) and Inheritance.arithmetic(.less, self.i_random, likelyhoodIntegerKeyArray[@intCast(1)].?.intValue())) {
                             _ = Inheritance.call(self, "setLastKey", .{ key });
                             break;
                         }

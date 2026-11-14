@@ -26,8 +26,8 @@ pub const GroupInterface = struct {
     pointer: *anyopaque,
     object: Object,
     toStringFn: *const fn (pointer: *anyopaque) ?*String,
-    getGroupNameFn: *const fn (pointer: *anyopaque) ?*String,
-    getGroupIdFn: *const fn (pointer: *anyopaque) i16,
+    getGroupNameFn: *const fn (interface_pointer: *anyopaque) ?*String,
+    getGroupIdFn: *const fn (interface_pointer: *anyopaque) i16,
 
     pub fn getGroupName(self: *Self) ?*String {
         return self.getGroupNameFn(self.pointer);
@@ -43,18 +43,18 @@ pub const GroupInterface = struct {
 
     // The interface value of an object with the methods. Like a Java class a method can be declared by the object or a superclass.
     pub fn of(object: anytype) ?*Self {
-        const Implementation = @TypeOf(object);
+        const ImplementationType = @TypeOf(object);
         const Methods = struct {
             fn toString(pointer: *anyopaque) ?*String {
-                const implementation: Implementation = @ptrCast(@alignCast(pointer));
+                const implementation: ImplementationType = @ptrCast(@alignCast(pointer));
                 return String.valueOf(implementation);
             }
-            fn getGroupName(pointer: *anyopaque) ?*String {
-                const implementation: Implementation = @ptrCast(@alignCast(pointer));
+            fn getGroupName(interface_pointer: *anyopaque) ?*String {
+                const implementation: ImplementationType = @ptrCast(@alignCast(interface_pointer));
                 return Inheritance.upcast(?*String, Inheritance.receiver(implementation, "getGroupName").getGroupName());
             }
-            fn getGroupId(pointer: *anyopaque) i16 {
-                const implementation: Implementation = @ptrCast(@alignCast(pointer));
+            fn getGroupId(interface_pointer: *anyopaque) i16 {
+                const implementation: ImplementationType = @ptrCast(@alignCast(interface_pointer));
                 return Inheritance.receiver(implementation, "getGroupId").getGroupId();
             }
         };

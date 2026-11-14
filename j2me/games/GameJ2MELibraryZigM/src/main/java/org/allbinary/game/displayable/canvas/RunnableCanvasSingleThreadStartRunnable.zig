@@ -22,6 +22,7 @@ const RunnableCanvas = @import("org/allbinary/canvas/RunnableCanvas.zig").Runnab
 const LogUtil = @import("org/allbinary/logic/communication/log/LogUtil.zig").LogUtil;
 const CommonStrings = @import("org/allbinary/string/CommonStrings.zig").CommonStrings;
 const GameRunnable = @import("org/allbinary/game/displayable/canvas/GameRunnable.zig").GameRunnable;
+const Exception = @import("java/lang/Exception.zig").Exception;
 
 pub const RunnableCanvasSingleThreadStartRunnable = struct {
     const Self = @This();
@@ -53,7 +54,7 @@ pub const RunnableCanvasSingleThreadStartRunnable = struct {
         }
         // catch (Exception e):
 //             const commonStrings: ?*CommonStrings = Inheritance.upcast(?*CommonStrings, CommonStrings.getInstance()); _ = commonStrings;
-//             _ = Inheritance.call(self.logUtil.?, "put", .{ commonStrings.?.EXCEPTION, self, commonStrings.?.RUN, e });
+//             _ = Inheritance.call(self.logUtil.?, "put", .{ Inheritance.fieldPointer(commonStrings.?, "EXCEPTION").*, self, Inheritance.fieldPointer(commonStrings.?, "RUN").*, e });
     }
     
 

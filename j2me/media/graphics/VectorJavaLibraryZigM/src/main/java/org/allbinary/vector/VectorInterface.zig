@@ -26,8 +26,8 @@ pub const VectorInterface = struct {
     pointer: *anyopaque,
     object: Object,
     toStringFn: *const fn (pointer: *anyopaque) ?*String,
-    getPointsFn: *const fn (pointer: *anyopaque, frame: i32) [][]i32,
-    setPointsFn: *const fn (pointer: *anyopaque, currentPoints: [][][]i32) void,
+    getPointsFn: *const fn (interface_pointer: *anyopaque, frame: i32) [][]i32,
+    setPointsFn: *const fn (interface_pointer: *anyopaque, currentPoints: [][][]i32) void,
 
     pub fn getPoints(self: *Self, frame: i32) [][]i32 {
         return self.getPointsFn(self.pointer, frame);
@@ -43,19 +43,19 @@ pub const VectorInterface = struct {
 
     // The interface value of an object with the methods. Like a Java class a method can be declared by the object or a superclass.
     pub fn of(object: anytype) ?*Self {
-        const Implementation = @TypeOf(object);
+        const ImplementationType = @TypeOf(object);
         const Methods = struct {
             fn toString(pointer: *anyopaque) ?*String {
-                const implementation: Implementation = @ptrCast(@alignCast(pointer));
+                const implementation: ImplementationType = @ptrCast(@alignCast(pointer));
                 return String.valueOf(implementation);
             }
-            fn getPoints(pointer: *anyopaque, frame: i32) [][]i32 {
-                const implementation: Implementation = @ptrCast(@alignCast(pointer));
-                return Inheritance.receiver(implementation, "getPoints").getPoints(frame);
+            fn getPoints(interface_pointer: *anyopaque, frame: i32) [][]i32 {
+                const implementation: ImplementationType = @ptrCast(@alignCast(interface_pointer));
+                return Inheritance.call(implementation, "getPoints", .{ frame });
             }
-            fn setPoints(pointer: *anyopaque, currentPoints: [][][]i32) void {
-                const implementation: Implementation = @ptrCast(@alignCast(pointer));
-                return Inheritance.receiver(implementation, "setPoints").setPoints(currentPoints);
+            fn setPoints(interface_pointer: *anyopaque, currentPoints: [][][]i32) void {
+                const implementation: ImplementationType = @ptrCast(@alignCast(interface_pointer));
+                return Inheritance.call(implementation, "setPoints", .{ currentPoints });
             }
         };
         const this = allocator.create(Self) catch unreachable;

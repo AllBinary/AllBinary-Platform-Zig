@@ -27,6 +27,7 @@ const AllBinaryMidlet = @import("org/allbinary/midlet/AllBinaryMidlet.zig").AllB
 const ExitRunnable = @import("org/allbinary/midlet/ExitRunnable.zig").ExitRunnable;
 const MidletExitProcessorFactory = @import("org/allbinary/midlet/MidletExitProcessorFactory.zig").MidletExitProcessorFactory;
 const Runnable = @import("java/lang/Runnable.zig").Runnable;
+const Exception = @import("java/lang/Exception.zig").Exception;
 
 //J2MEForJ2ME
 pub const ProgressMidlet = struct {
@@ -66,12 +67,12 @@ pub const ProgressMidlet = struct {
             _ = Inheritance.call(primaryThreadPool.?, "runTask", .{ runnable });
         }
         // catch (Exception e):
-//             _ = Inheritance.call(Inheritance.fieldPointer(self, "logUtil").*.?, "put", .{ Inheritance.fieldPointer(self, "commonStrings").*.?.EXCEPTION, self, String.literal("exit"), e });
+//             _ = Inheritance.call(Inheritance.fieldPointer(self, "logUtil").*.?, "put", .{ Inheritance.fieldPointer(Inheritance.fieldPointer(self, "commonStrings").*.?, "EXCEPTION").*, self, String.literal("exit"), e });
 //             { // try
 //                 _ = processor.?.process();
 //             }
 //             // catch (Exception e2):
-// //                 _ = Inheritance.call(Inheritance.fieldPointer(self, "logUtil").*.?, "put", .{ Inheritance.fieldPointer(self, "commonStrings").*.?.EXCEPTION, self, String.literal("exit"), e });
+// //                 _ = Inheritance.call(Inheritance.fieldPointer(self, "logUtil").*.?, "put", .{ Inheritance.fieldPointer(Inheritance.fieldPointer(self, "commonStrings").*.?, "EXCEPTION").*, self, String.literal("exit"), e });
     }
 };
 

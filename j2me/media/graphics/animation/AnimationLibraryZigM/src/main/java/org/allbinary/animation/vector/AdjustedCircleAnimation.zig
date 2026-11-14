@@ -18,7 +18,7 @@ const allocator = std.heap.page_allocator;
 const String = @import("java/lang/String.zig").String;
 const Object = @import("java/lang/Object.zig").Object;
 const Inheritance = @import("zig/Inheritance.zig");
-// const Graphics = @import("javax/microedition/lcdui/Graphics.zig").Graphics;
+const Graphics = @import("javax/microedition/lcdui/Graphics.zig").Graphics;
 const AndroidUtil = @import("org/allbinary/AndroidUtil.zig").AndroidUtil;
 const BasicColor = @import("org/allbinary/graphics/color/BasicColor.zig").BasicColor;
 const CircleAnimation = @import("org/allbinary/animation/vector/CircleAnimation.zig").CircleAnimation;
@@ -69,10 +69,10 @@ pub const AdjustedCircleAnimation = struct {
     pub fn init(self: *Self, innerWidth: i32) void {
         if (AndroidUtil.isAndroid()) {
             const widthPortion: i32 = (@divTrunc(((@divTrunc(innerWidth, 3)) * 10), 7));
-            self.xAdjustment = -((Inheritance.fieldPointer(self, "width").* >> @intCast(1)) - widthPortion);
+            self.xAdjustment = -(Inheritance.arithmetic(.subtract, (Inheritance.fieldPointer(self, "width").* >> @intCast(1)), widthPortion));
             self.yAdjustment = self.xAdjustment;
         } else {
-            self.xAdjustment = -((Inheritance.fieldPointer(self, "width").* >> @intCast(1)) - innerWidth);
+            self.xAdjustment = -(Inheritance.arithmetic(.subtract, (Inheritance.fieldPointer(self, "width").* >> @intCast(1)), innerWidth));
             self.yAdjustment = self.xAdjustment;
         }
     }

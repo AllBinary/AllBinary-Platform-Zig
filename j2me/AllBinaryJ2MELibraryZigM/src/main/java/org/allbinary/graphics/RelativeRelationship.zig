@@ -34,7 +34,7 @@ pub const RelativeRelationship = struct {
 
     // Static fields with runtime initializers: call staticInit once at startup
     pub fn staticInit() void {
-        NULL_RELATIVE_RELATIONSHIP = Inheritance.callStatic(RelativeRelationship, "create2", .{ PointFactory.getInstance().?.ZERO_ZERO, Inheritance.receiverOf(BasicArrayListUtil.getInstance().?, "getImmutableInstance").getImmutableInstance() });
+        NULL_RELATIVE_RELATIONSHIP = Inheritance.callStatic(RelativeRelationship, "create2", .{ Inheritance.fieldPointer(PointFactory.getInstance().?, "ZERO_ZERO").*, Inheritance.receiverOf(BasicArrayListUtil.getInstance().?, "getImmutableInstance").getImmutableInstance() });
     }
 
     fn initFields(this: *Self) void {

@@ -18,11 +18,12 @@ const allocator = std.heap.page_allocator;
 const String = @import("java/lang/String.zig").String;
 const Object = @import("java/lang/Object.zig").Object;
 const Inheritance = @import("zig/Inheritance.zig");
-// const Font = @import("javax/microedition/lcdui/Font.zig").Font;
-// const Graphics = @import("javax/microedition/lcdui/Graphics.zig").Graphics;
+const Font = @import("javax/microedition/lcdui/Font.zig").Font;
+const Graphics = @import("javax/microedition/lcdui/Graphics.zig").Graphics;
 const NumberStringHud = @import("org/allbinary/game/ag/layer/hud/basic/NumberStringHud.zig").NumberStringHud;
 const BasicColor = @import("org/allbinary/graphics/color/BasicColor.zig").BasicColor;
 const BasicColorFactory = @import("org/allbinary/graphics/color/BasicColorFactory.zig").BasicColorFactory;
+const Exception = @import("java/lang/Exception.zig").Exception;
 
 pub const ScoreHudWidget = struct {
     const Self = @This();
@@ -32,7 +33,7 @@ pub const ScoreHudWidget = struct {
 
     // throws Exception
     pub fn getInstance(maxscore: i32, location: i32, direction: i32) ?*ScoreHudWidget {
-        return Inheritance.callStatic(ScoreHudWidget, "create5", .{ maxscore, location, direction, 2, BasicColorFactory.getInstance().?.GREY });
+        return Inheritance.callStatic(ScoreHudWidget, "create5", .{ maxscore, location, direction, 2, Inheritance.fieldPointer(BasicColorFactory.getInstance().?, "GREY").* });
     }
     
 
@@ -48,7 +49,7 @@ pub const ScoreHudWidget = struct {
 
     pub fn updateMeasurement(self: *Self, graphics: ?*Graphics) void {
         const font: ?*Font = Inheritance.upcast(?*Font, graphics.?.getFont());
-        Inheritance.fieldPointer(self, "updateMaxWidth").* = Inheritance.upcast(@TypeOf(Inheritance.fieldPointer(self, "updateMaxWidth").*), font.?.getSize() * 5);
+        Inheritance.fieldPointer(self, "updateMaxWidth").* = Inheritance.upcast(@TypeOf(Inheritance.fieldPointer(self, "updateMaxWidth").*), Inheritance.arithmetic(.multiply, font.?.getSize(), 5));
         _ = Inheritance.call(&self.base, "updateMeasurement", .{ graphics });
     }
 };

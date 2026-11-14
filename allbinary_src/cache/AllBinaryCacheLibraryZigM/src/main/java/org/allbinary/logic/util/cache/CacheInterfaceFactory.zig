@@ -21,6 +21,7 @@ const Inheritance = @import("zig/Inheritance.zig");
 const CacheInterface = @import("org/allbinary/logic/util/cache/CacheInterface.zig").CacheInterface;
 const CachePolicy = @import("org/allbinary/logic/util/cache/CachePolicy.zig").CachePolicy;
 const CacheType = @import("org/allbinary/logic/util/cache/CacheType.zig").CacheType;
+const Exception = @import("java/lang/Exception.zig").Exception;
 
 pub const CacheInterfaceFactory = struct {
     const Self = @This();

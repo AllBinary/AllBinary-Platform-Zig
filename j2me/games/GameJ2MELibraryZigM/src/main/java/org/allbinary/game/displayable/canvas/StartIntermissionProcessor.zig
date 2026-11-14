@@ -22,6 +22,7 @@ const Processor = @import("org/allbinary/canvas/Processor.zig").Processor;
 const LogUtil = @import("org/allbinary/logic/communication/log/LogUtil.zig").LogUtil;
 const CommonStrings = @import("org/allbinary/string/CommonStrings.zig").CommonStrings;
 const AllBinaryGameCanvas = @import("org/allbinary/game/displayable/canvas/AllBinaryGameCanvas.zig").AllBinaryGameCanvas;
+const Exception = @import("java/lang/Exception.zig").Exception;
 
 pub const StartIntermissionProcessor = struct {
     const Self = @This();
@@ -54,7 +55,7 @@ pub const StartIntermissionProcessor = struct {
     // throws Exception
     pub fn process(self: *Self) void {
         if (Inheritance.call(Inheritance.receiverOf(Inheritance.receiver(self.gameCanvas.?, "getStartIntermissionInterface").getStartIntermissionInterface().?, "getTimeDelayHelper").getTimeDelayHelper().?, "isElapsedTNT", .{ self.WAIT })) {
-            _ = Inheritance.call(self.logUtil.?, "putF", .{ String.literal("Intermission End"), self, self.commonStrings.?.PROCESS });
+            _ = Inheritance.call(self.logUtil.?, "putF", .{ String.literal("Intermission End"), self, Inheritance.fieldPointer(self.commonStrings.?, "PROCESS").* });
             _ = Inheritance.call(Inheritance.receiver(self.gameCanvas.?, "getStartIntermissionInterface").getStartIntermissionInterface().?, "setEnabled", .{ false });
         }
     }

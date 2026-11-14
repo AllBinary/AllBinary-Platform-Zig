@@ -19,6 +19,7 @@ const String = @import("java/lang/String.zig").String;
 const Object = @import("java/lang/Object.zig").Object;
 const Inheritance = @import("zig/Inheritance.zig");
 const BasicArrayList = @import("org/allbinary/util/BasicArrayList.zig").BasicArrayList;
+const Exception = @import("java/lang/Exception.zig").Exception;
 
 // Java interface: an implementation is a pointer and a table of functions
 pub const CompleteMotionGestureListenerInterface = struct {
@@ -27,7 +28,7 @@ pub const CompleteMotionGestureListenerInterface = struct {
     pointer: *anyopaque,
     object: Object,
     toStringFn: *const fn (pointer: *anyopaque) ?*String,
-    onMotionGestureCompletedFn: *const fn (pointer: *anyopaque, list: ?*BasicArrayList) void,
+    onMotionGestureCompletedFn: *const fn (interface_pointer: *anyopaque, list: ?*BasicArrayList) void,
 
     pub fn onMotionGestureCompleted(self: *Self, list: ?*BasicArrayList) void {
         return self.onMotionGestureCompletedFn(self.pointer, list);
@@ -39,15 +40,15 @@ pub const CompleteMotionGestureListenerInterface = struct {
 
     // The interface value of an object with the methods. Like a Java class a method can be declared by the object or a superclass.
     pub fn of(object: anytype) ?*Self {
-        const Implementation = @TypeOf(object);
+        const ImplementationType = @TypeOf(object);
         const Methods = struct {
             fn toString(pointer: *anyopaque) ?*String {
-                const implementation: Implementation = @ptrCast(@alignCast(pointer));
+                const implementation: ImplementationType = @ptrCast(@alignCast(pointer));
                 return String.valueOf(implementation);
             }
-            fn onMotionGestureCompleted(pointer: *anyopaque, list: ?*BasicArrayList) void {
-                const implementation: Implementation = @ptrCast(@alignCast(pointer));
-                return Inheritance.receiver(implementation, "onMotionGestureCompleted").onMotionGestureCompleted(list);
+            fn onMotionGestureCompleted(interface_pointer: *anyopaque, list: ?*BasicArrayList) void {
+                const implementation: ImplementationType = @ptrCast(@alignCast(interface_pointer));
+                return Inheritance.call(implementation, "onMotionGestureCompleted", .{ list });
             }
         };
         const this = allocator.create(Self) catch unreachable;

@@ -20,6 +20,7 @@ const Object = @import("java/lang/Object.zig").Object;
 const Inheritance = @import("zig/Inheritance.zig");
 const BasicArrayList = @import("org/allbinary/util/BasicArrayList.zig").BasicArrayList;
 const BasicArrayListUtil = @import("org/allbinary/util/BasicArrayListUtil.zig").BasicArrayListUtil;
+const Exception = @import("java/lang/Exception.zig").Exception;
 
 pub const TouchButtonFactory = struct {
     const Self = @This();
@@ -89,7 +90,7 @@ pub const TouchButtonFactory = struct {
 
     // throws Exception
     pub fn setList(self: *Self, list: ?*BasicArrayList) void {
-        if (list == null) {
+        if (Object.isNull(list)) {
             std.debug.panic("{any}", .{exception: { _ = String.literal("Null List"); break :exception error.Exception; }});
         }
         self.list = list;

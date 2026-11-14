@@ -23,6 +23,7 @@ const AllBinarySensor = @import("org/allbinary/input/AllBinarySensor.zig").AllBi
 const NoAllBinarySensor = @import("org/allbinary/input/NoAllBinarySensor.zig").NoAllBinarySensor;
 const AccelerometerSensorFactory = @import("org/allbinary/input/accelerometer/AccelerometerSensorFactory.zig").AccelerometerSensorFactory;
 const GyroSensorFactory = @import("org/allbinary/input/gyro/GyroSensorFactory.zig").GyroSensorFactory;
+const Exception = @import("java/lang/Exception.zig").Exception;
 
 pub const SensorGameUpdateProcessor = struct {
     const Self = @This();

@@ -40,15 +40,15 @@ pub const GameSpeed = struct {
 
     pub fn getSpeed(self: *Self) i32 {
         _ = self;
-        const speedGameConfiguration: ?*GameConfiguration = Inheritance.upcast(?*GameConfiguration, GameConfigurationCentral.getInstance().?.SPEED);
-        return (Inheritance.receiverOf(speedGameConfiguration.?.getMaxValue().?, "intValue").intValue() - Inheritance.receiverOf(speedGameConfiguration.?.getValue().?, "intValue").intValue() + 1);
+        const speedGameConfiguration: ?*GameConfiguration = Inheritance.upcast(?*GameConfiguration, Inheritance.fieldPointer(GameConfigurationCentral.getInstance().?, "SPEED").*);
+        return (Inheritance.arithmetic(.subtract, Inheritance.receiverOf(speedGameConfiguration.?.getMaxValue().?, "intValue").intValue(), Inheritance.receiverOf(speedGameConfiguration.?.getValue().?, "intValue").intValue()) + 1);
     }
     
 
     pub fn getDelay(self: *Self) i32 {
         _ = self;
-        const speedGameConfiguration: ?*GameConfiguration = Inheritance.upcast(?*GameConfiguration, GameConfigurationCentral.getInstance().?.SPEED);
-        return 19 * (Inheritance.receiverOf(speedGameConfiguration.?.getMaxValue().?, "intValue").intValue() - Inheritance.receiverOf(speedGameConfiguration.?.getValue().?, "intValue").intValue());
+        const speedGameConfiguration: ?*GameConfiguration = Inheritance.upcast(?*GameConfiguration, Inheritance.fieldPointer(GameConfigurationCentral.getInstance().?, "SPEED").*);
+        return Inheritance.arithmetic(.multiply, 19, (Inheritance.arithmetic(.subtract, Inheritance.receiverOf(speedGameConfiguration.?.getMaxValue().?, "intValue").intValue(), Inheritance.receiverOf(speedGameConfiguration.?.getValue().?, "intValue").intValue())));
     }
     
 

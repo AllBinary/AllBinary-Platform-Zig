@@ -18,8 +18,8 @@ const allocator = std.heap.page_allocator;
 const String = @import("java/lang/String.zig").String;
 const Object = @import("java/lang/Object.zig").Object;
 const Inheritance = @import("zig/Inheritance.zig");
-// const Font = @import("javax/microedition/lcdui/Font.zig").Font;
-// const Graphics = @import("javax/microedition/lcdui/Graphics.zig").Graphics;
+const Font = @import("javax/microedition/lcdui/Font.zig").Font;
+const Graphics = @import("javax/microedition/lcdui/Graphics.zig").Graphics;
 const PickedUpLayerInterfaceFactoryInterface = @import("org/allbinary/game/layer/pickup/PickedUpLayerInterfaceFactoryInterface.zig").PickedUpLayerInterfaceFactoryInterface;
 const DisplayInfoSingleton = @import("org/allbinary/graphics/displayable/DisplayInfoSingleton.zig").DisplayInfoSingleton;
 const MyFontProcessor = @import("org/allbinary/graphics/font/MyFontProcessor.zig").MyFontProcessor;
@@ -73,7 +73,7 @@ pub const CountedLayersHudPaintable = struct {
     pub fn updateMeasurement(self: *Self, graphics: ?*Graphics) void {
         const font: ?*Font = Inheritance.upcast(?*Font, graphics.?.getFont());
         self.height = font.?.getHeight();
-        if (self.dropSize > font.?.getHeight()) {
+        if (Inheritance.arithmetic(.greater, self.dropSize, font.?.getHeight())) {
             self.height = self.dropSize;
         }
         if (CountedLayersHudPaintable.XXStringWidth == 0) {
@@ -99,7 +99,7 @@ pub const CountedLayersHudPaintable = struct {
             var index: i32 = self.startIndex;
             while (index < size) : (index += 1) {
             countedLayerInterfaceFactory = Inheritance.cast(?*CountedLayerInterfaceFactoryPart, self.partInterfaceArray[@intCast(index)]);
-            if (countedLayerInterfaceFactory.?.getTotal() > 0) {
+            if (Inheritance.arithmetic(.greater, countedLayerInterfaceFactory.?.getTotal(), 0)) {
                 pickedUpLayerInterfaceFactoryInterface = Inheritance.upcast(@TypeOf(pickedUpLayerInterfaceFactoryInterface), countedLayerInterfaceFactory.?.getCountedPickedUpLayerInterfaceFactory());
                 layerInterface = Inheritance.upcast(@TypeOf(layerInterface), pickedUpLayerInterfaceFactoryInterface.?.getIconLayer());
                 y = 40 + (count * self.height);
@@ -108,14 +108,14 @@ pub const CountedLayersHudPaintable = struct {
                 _ = Inheritance.call(graphics.?, "setColor", .{ self.countedTotalStringColor });
                 _ = Inheritance.call(countedLayerInterfaceFactory.?, "paint", .{ graphics });
                 charArray = Inheritance.upcast(@TypeOf(charArray), countedLayerInterfaceFactory.?.getTotalString());
-                _ = Inheritance.call(graphics.?, "drawChars", .{ charArray, 0, @as(i32, @intCast(charArray.len)), widthEdge - countedLayerInterfaceFactory.?.getXOffset(), y, 0 });
+                _ = Inheritance.call(graphics.?, "drawChars", .{ charArray, 0, @as(i32, @intCast(charArray.len)), Inheritance.arithmetic(.subtract, widthEdge, countedLayerInterfaceFactory.?.getXOffset()), y, 0 });
                 count += 1;
             }
             }
         }
         if (count > 0) {
             _ = Inheritance.call(graphics.?, "setColor", .{ self.countedPartsBorder });
-            _ = Inheritance.call(graphics.?, "drawRect", .{ lastWidth - (CountedLayersHudPaintable.XXStringWidth + self.dropSize), 40, CountedLayersHudPaintable.XXStringWidth + self.dropSize, (count * self.height) + 3 });
+            _ = Inheritance.call(graphics.?, "drawRect", .{ Inheritance.arithmetic(.subtract, lastWidth, (CountedLayersHudPaintable.XXStringWidth + self.dropSize)), 40, CountedLayersHudPaintable.XXStringWidth + self.dropSize, (count * self.height) + 3 });
         }
     }
     

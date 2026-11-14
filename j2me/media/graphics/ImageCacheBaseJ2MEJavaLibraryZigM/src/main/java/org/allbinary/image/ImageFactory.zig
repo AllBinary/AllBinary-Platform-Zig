@@ -18,8 +18,10 @@ const allocator = std.heap.page_allocator;
 const String = @import("java/lang/String.zig").String;
 const Object = @import("java/lang/Object.zig").Object;
 const Inheritance = @import("zig/Inheritance.zig");
-// const InputStream = @import("java/io/InputStream.zig").InputStream;
-// const Image = @import("javax/microedition/lcdui/Image.zig").Image;
+const InputStream = @import("java/io/InputStream.zig").InputStream;
+const Image = @import("javax/microedition/lcdui/Image.zig").Image;
+const MIDPUtil = @import("org/allbinary/MIDPUtil.zig").MIDPUtil;
+const Exception = @import("java/lang/Exception.zig").Exception;
 
 //ImageCacheBaseJavaLibrary - J2ME
 pub const ImageFactory = struct {
@@ -55,7 +57,7 @@ pub const ImageFactory = struct {
     pub fn createImage(self: *Self, caller: ?*String, width: i32, height: i32) ?*Image {
         _ = caller;
         _ = self;
-        return Inheritance.upcast(?*Image, Inheritance.callStatic(Image, "createImage", .{ width, height }));
+        return Inheritance.upcast(?*Image, Inheritance.call(MIDPUtil.getInstance().?, "createImageWH", .{ width, height }));
     }
     
 
@@ -63,7 +65,7 @@ pub const ImageFactory = struct {
     pub fn createImageFromInputStream2(self: *Self, key: ?Object, inputStream: ?*InputStream) ?*Image {
         _ = key;
         _ = self;
-        const image: ?*Image = Inheritance.upcast(?*Image, Inheritance.callStatic(Image, "createImage", .{ inputStream }));
+        const image: ?*Image = Inheritance.upcast(?*Image, Inheritance.call(MIDPUtil.getInstance().?, "createImageFromInputStream", .{ inputStream }));
         return image;
     }
     
@@ -71,7 +73,7 @@ pub const ImageFactory = struct {
     // throws Exception
     pub fn createImageFromInputStream(self: *Self, inputStream: ?*InputStream) ?*Image {
         _ = self;
-        return Inheritance.upcast(?*Image, Inheritance.callStatic(Image, "createImage", .{ inputStream }));
+        return Inheritance.upcast(?*Image, Inheritance.call(MIDPUtil.getInstance().?, "createImageFromInputStream", .{ inputStream }));
     }
 };
 

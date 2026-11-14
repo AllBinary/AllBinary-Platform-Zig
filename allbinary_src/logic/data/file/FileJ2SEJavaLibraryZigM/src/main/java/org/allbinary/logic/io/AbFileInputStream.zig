@@ -19,7 +19,7 @@ const String = @import("java/lang/String.zig").String;
 const Object = @import("java/lang/Object.zig").Object;
 const Inheritance = @import("zig/Inheritance.zig");
 const File = @import("java/io/File.zig").File;
-// const FileInputStream = @import("java/io/FileInputStream.zig").FileInputStream;
+const FileInputStream = @import("java/io/FileInputStream.zig").FileInputStream;
 // const FileNotFoundException = @import("java/io/FileNotFoundException.zig").FileNotFoundException;
 const AbFile = @import("org/allbinary/logic/io/file/AbFile.zig").AbFile;
 const AbFileNativeUtil = @import("org/allbinary/logic/io/file/AbFileNativeUtil.zig").AbFileNativeUtil;
@@ -39,23 +39,15 @@ pub const AbFileInputStream = struct {
     }
     
 
-    // Java overloaded constructor with the same parameter count: Zig needs a different name
-    pub fn create1(file: ?*AbFile) *Self {
-        const this = allocator.create(Self) catch unreachable;
-        this.* = .{};
-        this.base = Inheritance.callStatic(FileInputStream, "create1", .{ Inheritance.callStatic(AbFileNativeUtil, "get", .{ file }) }).*;
-        Inheritance.bindOverrides(this);
-        return this;
+    // throws FileNotFoundException
+    pub fn createFromAbFile(file: ?*AbFile) ?*AbFileInputStream {
+        return Inheritance.callStatic(AbFileInputStream, "create1", .{ Inheritance.receiverOf(Inheritance.callStatic(AbFileNativeUtil, "get", .{ file }).?, "getPath").getPath() });
     }
     
 
-    // Java overloaded constructor with the same parameter count: Zig needs a different name
-    pub fn create1(file: ?*File) *Self {
-        const this = allocator.create(Self) catch unreachable;
-        this.* = .{};
-        this.base = Inheritance.callStatic(FileInputStream, "create1", .{ file }).*;
-        Inheritance.bindOverrides(this);
-        return this;
+    // throws FileNotFoundException
+    pub fn createFromFile(file: ?*File) ?*AbFileInputStream {
+        return Inheritance.callStatic(AbFileInputStream, "create1", .{ file.?.getPath() });
     }
 };
 

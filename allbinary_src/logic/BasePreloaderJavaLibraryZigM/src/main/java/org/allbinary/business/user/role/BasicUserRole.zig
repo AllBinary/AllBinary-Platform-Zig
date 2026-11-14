@@ -58,7 +58,7 @@ pub const BasicUserRole = struct {
         this.displayValue = aDisplayValue;
         this.sessionTimeout = aSessionTimeout;
         this.sessionInactivityTimeout = aSessionInactivityTimeout;
-        _ = Inheritance.call(BasicUserRoles.getInstance().?.roleVector.?, "add", .{ this });
+        _ = Inheritance.call(Inheritance.fieldPointer(BasicUserRoles.getInstance().?, "roleVector").*.?, "add", .{ this });
         return this;
     }
     

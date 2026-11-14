@@ -18,7 +18,7 @@ const allocator = std.heap.page_allocator;
 const String = @import("java/lang/String.zig").String;
 const Object = @import("java/lang/Object.zig").Object;
 const Inheritance = @import("zig/Inheritance.zig");
-// const Player = @import("javax/microedition/media/Player.zig").Player;
+const Player = @import("javax/microedition/media/Player.zig").Player;
 const CommonStrings = @import("org/allbinary/string/CommonStrings.zig").CommonStrings;
 
 pub const PlayerStateUtil = struct {
@@ -71,7 +71,7 @@ pub const PlayerStateUtil = struct {
         } else if (state == Player.CLOSED) {
             return self.CLOSED;
         }
-        return Inheritance.upcast(?*String, self.commonStrings.?.UNKNOWN);
+        return Inheritance.upcast(?*String, Inheritance.fieldPointer(self.commonStrings.?, "UNKNOWN").*);
     }
 };
 

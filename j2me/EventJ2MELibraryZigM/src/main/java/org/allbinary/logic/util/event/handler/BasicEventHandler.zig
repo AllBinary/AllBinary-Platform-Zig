@@ -31,6 +31,7 @@ const JsMethod = @import("jsinterop/annotations/JsMethod.zig").JsMethod;
 const JsConstructor = @import("jsinterop/annotations/JsConstructor.zig").JsConstructor;
 const JsProperty = @import("jsinterop/annotations/JsProperty.zig").JsProperty;
 const BasicEventHandlerInterface = @import("org/allbinary/logic/util/event/handler/BasicEventHandlerInterface.zig").BasicEventHandlerInterface;
+const Exception = @import("java/lang/Exception.zig").Exception;
 
 pub const BasicEventHandler = struct {
     const Self = @This();
@@ -124,7 +125,7 @@ pub const BasicEventHandler = struct {
                 _ = Inheritance.call(self, "process", .{ eventObject, eventListenerInterface });
             }
             // catch (Exception e):
-//                 _ = Inheritance.call(self.logUtil.?, "put", .{ self.commonStrings.?.EXCEPTION, self, self.eventStrings.?.FIRE_EVENT, e });
+//                 _ = Inheritance.call(self.logUtil.?, "put", .{ Inheritance.fieldPointer(self.commonStrings.?, "EXCEPTION").*, self, Inheritance.fieldPointer(self.eventStrings.?, "FIRE_EVENT").*, e });
             index += 1;
         }
     }
@@ -144,18 +145,18 @@ pub const BasicEventHandler = struct {
 
     pub fn toString(self: *Self) ?*String {
         const stringBuffer: ?*StringMaker = StringMaker.create();
-        _ = Inheritance.call(stringBuffer.?, "append", .{ self.eventStrings.?.TOTAL_LISTENERS });
+        _ = Inheritance.call(stringBuffer.?, "append", .{ Inheritance.fieldPointer(self.eventStrings.?, "TOTAL_LISTENERS").* });
         _ = Inheritance.call(stringBuffer.?, "appendint", .{ self.eventListenerInterfaceList.?.size() });
         var eventListenerInterface: ?*EventListenerInterface = null;
         var index: i32 = 0;
         while (index < self.eventListenerInterfaceList.?.size()) {
             { // try
                 eventListenerInterface = Inheritance.cast(?*EventListenerInterface, Inheritance.call(self.eventListenerInterfaceList.?, "get", .{ index }));
-                _ = Inheritance.call(stringBuffer.?, "append", .{ self.eventStrings.?.LISTENER_LABEL });
+                _ = Inheritance.call(stringBuffer.?, "append", .{ Inheritance.fieldPointer(self.eventStrings.?, "LISTENER_LABEL").* });
                 _ = Inheritance.call(stringBuffer.?, "append", .{ Object.toString(Object.of(eventListenerInterface)) });
             }
             // catch (Exception e):
-//                 _ = Inheritance.call(self.logUtil.?, "put", .{ self.commonStrings.?.EXCEPTION, self, self.commonStrings.?.TOSTRING, e });
+//                 _ = Inheritance.call(self.logUtil.?, "put", .{ Inheritance.fieldPointer(self.commonStrings.?, "EXCEPTION").*, self, Inheritance.fieldPointer(self.commonStrings.?, "TOSTRING").*, e });
             index += 1;
         }
         return Inheritance.upcast(?*String, Object.toString(Object.of(stringBuffer)));

@@ -18,7 +18,7 @@ const allocator = std.heap.page_allocator;
 const String = @import("java/lang/String.zig").String;
 const Object = @import("java/lang/Object.zig").Object;
 const Inheritance = @import("zig/Inheritance.zig");
-// const Canvas = @import("javax/microedition/lcdui/Canvas.zig").Canvas;
+const Canvas = @import("javax/microedition/lcdui/Canvas.zig").Canvas;
 const GameKey = @import("org/allbinary/game/input/GameKey.zig").GameKey;
 const GameKeyEventSourceInterface = @import("org/allbinary/game/input/GameKeyEventSourceInterface.zig").GameKeyEventSourceInterface;
 const GameKeyFactory = @import("org/allbinary/game/input/GameKeyFactory.zig").GameKeyFactory;
@@ -36,6 +36,7 @@ const StringMaker = @import("org/allbinary/logic/string/StringMaker.zig").String
 const CommonSeps = @import("org/allbinary/string/CommonSeps.zig").CommonSeps;
 const CommonStrings = @import("org/allbinary/string/CommonStrings.zig").CommonStrings;
 const AllBinaryGameCanvas = @import("org/allbinary/game/displayable/canvas/AllBinaryGameCanvas.zig").AllBinaryGameCanvas;
+const Exception = @import("java/lang/Exception.zig").Exception;
 
 pub const FormInputProcessor = struct {
     const Self = @This();
@@ -75,13 +76,13 @@ pub const FormInputProcessor = struct {
 
     pub fn keyPressedByDevice(self: *Self, keyCode: i32, deviceId: i32) void {
         { // try
-            _ = Inheritance.callStatic(PreLogUtil, "put", .{ Object.toString(Object.of(Inheritance.call(Inheritance.call(Inheritance.call(Inheritance.call(Inheritance.call(StringMaker.create(), "append", .{ self.inputFactory.?.KEY_CODE_LABEL }).?, "appendint", .{ keyCode }).?, "append", .{ CommonSeps.getInstance().?.SPACE }).?, "append", .{ self.inputFactory.?.DEVICE_ID_LABEL }).?, "appendint", .{ deviceId }))), self, Inheritance.fieldPointer(self, "gameInputStrings").*.?.KEY_PRESSED });
+            _ = Inheritance.callStatic(PreLogUtil, "put", .{ Object.toString(Object.of(Inheritance.call(Inheritance.call(Inheritance.call(Inheritance.call(Inheritance.call(StringMaker.create(), "append", .{ Inheritance.fieldPointer(self.inputFactory.?, "KEY_CODE_LABEL").* }).?, "appendint", .{ keyCode }).?, "append", .{ Inheritance.fieldPointer(CommonSeps.getInstance().?, "SPACE").* }).?, "append", .{ Inheritance.fieldPointer(self.inputFactory.?, "DEVICE_ID_LABEL").* }).?, "appendint", .{ deviceId }))), self, Inheritance.fieldPointer(Inheritance.fieldPointer(self, "gameInputStrings").*.?, "KEY_PRESSED").* });
             const input: ?*Input = Inheritance.upcast(?*Input, Inheritance.call(self.inputFactory.?, "getInstanceById", .{ keyCode }));
             const gameKeyEvent: ?*GameKeyEvent = Inheritance.upcast(?*GameKeyEvent, Inheritance.call(self.gameKeyEventFactory.?, "getInstanceForInput", .{ self.allBinaryGameCanvas, input }));
             _ = Inheritance.call(self.downKeyEventHandler.?, "fireEventForGameKeyEvent", .{ gameKeyEvent });
         }
         // catch (Exception e):
-//             _ = Inheritance.call(self.logUtil.?, "put", .{ self.commonStrings.?.EXCEPTION, self, Inheritance.fieldPointer(self, "gameInputStrings").*.?.ADD_KEY_EVENT, e });
+//             _ = Inheritance.call(self.logUtil.?, "put", .{ Inheritance.fieldPointer(self.commonStrings.?, "EXCEPTION").*, self, Inheritance.fieldPointer(Inheritance.fieldPointer(self, "gameInputStrings").*.?, "ADD_KEY_EVENT").*, e });
     }
     
 
@@ -89,8 +90,8 @@ pub const FormInputProcessor = struct {
         { // try
             const input: ?*Input = Inheritance.upcast(?*Input, Inheritance.call(self.inputFactory.?, "getInstanceById", .{ keyCode }));
             if (Inheritance.call(self.platformKeyFactory.?, "isEnter", .{ input })) {
-                _ = Inheritance.callStatic(PreLogUtil, "put", .{ Object.toString(Object.of(Inheritance.call(Inheritance.call(Inheritance.call(Inheritance.call(Inheritance.call(StringMaker.create(), "append", .{ self.inputFactory.?.KEY_CODE_LABEL }).?, "appendint", .{ keyCode }).?, "append", .{ CommonSeps.getInstance().?.SPACE }).?, "append", .{ self.inputFactory.?.DEVICE_ID_LABEL }).?, "appendint", .{ deviceId }))), self, Inheritance.fieldPointer(self, "gameInputStrings").*.?.KEY_RELEASED });
-                const gameKey: ?*GameKey = Inheritance.upcast(?*GameKey, GameKeyFactory.getInstance().?.KEY_NUM0);
+                _ = Inheritance.callStatic(PreLogUtil, "put", .{ Object.toString(Object.of(Inheritance.call(Inheritance.call(Inheritance.call(Inheritance.call(Inheritance.call(StringMaker.create(), "append", .{ Inheritance.fieldPointer(self.inputFactory.?, "KEY_CODE_LABEL").* }).?, "appendint", .{ keyCode }).?, "append", .{ Inheritance.fieldPointer(CommonSeps.getInstance().?, "SPACE").* }).?, "append", .{ Inheritance.fieldPointer(self.inputFactory.?, "DEVICE_ID_LABEL").* }).?, "appendint", .{ deviceId }))), self, Inheritance.fieldPointer(Inheritance.fieldPointer(self, "gameInputStrings").*.?, "KEY_RELEASED").* });
+                const gameKey: ?*GameKey = Inheritance.upcast(?*GameKey, Inheritance.fieldPointer(GameKeyFactory.getInstance().?, "KEY_NUM0").*);
                 const gameKeyEventSourceInterface: ?*GameKeyEventSourceInterface = Inheritance.cast(?*GameKeyEventSourceInterface, canvas);
                 const gameKeyEvent: ?*GameKeyEvent = Inheritance.upcast(?*GameKeyEvent, Inheritance.call(self.gameKeyEventFactory.?, "getInstanceForInput", .{ gameKeyEventSourceInterface, gameKey }));
                 _ = Inheritance.call(self.upGameKeyEventHandler.?, "fireEvent", .{ gameKeyEvent });
@@ -98,7 +99,7 @@ pub const FormInputProcessor = struct {
             }
         }
         // catch (Exception e):
-//             _ = Inheritance.call(self.logUtil.?, "put", .{ self.commonStrings.?.EXCEPTION, self, Inheritance.fieldPointer(self, "gameInputStrings").*.?.ADD_KEY_EVENT, e });
+//             _ = Inheritance.call(self.logUtil.?, "put", .{ Inheritance.fieldPointer(self.commonStrings.?, "EXCEPTION").*, self, Inheritance.fieldPointer(Inheritance.fieldPointer(self, "gameInputStrings").*.?, "ADD_KEY_EVENT").*, e });
     }
 };
 

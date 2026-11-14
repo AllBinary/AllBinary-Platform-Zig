@@ -24,6 +24,7 @@ const StringValidationUtil = @import("org/allbinary/logic/string/StringValidatio
 const AbFilePath = @import("org/allbinary/logic/io/path/AbFilePath.zig").AbFilePath;
 const AbPath = @import("org/allbinary/logic/io/path/AbPath.zig").AbPath;
 const AbPathData = @import("org/allbinary/logic/io/path/AbPathData.zig").AbPathData;
+const Exception = @import("java/lang/Exception.zig").Exception;
 
 //Used to correct user input for paths
 pub const PathUtil = struct {
@@ -101,7 +102,7 @@ pub const PathUtil = struct {
     
 
     pub fn isValidStart(self: *Self, path: ?*String) bool {
-        if (Object.same(Inheritance.call(path.?, "charAt", .{ 0 }), self.abPathData.?.SEPARATORCHAR) or Inheritance.call(path.?, "charAt", .{ 0 }) == '.') {
+        if (Object.same(Inheritance.call(path.?, "charAt", .{ 0 }), Inheritance.fieldPointer(self.abPathData.?, "SEPARATORCHAR").*) or Inheritance.call(path.?, "charAt", .{ 0 }) == '.') {
             return true;
         } else {
             return false;
@@ -114,7 +115,7 @@ pub const PathUtil = struct {
         if (Inheritance.call(stringValidationUtil.?, "isEmpty", .{ path })) {
             return false;
         }
-        if (Object.same(Inheritance.call(path.?, "charAt", .{ path.?.length() - 1 }), self.abPathData.?.SEPARATORCHAR)) {
+        if (Object.same(Inheritance.call(path.?, "charAt", .{ path.?.length() - 1 }), Inheritance.fieldPointer(self.abPathData.?, "SEPARATORCHAR").*)) {
             return true;
         } else {
             return false;
@@ -125,7 +126,7 @@ pub const PathUtil = struct {
     pub fn adjustStart(self: *Self, pathParameter: ?*String) ?*String {
         var path = pathParameter;
         if (!Inheritance.call(self, "isValidStart", .{ path })) {
-            path = Inheritance.upcast(@TypeOf(path), String.plus(self.abPathData.?.SEPARATOR, path));
+            path = Inheritance.upcast(@TypeOf(path), String.plus(Inheritance.fieldPointer(self.abPathData.?, "SEPARATOR").*, path));
         }
         return path;
     }
@@ -134,7 +135,7 @@ pub const PathUtil = struct {
     pub fn adjustEnd(self: *Self, pathParameter: ?*String) ?*String {
         var path = pathParameter;
         if (!Inheritance.call(self, "isValidEnd", .{ path })) {
-            path = Inheritance.upcast(@TypeOf(path), String.plus(path, self.abPathData.?.SEPARATOR));
+            path = Inheritance.upcast(@TypeOf(path), String.plus(path, Inheritance.fieldPointer(self.abPathData.?, "SEPARATOR").*));
         }
         return path;
     }
@@ -144,10 +145,10 @@ pub const PathUtil = struct {
         var path = pathParameter;
         const stringValidationUtil: ?*StringValidationUtil = Inheritance.upcast(?*StringValidationUtil, StringValidationUtil.getInstance());
         if (Inheritance.call(stringValidationUtil.?, "isEmpty", .{ path })) {
-            return Inheritance.upcast(?*String, self.abPathData.?.SEPARATOR);
+            return Inheritance.upcast(?*String, Inheritance.fieldPointer(self.abPathData.?, "SEPARATOR").*);
         }
-        if (Inheritance.call(path.?, "indexOf", .{ String.literal("\\") }) >= 0) {
-            path = Inheritance.upcast(@TypeOf(path), Inheritance.call(path.?, "replace", .{ '\\', self.abPathData.?.SEPARATORCHAR }));
+        if (Inheritance.arithmetic(.greater_equal, Inheritance.call(path.?, "indexOf", .{ String.literal("\\") }), 0)) {
+            path = Inheritance.upcast(@TypeOf(path), Inheritance.call(path.?, "replace", .{ '\\', Inheritance.fieldPointer(self.abPathData.?, "SEPARATORCHAR").* }));
         }
         return path;
     }
@@ -155,9 +156,9 @@ pub const PathUtil = struct {
 
     // throws Exception
     pub fn removeNameFromPath(self: *Self, path: ?*String) ?*AbPath {
-        var endIndex: i32 = Inheritance.call(path.?, "lastIndexOf", .{ self.abPathData.?.SEPARATOR });
+        var endIndex: i32 = Inheritance.call(path.?, "lastIndexOf", .{ Inheritance.fieldPointer(self.abPathData.?, "SEPARATOR").* });
         if (endIndex < 0) {
-            endIndex = Inheritance.call(path.?, "lastIndexOf", .{ self.filePathData.?.SEPARATORCHAR });
+            endIndex = Inheritance.call(path.?, "lastIndexOf", .{ Inheritance.fieldPointer(self.filePathData.?, "SEPARATORCHAR").* });
         }
         if (endIndex < 0) {
             return Inheritance.upcast(?*AbPath, AbPath.createAbPath());
@@ -166,7 +167,7 @@ pub const PathUtil = struct {
             return Inheritance.upcast(?*AbPath, Inheritance.call(self, "removeNameFromPath", .{ path.?.substring2(0, endIndex - 1) }));
         } else {
             const pathWithoutName: ?*String = Inheritance.upcast(?*String, path.?.substring2(0, endIndex));
-            return Inheritance.callStatic(AbPath, "create2", .{ pathWithoutName, StringUtil.getInstance().?.EMPTY_STRING });
+            return Inheritance.callStatic(AbPath, "create2", .{ pathWithoutName, Inheritance.fieldPointer(StringUtil.getInstance().?, "EMPTY_STRING").* });
         }
     }
 };

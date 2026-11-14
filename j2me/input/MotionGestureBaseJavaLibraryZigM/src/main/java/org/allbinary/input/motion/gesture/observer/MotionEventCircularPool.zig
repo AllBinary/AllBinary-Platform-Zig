@@ -24,6 +24,7 @@ const TouchMotionGestureFactory = @import("org/allbinary/input/motion/gesture/To
 const AllBinaryEventCircularPool = @import("org/allbinary/logic/util/event/AllBinaryEventCircularPool.zig").AllBinaryEventCircularPool;
 const MotionEventFactory = @import("org/allbinary/input/motion/gesture/observer/MotionEventFactory.zig").MotionEventFactory;
 const MotionGestureEvent = @import("org/allbinary/input/motion/gesture/observer/MotionGestureEvent.zig").MotionGestureEvent;
+const Exception = @import("java/lang/Exception.zig").Exception;
 
 pub const MotionEventCircularPool = struct {
     const Self = @This();
@@ -32,8 +33,8 @@ pub const MotionEventCircularPool = struct {
     eventPool: ?*AllBinaryEventCircularPool = null,
 
     fn initFields(this: *Self) void {
-        this.MIN = Inheritance.receiverOf(TouchMotionGestureFactory.getInstance().?.LAST_MOTION.?, "getId").getId();
-        this.eventPool = Inheritance.callStatic(AllBinaryEventCircularPool, "create1", .{ (InputFactory.getInstance().?.MAX - 1) - this.MIN });
+        this.MIN = Inheritance.receiverOf(Inheritance.fieldPointer(TouchMotionGestureFactory.getInstance().?, "LAST_MOTION").*.?, "getId").getId();
+        this.eventPool = Inheritance.callStatic(AllBinaryEventCircularPool, "create1", .{ Inheritance.arithmetic(.subtract, (Inheritance.arithmetic(.subtract, Inheritance.fieldPointer(InputFactory.getInstance().?, "MAX").*, 1)), this.MIN) });
     }
     
 
@@ -56,7 +57,7 @@ pub const MotionEventCircularPool = struct {
         // Java synchronized method
         const javaMonitor = Object.monitor(self).enter();
         defer javaMonitor.exit();
-        return Inheritance.cast(?*MotionGestureEvent, Inheritance.call(self.eventPool.?, "getInstance", .{ Inheritance.receiver(motionGestureInput.?, "getId").getId() - self.MIN }));
+        return Inheritance.cast(?*MotionGestureEvent, Inheritance.call(self.eventPool.?, "getInstance", .{ Inheritance.arithmetic(.subtract, Inheritance.receiver(motionGestureInput.?, "getId").getId(), self.MIN) }));
     }
 };
 

@@ -22,6 +22,7 @@ const LogUtil = @import("org/allbinary/logic/communication/log/LogUtil.zig").Log
 const CommonStrings = @import("org/allbinary/string/CommonStrings.zig").CommonStrings;
 const ABRunnable = @import("org/allbinary/thread/ABRunnable.zig").ABRunnable;
 const DemoCanvas = @import("org/allbinary/game/displayable/canvas/DemoCanvas.zig").DemoCanvas;
+const Exception = @import("java/lang/Exception.zig").Exception;
 
 pub const DemoGameStartupRunnable = struct {
     const Self = @This();
@@ -52,14 +53,14 @@ pub const DemoGameStartupRunnable = struct {
         { // try
             _ = Inheritance.call(self, "setRunning", .{ true });
             _ = Inheritance.receiver(self.demoCanvas.?, "stopGameDemo").stopGameDemo();
-            _ = Inheritance.receiver(self.demoCanvas.?, "create").create();
+            _ = Inheritance.receiver(self.demoCanvas.?, "create_Method").create_Method();
             _ = Inheritance.receiver(self.demoCanvas.?, "start").start();
             _ = Inheritance.call(self, "setRunning", .{ false });
         }
         // catch (Exception e):
 //             _ = Inheritance.call(self, "setRunning", .{ false });
 //             const commonStrings: ?*CommonStrings = Inheritance.upcast(?*CommonStrings, CommonStrings.getInstance()); _ = commonStrings;
-//             _ = Inheritance.call(self.logUtil.?, "put", .{ commonStrings.?.EXCEPTION, self, commonStrings.?.RUN, e });
+//             _ = Inheritance.call(self.logUtil.?, "put", .{ Inheritance.fieldPointer(commonStrings.?, "EXCEPTION").*, self, Inheritance.fieldPointer(commonStrings.?, "RUN").*, e });
     }
     
 

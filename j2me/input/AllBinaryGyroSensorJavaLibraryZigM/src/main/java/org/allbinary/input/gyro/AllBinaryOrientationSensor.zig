@@ -23,6 +23,7 @@ const NoCompleteMotionGestureInputEventListener = @import("org/allbinary/game/in
 const AllBinarySensor = @import("org/allbinary/input/AllBinarySensor.zig").AllBinarySensor;
 const Orientation = @import("org/allbinary/logic/math/Orientation.zig").Orientation;
 const PrimitiveFloatUtil = @import("org/allbinary/logic/math/PrimitiveFloatUtil.zig").PrimitiveFloatUtil;
+const Exception = @import("java/lang/Exception.zig").Exception;
 
 pub const AllBinaryOrientationSensor = struct {
     const Self = @This();
@@ -30,6 +31,12 @@ pub const AllBinaryOrientationSensor = struct {
     base: AllBinarySensor = undefined,
     sensorDataFloatArray: []f32 = &.{},
     listener: ?*CompleteMotionGestureInputEventListenerInterface = null,
+    pub var NULL_ALLBINARY_ORIENTATION_SENSOR: ?*AllBinaryOrientationSensor = undefined;
+
+    // Static fields with runtime initializers: call staticInit once at startup
+    pub fn staticInit() void {
+        NULL_ALLBINARY_ORIENTATION_SENSOR = AllBinaryOrientationSensor.create();
+    }
 
     fn initFields(this: *Self) void {
         this.sensorDataFloatArray = PrimitiveFloatUtil.getArrayInstance();
@@ -54,7 +61,7 @@ pub const AllBinaryOrientationSensor = struct {
 
     // throws Exception
     pub fn getOrientation(self: *Self) ?*Orientation {
-        std.debug.panic("{any}", .{exception: { _ = Inheritance.fieldPointer(self, "commonStrings").*.?.NOT_IMPLEMENTED; break :exception error.Exception; }});
+        std.debug.panic("{any}", .{exception: { _ = Inheritance.fieldPointer(Inheritance.fieldPointer(self, "commonStrings").*.?, "NOT_IMPLEMENTED").*; break :exception error.Exception; }});
     }
 };
 

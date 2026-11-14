@@ -18,7 +18,8 @@ const allocator = std.heap.page_allocator;
 const String = @import("java/lang/String.zig").String;
 const Object = @import("java/lang/Object.zig").Object;
 const Inheritance = @import("zig/Inheritance.zig");
-// const Item = @import("javax/microedition/lcdui/Item.zig").Item;
+const Item = @import("javax/microedition/lcdui/Item.zig").Item;
+const MIDPUtil = @import("org/allbinary/MIDPUtil.zig").MIDPUtil;
 const CommandForm = @import("org/allbinary/graphics/displayable/screen/CommandForm.zig").CommandForm;
 
 //Handle the differences in the public platform vs the raw JS build
@@ -46,7 +47,7 @@ pub const MEUtil = struct {
 
     pub fn appendItem(self: *Self, form: ?*CommandForm, item: ?*Item) void {
         _ = self;
-        _ = Inheritance.call(form.?, "append", .{ item });
+        _ = Inheritance.call(MIDPUtil.getInstance().?, "appendItem", .{ form, item });
     }
 };
 

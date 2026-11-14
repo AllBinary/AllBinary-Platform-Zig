@@ -47,10 +47,10 @@ pub const TouchButtonLocationHelper = struct {
         const this = allocator.create(Self) catch unreachable;
         this.* = .{};
         this.initFields();
-        const buttonSize: i32 = CommonButtons.getInstance().?.STANDARD_BUTTON_SIZE;
+        const buttonSize: i32 = Inheritance.fieldPointer(CommonButtons.getInstance().?, "STANDARD_BUTTON_SIZE").*;
         const displayInfo: ?*DisplayInfoSingleton = Inheritance.upcast(?*DisplayInfoSingleton, DisplayInfoSingleton.getInstance());
-        this.totalColumns = @round(@as(f32, @floatCast(displayInfo.?.getLastWidth())) / @as(f32, @floatFromInt(buttonSize)));
-        this.totalRows = @round(@as(f32, @floatCast(displayInfo.?.getLastHeight())) / @as(f32, @floatFromInt(buttonSize)));
+        this.totalColumns = @round(Inheritance.number(f32, displayInfo.?.getLastWidth()) / @as(f32, @floatFromInt(buttonSize)));
+        this.totalRows = @round(Inheritance.number(f32, displayInfo.?.getLastHeight()) / @as(f32, @floatFromInt(buttonSize)));
         this.columnsRemainder = @rem(displayInfo.?.getLastWidth(), buttonSize);
         this.columnsRemainderHalf = (this.columnsRemainder >> @intCast(1));
         this.rowsRemainder = @rem(displayInfo.?.getLastHeight(), buttonSize);

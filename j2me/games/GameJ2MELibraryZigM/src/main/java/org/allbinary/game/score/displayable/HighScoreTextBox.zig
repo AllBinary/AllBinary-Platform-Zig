@@ -18,10 +18,10 @@ const allocator = std.heap.page_allocator;
 const String = @import("java/lang/String.zig").String;
 const Object = @import("java/lang/Object.zig").Object;
 const Inheritance = @import("zig/Inheritance.zig");
-// const CommandListener = @import("javax/microedition/lcdui/CommandListener.zig").CommandListener;
-// const Font = @import("javax/microedition/lcdui/Font.zig").Font;
-// const Graphics = @import("javax/microedition/lcdui/Graphics.zig").Graphics;
-// const TextField = @import("javax/microedition/lcdui/TextField.zig").TextField;
+const CommandListener = @import("javax/microedition/lcdui/CommandListener.zig").CommandListener;
+const Font = @import("javax/microedition/lcdui/Font.zig").Font;
+const Graphics = @import("javax/microedition/lcdui/Graphics.zig").Graphics;
+const TextField = @import("javax/microedition/lcdui/TextField.zig").TextField;
 const PostGameCommandFactory = @import("org/allbinary/PostGameCommandFactory.zig").PostGameCommandFactory;
 const GameInfo = @import("org/allbinary/game/GameInfo.zig").GameInfo;
 const HighScore = @import("org/allbinary/game/score/HighScore.zig").HighScore;
@@ -39,6 +39,7 @@ const OperatingSystemFactory = @import("org/allbinary/logic/system/os/OperatingS
 const AbeClientInformationInterface = @import("org/allbinary/logic/system/security/licensing/AbeClientInformationInterface.zig").AbeClientInformationInterface;
 const InApplicationPurchaseFactory = @import("org/allbinary/logic/system/security/licensing/InApplicationPurchaseFactory.zig").InApplicationPurchaseFactory;
 const HighScoreUtil = @import("org/allbinary/game/score/displayable/HighScoreUtil.zig").HighScoreUtil;
+const Exception = @import("java/lang/Exception.zig").Exception;
 
 pub const HighScoreTextBox = struct {
     const Self = @This();
@@ -53,7 +54,7 @@ pub const HighScoreTextBox = struct {
     fn initFields(this: *Self) void {
         this.virtualKeyboardEventHandler = Inheritance.upcast(?*VirtualKeyboardEventHandler, VirtualKeyboardEventHandler.getInstance());
         
-        this.pleaseWait = Inheritance.upcast(?*Paintable, Inheritance.callStatic(SimpleTextPaintable, "create2", .{ Inheritance.fieldPointer(this, "commonStrings").*.?.PLEASE_WAIT, BasicColorFactory.getInstance().?.WHITE }));
+        this.pleaseWait = Inheritance.upcast(?*Paintable, Inheritance.callStatic(SimpleTextPaintable, "create2", .{ Inheritance.fieldPointer(Inheritance.fieldPointer(this, "commonStrings").*.?, "PLEASE_WAIT").*, Inheritance.fieldPointer(BasicColorFactory.getInstance().?, "WHITE").* }));
         this.paintable = Inheritance.upcast(?*Paintable, NullPaintable.getInstance());
         this.submitted = false;
     }
@@ -68,11 +69,7 @@ pub const HighScoreTextBox = struct {
         const operatingSystemInterface: ?*GenericOperatingSystem = Inheritance.upcast(?*GenericOperatingSystem, Inheritance.receiverOf(OperatingSystemFactory.getInstance().?, "getOperatingSystemInstance").getOperatingSystemInstance());
         if (operatingSystemInterface.?.isOverScan()) {
             const username: ?*String = Inheritance.upcast(?*String, Inheritance.receiverOf(InApplicationPurchaseFactory.getInstance().?, "getUserName").getUserName());
-            if (username != null) {
-                _ = Inheritance.call(Inheritance.receiver(this, "getTextFieldItem").getTextFieldItem().?, "setString", .{ username });
-            } else {
-                _ = Inheritance.call(Inheritance.receiver(this, "getTextFieldItem").getTextFieldItem().?, "setString", .{ String.literal("NoGamerInfo") });
-            }
+            _ = Inheritance.call(Inheritance.receiver(this, "getTextFieldItem").getTextFieldItem().?, "setString", .{ username });
         }
         Inheritance.bindOverrides(this);
         return this;
@@ -90,7 +87,7 @@ pub const HighScoreTextBox = struct {
     pub fn open(self: *Self) void {
         _ = Inheritance.receiver(self.virtualKeyboardEventHandler.?, "open").open();
         self.paintable = Inheritance.upcast(@TypeOf(self.paintable), NullPaintable.getInstance());
-        _ = self.base.open();
+        _ = Inheritance.receiver(&self.base, "open").open();
     }
     
 
@@ -99,7 +96,7 @@ pub const HighScoreTextBox = struct {
         _ = Inheritance.receiver(self.virtualKeyboardEventHandler.?, "close").close();
         self.paintable = self.pleaseWait;
         _ = Inheritance.call(Inheritance.fieldPointer(self, "repaintBehavior").*.?, "onChangeRepaint", .{ self });
-        _ = self.base.close();
+        _ = Inheritance.receiver(&self.base, "close").close();
         _ = Inheritance.call(self, "removeCommand", .{ HighScoreUtil.SUBMIT_TEXTBOX_COMMAND });
         _ = self.update();
         if (self.submitted) {
@@ -115,7 +112,7 @@ pub const HighScoreTextBox = struct {
     pub fn update(self: *Self) void {
         const name: ?*String = Inheritance.upcast(?*String, Inheritance.receiverOf(Inheritance.receiver(self, "getTextFieldItem").getTextFieldItem().?, "getString").getString());
         _ = Inheritance.call(self.highScoreUtil.?, "update", .{ name });
-        _ = self.base.update();
+        _ = Inheritance.receiver(&self.base, "update").update();
     }
     
 

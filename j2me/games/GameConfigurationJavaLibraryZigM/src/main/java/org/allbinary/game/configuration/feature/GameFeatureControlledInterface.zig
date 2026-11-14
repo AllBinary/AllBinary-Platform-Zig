@@ -18,6 +18,7 @@ const allocator = std.heap.page_allocator;
 const String = @import("java/lang/String.zig").String;
 const Object = @import("java/lang/Object.zig").Object;
 const Inheritance = @import("zig/Inheritance.zig");
+const Exception = @import("java/lang/Exception.zig").Exception;
 
 // Java interface: an implementation is a pointer and a table of functions
 pub const GameFeatureControlledInterface = struct {
@@ -26,9 +27,9 @@ pub const GameFeatureControlledInterface = struct {
     pointer: *anyopaque,
     object: Object,
     toStringFn: *const fn (pointer: *anyopaque) ?*String,
-    initFn: *const fn (pointer: *anyopaque, level: i32) void,
-    isFeatureFn: *const fn (pointer: *anyopaque) bool,
-    isLoadingLevelFn: *const fn (pointer: *anyopaque, level: i32) bool,
+    initFn: *const fn (interface_pointer: *anyopaque, level: i32) void,
+    isFeatureFn: *const fn (interface_pointer: *anyopaque) bool,
+    isLoadingLevelFn: *const fn (interface_pointer: *anyopaque, level: i32) bool,
 
     pub fn init(self: *Self, level: i32) void {
         return self.initFn(self.pointer, level);
@@ -48,23 +49,23 @@ pub const GameFeatureControlledInterface = struct {
 
     // The interface value of an object with the methods. Like a Java class a method can be declared by the object or a superclass.
     pub fn of(object: anytype) ?*Self {
-        const Implementation = @TypeOf(object);
+        const ImplementationType = @TypeOf(object);
         const Methods = struct {
             fn toString(pointer: *anyopaque) ?*String {
-                const implementation: Implementation = @ptrCast(@alignCast(pointer));
+                const implementation: ImplementationType = @ptrCast(@alignCast(pointer));
                 return String.valueOf(implementation);
             }
-            fn init(pointer: *anyopaque, level: i32) void {
-                const implementation: Implementation = @ptrCast(@alignCast(pointer));
-                return Inheritance.receiver(implementation, "init").init(level);
+            fn init(interface_pointer: *anyopaque, level: i32) void {
+                const implementation: ImplementationType = @ptrCast(@alignCast(interface_pointer));
+                return Inheritance.call(implementation, "init", .{ level });
             }
-            fn isFeature(pointer: *anyopaque) bool {
-                const implementation: Implementation = @ptrCast(@alignCast(pointer));
+            fn isFeature(interface_pointer: *anyopaque) bool {
+                const implementation: ImplementationType = @ptrCast(@alignCast(interface_pointer));
                 return Inheritance.receiver(implementation, "isFeature").isFeature();
             }
-            fn isLoadingLevel(pointer: *anyopaque, level: i32) bool {
-                const implementation: Implementation = @ptrCast(@alignCast(pointer));
-                return Inheritance.receiver(implementation, "isLoadingLevel").isLoadingLevel(level);
+            fn isLoadingLevel(interface_pointer: *anyopaque, level: i32) bool {
+                const implementation: ImplementationType = @ptrCast(@alignCast(interface_pointer));
+                return Inheritance.call(implementation, "isLoadingLevel", .{ level });
             }
         };
         const this = allocator.create(Self) catch unreachable;

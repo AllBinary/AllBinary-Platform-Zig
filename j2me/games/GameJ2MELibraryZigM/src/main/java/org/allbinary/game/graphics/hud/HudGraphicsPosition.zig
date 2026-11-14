@@ -30,12 +30,12 @@ pub const HudGraphicsPosition = struct {
 
     // Static fields with runtime initializers: call staticInit once at startup
     pub fn staticInit() void {
-        NULL_HUD_GRAPHICS_POSITION = Inheritance.callStatic(HudGraphicsPosition, "create2", .{ PointFactory.getInstance().?.ZERO_ZERO, 9 });
+        NULL_HUD_GRAPHICS_POSITION = Inheritance.callStatic(HudGraphicsPosition, "create2", .{ Inheritance.fieldPointer(PointFactory.getInstance().?, "ZERO_ZERO").*, 9 });
     }
 
     fn initFields(this: *Self) void {
         this.anchor = 0;
-        this.point = Inheritance.upcast(?*GPoint, PointFactory.getInstance().?.ZERO_ZERO);
+        this.point = Inheritance.upcast(?*GPoint, Inheritance.fieldPointer(PointFactory.getInstance().?, "ZERO_ZERO").*);
     }
     
 

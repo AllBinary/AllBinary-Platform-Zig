@@ -19,6 +19,8 @@ const String = @import("java/lang/String.zig").String;
 const Object = @import("java/lang/Object.zig").Object;
 const Inheritance = @import("zig/Inheritance.zig");
 const ByteArrayOutputStream = @import("java/io/ByteArrayOutputStream.zig").ByteArrayOutputStream;
+const Throwable = @import("java/lang/Throwable.zig").Throwable;
+const Exception = @import("java/lang/Exception.zig").Exception;
 
 //ActualPlatform
 pub const ExceptionUtil = struct {
@@ -53,13 +55,11 @@ pub const ExceptionUtil = struct {
     
 
     pub fn getStackTrace(self: *Self, e: ?anyerror) ?*String {
+        _ = self;
         const bs: ?*ByteArrayOutputStream = ByteArrayOutputStream.create();
         _ = std.debug.print("{any}\n", .{e});
         const output: ?*String = Inheritance.upcast(?*String, Object.toString(Object.of(bs)));
-        if (output != null) {
-            return Inheritance.callStatic(String, "create1", .{ output });
-        }
-        return self.NONE;
+        return Inheritance.callStatic(String, "create1", .{ output });
     }
 };
 

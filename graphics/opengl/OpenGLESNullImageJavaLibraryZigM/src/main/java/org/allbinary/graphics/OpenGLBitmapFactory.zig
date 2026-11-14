@@ -6,9 +6,9 @@ const allocator = std.heap.page_allocator;
 const String = @import("java/lang/String.zig").String;
 const Object = @import("java/lang/Object.zig").Object;
 const Inheritance = @import("zig/Inheritance.zig");
-// const IOException = @import("java/io/IOException.zig").IOException;
-// const InputStream = @import("java/io/InputStream.zig").InputStream;
-// const Image = @import("javax/microedition/lcdui/Image.zig").Image;
+const IOException = @import("java/io/IOException.zig").IOException;
+const InputStream = @import("java/io/InputStream.zig").InputStream;
+const Image = @import("javax/microedition/lcdui/Image.zig").Image;
 const NullUtil = @import("org/allbinary/logic/NullUtil.zig").NullUtil;
 const PlatformBitmapBase = @import("org/allbinary/platform/graphics/PlatformBitmapBase.zig").PlatformBitmapBase;
 const PlatformBitmapBaseFactory = @import("org/allbinary/platform/graphics/PlatformBitmapBaseFactory.zig").PlatformBitmapBaseFactory;
@@ -27,7 +27,7 @@ pub const OpenGLBitmapFactory = struct {
     }
 
     fn initFields(this: *Self) void {
-        this.ARGB_8888 = Inheritance.callStatic(Config, "create1", .{ NullUtil.getInstance().?.NULL_OBJECT });
+        this.ARGB_8888 = Inheritance.callStatic(Config, "create1", .{ Inheritance.fieldPointer(NullUtil.getInstance().?, "NULL_OBJECT").* });
     }
 
     pub fn create() *Self {
@@ -50,7 +50,7 @@ pub const OpenGLBitmapFactory = struct {
         _ = height;
         _ = config;
         _ = self;
-        return Inheritance.callStatic(OpenGLBitmap, "create1", .{ NullUtil.getInstance().?.NULL_OBJECT });
+        return Inheritance.callStatic(OpenGLBitmap, "create1", .{ Inheritance.fieldPointer(NullUtil.getInstance().?, "NULL_OBJECT").* });
     }
     
 
@@ -58,31 +58,31 @@ pub const OpenGLBitmapFactory = struct {
     pub fn decodeStream(self: *Self, inputStream: ?*InputStream) ?*OpenGLBitmap {
         _ = inputStream;
         _ = self;
-        return Inheritance.callStatic(OpenGLBitmap, "create1", .{ NullUtil.getInstance().?.NULL_OBJECT });
+        return Inheritance.callStatic(OpenGLBitmap, "create1", .{ Inheritance.fieldPointer(NullUtil.getInstance().?, "NULL_OBJECT").* });
     }
     
 
     pub fn createBitmap(self: *Self, image: ?*Image) ?*PlatformBitmapBase {
         _ = image;
         _ = self;
-        return Inheritance.upcast(?*PlatformBitmapBase, Inheritance.callStatic(OpenGLBitmap, "create1", .{ NullUtil.getInstance().?.NULL_OBJECT }));
+        return Inheritance.upcast(?*PlatformBitmapBase, Inheritance.callStatic(OpenGLBitmap, "create1", .{ Inheritance.fieldPointer(NullUtil.getInstance().?, "NULL_OBJECT").* }));
     }
     pub const Config = struct {
-        const Self = @This();
+        const Self1 = @This();
         pub const java_name = "org.allbinary.graphics.Config";
         bitmapConfig: ?Object = null,
 
-    fn initFields(this: *Self) void {
+    fn initFields(this: *Self1) void {
         _ = this;
             
     }
         
 
-        pub fn create1(bitmapConfig: ?Object) *Self {
-            const this = allocator.create(Self) catch unreachable;
+        pub fn create1(bitmapConfig: ?Object) *Self1 {
+            const this = allocator.create(Self1) catch unreachable;
             this.* = .{};
             this.initFields();
-            Inheritance.fieldPointer(this, "bitmapConfig").* = bitmapConfig;
+            this.bitmapConfig = bitmapConfig;
             return this;
         }
     };

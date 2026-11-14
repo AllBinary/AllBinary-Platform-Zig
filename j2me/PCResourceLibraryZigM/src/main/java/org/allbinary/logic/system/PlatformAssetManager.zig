@@ -18,8 +18,9 @@ const allocator = std.heap.page_allocator;
 const String = @import("java/lang/String.zig").String;
 const Object = @import("java/lang/Object.zig").Object;
 const Inheritance = @import("zig/Inheritance.zig");
-// const InputStream = @import("java/io/InputStream.zig").InputStream;
+const InputStream = @import("java/io/InputStream.zig").InputStream;
 const ResourceUtil = @import("org/allbinary/data/resource/ResourceUtil.zig").ResourceUtil;
+const Exception = @import("java/lang/Exception.zig").Exception;
 
 pub const PlatformAssetManager = struct {
     const Self = @This();

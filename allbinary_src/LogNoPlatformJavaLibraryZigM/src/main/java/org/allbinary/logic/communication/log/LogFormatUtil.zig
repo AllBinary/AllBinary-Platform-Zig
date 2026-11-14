@@ -25,6 +25,7 @@ const StringUtil = @import("org/allbinary/logic/string/StringUtil.zig").StringUt
 const CommonLabels = @import("org/allbinary/string/CommonLabels.zig").CommonLabels;
 const CommonSeps = @import("org/allbinary/string/CommonSeps.zig").CommonSeps;
 const TimeStampUtil = @import("org/allbinary/time/TimeStampUtil.zig").TimeStampUtil;
+const RuntimeException = @import("java/lang/RuntimeException.zig").RuntimeException;
 
 //NoPlatform
 pub const LogFormatUtil = struct {

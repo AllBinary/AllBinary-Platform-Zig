@@ -26,13 +26,13 @@ pub const LifeInterface = struct {
     pointer: *anyopaque,
     object: Object,
     toStringFn: *const fn (pointer: *anyopaque) ?*String,
-    getFn: *const fn (pointer: *anyopaque) i16,
-    setFn: *const fn (pointer: *anyopaque, lives: i16) void,
-    resetFn: *const fn (pointer: *anyopaque) void,
-    addFn: *const fn (pointer: *anyopaque, lives: i16) void,
-    deathsFn: *const fn (pointer: *anyopaque, lives: i16) void,
-    getMaxlivesFn: *const fn (pointer: *anyopaque) i16,
-    isAliveFn: *const fn (pointer: *anyopaque) bool,
+    getFn: *const fn (interface_pointer: *anyopaque) i16,
+    setFn: *const fn (interface_pointer: *anyopaque, lives: i16) void,
+    resetFn: *const fn (interface_pointer: *anyopaque) void,
+    addFn: *const fn (interface_pointer: *anyopaque, lives: i16) void,
+    deathsFn: *const fn (interface_pointer: *anyopaque, lives: i16) void,
+    getMaxlivesFn: *const fn (interface_pointer: *anyopaque) i16,
+    isAliveFn: *const fn (interface_pointer: *anyopaque) bool,
 
     pub fn get(self: *Self) i16 {
         return self.getFn(self.pointer);
@@ -68,38 +68,38 @@ pub const LifeInterface = struct {
 
     // The interface value of an object with the methods. Like a Java class a method can be declared by the object or a superclass.
     pub fn of(object: anytype) ?*Self {
-        const Implementation = @TypeOf(object);
+        const ImplementationType = @TypeOf(object);
         const Methods = struct {
             fn toString(pointer: *anyopaque) ?*String {
-                const implementation: Implementation = @ptrCast(@alignCast(pointer));
+                const implementation: ImplementationType = @ptrCast(@alignCast(pointer));
                 return String.valueOf(implementation);
             }
-            fn get(pointer: *anyopaque) i16 {
-                const implementation: Implementation = @ptrCast(@alignCast(pointer));
+            fn get(interface_pointer: *anyopaque) i16 {
+                const implementation: ImplementationType = @ptrCast(@alignCast(interface_pointer));
                 return Inheritance.receiver(implementation, "get").get();
             }
-            fn set(pointer: *anyopaque, lives: i16) void {
-                const implementation: Implementation = @ptrCast(@alignCast(pointer));
-                return Inheritance.receiver(implementation, "set").set(lives);
+            fn set(interface_pointer: *anyopaque, lives: i16) void {
+                const implementation: ImplementationType = @ptrCast(@alignCast(interface_pointer));
+                return Inheritance.call(implementation, "set", .{ lives });
             }
-            fn reset(pointer: *anyopaque) void {
-                const implementation: Implementation = @ptrCast(@alignCast(pointer));
+            fn reset(interface_pointer: *anyopaque) void {
+                const implementation: ImplementationType = @ptrCast(@alignCast(interface_pointer));
                 return Inheritance.receiver(implementation, "reset").reset();
             }
-            fn add(pointer: *anyopaque, lives: i16) void {
-                const implementation: Implementation = @ptrCast(@alignCast(pointer));
-                return Inheritance.receiver(implementation, "add").add(lives);
+            fn add(interface_pointer: *anyopaque, lives: i16) void {
+                const implementation: ImplementationType = @ptrCast(@alignCast(interface_pointer));
+                return Inheritance.call(implementation, "add", .{ lives });
             }
-            fn deaths(pointer: *anyopaque, lives: i16) void {
-                const implementation: Implementation = @ptrCast(@alignCast(pointer));
-                return Inheritance.receiver(implementation, "deaths").deaths(lives);
+            fn deaths(interface_pointer: *anyopaque, lives: i16) void {
+                const implementation: ImplementationType = @ptrCast(@alignCast(interface_pointer));
+                return Inheritance.call(implementation, "deaths", .{ lives });
             }
-            fn getMaxlives(pointer: *anyopaque) i16 {
-                const implementation: Implementation = @ptrCast(@alignCast(pointer));
+            fn getMaxlives(interface_pointer: *anyopaque) i16 {
+                const implementation: ImplementationType = @ptrCast(@alignCast(interface_pointer));
                 return Inheritance.receiver(implementation, "getMaxlives").getMaxlives();
             }
-            fn isAlive(pointer: *anyopaque) bool {
-                const implementation: Implementation = @ptrCast(@alignCast(pointer));
+            fn isAlive(interface_pointer: *anyopaque) bool {
+                const implementation: ImplementationType = @ptrCast(@alignCast(interface_pointer));
                 return Inheritance.receiver(implementation, "isAlive").isAlive();
             }
         };

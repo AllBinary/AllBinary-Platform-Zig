@@ -6,7 +6,7 @@ const allocator = std.heap.page_allocator;
 const String = @import("java/lang/String.zig").String;
 const Object = @import("java/lang/Object.zig").Object;
 const Inheritance = @import("zig/Inheritance.zig");
-// const Image = @import("javax/microedition/lcdui/Image.zig").Image;
+const Image = @import("javax/microedition/lcdui/Image.zig").Image;
 const DisplayInfoSingleton = @import("org/allbinary/graphics/displayable/DisplayInfoSingleton.zig").DisplayInfoSingleton;
 
 pub const ScreenRelationalUtil = struct {
@@ -47,8 +47,8 @@ pub const ScreenRelationalUtil = struct {
         _ = self;
         const displayInfoSingleton: ?*DisplayInfoSingleton = Inheritance.upcast(?*DisplayInfoSingleton, DisplayInfoSingleton.getInstance());
         const last: []i32 = displayInfoSingleton.?.getLast();
-        const width: f32 = @as(f32, @floatFromInt(last[@intCast(displayInfoSingleton.?.WIDTH)]));
-        const height: f32 = @as(f32, @floatFromInt(last[@intCast(displayInfoSingleton.?.HEIGHT)]));
+        const width: f32 = @as(f32, @floatFromInt(last[@intCast(Inheritance.fieldPointer(displayInfoSingleton.?, "WIDTH").*)]));
+        const height: f32 = @as(f32, @floatFromInt(last[@intCast(Inheritance.fieldPointer(displayInfoSingleton.?, "HEIGHT").*)]));
         var largestSize: f32 = width;
         if (largestSize < height) {
             largestSize = height;

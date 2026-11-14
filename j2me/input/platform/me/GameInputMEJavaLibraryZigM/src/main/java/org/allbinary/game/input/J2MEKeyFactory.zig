@@ -18,6 +18,10 @@ const allocator = std.heap.page_allocator;
 const String = @import("java/lang/String.zig").String;
 const Object = @import("java/lang/Object.zig").Object;
 const Inheritance = @import("zig/Inheritance.zig");
+const GameKey = @import("org/allbinary/game/input/GameKey.zig").GameKey;
+const GameKeyFactory = @import("org/allbinary/game/input/GameKeyFactory.zig").GameKeyFactory;
+const Input = @import("org/allbinary/game/input/Input.zig").Input;
+const InputFactory = @import("org/allbinary/game/input/InputFactory.zig").InputFactory;
 
 pub const J2MEKeyFactory = struct {
     const Self = @This();
@@ -49,19 +53,19 @@ pub const J2MEKeyFactory = struct {
     
 
     pub fn init(self: *Self) void {
-        const gameKeyArray: []?*GameKey = @constCast(&[_]?*GameKey{ self.gameKeyFactory.?.DOWN, self.gameKeyFactory.?.FIRE, self.gameKeyFactory.?.GAME_A, self.gameKeyFactory.?.GAME_B, self.gameKeyFactory.?.GAME_C, self.gameKeyFactory.?.GAME_D, self.gameKeyFactory.?.KEY_NUM0, self.gameKeyFactory.?.KEY_NUM1, self.gameKeyFactory.?.KEY_NUM2, self.gameKeyFactory.?.KEY_NUM3, self.gameKeyFactory.?.KEY_NUM4, self.gameKeyFactory.?.KEY_NUM5, self.gameKeyFactory.?.KEY_NUM6, self.gameKeyFactory.?.KEY_NUM7, self.gameKeyFactory.?.KEY_NUM8, self.gameKeyFactory.?.KEY_NUM9, self.gameKeyFactory.?.KEY_POUND, self.gameKeyFactory.?.KEY_STAR, self.gameKeyFactory.?.LEFT, self.gameKeyFactory.?.LEVEL_DOWN, self.gameKeyFactory.?.LEVEL_UP, self.gameKeyFactory.?.NONE, self.gameKeyFactory.?.RIGHT, self.gameKeyFactory.?.UP })[0..];
+        const gameKeyArray: []?*GameKey = @constCast(&[_]?*GameKey{ Inheritance.upcast(?*GameKey, Inheritance.fieldPointer(self.gameKeyFactory.?, "DOWN").*), Inheritance.upcast(?*GameKey, Inheritance.fieldPointer(self.gameKeyFactory.?, "FIRE").*), Inheritance.upcast(?*GameKey, Inheritance.fieldPointer(self.gameKeyFactory.?, "GAME_A").*), Inheritance.upcast(?*GameKey, Inheritance.fieldPointer(self.gameKeyFactory.?, "GAME_B").*), Inheritance.upcast(?*GameKey, Inheritance.fieldPointer(self.gameKeyFactory.?, "GAME_C").*), Inheritance.upcast(?*GameKey, Inheritance.fieldPointer(self.gameKeyFactory.?, "GAME_D").*), Inheritance.upcast(?*GameKey, Inheritance.fieldPointer(self.gameKeyFactory.?, "KEY_NUM0").*), Inheritance.upcast(?*GameKey, Inheritance.fieldPointer(self.gameKeyFactory.?, "KEY_NUM1").*), Inheritance.upcast(?*GameKey, Inheritance.fieldPointer(self.gameKeyFactory.?, "KEY_NUM2").*), Inheritance.upcast(?*GameKey, Inheritance.fieldPointer(self.gameKeyFactory.?, "KEY_NUM3").*), Inheritance.upcast(?*GameKey, Inheritance.fieldPointer(self.gameKeyFactory.?, "KEY_NUM4").*), Inheritance.upcast(?*GameKey, Inheritance.fieldPointer(self.gameKeyFactory.?, "KEY_NUM5").*), Inheritance.upcast(?*GameKey, Inheritance.fieldPointer(self.gameKeyFactory.?, "KEY_NUM6").*), Inheritance.upcast(?*GameKey, Inheritance.fieldPointer(self.gameKeyFactory.?, "KEY_NUM7").*), Inheritance.upcast(?*GameKey, Inheritance.fieldPointer(self.gameKeyFactory.?, "KEY_NUM8").*), Inheritance.upcast(?*GameKey, Inheritance.fieldPointer(self.gameKeyFactory.?, "KEY_NUM9").*), Inheritance.upcast(?*GameKey, Inheritance.fieldPointer(self.gameKeyFactory.?, "KEY_POUND").*), Inheritance.upcast(?*GameKey, Inheritance.fieldPointer(self.gameKeyFactory.?, "KEY_STAR").*), Inheritance.upcast(?*GameKey, Inheritance.fieldPointer(self.gameKeyFactory.?, "LEFT").*), Inheritance.upcast(?*GameKey, Inheritance.fieldPointer(self.gameKeyFactory.?, "LEVEL_DOWN").*), Inheritance.upcast(?*GameKey, Inheritance.fieldPointer(self.gameKeyFactory.?, "LEVEL_UP").*), Inheritance.upcast(?*GameKey, Inheritance.fieldPointer(self.gameKeyFactory.?, "NONE").*), Inheritance.upcast(?*GameKey, Inheritance.fieldPointer(self.gameKeyFactory.?, "RIGHT").*), Inheritance.upcast(?*GameKey, Inheritance.fieldPointer(self.gameKeyFactory.?, "UP").*) })[0..];
         const inputFactory: ?*InputFactory = Inheritance.upcast(?*InputFactory, InputFactory.getInstance());
         {
             var index: i32 = @as(i32, @intCast(gameKeyArray.len));
             while (value_N66391: { index -= 1; break :value_N66391 index; } >= 0) {
-            _ = Inheritance.call(inputFactory.?, "add", .{ gameKeyArray[@intCast(index)].?.getId(), gameKeyArray[@intCast(index)] });
+            _ = Inheritance.call(inputFactory.?, "add", .{ Inheritance.receiver(gameKeyArray[@intCast(index)].?, "getId").getId(), gameKeyArray[@intCast(index)] });
             }
         }
     }
     
 
     pub fn isSubmission(self: *Self, input: ?*Input) bool {
-        if (Object.same(input, self.gameKeyFactory.?.FIRE)) {
+        if (Object.same(input, Inheritance.fieldPointer(self.gameKeyFactory.?, "FIRE").*)) {
             return true;
         }
         return false;
@@ -69,7 +73,7 @@ pub const J2MEKeyFactory = struct {
     
 
     pub fn isDelete(self: *Self, input: ?*Input) bool {
-        if (Object.same(input, self.gameKeyFactory.?.GAME_D)) {
+        if (Object.same(input, Inheritance.fieldPointer(self.gameKeyFactory.?, "GAME_D").*)) {
             return true;
         }
         return false;
@@ -84,7 +88,7 @@ pub const J2MEKeyFactory = struct {
     
 
     pub fn isUp(self: *Self, input: ?*Input) bool {
-        if (Object.same(input, self.gameKeyFactory.?.UP)) {
+        if (Object.same(input, Inheritance.fieldPointer(self.gameKeyFactory.?, "UP").*)) {
             return true;
         }
         return false;
@@ -92,7 +96,7 @@ pub const J2MEKeyFactory = struct {
     
 
     pub fn isDown(self: *Self, input: ?*Input) bool {
-        if (Object.same(input, self.gameKeyFactory.?.DOWN)) {
+        if (Object.same(input, Inheritance.fieldPointer(self.gameKeyFactory.?, "DOWN").*)) {
             return true;
         }
         return false;
@@ -100,7 +104,7 @@ pub const J2MEKeyFactory = struct {
     
 
     pub fn isLeft(self: *Self, input: ?*Input) bool {
-        if (Object.same(input, self.gameKeyFactory.?.LEFT)) {
+        if (Object.same(input, Inheritance.fieldPointer(self.gameKeyFactory.?, "LEFT").*)) {
             return true;
         }
         return false;
@@ -108,7 +112,7 @@ pub const J2MEKeyFactory = struct {
     
 
     pub fn isRight(self: *Self, input: ?*Input) bool {
-        if (Object.same(input, self.gameKeyFactory.?.RIGHT)) {
+        if (Object.same(input, Inheritance.fieldPointer(self.gameKeyFactory.?, "RIGHT").*)) {
             return true;
         }
         return false;
@@ -116,7 +120,7 @@ pub const J2MEKeyFactory = struct {
     
 
     pub fn isEnter(self: *Self, input: ?*Input) bool {
-        if (Object.same(input, self.gameKeyFactory.?.FIRE)) {
+        if (Object.same(input, Inheritance.fieldPointer(self.gameKeyFactory.?, "FIRE").*)) {
             return true;
         }
         return false;

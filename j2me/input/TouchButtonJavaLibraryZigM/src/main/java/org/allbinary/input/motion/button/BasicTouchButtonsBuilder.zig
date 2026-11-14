@@ -32,6 +32,7 @@ const TouchButtonLocationHelper = @import("org/allbinary/input/motion/button/Tou
 const TouchButtonTurnLeftResource = @import("org/allbinary/input/motion/button/TouchButtonTurnLeftResource.zig").TouchButtonTurnLeftResource;
 const TouchButtonTurnRightResource = @import("org/allbinary/input/motion/button/TouchButtonTurnRightResource.zig").TouchButtonTurnRightResource;
 const TouchButtonUpResource = @import("org/allbinary/input/motion/button/TouchButtonUpResource.zig").TouchButtonUpResource;
+const Exception = @import("java/lang/Exception.zig").Exception;
 
 pub const BasicTouchButtonsBuilder = struct {
     const Self = @This();
@@ -55,15 +56,15 @@ pub const BasicTouchButtonsBuilder = struct {
 
     pub fn getList(self: *Self) ?*BasicArrayList {
         { // try
-            _ = Inheritance.call(self.logUtil.?, "putF", .{ Inheritance.fieldPointer(self, "commonStrings").*.?.START, self, Inheritance.fieldPointer(self, "commonStrings").*.?.CONSTRUCTOR });
+            _ = Inheritance.call(self.logUtil.?, "putF", .{ Inheritance.fieldPointer(Inheritance.fieldPointer(self, "commonStrings").*.?, "START").*, self, Inheritance.fieldPointer(Inheritance.fieldPointer(self, "commonStrings").*.?, "CONSTRUCTOR").* });
             const list: ?*BasicArrayList = Inheritance.upcast(?*BasicArrayList, BasicArrayListD.create());
             const commonButtons: ?*CommonButtons = Inheritance.upcast(?*CommonButtons, CommonButtons.getInstance());
             const touchButtonLocationHelper: ?*TouchButtonLocationHelper = TouchButtonLocationHelper.create();
             const basicTouchButtonCellPositionFactory: ?*BasicTouchButtonCellPositionFactory = BasicTouchButtonCellPositionFactory.create();
-            const UP: ?*TouchButton = Inheritance.upcast(?*TouchButton, Inheritance.callStatic(TouchButton, "createButton", .{ BasicTouchInputFactory.getInstance().?.UP, TouchButtonUpResource.getInstance(), commonButtons.?.NORMAL_BUTTON, basicTouchButtonCellPositionFactory.?.SECOND_FROM_BOTTOM_LEFT, touchButtonLocationHelper.?.getColumnsRemainderHalf(), touchButtonLocationHelper.?.getRowsRemainderHalf() }));
-            const DOWN: ?*TouchButton = Inheritance.upcast(?*TouchButton, Inheritance.callStatic(TouchButton, "createButton", .{ BasicTouchInputFactory.getInstance().?.DOWN, TouchButtonDownResource.getInstance(), commonButtons.?.NORMAL_BUTTON, basicTouchButtonCellPositionFactory.?.BOTTOM_LEFT, touchButtonLocationHelper.?.getColumnsRemainderHalf(), touchButtonLocationHelper.?.getRowsRemainderHalf() }));
-            const LEFT: ?*TouchButton = Inheritance.upcast(?*TouchButton, Inheritance.callStatic(TouchButton, "createButton", .{ BasicTouchInputFactory.getInstance().?.SPECIAL_BUTTON_FOUR, TouchButtonTurnLeftResource.getInstance(), commonButtons.?.NORMAL_BUTTON, basicTouchButtonCellPositionFactory.?.BOTTOM_SECOND_FROM_RIGHT, touchButtonLocationHelper.?.getColumnsRemainderHalf(), touchButtonLocationHelper.?.getRowsRemainderHalf() }));
-            const RIGHT: ?*TouchButton = Inheritance.upcast(?*TouchButton, Inheritance.callStatic(TouchButton, "createButton", .{ BasicTouchInputFactory.getInstance().?.SPECIAL_BUTTON_THREE, TouchButtonTurnRightResource.getInstance(), commonButtons.?.NORMAL_BUTTON, basicTouchButtonCellPositionFactory.?.BOTTOM_RIGHT, touchButtonLocationHelper.?.getColumnsRemainderHalf(), touchButtonLocationHelper.?.getRowsRemainderHalf() }));
+            const UP: ?*TouchButton = Inheritance.upcast(?*TouchButton, Inheritance.callStatic(TouchButton, "createButton", .{ Inheritance.fieldPointer(BasicTouchInputFactory.getInstance().?, "UP").*, TouchButtonUpResource.getInstance(), Inheritance.fieldPointer(commonButtons.?, "NORMAL_BUTTON").*, Inheritance.fieldPointer(basicTouchButtonCellPositionFactory.?, "SECOND_FROM_BOTTOM_LEFT").*, touchButtonLocationHelper.?.getColumnsRemainderHalf(), touchButtonLocationHelper.?.getRowsRemainderHalf() }));
+            const DOWN: ?*TouchButton = Inheritance.upcast(?*TouchButton, Inheritance.callStatic(TouchButton, "createButton", .{ Inheritance.fieldPointer(BasicTouchInputFactory.getInstance().?, "DOWN").*, TouchButtonDownResource.getInstance(), Inheritance.fieldPointer(commonButtons.?, "NORMAL_BUTTON").*, Inheritance.fieldPointer(basicTouchButtonCellPositionFactory.?, "BOTTOM_LEFT").*, touchButtonLocationHelper.?.getColumnsRemainderHalf(), touchButtonLocationHelper.?.getRowsRemainderHalf() }));
+            const LEFT: ?*TouchButton = Inheritance.upcast(?*TouchButton, Inheritance.callStatic(TouchButton, "createButton", .{ Inheritance.fieldPointer(BasicTouchInputFactory.getInstance().?, "SPECIAL_BUTTON_FOUR").*, TouchButtonTurnLeftResource.getInstance(), Inheritance.fieldPointer(commonButtons.?, "NORMAL_BUTTON").*, Inheritance.fieldPointer(basicTouchButtonCellPositionFactory.?, "BOTTOM_SECOND_FROM_RIGHT").*, touchButtonLocationHelper.?.getColumnsRemainderHalf(), touchButtonLocationHelper.?.getRowsRemainderHalf() }));
+            const RIGHT: ?*TouchButton = Inheritance.upcast(?*TouchButton, Inheritance.callStatic(TouchButton, "createButton", .{ Inheritance.fieldPointer(BasicTouchInputFactory.getInstance().?, "SPECIAL_BUTTON_THREE").*, TouchButtonTurnRightResource.getInstance(), Inheritance.fieldPointer(commonButtons.?, "NORMAL_BUTTON").*, Inheritance.fieldPointer(basicTouchButtonCellPositionFactory.?, "BOTTOM_RIGHT").*, touchButtonLocationHelper.?.getColumnsRemainderHalf(), touchButtonLocationHelper.?.getRowsRemainderHalf() }));
             _ = Inheritance.call(list.?, "add", .{ UP });
             _ = Inheritance.call(list.?, "add", .{ LEFT });
             _ = Inheritance.call(list.?, "add", .{ RIGHT });
@@ -71,7 +72,7 @@ pub const BasicTouchButtonsBuilder = struct {
             return list;
         }
         // catch (Exception e):
-//             _ = Inheritance.call(self.logUtil.?, "put", .{ Inheritance.fieldPointer(self, "commonStrings").*.?.EXCEPTION, self, Inheritance.fieldPointer(self, "commonStrings").*.?.GET_LIST, e });
+//             _ = Inheritance.call(self.logUtil.?, "put", .{ Inheritance.fieldPointer(Inheritance.fieldPointer(self, "commonStrings").*.?, "EXCEPTION").*, self, Inheritance.fieldPointer(Inheritance.fieldPointer(self, "commonStrings").*.?, "GET_LIST").*, e });
 //             return Inheritance.upcast(?*BasicArrayList, Inheritance.receiverOf(BasicArrayListUtil.getInstance().?, "getImmutableInstance").getImmutableInstance());
     }
 };

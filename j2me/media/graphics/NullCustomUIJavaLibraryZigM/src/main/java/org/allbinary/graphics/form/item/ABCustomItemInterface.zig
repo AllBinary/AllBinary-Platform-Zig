@@ -6,7 +6,7 @@ const allocator = std.heap.page_allocator;
 const String = @import("java/lang/String.zig").String;
 const Object = @import("java/lang/Object.zig").Object;
 const Inheritance = @import("zig/Inheritance.zig");
-// const Graphics = @import("javax/microedition/lcdui/Graphics.zig").Graphics;
+const Graphics = @import("javax/microedition/lcdui/Graphics.zig").Graphics;
 
 // Java interface: an implementation is a pointer and a table of functions
 pub const ABCustomItemInterface = struct {
@@ -15,11 +15,11 @@ pub const ABCustomItemInterface = struct {
     pointer: *anyopaque,
     object: Object,
     toStringFn: *const fn (pointer: *anyopaque) ?*String,
-    getMinimumWidthFn: *const fn (pointer: *anyopaque) i32,
-    getMinimumHeightFn: *const fn (pointer: *anyopaque) i32,
-    getLabelFn: *const fn (pointer: *anyopaque) ?*String,
-    paintXYFn: *const fn (pointer: *anyopaque, graphics: ?*Graphics, x: i32, y: i32) void,
-    paintUnselectedFn: *const fn (pointer: *anyopaque, graphics: ?*Graphics, x: i32, y: i32) void,
+    getMinimumWidthFn: *const fn (interface_pointer: *anyopaque) i32,
+    getMinimumHeightFn: *const fn (interface_pointer: *anyopaque) i32,
+    getLabelFn: *const fn (interface_pointer: *anyopaque) ?*String,
+    paintXYFn: *const fn (interface_pointer: *anyopaque, graphics: ?*Graphics, x: i32, y: i32) void,
+    paintUnselectedFn: *const fn (interface_pointer: *anyopaque, graphics: ?*Graphics, x: i32, y: i32) void,
 
     pub fn getMinimumWidth(self: *Self) i32 {
         return self.getMinimumWidthFn(self.pointer);
@@ -47,31 +47,31 @@ pub const ABCustomItemInterface = struct {
 
     // The interface value of an object with the methods. Like a Java class a method can be declared by the object or a superclass.
     pub fn of(object: anytype) ?*Self {
-        const Implementation = @TypeOf(object);
+        const ImplementationType = @TypeOf(object);
         const Methods = struct {
             fn toString(pointer: *anyopaque) ?*String {
-                const implementation: Implementation = @ptrCast(@alignCast(pointer));
+                const implementation: ImplementationType = @ptrCast(@alignCast(pointer));
                 return String.valueOf(implementation);
             }
-            fn getMinimumWidth(pointer: *anyopaque) i32 {
-                const implementation: Implementation = @ptrCast(@alignCast(pointer));
+            fn getMinimumWidth(interface_pointer: *anyopaque) i32 {
+                const implementation: ImplementationType = @ptrCast(@alignCast(interface_pointer));
                 return Inheritance.receiver(implementation, "getMinimumWidth").getMinimumWidth();
             }
-            fn getMinimumHeight(pointer: *anyopaque) i32 {
-                const implementation: Implementation = @ptrCast(@alignCast(pointer));
+            fn getMinimumHeight(interface_pointer: *anyopaque) i32 {
+                const implementation: ImplementationType = @ptrCast(@alignCast(interface_pointer));
                 return Inheritance.receiver(implementation, "getMinimumHeight").getMinimumHeight();
             }
-            fn getLabel(pointer: *anyopaque) ?*String {
-                const implementation: Implementation = @ptrCast(@alignCast(pointer));
+            fn getLabel(interface_pointer: *anyopaque) ?*String {
+                const implementation: ImplementationType = @ptrCast(@alignCast(interface_pointer));
                 return Inheritance.upcast(?*String, Inheritance.receiver(implementation, "getLabel").getLabel());
             }
-            fn paintXY(pointer: *anyopaque, graphics: ?*Graphics, x: i32, y: i32) void {
-                const implementation: Implementation = @ptrCast(@alignCast(pointer));
-                return Inheritance.receiver(implementation, "paintXY").paintXY(graphics, x, y);
+            fn paintXY(interface_pointer: *anyopaque, graphics: ?*Graphics, x: i32, y: i32) void {
+                const implementation: ImplementationType = @ptrCast(@alignCast(interface_pointer));
+                return Inheritance.call(implementation, "paintXY", .{ graphics, x, y });
             }
-            fn paintUnselected(pointer: *anyopaque, graphics: ?*Graphics, x: i32, y: i32) void {
-                const implementation: Implementation = @ptrCast(@alignCast(pointer));
-                return Inheritance.receiver(implementation, "paintUnselected").paintUnselected(graphics, x, y);
+            fn paintUnselected(interface_pointer: *anyopaque, graphics: ?*Graphics, x: i32, y: i32) void {
+                const implementation: ImplementationType = @ptrCast(@alignCast(interface_pointer));
+                return Inheritance.call(implementation, "paintUnselected", .{ graphics, x, y });
             }
         };
         const this = allocator.create(Self) catch unreachable;

@@ -30,7 +30,7 @@ pub const GameInitializedEvent = struct {
     level: i32 = 0,
 
     fn initFields(this: *Self) void {
-        this.resourceLoadingLevel = Inheritance.upcast(?*ResourceLoadingLevel, ResourceLoadingLevelFactory.getInstance().?.LEVEL);
+        this.resourceLoadingLevel = Inheritance.upcast(?*ResourceLoadingLevel, Inheritance.fieldPointer(ResourceLoadingLevelFactory.getInstance().?, "LEVEL").*);
         this.level = 0;
     }
     
@@ -47,7 +47,7 @@ pub const GameInitializedEvent = struct {
 
     pub fn setLevel(self: *Self, level: i32) void {
         self.level = level;
-        self.resourceLoadingLevel = Inheritance.upcast(@TypeOf(self.resourceLoadingLevel), ResourceLoadingLevelFactory.getInstance().?.LEVEL);
+        self.resourceLoadingLevel = Inheritance.upcast(@TypeOf(self.resourceLoadingLevel), Inheritance.fieldPointer(ResourceLoadingLevelFactory.getInstance().?, "LEVEL").*);
     }
     
 

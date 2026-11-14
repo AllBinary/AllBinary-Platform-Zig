@@ -23,6 +23,7 @@ const AllBinaryEventObject = @import("org/allbinary/logic/util/event/AllBinaryEv
 const EventListenerInterface = @import("org/allbinary/logic/util/event/EventListenerInterface.zig").EventListenerInterface;
 const BasicArrayList = @import("org/allbinary/util/BasicArrayList.zig").BasicArrayList;
 const JsMethod = @import("jsinterop/annotations/JsMethod.zig").JsMethod;
+const Exception = @import("java/lang/Exception.zig").Exception;
 
 // Java interface: an implementation is a pointer and a table of functions
 pub const BasicEventHandlerInterface = struct {
@@ -31,11 +32,11 @@ pub const BasicEventHandlerInterface = struct {
     pointer: *anyopaque,
     object: Object,
     toStringFn: *const fn (pointer: *anyopaque) ?*String,
-    addListenerInterfaceFn: *const fn (pointer: *anyopaque, eventListenerInterface: ?*EventListenerInterface) void,
-    addListenersFn: *const fn (pointer: *anyopaque, basicArrayList: ?*BasicArrayList) void,
-    fireEventFn: *const fn (pointer: *anyopaque, eventObject: ?*AllBinaryEventObject) void,
-    removeAllListenersFn: *const fn (pointer: *anyopaque) void,
-    removeListenerFn: *const fn (pointer: *anyopaque, eventListenerInterface: ?*EventListenerInterface) void,
+    addListenerInterfaceFn: *const fn (interface_pointer: *anyopaque, eventListenerInterface: ?*EventListenerInterface) void,
+    addListenersFn: *const fn (interface_pointer: *anyopaque, basicArrayList: ?*BasicArrayList) void,
+    fireEventFn: *const fn (interface_pointer: *anyopaque, eventObject: ?*AllBinaryEventObject) void,
+    removeAllListenersFn: *const fn (interface_pointer: *anyopaque) void,
+    removeListenerFn: *const fn (interface_pointer: *anyopaque, eventListenerInterface: ?*EventListenerInterface) void,
 
     pub fn addListenerInterface(self: *Self, eventListenerInterface: ?*EventListenerInterface) void {
         return self.addListenerInterfaceFn(self.pointer, eventListenerInterface);
@@ -63,31 +64,31 @@ pub const BasicEventHandlerInterface = struct {
 
     // The interface value of an object with the methods. Like a Java class a method can be declared by the object or a superclass.
     pub fn of(object: anytype) ?*Self {
-        const Implementation = @TypeOf(object);
+        const ImplementationType = @TypeOf(object);
         const Methods = struct {
             fn toString(pointer: *anyopaque) ?*String {
-                const implementation: Implementation = @ptrCast(@alignCast(pointer));
+                const implementation: ImplementationType = @ptrCast(@alignCast(pointer));
                 return String.valueOf(implementation);
             }
-            fn addListenerInterface(pointer: *anyopaque, eventListenerInterface: ?*EventListenerInterface) void {
-                const implementation: Implementation = @ptrCast(@alignCast(pointer));
-                return Inheritance.receiver(implementation, "addListenerInterface").addListenerInterface(eventListenerInterface);
+            fn addListenerInterface(interface_pointer: *anyopaque, eventListenerInterface: ?*EventListenerInterface) void {
+                const implementation: ImplementationType = @ptrCast(@alignCast(interface_pointer));
+                return Inheritance.call(implementation, "addListenerInterface", .{ eventListenerInterface });
             }
-            fn addListeners(pointer: *anyopaque, basicArrayList: ?*BasicArrayList) void {
-                const implementation: Implementation = @ptrCast(@alignCast(pointer));
-                return Inheritance.receiver(implementation, "addListeners").addListeners(basicArrayList);
+            fn addListeners(interface_pointer: *anyopaque, basicArrayList: ?*BasicArrayList) void {
+                const implementation: ImplementationType = @ptrCast(@alignCast(interface_pointer));
+                return Inheritance.call(implementation, "addListeners", .{ basicArrayList });
             }
-            fn fireEvent(pointer: *anyopaque, eventObject: ?*AllBinaryEventObject) void {
-                const implementation: Implementation = @ptrCast(@alignCast(pointer));
-                return Inheritance.receiver(implementation, "fireEvent").fireEvent(eventObject);
+            fn fireEvent(interface_pointer: *anyopaque, eventObject: ?*AllBinaryEventObject) void {
+                const implementation: ImplementationType = @ptrCast(@alignCast(interface_pointer));
+                return Inheritance.call(implementation, "fireEvent", .{ eventObject });
             }
-            fn removeAllListeners(pointer: *anyopaque) void {
-                const implementation: Implementation = @ptrCast(@alignCast(pointer));
+            fn removeAllListeners(interface_pointer: *anyopaque) void {
+                const implementation: ImplementationType = @ptrCast(@alignCast(interface_pointer));
                 return Inheritance.receiver(implementation, "removeAllListeners").removeAllListeners();
             }
-            fn removeListener(pointer: *anyopaque, eventListenerInterface: ?*EventListenerInterface) void {
-                const implementation: Implementation = @ptrCast(@alignCast(pointer));
-                return Inheritance.receiver(implementation, "removeListener").removeListener(eventListenerInterface);
+            fn removeListener(interface_pointer: *anyopaque, eventListenerInterface: ?*EventListenerInterface) void {
+                const implementation: ImplementationType = @ptrCast(@alignCast(interface_pointer));
+                return Inheritance.call(implementation, "removeListener", .{ eventListenerInterface });
             }
         };
         const this = allocator.create(Self) catch unreachable;

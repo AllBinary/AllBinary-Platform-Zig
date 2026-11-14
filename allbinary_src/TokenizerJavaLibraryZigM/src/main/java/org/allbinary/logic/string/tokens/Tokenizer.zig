@@ -24,6 +24,7 @@ const StringUtil = @import("org/allbinary/logic/string/StringUtil.zig").StringUt
 const ABHashtable = @import("org/allbinary/util/ABHashtable.zig").ABHashtable;
 const BasicArrayList = @import("org/allbinary/util/BasicArrayList.zig").BasicArrayList;
 const BasicArrayListD = @import("org/allbinary/util/BasicArrayListD.zig").BasicArrayListD;
+const Exception = @import("java/lang/Exception.zig").Exception;
 
 pub const Tokenizer = struct {
     const Self = @This();
@@ -33,7 +34,7 @@ pub const Tokenizer = struct {
 
     fn initFields(this: *Self) void {
         
-        this.endSep = Inheritance.upcast(?*String, StringUtil.getInstance().?.EMPTY_STRING);
+        this.endSep = Inheritance.upcast(?*String, Inheritance.fieldPointer(StringUtil.getInstance().?, "EMPTY_STRING").*);
     }
     
 
@@ -41,7 +42,7 @@ pub const Tokenizer = struct {
         const this = allocator.create(Self) catch unreachable;
         this.* = .{};
         this.initFields();
-        if (sep == null or Inheritance.call(TsUtil.getInstance().?, "compareTo", .{ sep, StringUtil.getInstance().?.EMPTY_STRING }) == 0) {
+        if (Inheritance.call(TsUtil.getInstance().?, "compareTo", .{ sep, Inheritance.fieldPointer(StringUtil.getInstance().?, "EMPTY_STRING").* }) == 0) {
             std.debug.panic("{any}", .{exception: { _ = String.literal("Sep provided is not valid"); break :exception error.Exception; }});
         }
         this.sep = sep;
@@ -99,13 +100,13 @@ pub const Tokenizer = struct {
 
     pub fn getTokens(self: *Self, stringVector: ?*BasicArrayList) ?*ABHashtable {
         const tokenHashtable: ?*ABHashtable = Inheritance.upcast(?*ABHashtable, Inheritance.receiverOf(StdUtil.getInstance().?, "createHashtable").createHashtable());
-        var string: ?*String = Inheritance.upcast(?*String, StringUtil.getInstance().?.EMPTY_STRING);
+        var string: ?*String = Inheritance.upcast(?*String, Inheritance.fieldPointer(StringUtil.getInstance().?, "EMPTY_STRING").*);
         var end: i32 = 0;
         const size: i32 = stringVector.?.size();
         {
             var index: i32 = 0;
             while (index < size) : (index += 1) {
-            string = Inheritance.cast(?*String, stringVector.?.objectArray[@intCast(index)]);
+            string = Inheritance.cast(?*String, Inheritance.fieldPointer(stringVector.?, "objectArray").*[@intCast(index)]);
             end = Inheritance.call(string.?, "indexOf", .{ self.sep });
             if (end >= 0) {
                 _ = Inheritance.call(tokenHashtable.?, "put", .{ string.?.substring2(0, end), string.?.substring2(end + 1, string.?.length()) });

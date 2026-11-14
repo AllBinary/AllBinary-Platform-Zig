@@ -18,7 +18,7 @@ const allocator = std.heap.page_allocator;
 const String = @import("java/lang/String.zig").String;
 const Object = @import("java/lang/Object.zig").Object;
 const Inheritance = @import("zig/Inheritance.zig");
-// const Canvas = @import("javax/microedition/lcdui/Canvas.zig").Canvas;
+const Canvas = @import("javax/microedition/lcdui/Canvas.zig").Canvas;
 const ArtificialIntelligence = @import("org/allbinary/ai/ArtificialIntelligence.zig").ArtificialIntelligence;
 const ArtificialIntelligenceTransitionInterface = @import("org/allbinary/ai/ArtificialIntelligenceTransitionInterface.zig").ArtificialIntelligenceTransitionInterface;
 const IndexedAnimation = @import("org/allbinary/animation/IndexedAnimation.zig").IndexedAnimation;
@@ -35,6 +35,7 @@ const AllBinaryLayerManager = @import("org/allbinary/layer/AllBinaryLayerManager
 const AngleIncrementInfo = @import("org/allbinary/math/AngleIncrementInfo.zig").AngleIncrementInfo;
 const CircularIndexUtil = @import("org/allbinary/util/CircularIndexUtil.zig").CircularIndexUtil;
 const Integer = @import("java/lang/Integer.zig").Integer;
+const Exception = @import("java/lang/Exception.zig").Exception;
 
 pub const HorizontaRotationManeuverAI = struct {
     const Self = @This();
@@ -68,7 +69,7 @@ pub const HorizontaRotationManeuverAI = struct {
         this.velocityInterface = Inheritance.cast(?*VelocityInterface, this.baseVelocityInterface);
         const rotationAnimationInterface: ?*RotationAnimationInterface = Inheritance.cast(?*RotationAnimationInterface, this.rotationAnimationInterface);
         const angleIncrementInfo: ?*AngleIncrementInfo = Inheritance.upcast(?*AngleIncrementInfo, Inheritance.receiverOf(Inheritance.receiver(rotationAnimationInterface.?, "getAngleInfoP").getAngleInfoP().?, "getAngleIncrementInfo").getAngleIncrementInfo());
-        _ = Inheritance.call(rotationAnimationInterfaceCompositeInterface.?, "setFrame", .{ Inheritance.receiverOf(angleIncrementInfo.?.RIGHT_FRAME.?, "intValue").intValue() });
+        _ = Inheritance.call(rotationAnimationInterfaceCompositeInterface.?, "setFrame", .{ Inheritance.receiverOf(Inheritance.fieldPointer(angleIncrementInfo.?, "RIGHT_FRAME").*.?, "intValue").intValue() });
         Inheritance.bindOverrides(this);
         return this;
     }
@@ -78,7 +79,7 @@ pub const HorizontaRotationManeuverAI = struct {
         const rotationAnimationInterface: ?*RotationAnimationInterface = Inheritance.cast(?*RotationAnimationInterface, self.rotationAnimationInterface);
         const angleIncrementInfo: ?*AngleIncrementInfo = Inheritance.upcast(?*AngleIncrementInfo, Inheritance.receiverOf(Inheritance.receiver(rotationAnimationInterface.?, "getAngleInfoP").getAngleInfoP().?, "getAngleIncrementInfo").getAngleIncrementInfo());
         const rotationAnimationInterfaceCompositeInterface: ?*RotationAnimationInterfaceCompositeInterface = Inheritance.cast(?*RotationAnimationInterfaceCompositeInterface, Inheritance.receiver(self, "getOwnerLayerInterface").getOwnerLayerInterface());
-        _ = Inheritance.call(rotationAnimationInterfaceCompositeInterface.?, "setFrame", .{ Inheritance.receiverOf(angleIncrementInfo.?.RIGHT_FRAME.?, "intValue").intValue() });
+        _ = Inheritance.call(rotationAnimationInterfaceCompositeInterface.?, "setFrame", .{ Inheritance.receiverOf(Inheritance.fieldPointer(angleIncrementInfo.?, "RIGHT_FRAME").*.?, "intValue").intValue() });
         const allbinaryLayer: ?*AllBinaryLayer = Inheritance.upcast(?*AllBinaryLayer, Inheritance.receiver(self, "getOwnerLayerInterface").getOwnerLayerInterface());
         _ = Inheritance.call(allbinaryLayer.?, "setPosition", .{ Inheritance.receiver(allbinaryLayer.?, "getXP").getXP(), 1, Inheritance.receiver(allbinaryLayer.?, "getZP").getZP() });
     }
@@ -91,12 +92,12 @@ pub const HorizontaRotationManeuverAI = struct {
         const angleIncrementInfo: ?*AngleIncrementInfo = Inheritance.upcast(?*AngleIncrementInfo, Inheritance.receiverOf(Inheritance.receiver(rotationAnimationInterface.?, "getAngleInfoP").getAngleInfoP().?, "getAngleIncrementInfo").getAngleIncrementInfo());
         const frame: i32 = Inheritance.receiver(self.rotationAnimationInterface.?, "getFrame").getFrame();
         const ownerLayerInterface: ?*AllBinaryLayer = Inheritance.upcast(?*AllBinaryLayer, Inheritance.receiver(self, "getOwnerLayerInterface").getOwnerLayerInterface());
-        if (Inheritance.receiver(ownerLayerInterface.?, "getXP").getXP() - Inheritance.receiver(ownerLayerInterface.?, "getWidth").getWidth() <= 0 and frame == Inheritance.receiverOf(angleIncrementInfo.?.LEFT_FRAME.?, "intValue").intValue()) {
+        if (Inheritance.arithmetic(.less_equal, Inheritance.arithmetic(.subtract, Inheritance.receiver(ownerLayerInterface.?, "getXP").getXP(), Inheritance.receiver(ownerLayerInterface.?, "getWidth").getWidth()), 0) and frame == Inheritance.receiverOf(Inheritance.fieldPointer(angleIncrementInfo.?, "LEFT_FRAME").*.?, "intValue").intValue()) {
             _ = self.reverse();
             _ = self.drop();
         }
         const displayInfo: ?*DisplayInfoSingleton = Inheritance.upcast(?*DisplayInfoSingleton, DisplayInfoSingleton.getInstance());
-        if (Inheritance.receiver(ownerLayerInterface.?, "getX2").getX2() + Inheritance.receiver(ownerLayerInterface.?, "getWidth").getWidth() > displayInfo.?.getLastWidth() and frame == Inheritance.receiverOf(angleIncrementInfo.?.RIGHT_FRAME.?, "intValue").intValue()) {
+        if (Inheritance.arithmetic(.greater, Inheritance.plus(Inheritance.receiver(ownerLayerInterface.?, "getX2").getX2(), Inheritance.receiver(ownerLayerInterface.?, "getWidth").getWidth()), displayInfo.?.getLastWidth()) and frame == Inheritance.receiverOf(Inheritance.fieldPointer(angleIncrementInfo.?, "RIGHT_FRAME").*.?, "intValue").intValue()) {
             _ = self.reverse();
             _ = self.accelerate();
             _ = self.drop();
@@ -107,9 +108,9 @@ pub const HorizontaRotationManeuverAI = struct {
             _ = Inheritance.call(self.velocityInterface.?, "limitMaxXYVelocity", .{ (divide_N67853: { const left_N67853 = Inheritance.receiver(self.velocityInterface.?, "getMaxForwardVelocity").getMaxForwardVelocity(); const right_N67853 = self.currentSpeedDivisor; break :divide_N67853 if (comptime @typeInfo(@TypeOf(left_N67853)) == .int or @TypeOf(left_N67853) == comptime_int) @divTrunc(left_N67853, right_N67853) else left_N67853 / right_N67853; }) });
         }
         _ = self.circularIndexUtil.?.next();
-        if (frame == Inheritance.receiverOf(angleIncrementInfo.?.LEFT_FRAME.?, "intValue").intValue()) {
+        if (frame == Inheritance.receiverOf(Inheritance.fieldPointer(angleIncrementInfo.?, "LEFT_FRAME").*.?, "intValue").intValue()) {
             _ = Inheritance.call(&self.base, "processKeyAI", .{ Canvas.KEY_NUM0 });
-        } else if (frame == Inheritance.receiverOf(angleIncrementInfo.?.RIGHT_FRAME.?, "intValue").intValue()) {
+        } else if (frame == Inheritance.receiverOf(Inheritance.fieldPointer(angleIncrementInfo.?, "RIGHT_FRAME").*.?, "intValue").intValue()) {
             _ = Inheritance.call(&self.base, "processKeyAI", .{ Canvas.KEY_POUND });
         }
     }
@@ -119,13 +120,13 @@ pub const HorizontaRotationManeuverAI = struct {
         const rotationAnimationInterface: ?*RotationAnimationInterface = Inheritance.cast(?*RotationAnimationInterface, self.rotationAnimationInterface);
         const angleIncrementInfo: ?*AngleIncrementInfo = Inheritance.upcast(?*AngleIncrementInfo, Inheritance.receiverOf(Inheritance.receiver(rotationAnimationInterface.?, "getAngleInfoP").getAngleInfoP().?, "getAngleIncrementInfo").getAngleIncrementInfo());
         const frame: i32 = Inheritance.receiver(self.rotationAnimationInterface.?, "getFrame").getFrame();
-        if (frame == Inheritance.receiverOf(angleIncrementInfo.?.LEFT_FRAME.?, "intValue").intValue()) {
+        if (frame == Inheritance.receiverOf(Inheritance.fieldPointer(angleIncrementInfo.?, "LEFT_FRAME").*.?, "intValue").intValue()) {
             const rotationAnimationInterfaceCompositeInterface: ?*RotationAnimationInterfaceCompositeInterface = Inheritance.cast(?*RotationAnimationInterfaceCompositeInterface, Inheritance.receiver(self, "getOwnerLayerInterface").getOwnerLayerInterface());
-            _ = Inheritance.call(rotationAnimationInterfaceCompositeInterface.?, "setFrame", .{ Inheritance.receiverOf(angleIncrementInfo.?.RIGHT_FRAME.?, "intValue").intValue() });
+            _ = Inheritance.call(rotationAnimationInterfaceCompositeInterface.?, "setFrame", .{ Inheritance.receiverOf(Inheritance.fieldPointer(angleIncrementInfo.?, "RIGHT_FRAME").*.?, "intValue").intValue() });
             _ = self.baseVelocityInterface.?.zero();
-        } else if (frame == Inheritance.receiverOf(angleIncrementInfo.?.RIGHT_FRAME.?, "intValue").intValue()) {
+        } else if (frame == Inheritance.receiverOf(Inheritance.fieldPointer(angleIncrementInfo.?, "RIGHT_FRAME").*.?, "intValue").intValue()) {
             const rotationAnimationInterfaceCompositeInterface: ?*RotationAnimationInterfaceCompositeInterface = Inheritance.cast(?*RotationAnimationInterfaceCompositeInterface, Inheritance.receiver(self, "getOwnerLayerInterface").getOwnerLayerInterface());
-            _ = Inheritance.call(rotationAnimationInterfaceCompositeInterface.?, "setFrame", .{ Inheritance.receiverOf(angleIncrementInfo.?.LEFT_FRAME.?, "intValue").intValue() });
+            _ = Inheritance.call(rotationAnimationInterfaceCompositeInterface.?, "setFrame", .{ Inheritance.receiverOf(Inheritance.fieldPointer(angleIncrementInfo.?, "LEFT_FRAME").*.?, "intValue").intValue() });
             _ = self.baseVelocityInterface.?.zero();
         }
     }
@@ -142,7 +143,7 @@ pub const HorizontaRotationManeuverAI = struct {
         const displayInfo: ?*DisplayInfoSingleton = Inheritance.upcast(?*DisplayInfoSingleton, DisplayInfoSingleton.getInstance());
         const ownerLayerInterface: ?*AllBinaryLayer = Inheritance.upcast(?*AllBinaryLayer, Inheritance.receiver(self, "getOwnerLayerInterface").getOwnerLayerInterface());
         var y: i32 = Inheritance.receiver(ownerLayerInterface.?, "getYP").getYP();
-        if (Inheritance.receiver(ownerLayerInterface.?, "getY2").getY2() + Inheritance.receiver(ownerLayerInterface.?, "getHeight").getHeight() > displayInfo.?.getLastHeight()) {
+        if (Inheritance.arithmetic(.greater, Inheritance.plus(Inheritance.receiver(ownerLayerInterface.?, "getY2").getY2(), Inheritance.receiver(ownerLayerInterface.?, "getHeight").getHeight()), displayInfo.?.getLastHeight())) {
             y = 0;
         } else {
             y += Inheritance.receiver(ownerLayerInterface.?, "getHeight").getHeight() + 1;

@@ -36,9 +36,9 @@ pub const Memory = struct {
     pub fn getInfo() ?*String {
         const stringBuffer: ?*StringMaker = StringMaker.create();
         _ = Inheritance.call(stringBuffer.?, "append", .{ String.literal("Memory: Free: ") });
-        _ = Inheritance.call(stringBuffer.?, "appendlong", .{ @as(i64, @intCast(Inheritance.receiverOf(Runtime.getRuntime().?, "freeMemory").freeMemory())) });
+        _ = Inheritance.call(stringBuffer.?, "appendlong", .{ Inheritance.number(i64, Inheritance.receiverOf(Runtime.getRuntime().?, "freeMemory").freeMemory()) });
         _ = Inheritance.call(stringBuffer.?, "append", .{ String.literal(" Total: ") });
-        _ = Inheritance.call(stringBuffer.?, "appendlong", .{ @as(i64, @intCast(Inheritance.receiverOf(Runtime.getRuntime().?, "totalMemory").totalMemory())) });
+        _ = Inheritance.call(stringBuffer.?, "appendlong", .{ Inheritance.number(i64, Inheritance.receiverOf(Runtime.getRuntime().?, "totalMemory").totalMemory()) });
         return Inheritance.upcast(?*String, Object.toString(Object.of(stringBuffer)));
     }
 };

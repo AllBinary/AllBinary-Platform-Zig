@@ -22,6 +22,7 @@ const BaseSoundsFactory = @import("org/allbinary/media/audio/BaseSoundsFactory.z
 const ErrorSound = @import("org/allbinary/media/audio/ErrorSound.zig").ErrorSound;
 const SelectSound = @import("org/allbinary/media/audio/SelectSound.zig").SelectSound;
 const Sound = @import("org/allbinary/media/audio/Sound.zig").Sound;
+const Exception = @import("java/lang/Exception.zig").Exception;
 
 pub const EarlySoundsFactory = struct {
     const Self = @This();

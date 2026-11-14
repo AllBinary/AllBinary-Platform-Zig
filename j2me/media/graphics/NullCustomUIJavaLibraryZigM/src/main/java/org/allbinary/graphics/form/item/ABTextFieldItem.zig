@@ -6,8 +6,8 @@ const allocator = std.heap.page_allocator;
 const String = @import("java/lang/String.zig").String;
 const Object = @import("java/lang/Object.zig").Object;
 const Inheritance = @import("zig/Inheritance.zig");
-// const Canvas = @import("javax/microedition/lcdui/Canvas.zig").Canvas;
-// const Font = @import("javax/microedition/lcdui/Font.zig").Font;
+const Canvas = @import("javax/microedition/lcdui/Canvas.zig").Canvas;
+const Font = @import("javax/microedition/lcdui/Font.zig").Font;
 const BasicColor = @import("org/allbinary/graphics/color/BasicColor.zig").BasicColor;
 const StringUtil = @import("org/allbinary/logic/string/StringUtil.zig").StringUtil;
 const Visitor = @import("org/allbinary/logic/util/visitor/Visitor.zig").Visitor;
@@ -42,7 +42,7 @@ pub const ABTextFieldItem = struct {
 
     pub fn getLabel(self: *Self) ?*String {
         _ = self;
-        return Inheritance.upcast(?*String, StringUtil.getInstance().?.EMPTY_STRING);
+        return Inheritance.upcast(?*String, Inheritance.fieldPointer(StringUtil.getInstance().?, "EMPTY_STRING").*);
     }
     
 
@@ -54,7 +54,7 @@ pub const ABTextFieldItem = struct {
 
     pub fn getString(self: *Self) ?*String {
         _ = self;
-        return Inheritance.upcast(?*String, StringUtil.getInstance().?.EMPTY_STRING);
+        return Inheritance.upcast(?*String, Inheritance.fieldPointer(StringUtil.getInstance().?, "EMPTY_STRING").*);
     }
     
 

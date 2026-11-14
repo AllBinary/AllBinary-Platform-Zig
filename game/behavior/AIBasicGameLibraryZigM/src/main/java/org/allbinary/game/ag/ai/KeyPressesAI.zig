@@ -25,6 +25,7 @@ const HashtableUtil = @import("org/allbinary/util/HashtableUtil.zig").HashtableU
 const BasicAI = @import("org/allbinary/game/ai/BasicAI.zig").BasicAI;
 const ABHashtable = @import("org/allbinary/util/ABHashtable.zig").ABHashtable;
 const Integer = @import("java/lang/Integer.zig").Integer;
+const Exception = @import("java/lang/Exception.zig").Exception;
 
 pub const KeyPressesAI = struct {
     const Self = @This();

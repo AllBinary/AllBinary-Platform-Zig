@@ -18,15 +18,17 @@ const allocator = std.heap.page_allocator;
 const String = @import("java/lang/String.zig").String;
 const Object = @import("java/lang/Object.zig").Object;
 const Inheritance = @import("zig/Inheritance.zig");
-// const ByteArrayInputStream = @import("java/io/ByteArrayInputStream.zig").ByteArrayInputStream;
+const ByteArrayInputStream = @import("java/io/ByteArrayInputStream.zig").ByteArrayInputStream;
 const ByteArrayOutputStream = @import("java/io/ByteArrayOutputStream.zig").ByteArrayOutputStream;
-// const FileInputStream = @import("java/io/FileInputStream.zig").FileInputStream;
-// const InputStream = @import("java/io/InputStream.zig").InputStream;
+const FileInputStream = @import("java/io/FileInputStream.zig").FileInputStream;
+const InputStream = @import("java/io/InputStream.zig").InputStream;
 const LogUtil = @import("org/allbinary/logic/communication/log/LogUtil.zig").LogUtil;
 const StreamUtil = @import("org/allbinary/logic/io/StreamUtil.zig").StreamUtil;
 const StringMaker = @import("org/allbinary/logic/string/StringMaker.zig").StringMaker;
 const StringUtil = @import("org/allbinary/logic/string/StringUtil.zig").StringUtil;
 const Integer = @import("java/lang/Integer.zig").Integer;
+const Exception = @import("java/lang/Exception.zig").Exception;
+const ClassLoader = @import("java/lang/ClassLoader.zig").ClassLoader;
 
 //J2SE - PC
 pub const ResourceUtil = struct {
@@ -44,8 +46,8 @@ pub const ResourceUtil = struct {
 
     fn initFields(this: *Self) void {
         this.logUtil = Inheritance.upcast(?*LogUtil, LogUtil.getInstance());
-        this.path = Inheritance.upcast(?*String, StringUtil.getInstance().?.EMPTY_STRING);
-        this.ext = Inheritance.upcast(?*String, StringUtil.getInstance().?.EMPTY_STRING);
+        this.path = Inheritance.upcast(?*String, Inheritance.fieldPointer(StringUtil.getInstance().?, "EMPTY_STRING").*);
+        this.ext = Inheritance.upcast(?*String, Inheritance.fieldPointer(StringUtil.getInstance().?, "EMPTY_STRING").*);
     }
     
 
@@ -77,9 +79,9 @@ pub const ResourceUtil = struct {
     // throws Exception
     pub fn getResourceAsStream(self: *Self, resource: ?*String) ?*InputStream {
         var inputStream: ?*InputStream = Inheritance.upcast(?*InputStream, Inheritance.call(self, "getResourceAsStreamAtStart", .{ resource, 2 }));
-        if (inputStream == null) {
+        if (Object.isNull(inputStream)) {
             inputStream = Inheritance.upcast(@TypeOf(inputStream), Inheritance.call(self, "getResourceAsStreamAtStart", .{ resource, 1 }));
-            if (inputStream == null) {
+            if (Object.isNull(inputStream)) {
                 std.debug.panic("{any}", .{exception: { _ = Object.toString(Object.of(Inheritance.call(Inheritance.call(StringMaker.create(), "append", .{ String.literal("Unable to obtain: ") }).?, "append", .{ resource }))); break :exception error.Exception; }});
             }
         }
@@ -91,7 +93,7 @@ pub const ResourceUtil = struct {
     pub fn getResourceAsStreamAtStart(self: *Self, resource: ?*String, startIndex: i32) ?*InputStream {
         _ = startIndex;
         const inputStream: ?*InputStream = Inheritance.upcast(?*InputStream, Inheritance.callStatic(FileInputStream, "create1", .{ Object.toString(Object.of(Inheritance.call(Inheritance.call(Inheritance.call(StringMaker.create(), "append", .{ self.path }).?, "append", .{ resource }).?, "append", .{ self.ext }))) }));
-        if (inputStream != null) {
+        if (!Object.isNull(inputStream)) {
             const byteArray: []i8 = array_N66728: { const array_N66728_array = allocator.alloc(i8, @intCast(inputStream.?.available())) catch unreachable; @memset(array_N66728_array, 0); break :array_N66728 array_N66728_array; };
             _ = Inheritance.call(StreamUtil.getInstance().?, "getByteArray", .{ inputStream, ByteArrayOutputStream.create(), byteArray });
             return Inheritance.upcast(?*InputStream, Inheritance.callStatic(ByteArrayInputStream, "create1", .{ byteArray }));

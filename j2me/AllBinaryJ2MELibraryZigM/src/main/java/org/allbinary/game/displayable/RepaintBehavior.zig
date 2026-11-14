@@ -18,14 +18,14 @@ const allocator = std.heap.page_allocator;
 const String = @import("java/lang/String.zig").String;
 const Object = @import("java/lang/Object.zig").Object;
 const Inheritance = @import("zig/Inheritance.zig");
-const ARunnable = @import("org/allbinary/thread/ARunnable.zig").ARunnable;
-// const Canvas = @import("javax/microedition/lcdui/Canvas.zig").Canvas;
+const Canvas = @import("javax/microedition/lcdui/Canvas.zig").Canvas;
 const Features = @import("org/allbinary/game/configuration/feature/Features.zig").Features;
 const DisplayInfoSingleton = @import("org/allbinary/graphics/displayable/DisplayInfoSingleton.zig").DisplayInfoSingleton;
 const OpenGLFeatureFactory = @import("org/allbinary/graphics/opengles/OpenGLFeatureFactory.zig").OpenGLFeatureFactory;
 const LogUtil = @import("org/allbinary/logic/communication/log/LogUtil.zig").LogUtil;
 const CommonStrings = @import("org/allbinary/string/CommonStrings.zig").CommonStrings;
 const NullRunnable = @import("org/allbinary/thread/NullRunnable.zig").NullRunnable;
+const RepaintRunnable = @import("org/allbinary/game/displayable/RepaintRunnable.zig").RepaintRunnable;
 const Thread = @import("java/lang/Thread.zig").Thread;
 
 pub const RepaintBehavior = struct {
@@ -67,24 +67,10 @@ pub const RepaintBehavior = struct {
     pub fn onChangeRepaint(self: *Self, canvas: ?*Canvas) void {
         const features: ?*Features = Inheritance.upcast(?*Features, Features.getInstance());
         const openGLFeatureFactory: ?*OpenGLFeatureFactory = Inheritance.upcast(?*OpenGLFeatureFactory, OpenGLFeatureFactory.getInstance());
-        if (Inheritance.call(features.?, "isFeature", .{ openGLFeatureFactory.?.OPENGL })) {
+        if (Inheritance.call(features.?, "isFeature", .{ Inheritance.fieldPointer(openGLFeatureFactory.?, "OPENGL").* })) {
             _ = Inheritance.receiverOf(DisplayInfoSingleton.getInstance().?, "process").process();
         } else {
-            const thread: ?*Thread = Inheritance.callStatic(Thread, "create2", .{ ARunnable.create() // Java anonymous class body: implement it as a named type
-//                 
-// 
-//                 pub fn run(self: *Self) void {
-//                     _ = self;
-//                     { // try
-//                         _ = canvas.?.repaint();
-//                         _ = Inheritance.receiverOf(DisplayInfoSingleton.getInstance().?, "process").process();
-//                     }
-//                     // catch (Exception e):
-// //                         const commonStrings: ?*CommonStrings = Inheritance.upcast(?*CommonStrings, CommonStrings.getInstance()); _ = commonStrings;
-// //                         const logUtil: ?*LogUtil = Inheritance.upcast(?*LogUtil, LogUtil.getInstance()); _ = logUtil;
-// //                         _ = Inheritance.call(logUtil.?, "put", .{ commonStrings.?.EXCEPTION, self, commonStrings.?.RUN, e });
-//                 }
-, self.NAME });
+            const thread: ?*Thread = Inheritance.callStatic(Thread, "create2", .{ Inheritance.callStatic(RepaintRunnable, "create1", .{ canvas }), self.NAME });
             _ = thread.?.start();
         }
     }

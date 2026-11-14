@@ -18,7 +18,7 @@ const allocator = std.heap.page_allocator;
 const String = @import("java/lang/String.zig").String;
 const Object = @import("java/lang/Object.zig").Object;
 const Inheritance = @import("zig/Inheritance.zig");
-// const Set = @import("java/util/Set.zig").Set;
+const Set = @import("java/util/Set.zig").Set;
 const AutomaticCacheInterface = @import("org/allbinary/logic/util/cache/AutomaticCacheInterface.zig").AutomaticCacheInterface;
 
 // Java interface: an implementation is a pointer and a table of functions
@@ -29,7 +29,7 @@ pub const J2SECacheInterface = struct {
     object: Object,
     base: AutomaticCacheInterface,
     toStringFn: *const fn (pointer: *anyopaque) ?*String,
-    keySetFn: *const fn (pointer: *anyopaque) ?*Set,
+    keySetFn: *const fn (interface_pointer: *anyopaque) ?*Set,
 
     pub fn keySet(self: *Self) ?*Set {
         return self.keySetFn(self.pointer);
@@ -41,14 +41,14 @@ pub const J2SECacheInterface = struct {
 
     // The interface value of an object with the methods. Like a Java class a method can be declared by the object or a superclass.
     pub fn of(object: anytype) ?*Self {
-        const Implementation = @TypeOf(object);
+        const ImplementationType = @TypeOf(object);
         const Methods = struct {
             fn toString(pointer: *anyopaque) ?*String {
-                const implementation: Implementation = @ptrCast(@alignCast(pointer));
+                const implementation: ImplementationType = @ptrCast(@alignCast(pointer));
                 return String.valueOf(implementation);
             }
-            fn keySet(pointer: *anyopaque) ?*Set {
-                const implementation: Implementation = @ptrCast(@alignCast(pointer));
+            fn keySet(interface_pointer: *anyopaque) ?*Set {
+                const implementation: ImplementationType = @ptrCast(@alignCast(interface_pointer));
                 return Inheritance.upcast(?*Set, Inheritance.receiver(implementation, "keySet").keySet());
             }
         };

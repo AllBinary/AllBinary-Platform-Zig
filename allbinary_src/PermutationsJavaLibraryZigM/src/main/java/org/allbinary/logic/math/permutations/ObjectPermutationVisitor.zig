@@ -41,7 +41,7 @@ pub const ObjectPermutationVisitor = struct {
         _ = anyType;
         _ = Inheritance.call(self.stringBuilder.?, "delete", .{ 0, self.stringBuilder.?.length() });
         _ = Inheritance.call(self, "print", .{ self.data, self.stringBuilder });
-        return Inheritance.upcast(?Object, NullUtil.getInstance().?.NULL_OBJECT);
+        return Inheritance.upcast(?Object, Inheritance.fieldPointer(NullUtil.getInstance().?, "NULL_OBJECT").*);
     }
     
 
@@ -52,13 +52,14 @@ pub const ObjectPermutationVisitor = struct {
     
 
     pub fn print2(self: *Self, data: []?Object, stringBuilder: ?*StringMaker) void {
+        _ = self;
         const tsUtil: ?*TsUtil = Inheritance.upcast(?*TsUtil, TsUtil.getInstance());
         const size: i32 = @as(i32, @intCast(data.len));
         {
             var i: i32 = 0;
             while (i < size) : (i += 1) {
-            _ = Inheritance.call(stringBuilder.?, "appendint", .{ @as(i32, @intCast(Inheritance.call(tsUtil.?, "hashCode", .{ data[@intCast(i)] }))) });
-            _ = Inheritance.call(stringBuilder.?, "append", .{ CommonSeps.getInstance().?.SPACE });
+            _ = Inheritance.call(stringBuilder.?, "appendint", .{ Inheritance.number(i32, Inheritance.call(tsUtil.?, "hashCode", .{ data[@intCast(i)] })) });
+            _ = Inheritance.call(stringBuilder.?, "append", .{ Inheritance.fieldPointer(CommonSeps.getInstance().?, "SPACE").* });
             }
         }
         _ = std.debug.print("{s}\n", .{String.text(Object.toString(Object.of(stringBuilder)))});

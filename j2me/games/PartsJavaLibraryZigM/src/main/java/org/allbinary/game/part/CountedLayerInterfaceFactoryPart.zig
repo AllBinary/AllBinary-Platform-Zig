@@ -18,8 +18,8 @@ const allocator = std.heap.page_allocator;
 const String = @import("java/lang/String.zig").String;
 const Object = @import("java/lang/Object.zig").Object;
 const Inheritance = @import("zig/Inheritance.zig");
-// const Font = @import("javax/microedition/lcdui/Font.zig").Font;
-// const Graphics = @import("javax/microedition/lcdui/Graphics.zig").Graphics;
+const Font = @import("javax/microedition/lcdui/Font.zig").Font;
+const Graphics = @import("javax/microedition/lcdui/Graphics.zig").Graphics;
 const Animation = @import("org/allbinary/animation/Animation.zig").Animation;
 const NullAnimationFactory = @import("org/allbinary/animation/NullAnimationFactory.zig").NullAnimationFactory;
 const CountedPickedUpLayerInterfaceFactory = @import("org/allbinary/game/layer/pickup/CountedPickedUpLayerInterfaceFactory.zig").CountedPickedUpLayerInterfaceFactory;
@@ -31,6 +31,7 @@ const NullUtil = @import("org/allbinary/logic/NullUtil.zig").NullUtil;
 const PrimitiveLongUtil = @import("org/allbinary/logic/math/PrimitiveLongUtil.zig").PrimitiveLongUtil;
 const ABHashtable = @import("org/allbinary/util/ABHashtable.zig").ABHashtable;
 const PartInterface = @import("org/allbinary/game/part/PartInterface.zig").PartInterface;
+const Exception = @import("java/lang/Exception.zig").Exception;
 
 pub const CountedLayerInterfaceFactoryPart = struct {
     const Self = @This();
@@ -58,7 +59,7 @@ pub const CountedLayerInterfaceFactoryPart = struct {
         this.myFontProcessor = this.updateMyFontProcessor;
         this.animationInterface = Inheritance.upcast(?*Animation, Inheritance.call(NullAnimationFactory.getFactoryInstance().?, "getInstance", .{ 0 }));
         this.total = 0;
-        this.totalString = NullUtil.getInstance().?.NULL_CHAR_ARRAY;
+        this.totalString = Inheritance.fieldPointer(NullUtil.getInstance().?, "NULL_CHAR_ARRAY").*;
         this.xOffset = 0;
         this.countedPickedUpLayerInterfaceFactory = Inheritance.upcast(?*CountedPickedUpLayerInterfaceFactory, CountedPickedUpLayerInterfaceFactory.NULL_COUNTED_PICKUP_LAYER_FACTORY);
         
@@ -77,7 +78,7 @@ pub const CountedLayerInterfaceFactoryPart = struct {
 
     pub fn updateMeasurement(self: *Self, graphics: ?*Graphics) void {
         const font: ?*Font = Inheritance.upcast(?*Font, graphics.?.getFont());
-        _ = Inheritance.call(self, "setXOffset", .{ Inheritance.call(font.?, "charsWidth", .{ self.totalString, 0, self.primitiveLongUtil.?.getCurrentTotalDigits() }) + (font.?.getSize() >> @intCast(1)) });
+        _ = Inheritance.call(self, "setXOffset", .{ Inheritance.plus(Inheritance.call(font.?, "charsWidth", .{ self.totalString, 0, self.primitiveLongUtil.?.getCurrentTotalDigits() }), (font.?.getSize() >> @intCast(1))) });
         self.myFontProcessor = Inheritance.upcast(@TypeOf(self.myFontProcessor), MyFontProcessor.getInstance());
     }
     

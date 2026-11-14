@@ -36,8 +36,8 @@ pub const BasicHighScoresGameInfoFactory = struct {
     }
 
     fn initFields(this: *Self) void {
-        this.MULTI_PLAYER_SERVER = Inheritance.callStatic(GameInfo, "create5", .{ GameTypeFactory.getInstance().?.MULTI_PLAYER, GameMode.SERVER, PlayerTypesFactory.getInstance().?.PLAYER_TYPE_ONE, 0, 0 });
-        this.SINGLE_PLAYER_SERVER = Inheritance.callStatic(GameInfo, "create5", .{ GameTypeFactory.getInstance().?.SINGLE_PLAYER, GameMode.SERVER, PlayerTypesFactory.getInstance().?.PLAYER_TYPE_ONE, 0, 0 });
+        this.MULTI_PLAYER_SERVER = Inheritance.callStatic(GameInfo, "create5", .{ Inheritance.fieldPointer(GameTypeFactory.getInstance().?, "MULTI_PLAYER").*, GameMode.SERVER, Inheritance.fieldPointer(PlayerTypesFactory.getInstance().?, "PLAYER_TYPE_ONE").*, 0, 0 });
+        this.SINGLE_PLAYER_SERVER = Inheritance.callStatic(GameInfo, "create5", .{ Inheritance.fieldPointer(GameTypeFactory.getInstance().?, "SINGLE_PLAYER").*, GameMode.SERVER, Inheritance.fieldPointer(PlayerTypesFactory.getInstance().?, "PLAYER_TYPE_ONE").*, 0, 0 });
     }
 
     pub fn create() *Self {

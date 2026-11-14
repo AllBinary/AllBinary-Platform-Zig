@@ -18,7 +18,7 @@ const allocator = std.heap.page_allocator;
 const String = @import("java/lang/String.zig").String;
 const Object = @import("java/lang/Object.zig").Object;
 const Inheritance = @import("zig/Inheritance.zig");
-// const Canvas = @import("javax/microedition/lcdui/Canvas.zig").Canvas;
+const Canvas = @import("javax/microedition/lcdui/Canvas.zig").Canvas;
 const ArtificialIntelligenceInterface = @import("org/allbinary/ai/ArtificialIntelligenceInterface.zig").ArtificialIntelligenceInterface;
 const Direction = @import("org/allbinary/direction/Direction.zig").Direction;
 const DirectionFactory = @import("org/allbinary/direction/DirectionFactory.zig").DirectionFactory;
@@ -28,6 +28,7 @@ const BasicAI = @import("org/allbinary/game/ai/BasicAI.zig").BasicAI;
 const DestroyedEvent = @import("org/allbinary/game/combat/destroy/event/DestroyedEvent.zig").DestroyedEvent;
 const DestroyedEventHandler = @import("org/allbinary/game/combat/destroy/event/DestroyedEventHandler.zig").DestroyedEventHandler;
 const DestroyedEventListenerInterface = @import("org/allbinary/game/combat/destroy/event/DestroyedEventListenerInterface.zig").DestroyedEventListenerInterface;
+const Group = @import("org/allbinary/game/identification/Group.zig").Group;
 const GameInput = @import("org/allbinary/game/input/GameInput.zig").GameInput;
 const BasicVelocityProperties = @import("org/allbinary/game/physics/velocity/BasicVelocityProperties.zig").BasicVelocityProperties;
 const VelocityInterfaceCompositeInterface = @import("org/allbinary/game/physics/velocity/VelocityInterfaceCompositeInterface.zig").VelocityInterfaceCompositeInterface;
@@ -48,6 +49,7 @@ const GameTickTimeDelayHelperFactory = @import("org/allbinary/time/GameTickTimeD
 const TimeDelayHelper = @import("org/allbinary/time/TimeDelayHelper.zig").TimeDelayHelper;
 const BasicArrayList = @import("org/allbinary/util/BasicArrayList.zig").BasicArrayList;
 const BasicArrayListD = @import("org/allbinary/util/BasicArrayListD.zig").BasicArrayListD;
+const Exception = @import("java/lang/Exception.zig").Exception;
 
 pub const DiveAndDirectionalTrackingAI = struct {
     const Self = @This();
@@ -88,7 +90,7 @@ pub const DiveAndDirectionalTrackingAI = struct {
         this.lastTrackingLayerInterface = Inheritance.upcast(?*AllBinaryLayer, AllBinaryLayer.NULL_ALLBINARY_LAYER);
         
         
-        this.lastDirection = Inheritance.upcast(?*Direction, DirectionFactory.getInstance().?.NO_DIRECTION);
+        this.lastDirection = Inheritance.upcast(?*Direction, Inheritance.fieldPointer(DirectionFactory.getInstance().?, "NO_DIRECTION").*);
     }
     
 
@@ -128,7 +130,7 @@ pub const DiveAndDirectionalTrackingAI = struct {
 
     pub fn init(self: *Self) void {
         self.diveP = false;
-        self.directionOfTarget = Inheritance.upcast(@TypeOf(self.directionOfTarget), DirectionFactory.getInstance().?.NOT_BORDERED_WITH);
+        self.directionOfTarget = Inheritance.upcast(@TypeOf(self.directionOfTarget), Inheritance.fieldPointer(DirectionFactory.getInstance().?, "NOT_BORDERED_WITH").*);
         _ = Inheritance.call(TrackingEventHandler.getInstance().?, "addListenerInterface", .{ self });
     }
     
@@ -142,34 +144,36 @@ pub const DiveAndDirectionalTrackingAI = struct {
         self.lastTrackingLayerInterface = Inheritance.upcast(@TypeOf(self.lastTrackingLayerInterface), Inheritance.receiver(lastTrackingEvent.?, "getLayerInterface").getLayerInterface());
         const layerInterface: ?*AllBinaryLayer = self.lastTrackingLayerInterface;
         const ownerLayerInterface: ?*AllBinaryLayer = Inheritance.upcast(?*AllBinaryLayer, Inheritance.receiver(self, "getOwnerLayerInterface").getOwnerLayerInterface());
-        if (Object.same(Inheritance.receiver(layerInterface.?, "getGroupInterface").getGroupInterface(), Inheritance.receiver(ownerLayerInterface.?, "getGroupInterface").getGroupInterface())) {
+        const groupArray: []?*Group = Inheritance.receiver(layerInterface.?, "getGroupInterface").getGroupInterface();
+        const ownerGroupArray: []?*Group = Inheritance.receiver(ownerLayerInterface.?, "getGroupInterface").getGroupInterface();
+        if (Object.same(groupArray, ownerGroupArray)) {
             return;
         }
         const x: i32 = Inheritance.receiver(self.lastTrackingLayerInterface.?, "getXP").getXP();
         const y: i32 = Inheritance.receiver(self.lastTrackingLayerInterface.?, "getYP").getYP();
-        const yDistance: i32 = Inheritance.receiver(ownerLayerInterface.?, "getYP").getYP() - y - Inheritance.receiver(ownerLayerInterface.?, "getHeight").getHeight();
-        const xDistance: i32 = Inheritance.receiver(ownerLayerInterface.?, "getXP").getXP() - x - Inheritance.receiver(ownerLayerInterface.?, "getWidth").getWidth();
+        const yDistance: i32 = Inheritance.arithmetic(.subtract, Inheritance.arithmetic(.subtract, Inheritance.receiver(ownerLayerInterface.?, "getYP").getYP(), y), Inheritance.receiver(ownerLayerInterface.?, "getHeight").getHeight());
+        const xDistance: i32 = Inheritance.arithmetic(.subtract, Inheritance.arithmetic(.subtract, Inheritance.receiver(ownerLayerInterface.?, "getXP").getXP(), x), Inheritance.receiver(ownerLayerInterface.?, "getWidth").getWidth());
         const directionFactory: ?*DirectionFactory = Inheritance.upcast(?*DirectionFactory, DirectionFactory.getInstance());
-        if (Inheritance.call(self.mathUtil.?, "abs", .{ yDistance }) > Inheritance.call(self.mathUtil.?, "abs", .{ xDistance })) {
+        if (Inheritance.arithmetic(.greater, Inheritance.call(self.mathUtil.?, "abs", .{ yDistance }), Inheritance.call(self.mathUtil.?, "abs", .{ xDistance }))) {
             if (yDistance > self.MIN_DISTANCE) {
-                self.directionOfTarget = Inheritance.upcast(@TypeOf(self.directionOfTarget), directionFactory.?.UP);
+                self.directionOfTarget = Inheritance.upcast(@TypeOf(self.directionOfTarget), Inheritance.fieldPointer(directionFactory.?, "UP").*);
             } else if (yDistance < -self.MIN_DISTANCE) {
-                self.directionOfTarget = Inheritance.upcast(@TypeOf(self.directionOfTarget), directionFactory.?.DOWN);
+                self.directionOfTarget = Inheritance.upcast(@TypeOf(self.directionOfTarget), Inheritance.fieldPointer(directionFactory.?, "DOWN").*);
             }
         } else {
             if (xDistance > self.MIN_DISTANCE) {
-                self.directionOfTarget = Inheritance.upcast(@TypeOf(self.directionOfTarget), directionFactory.?.LEFT);
+                self.directionOfTarget = Inheritance.upcast(@TypeOf(self.directionOfTarget), Inheritance.fieldPointer(directionFactory.?, "LEFT").*);
             } else if (xDistance < -self.MIN_DISTANCE) {
-                self.directionOfTarget = Inheritance.upcast(@TypeOf(self.directionOfTarget), directionFactory.?.RIGHT);
+                self.directionOfTarget = Inheritance.upcast(@TypeOf(self.directionOfTarget), Inheritance.fieldPointer(directionFactory.?, "RIGHT").*);
             }
         }
-        if (!self.initialDropped and !Object.same(self.directionOfTarget, directionFactory.?.NOT_BORDERED_WITH)) {
+        if (!self.initialDropped and !Object.same(self.directionOfTarget, Inheritance.fieldPointer(directionFactory.?, "NOT_BORDERED_WITH").*)) {
             _ = self.drop();
         }
         if (self.initialDropped) {
-            if (Object.same(self.directionOfTarget, directionFactory.?.UP) or Object.same(self.directionOfTarget, directionFactory.?.DOWN)) {
+            if (Object.same(self.directionOfTarget, Inheritance.fieldPointer(directionFactory.?, "UP").*) or Object.same(self.directionOfTarget, Inheritance.fieldPointer(directionFactory.?, "DOWN").*)) {
                 _ = Inheritance.call(self, "verticalTargeting", .{ x });
-            } else if (Object.same(self.directionOfTarget, directionFactory.?.LEFT) or Object.same(self.directionOfTarget, directionFactory.?.RIGHT)) {
+            } else if (Object.same(self.directionOfTarget, Inheritance.fieldPointer(directionFactory.?, "LEFT").*) or Object.same(self.directionOfTarget, Inheritance.fieldPointer(directionFactory.?, "RIGHT").*)) {
                 _ = Inheritance.call(self, "horizontalTargeting", .{ y });
             } else {
                 _ = Inheritance.call(self.artificialIntelligenceInterface.?, "processAI", .{ allBinaryLayerManager });
@@ -181,13 +185,13 @@ pub const DiveAndDirectionalTrackingAI = struct {
     // throws Exception
     pub fn verticalTargeting(self: *Self, x: i32) void {
         const ownerLayerInterface: ?*AllBinaryLayer = Inheritance.upcast(?*AllBinaryLayer, Inheritance.receiver(self, "getOwnerLayerInterface").getOwnerLayerInterface());
-        if (Inheritance.receiver(ownerLayerInterface.?, "getXP").getXP() < x) {
+        if (Inheritance.arithmetic(.less, Inheritance.receiver(ownerLayerInterface.?, "getXP").getXP(), x)) {
             _ = self.moveRight();
         }
-        if (Inheritance.receiver(ownerLayerInterface.?, "getXP").getXP() > x) {
+        if (Inheritance.arithmetic(.greater, Inheritance.receiver(ownerLayerInterface.?, "getXP").getXP(), x)) {
             _ = self.moveLeft();
         }
-        if (Inheritance.receiver(ownerLayerInterface.?, "getXP").getXP() > x - 3 and Inheritance.receiver(ownerLayerInterface.?, "getXP").getXP() < x + 3) {
+        if (Inheritance.arithmetic(.greater, Inheritance.receiver(ownerLayerInterface.?, "getXP").getXP(), x - 3) and Inheritance.arithmetic(.less, Inheritance.receiver(ownerLayerInterface.?, "getXP").getXP(), x + 3)) {
             _ = self.setDive();
         }
     }
@@ -196,13 +200,13 @@ pub const DiveAndDirectionalTrackingAI = struct {
     // throws Exception
     pub fn horizontalTargeting(self: *Self, y: i32) void {
         const ownerLayerInterface: ?*AllBinaryLayer = Inheritance.upcast(?*AllBinaryLayer, Inheritance.receiver(self, "getOwnerLayerInterface").getOwnerLayerInterface());
-        if (Inheritance.receiver(ownerLayerInterface.?, "getYP").getYP() < y) {
+        if (Inheritance.arithmetic(.less, Inheritance.receiver(ownerLayerInterface.?, "getYP").getYP(), y)) {
             _ = self.moveDown();
         }
-        if (Inheritance.receiver(ownerLayerInterface.?, "getYP").getYP() > y) {
+        if (Inheritance.arithmetic(.greater, Inheritance.receiver(ownerLayerInterface.?, "getYP").getYP(), y)) {
             _ = self.moveUp();
         }
-        if (Inheritance.receiver(ownerLayerInterface.?, "getYP").getYP() > y - 3 and Inheritance.receiver(ownerLayerInterface.?, "getYP").getYP() < y + 3) {
+        if (Inheritance.arithmetic(.greater, Inheritance.receiver(ownerLayerInterface.?, "getYP").getYP(), y - 3) and Inheritance.arithmetic(.less, Inheritance.receiver(ownerLayerInterface.?, "getYP").getYP(), y + 3)) {
             _ = self.setDive();
         }
     }
@@ -217,7 +221,7 @@ pub const DiveAndDirectionalTrackingAI = struct {
 
     // throws Exception
     pub fn moveRight(self: *Self) void {
-        _ = Inheritance.call(self, "setLastDirection", .{ self.directionFactory.?.RIGHT });
+        _ = Inheritance.call(self, "setLastDirection", .{ Inheritance.fieldPointer(self.directionFactory.?, "RIGHT").* });
         _ = Inheritance.call(self.directionalInterface.?, "setFrameByDirection", .{ self.lastDirection });
         _ = Inheritance.call(self.aiVistor.?, "visit", .{ self });
     }
@@ -225,7 +229,7 @@ pub const DiveAndDirectionalTrackingAI = struct {
 
     // throws Exception
     pub fn moveLeft(self: *Self) void {
-        _ = Inheritance.call(self, "setLastDirection", .{ self.directionFactory.?.LEFT });
+        _ = Inheritance.call(self, "setLastDirection", .{ Inheritance.fieldPointer(self.directionFactory.?, "LEFT").* });
         _ = Inheritance.call(self.directionalInterface.?, "setFrameByDirection", .{ self.lastDirection });
         _ = Inheritance.call(self.aiVistor.?, "visit", .{ self });
     }
@@ -233,7 +237,7 @@ pub const DiveAndDirectionalTrackingAI = struct {
 
     // throws Exception
     pub fn moveDown(self: *Self) void {
-        _ = Inheritance.call(self, "setLastDirection", .{ self.directionFactory.?.DOWN });
+        _ = Inheritance.call(self, "setLastDirection", .{ Inheritance.fieldPointer(self.directionFactory.?, "DOWN").* });
         _ = Inheritance.call(self.directionalInterface.?, "setFrameByDirection", .{ self.lastDirection });
         _ = Inheritance.call(self.aiVistor.?, "visit", .{ self });
     }
@@ -241,7 +245,7 @@ pub const DiveAndDirectionalTrackingAI = struct {
 
     // throws Exception
     pub fn moveUp(self: *Self) void {
-        _ = Inheritance.call(self, "setLastDirection", .{ self.directionFactory.?.UP });
+        _ = Inheritance.call(self, "setLastDirection", .{ Inheritance.fieldPointer(self.directionFactory.?, "UP").* });
         _ = Inheritance.call(self.directionalInterface.?, "setFrameByDirection", .{ self.lastDirection });
         _ = Inheritance.call(self.aiVistor.?, "visit", .{ self });
     }
@@ -262,7 +266,7 @@ pub const DiveAndDirectionalTrackingAI = struct {
 
     // throws Exception
     pub fn drop(self: *Self) void {
-        if (Inheritance.call(self.timeDelayHelper.?, "isTime", .{ self.gameTickTimeDelayHelper.?.startTime })) {
+        if (Inheritance.call(self.timeDelayHelper.?, "isTime", .{ Inheritance.fieldPointer(self.gameTickTimeDelayHelper.?, "startTime").* })) {
             self.initialDropped = true;
             _ = Inheritance.call(self.aiVistor.?, "visit", .{ self });
         }
@@ -270,26 +274,26 @@ pub const DiveAndDirectionalTrackingAI = struct {
     
 
     pub fn isBeyondTarget(self: *Self) bool {
-        if (Object.same(self.directionOfTarget, self.directionFactory.?.DOWN)) {
-            if (Inheritance.receiverOf(Inheritance.receiver(self, "getOwnerLayerInterface").getOwnerLayerInterface().?, "getYP").getYP() > Inheritance.receiver(self.lastTrackingLayerInterface.?, "getYP").getYP() + self.MIN_DISTANCE) {
+        if (Object.same(self.directionOfTarget, Inheritance.fieldPointer(self.directionFactory.?, "DOWN").*)) {
+            if (Inheritance.arithmetic(.greater, Inheritance.receiverOf(Inheritance.receiver(self, "getOwnerLayerInterface").getOwnerLayerInterface().?, "getYP").getYP(), Inheritance.receiver(self.lastTrackingLayerInterface.?, "getYP").getYP() + self.MIN_DISTANCE)) {
                 return true;
             } else {
                 return false;
             }
-        } else if (Object.same(self.directionOfTarget, self.directionFactory.?.UP)) {
-            if (Inheritance.receiverOf(Inheritance.receiver(self, "getOwnerLayerInterface").getOwnerLayerInterface().?, "getYP").getYP() < Inheritance.receiver(self.lastTrackingLayerInterface.?, "getYP").getYP() + self.MIN_DISTANCE) {
+        } else if (Object.same(self.directionOfTarget, Inheritance.fieldPointer(self.directionFactory.?, "UP").*)) {
+            if (Inheritance.arithmetic(.less, Inheritance.receiverOf(Inheritance.receiver(self, "getOwnerLayerInterface").getOwnerLayerInterface().?, "getYP").getYP(), Inheritance.receiver(self.lastTrackingLayerInterface.?, "getYP").getYP() + self.MIN_DISTANCE)) {
                 return true;
             } else {
                 return false;
             }
-        } else if (Object.same(self.directionOfTarget, self.directionFactory.?.RIGHT)) {
-            if (Inheritance.receiverOf(Inheritance.receiver(self, "getOwnerLayerInterface").getOwnerLayerInterface().?, "getXP").getXP() > Inheritance.receiver(self.lastTrackingLayerInterface.?, "getXP").getXP() + self.MIN_DISTANCE) {
+        } else if (Object.same(self.directionOfTarget, Inheritance.fieldPointer(self.directionFactory.?, "RIGHT").*)) {
+            if (Inheritance.arithmetic(.greater, Inheritance.receiverOf(Inheritance.receiver(self, "getOwnerLayerInterface").getOwnerLayerInterface().?, "getXP").getXP(), Inheritance.receiver(self.lastTrackingLayerInterface.?, "getXP").getXP() + self.MIN_DISTANCE)) {
                 return true;
             } else {
                 return false;
             }
-        } else if (Object.same(self.directionOfTarget, self.directionFactory.?.LEFT)) {
-            if (Inheritance.receiverOf(Inheritance.receiver(self, "getOwnerLayerInterface").getOwnerLayerInterface().?, "getXP").getXP() < Inheritance.receiver(self.lastTrackingLayerInterface.?, "getXP").getXP() + self.MIN_DISTANCE) {
+        } else if (Object.same(self.directionOfTarget, Inheritance.fieldPointer(self.directionFactory.?, "LEFT").*)) {
+            if (Inheritance.arithmetic(.less, Inheritance.receiverOf(Inheritance.receiver(self, "getOwnerLayerInterface").getOwnerLayerInterface().?, "getXP").getXP(), Inheritance.receiver(self.lastTrackingLayerInterface.?, "getXP").getXP() + self.MIN_DISTANCE)) {
                 return true;
             } else {
                 return false;
@@ -302,7 +306,7 @@ pub const DiveAndDirectionalTrackingAI = struct {
 
     pub fn onEvent(self: *Self, eventObject: ?*AllBinaryEventObject) void {
         _ = eventObject;
-        _ = Inheritance.callStatic(ForcedLogUtil, "log", .{ EventStrings.getInstance().?.PERFORMANCE_MESSAGE, self });
+        _ = Inheritance.callStatic(ForcedLogUtil, "log", .{ Inheritance.fieldPointer(EventStrings.getInstance().?, "PERFORMANCE_MESSAGE").*, self });
     }
     
 
@@ -331,13 +335,13 @@ pub const DiveAndDirectionalTrackingAI = struct {
     pub fn setLastKey(self: *Self, lastKey: i32) void {
         _ = Inheritance.call(&self.base, "setLastKey", .{ lastKey });
         if (Object.same(Inheritance.receiver(self, "getLastKey").getLastKey(), Canvas.LEFT)) {
-            self.lastDirection = Inheritance.upcast(@TypeOf(self.lastDirection), DirectionFactory.getInstance().?.LEFT);
+            self.lastDirection = Inheritance.upcast(@TypeOf(self.lastDirection), Inheritance.fieldPointer(DirectionFactory.getInstance().?, "LEFT").*);
         } else if (Object.same(Inheritance.receiver(self, "getLastKey").getLastKey(), Canvas.DOWN)) {
-            self.lastDirection = Inheritance.upcast(@TypeOf(self.lastDirection), DirectionFactory.getInstance().?.DOWN);
+            self.lastDirection = Inheritance.upcast(@TypeOf(self.lastDirection), Inheritance.fieldPointer(DirectionFactory.getInstance().?, "DOWN").*);
         } else if (Object.same(Inheritance.receiver(self, "getLastKey").getLastKey(), Canvas.UP)) {
-            self.lastDirection = Inheritance.upcast(@TypeOf(self.lastDirection), DirectionFactory.getInstance().?.UP);
+            self.lastDirection = Inheritance.upcast(@TypeOf(self.lastDirection), Inheritance.fieldPointer(DirectionFactory.getInstance().?, "UP").*);
         } else if (Object.same(Inheritance.receiver(self, "getLastKey").getLastKey(), Canvas.RIGHT)) {
-            self.lastDirection = Inheritance.upcast(@TypeOf(self.lastDirection), DirectionFactory.getInstance().?.RIGHT);
+            self.lastDirection = Inheritance.upcast(@TypeOf(self.lastDirection), Inheritance.fieldPointer(DirectionFactory.getInstance().?, "RIGHT").*);
         }
     }
     
@@ -349,7 +353,7 @@ pub const DiveAndDirectionalTrackingAI = struct {
 
     pub fn toString(self: *Self) ?*String {
         const stringBuffer: ?*StringMaker = StringMaker.create();
-        _ = Inheritance.call(stringBuffer.?, "append", .{ self.base.toString() });
+        _ = Inheritance.call(stringBuffer.?, "append", .{ String.valueOf(&self.base) });
         _ = Inheritance.call(stringBuffer.?, "append", .{ String.literal(" LastDirection: ") });
         _ = Inheritance.call(stringBuffer.?, "append", .{ Inheritance.call(StringUtil.getInstance().?, "toString", .{ self.getLastDirection() }) });
         return Inheritance.upcast(?*String, Object.toString(Object.of(stringBuffer)));

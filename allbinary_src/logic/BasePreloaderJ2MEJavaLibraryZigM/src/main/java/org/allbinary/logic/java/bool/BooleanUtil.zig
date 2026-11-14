@@ -22,6 +22,7 @@ const TsUtil = @import("org/allbinary/TsUtil.zig").TsUtil;
 const StringMaker = @import("org/allbinary/logic/string/StringMaker.zig").StringMaker;
 const StringValidationUtil = @import("org/allbinary/logic/string/StringValidationUtil.zig").StringValidationUtil;
 const BooleanFactory = @import("org/allbinary/logic/java/bool/BooleanFactory.zig").BooleanFactory;
+const Exception = @import("java/lang/Exception.zig").Exception;
 
 pub const BooleanUtil = struct {
     const Self = @This();
@@ -60,9 +61,9 @@ pub const BooleanUtil = struct {
             return false;
         }
         const booleanStringLowerCase: ?*String = Inheritance.upcast(?*String, booleanString.?.toLowerCase());
-        if (Inheritance.call(self.tsUtil.?, "compareTo", .{ booleanStringLowerCase, booleanFactory.?.TRUE_STRING }) == 0) {
+        if (Inheritance.call(self.tsUtil.?, "compareTo", .{ booleanStringLowerCase, Inheritance.fieldPointer(booleanFactory.?, "TRUE_STRING").* }) == 0) {
             return true;
-        } else if (Inheritance.call(self.tsUtil.?, "compareTo", .{ booleanStringLowerCase, booleanFactory.?.FALSE_STRING }) == 0) {
+        } else if (Inheritance.call(self.tsUtil.?, "compareTo", .{ booleanStringLowerCase, Inheritance.fieldPointer(booleanFactory.?, "FALSE_STRING").* }) == 0) {
             return false;
         } else {
             std.debug.panic("{any}", .{exception: { _ = String.literal("Invalid booleanString - Must be true or false"); break :exception error.Exception; }});
@@ -75,7 +76,7 @@ pub const BooleanUtil = struct {
         _ = self;
         const booleanFactory: ?*BooleanFactory = Inheritance.upcast(?*BooleanFactory, BooleanFactory.getInstance());
         const booleanStringLowerCase: ?*String = Inheritance.upcast(?*String, booleanString.?.toLowerCase());
-        if (Inheritance.call(booleanStringLowerCase.?, "compareTo", .{ booleanFactory.?.TRUE_STRING }) == 0 or Inheritance.call(booleanStringLowerCase.?, "compareTo", .{ booleanFactory.?.FALSE_STRING }) == 0) {
+        if (Inheritance.call(booleanStringLowerCase.?, "compareTo", .{ Inheritance.fieldPointer(booleanFactory.?, "TRUE_STRING").* }) == 0 or Inheritance.call(booleanStringLowerCase.?, "compareTo", .{ Inheritance.fieldPointer(booleanFactory.?, "FALSE_STRING").* }) == 0) {
             return true;
         }
         return false;

@@ -26,6 +26,7 @@ const ThreadObjectUtil = @import("org/allbinary/thread/ThreadObjectUtil.zig").Th
 const ThreadPool = @import("org/allbinary/thread/ThreadPool.zig").ThreadPool;
 const Thread = @import("java/lang/Thread.zig").Thread;
 const Runnable = @import("java/lang/Runnable.zig").Runnable;
+const Exception = @import("java/lang/Exception.zig").Exception;
 
 pub const PooledThread = struct {
     const Self = @This();
@@ -51,7 +52,7 @@ pub const PooledThread = struct {
         this.* = .{};
         this.base = Inheritance.callStatic(Thread, "create1", .{ threadPool.?.createName() }).*;
         this.initFields();
-        _ = Inheritance.call(this.logUtil.?, "putF", .{ this.commonStrings.?.CONSTRUCTOR, this, this.commonStrings.?.CONSTRUCTOR });
+        _ = Inheritance.call(this.logUtil.?, "putF", .{ Inheritance.fieldPointer(this.commonStrings.?, "CONSTRUCTOR").*, this, Inheritance.fieldPointer(this.commonStrings.?, "CONSTRUCTOR").* });
         this.threadPool = threadPool;
         Inheritance.bindOverrides(this);
         return this;
@@ -61,27 +62,27 @@ pub const PooledThread = struct {
     pub fn run(self: *Self) void {
         _ = self.threadPool.?.threadStarted();
         while (true) {
-            var task2: ?*Runnable = Inheritance.upcast(?*Runnable, self.threadObjectUtil.?.NULL_PRIORITY_RUNNABLE);
+            var task2: ?*Runnable = Inheritance.upcast(?*Runnable, Inheritance.fieldPointer(self.threadObjectUtil.?, "NULL_PRIORITY_RUNNABLE").*);
             { // try
                 task2 = Inheritance.upcast(@TypeOf(task2), self.threadPool.?.getTask());
-                self.threadPool.?.runningTask = true;
+                Inheritance.fieldPointer(self.threadPool.?, "runningTask").* = true;
                 _ = Inheritance.call(self.threadPool.?, "startTask", .{ task2 });
             }
             // catch (InterruptedException ex):
 //                 const logUtil: ?*LogUtil = Inheritance.upcast(?*LogUtil, LogUtil.getInstance()); _ = logUtil;
-//                 _ = Inheritance.call(logUtil.?, "putF", .{ self.INTERRUPT_EXCEPTION, self, self.commonStrings.?.RUN });
+//                 _ = Inheritance.call(logUtil.?, "putF", .{ self.INTERRUPT_EXCEPTION, self, Inheritance.fieldPointer(self.commonStrings.?, "RUN").* });
 //                 break;
-            if (Object.same(task2, self.threadObjectUtil.?.NULL_PRIORITY_RUNNABLE)) {
+            if (Object.same(task2, Inheritance.fieldPointer(self.threadObjectUtil.?, "NULL_PRIORITY_RUNNABLE").*)) {
                 break;
             }
             { // try
                 _ = task2.?.run();
                 _ = Inheritance.call(self.threadPool.?, "completedTask", .{ task2 });
-                self.threadPool.?.runningTask = false;
+                Inheritance.fieldPointer(self.threadPool.?, "runningTask").* = false;
             }
             // catch (Exception e):
 //                 const logUtil: ?*LogUtil = Inheritance.upcast(?*LogUtil, LogUtil.getInstance()); _ = logUtil;
-//                 _ = Inheritance.call(logUtil.?, "put", .{ Object.toString(Object.of(Inheritance.call(Inheritance.call(StringMaker.create(), "append", .{ self.commonStrings.?.EXCEPTION_LABEL }).?, "append", .{ Inheritance.call(StringUtil.getInstance().?, "toString", .{ task2 }) }))), self, self.commonStrings.?.RUN, e });
+//                 _ = Inheritance.call(logUtil.?, "put", .{ Object.toString(Object.of(Inheritance.call(Inheritance.call(StringMaker.create(), "append", .{ Inheritance.fieldPointer(self.commonStrings.?, "EXCEPTION_LABEL").* }).?, "append", .{ Inheritance.call(StringUtil.getInstance().?, "toString", .{ task2 }) }))), self, Inheritance.fieldPointer(self.commonStrings.?, "RUN").*, e });
         }
         _ = self.threadPool.?.threadStopped();
     }

@@ -28,12 +28,12 @@ pub const TestInputInterface = struct {
     object: Object,
     base: PaintableInterface,
     toStringFn: *const fn (pointer: *anyopaque) ?*String,
-    upFn: *const fn (pointer: *anyopaque) void,
-    downFn: *const fn (pointer: *anyopaque) void,
-    leftFn: *const fn (pointer: *anyopaque) void,
-    rightFn: *const fn (pointer: *anyopaque) void,
-    strafeLeftFn: *const fn (pointer: *anyopaque) void,
-    strafeRightFn: *const fn (pointer: *anyopaque) void,
+    upFn: *const fn (interface_pointer: *anyopaque) void,
+    downFn: *const fn (interface_pointer: *anyopaque) void,
+    leftFn: *const fn (interface_pointer: *anyopaque) void,
+    rightFn: *const fn (interface_pointer: *anyopaque) void,
+    strafeLeftFn: *const fn (interface_pointer: *anyopaque) void,
+    strafeRightFn: *const fn (interface_pointer: *anyopaque) void,
 
     pub fn up(self: *Self) void {
         return self.upFn(self.pointer);
@@ -65,34 +65,34 @@ pub const TestInputInterface = struct {
 
     // The interface value of an object with the methods. Like a Java class a method can be declared by the object or a superclass.
     pub fn of(object: anytype) ?*Self {
-        const Implementation = @TypeOf(object);
+        const ImplementationType = @TypeOf(object);
         const Methods = struct {
             fn toString(pointer: *anyopaque) ?*String {
-                const implementation: Implementation = @ptrCast(@alignCast(pointer));
+                const implementation: ImplementationType = @ptrCast(@alignCast(pointer));
                 return String.valueOf(implementation);
             }
-            fn up(pointer: *anyopaque) void {
-                const implementation: Implementation = @ptrCast(@alignCast(pointer));
+            fn up(interface_pointer: *anyopaque) void {
+                const implementation: ImplementationType = @ptrCast(@alignCast(interface_pointer));
                 return Inheritance.receiver(implementation, "up").up();
             }
-            fn down(pointer: *anyopaque) void {
-                const implementation: Implementation = @ptrCast(@alignCast(pointer));
+            fn down(interface_pointer: *anyopaque) void {
+                const implementation: ImplementationType = @ptrCast(@alignCast(interface_pointer));
                 return Inheritance.receiver(implementation, "down").down();
             }
-            fn left(pointer: *anyopaque) void {
-                const implementation: Implementation = @ptrCast(@alignCast(pointer));
+            fn left(interface_pointer: *anyopaque) void {
+                const implementation: ImplementationType = @ptrCast(@alignCast(interface_pointer));
                 return Inheritance.receiver(implementation, "left").left();
             }
-            fn right(pointer: *anyopaque) void {
-                const implementation: Implementation = @ptrCast(@alignCast(pointer));
+            fn right(interface_pointer: *anyopaque) void {
+                const implementation: ImplementationType = @ptrCast(@alignCast(interface_pointer));
                 return Inheritance.receiver(implementation, "right").right();
             }
-            fn strafeLeft(pointer: *anyopaque) void {
-                const implementation: Implementation = @ptrCast(@alignCast(pointer));
+            fn strafeLeft(interface_pointer: *anyopaque) void {
+                const implementation: ImplementationType = @ptrCast(@alignCast(interface_pointer));
                 return Inheritance.receiver(implementation, "strafeLeft").strafeLeft();
             }
-            fn strafeRight(pointer: *anyopaque) void {
-                const implementation: Implementation = @ptrCast(@alignCast(pointer));
+            fn strafeRight(interface_pointer: *anyopaque) void {
+                const implementation: ImplementationType = @ptrCast(@alignCast(interface_pointer));
                 return Inheritance.receiver(implementation, "strafeRight").strafeRight();
             }
         };

@@ -20,6 +20,7 @@ const Object = @import("java/lang/Object.zig").Object;
 const Inheritance = @import("zig/Inheritance.zig");
 const CommonStrings = @import("org/allbinary/string/CommonStrings.zig").CommonStrings;
 const InitInterface = @import("org/allbinary/init/InitInterface.zig").InitInterface;
+const Exception = @import("java/lang/Exception.zig").Exception;
 
 pub const Init = struct {
     const Self = @This();

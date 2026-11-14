@@ -18,9 +18,9 @@ const allocator = std.heap.page_allocator;
 const String = @import("java/lang/String.zig").String;
 const Object = @import("java/lang/Object.zig").Object;
 const Inheritance = @import("zig/Inheritance.zig");
-// const InputStream = @import("java/io/InputStream.zig").InputStream;
-// const Image = @import("javax/microedition/lcdui/Image.zig").Image;
-// const NullImage = @import("javax/microedition/lcdui/NullImage.zig").NullImage;
+const InputStream = @import("java/io/InputStream.zig").InputStream;
+const Image = @import("javax/microedition/lcdui/Image.zig").Image;
+const NullImage = @import("javax/microedition/lcdui/NullImage.zig").NullImage;
 const J2MEUtil = @import("org/allbinary/J2MEUtil.zig").J2MEUtil;
 const TsUtil = @import("org/allbinary/TsUtil.zig").TsUtil;
 const ResourceUtil = @import("org/allbinary/data/resource/ResourceUtil.zig").ResourceUtil;
@@ -32,6 +32,8 @@ const CommonStrings = @import("org/allbinary/string/CommonStrings.zig").CommonSt
 const Memory = @import("org/allbinary/system/Memory.zig").Memory;
 const ImageCacheBase = @import("org/allbinary/image/ImageCacheBase.zig").ImageCacheBase;
 const Thread = @import("java/lang/Thread.zig").Thread;
+const Exception = @import("java/lang/Exception.zig").Exception;
+const RuntimeException = @import("java/lang/RuntimeException.zig").RuntimeException;
 
 pub const ImageCache = struct {
     const Self = @This();
@@ -70,7 +72,7 @@ pub const ImageCache = struct {
 
     pub fn getIndex(self: *Self, key: ?Object) i32 {
         const gdResources: ?*GDResources = Inheritance.upcast(?*GDResources, GDResources.getInstance());
-        const resourceStringArray: []?*String = gdResources.?.resourceStringArray;
+        const resourceStringArray: []?*String = Inheritance.fieldPointer(gdResources.?, "resourceStringArray").*;
         const size: i32 = @as(i32, @intCast(resourceStringArray.len));
         {
             var index: i32 = 0;
@@ -80,7 +82,7 @@ pub const ImageCache = struct {
             }
             }
         }
-        _ = Inheritance.call(Inheritance.fieldPointer(self, "logUtil").*.?, "putF", .{ Object.toString(Object.of(Inheritance.call(Inheritance.call(StringMaker.create(), "append", .{ String.literal("unable to find key: ") }).?, "append", .{ Inheritance.call(StringUtil.getInstance().?, "toString", .{ key }) }))), self, self.commonStrings.?.RUN });
+        _ = Inheritance.call(Inheritance.fieldPointer(self, "logUtil").*.?, "putF", .{ Object.toString(Object.of(Inheritance.call(Inheritance.call(StringMaker.create(), "append", .{ String.literal("unable to find key: ") }).?, "append", .{ Inheritance.call(StringUtil.getInstance().?, "toString", .{ key }) }))), self, Inheritance.fieldPointer(self.commonStrings.?, "RUN").* });
         std.debug.panic("{any}", .{error.RuntimeException});
     }
     
@@ -91,13 +93,13 @@ pub const ImageCache = struct {
         var image: ?*Image = Inheritance.upcast(?*Image, Inheritance.call(self, "getFromAvailable", .{ foundIndex, width, height }));
         if (Object.same(image, NullImage.NULL_IMAGE)) {
             Inheritance.fieldPointer(self, "volume").* += width * height;
-            if (Inheritance.fieldPointer(self, "volume").* > 32000) {
+            if (Inheritance.arithmetic(.greater, Inheritance.fieldPointer(self, "volume").*, 32000)) {
                 _ = self.tsUtil.?.gc();
                 Inheritance.fieldPointer(self, "volume").* = 0;
             }
             image = Inheritance.upcast(@TypeOf(image), Inheritance.call(self, "createImage", .{ caller, width, height }));
             const widths: []i32 = Inheritance.fieldPointer(self, "widths").*;
-            if (Inheritance.fieldPointer(self, "nextIndex").* > @as(i32, @intCast(widths.len)) - 1) {
+            if (Inheritance.arithmetic(.greater, Inheritance.fieldPointer(self, "nextIndex").*, @as(i32, @intCast(widths.len)) - 1)) {
                 if (foundIndex == -1) {
                     foundIndex = Inheritance.fieldPointer(self, "nextIndex").*;
                     widths[@intCast(Inheritance.fieldPointer(self, "nextIndex").*)] = width;
@@ -117,18 +119,18 @@ pub const ImageCache = struct {
         if (Object.same(image, NullImage.NULL_IMAGE)) {
             const resourceUtil: ?*ResourceUtil = Inheritance.upcast(?*ResourceUtil, ResourceUtil.getInstance());
             const resourceInputStream: ?*InputStream = Inheritance.upcast(?*InputStream, Inheritance.call(resourceUtil.?, "getResourceAsStream", .{ Inheritance.cast(?*String, key) }));
-            if (resourceInputStream == null) {
+            if (Object.isNull(resourceInputStream)) {
                 std.debug.panic("{any}", .{exception: { _ = Object.toString(Object.of(Inheritance.call(Inheritance.call(StringMaker.create(), "append", .{ String.literal("Image resource is not available for key: ") }).?, "append", .{ Inheritance.call(StringUtil.getInstance().?, "toString", .{ key }) }))); break :exception error.RuntimeException; }});
             }
             { // try
                 image = Inheritance.upcast(@TypeOf(image), Inheritance.call(self, "createImageFromInputStream", .{ key, resourceInputStream }));
             }
             // catch (Exception e):
-//                 _ = Inheritance.call(Inheritance.fieldPointer(self, "logUtil").*.?, "put", .{ String.literal("Exception: Trying Again After GC"), self, self.commonStrings.?.GET, e });
-//                 _ = Inheritance.call(Inheritance.fieldPointer(self, "logUtil").*.?, "putF", .{ Object.toString(Object.of(Inheritance.call(Inheritance.call(StringMaker.create(), "append", .{ String.literal("InputStream: ") }).?, "append", .{ Inheritance.call(StringUtil.getInstance().?, "toString", .{ resourceInputStream }) }))), self, self.commonStrings.?.GET });
+//                 _ = Inheritance.call(Inheritance.fieldPointer(self, "logUtil").*.?, "put", .{ String.literal("Exception: Trying Again After GC"), self, Inheritance.fieldPointer(self.commonStrings.?, "GET").*, e });
+//                 _ = Inheritance.call(Inheritance.fieldPointer(self, "logUtil").*.?, "putF", .{ Object.toString(Object.of(Inheritance.call(Inheritance.call(StringMaker.create(), "append", .{ String.literal("InputStream: ") }).?, "append", .{ Inheritance.call(StringUtil.getInstance().?, "toString", .{ resourceInputStream }) }))), self, Inheritance.fieldPointer(self.commonStrings.?, "GET").* });
 //                 _ = self.tsUtil.?.gc();
 //                 _ = self.tsUtil.?.gc();
-//                 _ = Inheritance.call(Inheritance.fieldPointer(self, "logUtil").*.?, "putF", .{ Memory.getInfo(), self, self.commonStrings.?.GET });
+//                 _ = Inheritance.call(Inheritance.fieldPointer(self, "logUtil").*.?, "putF", .{ Memory.getInfo(), self, Inheritance.fieldPointer(self.commonStrings.?, "GET").* });
 //                 _ = (std.Io.sleep(std.Io.Threaded.global_single_threaded.io(), std.Io.Duration.fromMilliseconds(100), .awake) catch {});
 //                 image = Inheritance.upcast(@TypeOf(image), Inheritance.call(self, "createImageFromInputStream", .{ key, resourceInputStream }));
             if (J2MEUtil.isHTML()) {

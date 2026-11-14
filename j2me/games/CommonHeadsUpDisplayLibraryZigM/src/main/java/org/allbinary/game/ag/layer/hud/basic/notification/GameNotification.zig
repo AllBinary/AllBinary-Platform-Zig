@@ -38,7 +38,7 @@ pub const GameNotification = struct {
 
     // Static fields with runtime initializers: call staticInit once at startup
     pub fn staticInit() void {
-        NULL_GAME_NOTIFICATION_EVENT = Inheritance.callStatic(GameNotificationEvent, "create5", .{ NullUtil.getInstance().?.NULL_OBJECT, StringUtil.getInstance().?.EMPTY_STRING, Inheritance.callStatic(Integer, "create1", .{ 0 }), BasicColorFactory.getInstance().?.RED, BooleanFactory.getInstance().?.FALSE });
+        NULL_GAME_NOTIFICATION_EVENT = Inheritance.callStatic(GameNotificationEvent, "create5", .{ Inheritance.fieldPointer(NullUtil.getInstance().?, "NULL_OBJECT").*, Inheritance.fieldPointer(StringUtil.getInstance().?, "EMPTY_STRING").*, Inheritance.callStatic(Integer, "create1", .{ 0 }), Inheritance.fieldPointer(BasicColorFactory.getInstance().?, "RED").*, Inheritance.fieldPointer(BooleanFactory.getInstance().?, "FALSE").* });
     }
 
     fn initFields(this: *Self) void {

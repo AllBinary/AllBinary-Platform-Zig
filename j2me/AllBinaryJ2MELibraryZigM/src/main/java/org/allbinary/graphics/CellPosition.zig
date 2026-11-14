@@ -75,11 +75,11 @@ pub const CellPosition = struct {
     pub fn toStringColRow(i_column: i32, i_row: i32) ?*String {
         const stringBuffer: ?*StringMaker = StringMaker.create();
         const commonSeps: ?*CommonSeps = Inheritance.upcast(?*CommonSeps, CommonSeps.getInstance());
-        _ = Inheritance.call(stringBuffer.?, "append", .{ commonSeps.?.PARENTHESIS_OPEN });
+        _ = Inheritance.call(stringBuffer.?, "append", .{ Inheritance.fieldPointer(commonSeps.?, "PARENTHESIS_OPEN").* });
         _ = Inheritance.call(stringBuffer.?, "appendint", .{ i_column });
-        _ = Inheritance.call(stringBuffer.?, "append", .{ commonSeps.?.COMMA });
+        _ = Inheritance.call(stringBuffer.?, "append", .{ Inheritance.fieldPointer(commonSeps.?, "COMMA").* });
         _ = Inheritance.call(stringBuffer.?, "appendint", .{ i_row });
-        _ = Inheritance.call(stringBuffer.?, "append", .{ commonSeps.?.PARENTHESIS_CLOSE });
+        _ = Inheritance.call(stringBuffer.?, "append", .{ Inheritance.fieldPointer(commonSeps.?, "PARENTHESIS_CLOSE").* });
         return Inheritance.upcast(?*String, Object.toString(Object.of(stringBuffer)));
     }
     

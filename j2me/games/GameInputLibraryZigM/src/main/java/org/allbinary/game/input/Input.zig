@@ -29,7 +29,7 @@ pub const Input = struct {
 
     fn initFields(this: *Self) void {
         this.id = 0;
-        this.name = Inheritance.upcast(?*String, StringUtil.getInstance().?.EMPTY_STRING);
+        this.name = Inheritance.upcast(?*String, Inheritance.fieldPointer(StringUtil.getInstance().?, "EMPTY_STRING").*);
     }
     
 

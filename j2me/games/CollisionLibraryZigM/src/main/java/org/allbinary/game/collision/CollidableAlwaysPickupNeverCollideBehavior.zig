@@ -41,7 +41,7 @@ pub const CollidableAlwaysPickupNeverCollideBehavior = struct {
     pub fn getCollisionTypeWith(self: *Self, layerInterface: ?*AllBinaryLayer) ?*CollisionType {
         _ = layerInterface;
         _ = self;
-        return Inheritance.upcast(?*CollisionType, CollisionTypeFactory.getInstance().?.PICKUP);
+        return Inheritance.upcast(?*CollisionType, Inheritance.fieldPointer(CollisionTypeFactory.getInstance().?, "PICKUP").*);
     }
 };
 

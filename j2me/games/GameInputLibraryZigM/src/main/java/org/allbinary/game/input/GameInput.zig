@@ -49,7 +49,7 @@ pub const GameInput = struct {
         this.initFields();
         this.gameKeyEventList = gameKeyEventList;
         this.removalGameKeyEventList = removalGameKeyEventList;
-        this.isRemoveDuplicateKeyPresses = Inheritance.call(Features.getInstance().?, "isFeature", .{ InputFeatureFactory.getInstance().?.REMOVE_DUPLICATE_KEY_PRESSES });
+        this.isRemoveDuplicateKeyPresses = Inheritance.call(Features.getInstance().?, "isFeature", .{ Inheritance.fieldPointer(InputFeatureFactory.getInstance().?, "REMOVE_DUPLICATE_KEY_PRESSES").* });
         return this;
     }
     
@@ -61,10 +61,10 @@ pub const GameInput = struct {
         if (self.isRemoveDuplicateKeyPresses and Inheritance.call(self.gameKeyEventList.?, "contains", .{ gameKeyEvent })) {
             return;
         }
-        if (gameKeyEvent != null) {
+        if (!Object.isNull(gameKeyEvent)) {
             _ = Inheritance.call(self.gameKeyEventList.?, "add", .{ gameKeyEvent });
         } else {
-            _ = Inheritance.call(self.logUtil.?, "putF", .{ String.literal("Danger Passed Null GameKeyEvent"), self, self.commonStrings.?.ADD });
+            _ = Inheritance.call(self.logUtil.?, "putF", .{ String.literal("Danger Passed Null GameKeyEvent"), self, Inheritance.fieldPointer(self.commonStrings.?, "ADD").* });
         }
     }
     
@@ -102,7 +102,7 @@ pub const GameInput = struct {
         {
             var index: i32 = list.?.size();
             while (value_N66847: { index -= 1; break :value_N66847 index; } >= 0) {
-            gameKeyEvent = Inheritance.cast(?*GameKeyEvent, list.?.objectArray[@intCast(index)]);
+            gameKeyEvent = Inheritance.cast(?*GameKeyEvent, Inheritance.fieldPointer(list.?, "objectArray").*[@intCast(index)]);
             if (Inheritance.receiver(gameKeyEvent.?, "getSourceId").getSourceId() != 1) {
                 _ = Inheritance.call(list.?, "removeAt", .{ index });
             }
@@ -121,11 +121,11 @@ pub const GameInput = struct {
         {
             var index: i32 = 0;
             while (index < size) : (index += 1) {
-            const anyType: ?Object = Inheritance.upcast(?Object, removeList.?.objectArray[@intCast(index)]);
+            const anyType: ?Object = Inheritance.upcast(?Object, Inheritance.fieldPointer(removeList.?, "objectArray").*[@intCast(index)]);
             {
                 var index2: i32 = list.?.size();
                 while (value_N67208: { index2 -= 1; break :value_N67208 index2; } >= 0) {
-                if (Object.same(list.?.objectArray[@intCast(index2)], anyType)) {
+                if (Object.same(Inheritance.fieldPointer(list.?, "objectArray").*[@intCast(index2)], anyType)) {
                     _ = Inheritance.call(list.?, "removeAt", .{ index2 });
                 }
                 }

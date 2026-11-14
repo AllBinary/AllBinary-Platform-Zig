@@ -29,6 +29,7 @@ const StringMaker = @import("org/allbinary/logic/string/StringMaker.zig").String
 const BasicArrayList = @import("org/allbinary/util/BasicArrayList.zig").BasicArrayList;
 const BasicArrayListD = @import("org/allbinary/util/BasicArrayListD.zig").BasicArrayListD;
 const AllBinaryGameCanvas = @import("org/allbinary/game/displayable/canvas/AllBinaryGameCanvas.zig").AllBinaryGameCanvas;
+const Exception = @import("java/lang/Exception.zig").Exception;
 
 pub const CheatGameInputProcessor = struct {
     const Self = @This();
@@ -73,31 +74,31 @@ pub const CheatGameInputProcessor = struct {
             {
                 var index: i32 = 0;
                 while (index < size) : (index += 1) {
-                const anyType: ?Object = Inheritance.upcast(?Object, list.?.objectArray[@intCast(index)]);
+                const anyType: ?Object = Inheritance.upcast(?Object, Inheritance.fieldPointer(list.?, "objectArray").*[@intCast(index)]);
                 const key: i32 = Inheritance.callStatic(GameKeyEventUtil, "getKey", .{ anyType });
-                if (key == Inheritance.receiverOf(self.gameKeyFactory.?.LEVEL_DOWN.?, "getId").getId()) {
+                if (key == Inheritance.receiverOf(Inheritance.fieldPointer(self.gameKeyFactory.?, "LEVEL_DOWN").*.?, "getId").getId()) {
                     _ = Inheritance.receiverOf(CheatGameInputProcessor.inputProcessor.?, "strafeLeft").strafeLeft();
                     break;
-                } else if (key == Inheritance.receiverOf(self.gameKeyFactory.?.LEVEL_UP.?, "getId").getId()) {
+                } else if (key == Inheritance.receiverOf(Inheritance.fieldPointer(self.gameKeyFactory.?, "LEVEL_UP").*.?, "getId").getId()) {
                     _ = Inheritance.receiverOf(CheatGameInputProcessor.inputProcessor.?, "strafeRight").strafeRight();
                     break;
                 }
-                if (key == Inheritance.receiverOf(self.gameKeyFactory.?.LEFT.?, "getId").getId()) {
+                if (key == Inheritance.receiverOf(Inheritance.fieldPointer(self.gameKeyFactory.?, "LEFT").*.?, "getId").getId()) {
                     _ = Inheritance.receiverOf(CheatGameInputProcessor.inputProcessor.?, "left").left();
                     break;
-                } else if (key == Inheritance.receiverOf(self.gameKeyFactory.?.RIGHT.?, "getId").getId()) {
+                } else if (key == Inheritance.receiverOf(Inheritance.fieldPointer(self.gameKeyFactory.?, "RIGHT").*.?, "getId").getId()) {
                     _ = Inheritance.receiverOf(CheatGameInputProcessor.inputProcessor.?, "right").right();
                     break;
-                } else if (key == Inheritance.receiverOf(self.gameKeyFactory.?.UP.?, "getId").getId()) {
+                } else if (key == Inheritance.receiverOf(Inheritance.fieldPointer(self.gameKeyFactory.?, "UP").*.?, "getId").getId()) {
                     _ = Inheritance.receiverOf(CheatGameInputProcessor.inputProcessor.?, "up").up();
                     break;
-                } else if (key == Inheritance.receiverOf(self.gameKeyFactory.?.DOWN.?, "getId").getId()) {
+                } else if (key == Inheritance.receiverOf(Inheritance.fieldPointer(self.gameKeyFactory.?, "DOWN").*.?, "getId").getId()) {
                     _ = Inheritance.receiverOf(CheatGameInputProcessor.inputProcessor.?, "down").down();
                     break;
-                } else if (key == Inheritance.receiverOf(self.gameKeyFactory.?.KEY_NUM1.?, "getId").getId()) {
+                } else if (key == Inheritance.receiverOf(Inheritance.fieldPointer(self.gameKeyFactory.?, "KEY_NUM1").*.?, "getId").getId()) {
                     _ = Inheritance.call(CheatGameInputProcessor.inputProcessor.?, "special1", .{ gameLayerManager, GameKeyEvent.NONE });
                     break;
-                } else if (key == Inheritance.receiverOf(self.gameKeyFactory.?.KEY_NUM3.?, "getId").getId()) {
+                } else if (key == Inheritance.receiverOf(Inheritance.fieldPointer(self.gameKeyFactory.?, "KEY_NUM3").*.?, "getId").getId()) {
                     _ = Inheritance.call(CheatGameInputProcessor.inputProcessor.?, "special2", .{ gameLayerManager, GameKeyEvent.NONE });
                     break;
                 }
@@ -106,7 +107,7 @@ pub const CheatGameInputProcessor = struct {
             _ = list.?.clear();
         }
         // catch (Exception e):
-//             _ = Inheritance.call(Inheritance.fieldPointer(self, "logUtil").*.?, "put", .{ Inheritance.fieldPointer(self, "commonStrings").*.?.EXCEPTION, self, Inheritance.fieldPointer(self, "commonStrings").*.?.UPDATE, e });
+//             _ = Inheritance.call(Inheritance.fieldPointer(self, "logUtil").*.?, "put", .{ Inheritance.fieldPointer(Inheritance.fieldPointer(self, "commonStrings").*.?, "EXCEPTION").*, self, Inheritance.fieldPointer(Inheritance.fieldPointer(self, "commonStrings").*.?, "UPDATE").*, e });
     }
 };
 

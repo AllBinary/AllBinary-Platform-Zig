@@ -18,7 +18,7 @@ const allocator = std.heap.page_allocator;
 const String = @import("java/lang/String.zig").String;
 const Object = @import("java/lang/Object.zig").Object;
 const Inheritance = @import("zig/Inheritance.zig");
-// const Player = @import("javax/microedition/media/Player.zig").Player;
+const Player = @import("javax/microedition/media/Player.zig").Player;
 const ProgressCanvas = @import("org/allbinary/graphics/canvas/transition/progress/ProgressCanvas.zig").ProgressCanvas;
 const ProgressCanvasFactory = @import("org/allbinary/graphics/canvas/transition/progress/ProgressCanvasFactory.zig").ProgressCanvasFactory;
 const LogUtil = @import("org/allbinary/logic/communication/log/LogUtil.zig").LogUtil;
@@ -30,6 +30,7 @@ const Sound = @import("org/allbinary/media/audio/Sound.zig").Sound;
 const SoundStrings = @import("org/allbinary/media/audio/SoundStrings.zig").SoundStrings;
 const SoundsFactoryInterface = @import("org/allbinary/media/audio/SoundsFactoryInterface.zig").SoundsFactoryInterface;
 const Integer = @import("java/lang/Integer.zig").Integer;
+const Exception = @import("java/lang/Exception.zig").Exception;
 
 pub const Sounds = struct {
     const Self = @This();
@@ -58,7 +59,7 @@ pub const Sounds = struct {
 
     // throws Exception
     pub fn init(self: *Self) void {
-        _ = Inheritance.call(self.logUtil.?, "putF", .{ self.commonStrings.?.START, self, self.commonStrings.?.INIT });
+        _ = Inheritance.call(self.logUtil.?, "putF", .{ Inheritance.fieldPointer(self.commonStrings.?, "START").*, self, Inheritance.fieldPointer(self.commonStrings.?, "INIT").* });
         const commonLabels: ?*CommonLabels = Inheritance.upcast(?*CommonLabels, CommonLabels.getInstance());
         const progressCanvas: ?*ProgressCanvas = Inheritance.upcast(?*ProgressCanvas, ProgressCanvasFactory.getInstance());
         _ = self.soundsFactoryInterface.?.init();
@@ -71,39 +72,39 @@ pub const Sounds = struct {
             var i: i32 = 0;
             while (i < @as(i32, @intCast(soundInterfaceArray.len))) : (i += 1) {
             const soundInterface: ?*Sound = Inheritance.upcast(?*Sound, soundInterfaceArray[@intCast(i)]);
-            if (soundInterface != null) {
+            if (!Object.isNull(soundInterface)) {
                 indexInteger = Inheritance.upcast(@TypeOf(indexInteger), Inheritance.call(smallIntegerSingletonFactory.?, "getAt", .{ i }));
                 indexString = Inheritance.upcast(@TypeOf(indexString), String.valueOf(indexInteger.?));
                 _ = Inheritance.call(stringBuffer.?, "delete", .{ 0, stringBuffer.?.length() });
-                _ = Inheritance.call(stringBuffer.?, "append", .{ commonLabels.?.INDEX_LABEL });
+                _ = Inheritance.call(stringBuffer.?, "append", .{ Inheritance.fieldPointer(commonLabels.?, "INDEX_LABEL").* });
                 _ = Inheritance.call(stringBuffer.?, "append", .{ indexString });
-                _ = Inheritance.call(stringBuffer.?, "append", .{ self.soundStrings.?.SOUND });
+                _ = Inheritance.call(stringBuffer.?, "append", .{ Inheritance.fieldPointer(self.soundStrings.?, "SOUND").* });
                 _ = Inheritance.call(stringBuffer.?, "append", .{ String.fromBytes(@as(*const Object.Class, @ptrCast(@alignCast(@as(?*anyopaque, @ptrCast(@constCast(Object.of(soundInterface).?.class))).?))).name) });
-                _ = Inheritance.call(self.logUtil.?, "putF", .{ Object.toString(Object.of(stringBuffer)), self, self.commonStrings.?.INIT });
+                _ = Inheritance.call(self.logUtil.?, "putF", .{ Object.toString(Object.of(stringBuffer)), self, Inheritance.fieldPointer(self.commonStrings.?, "INIT").* });
                 _ = soundInterface.?.init();
-                _ = Inheritance.call(progressCanvas.?, "addNormalPortion", .{ 100, Object.toString(Object.of(Inheritance.call(Inheritance.call(StringMaker.create(), "append", .{ self.soundStrings.?.INIT_SOUND }).?, "append", .{ indexString }))) });
+                _ = Inheritance.call(progressCanvas.?, "addNormalPortion", .{ 100, Object.toString(Object.of(Inheritance.call(Inheritance.call(StringMaker.create(), "append", .{ Inheritance.fieldPointer(self.soundStrings.?, "INIT_SOUND").* }).?, "append", .{ indexString }))) });
             }
             }
         }
         _ = Inheritance.call(self.soundsFactoryInterface.?, "setInitialized", .{ true });
-        _ = Inheritance.call(self.logUtil.?, "putF", .{ self.commonStrings.?.END, self, self.commonStrings.?.INIT });
+        _ = Inheritance.call(self.logUtil.?, "putF", .{ Inheritance.fieldPointer(self.commonStrings.?, "END").*, self, Inheritance.fieldPointer(self.commonStrings.?, "INIT").* });
     }
     
 
     // throws Exception
     pub fn stopAll(self: *Self) void {
-        _ = Inheritance.call(self.logUtil.?, "putF", .{ self.commonStrings.?.START, self, self.soundStrings.?.STOP_ALL });
+        _ = Inheritance.call(self.logUtil.?, "putF", .{ Inheritance.fieldPointer(self.commonStrings.?, "START").*, self, Inheritance.fieldPointer(self.soundStrings.?, "STOP_ALL").* });
         const soundInterfaceArray: []?*Sound = self.soundsFactoryInterface.?.getSoundInterfaceArray();
         const progressCanvas: ?*ProgressCanvas = Inheritance.upcast(?*ProgressCanvas, ProgressCanvasFactory.getInstance());
         var player: ?*Player = null;
         {
             var index: i32 = 0;
             while (index < @as(i32, @intCast(soundInterfaceArray.len))) : (index += 1) {
-            if (soundInterfaceArray[@intCast(index)] != null) {
+            if (!Object.isNull(soundInterfaceArray[@intCast(index)])) {
                 player = Inheritance.upcast(@TypeOf(player), soundInterfaceArray[@intCast(index)].?.getPlayerP());
-                if (player != null) {
-                    _ = player.?.stop();
-                    _ = Inheritance.call(progressCanvas.?, "addPortion", .{ 100, self.soundStrings.?.STOPPING_SOUND, index });
+                if (!Object.isNull(player)) {
+                    _ = Inheritance.receiver(player.?, "stop").stop();
+                    _ = Inheritance.call(progressCanvas.?, "addPortion", .{ 100, Inheritance.fieldPointer(self.soundStrings.?, "STOPPING_SOUND").*, index });
                 }
             }
             }
@@ -113,18 +114,18 @@ pub const Sounds = struct {
 
     // throws Exception
     pub fn closeAll(self: *Self) void {
-        _ = Inheritance.call(self.logUtil.?, "putF", .{ self.commonStrings.?.START, self, self.soundStrings.?.CLOSE_ALL });
+        _ = Inheritance.call(self.logUtil.?, "putF", .{ Inheritance.fieldPointer(self.commonStrings.?, "START").*, self, Inheritance.fieldPointer(self.soundStrings.?, "CLOSE_ALL").* });
         const soundInterfaceArray: []?*Sound = self.soundsFactoryInterface.?.getSoundInterfaceArray();
         const progressCanvas: ?*ProgressCanvas = Inheritance.upcast(?*ProgressCanvas, ProgressCanvasFactory.getInstance());
         var player: ?*Player = null;
         {
             var index: i32 = 0;
             while (index < @as(i32, @intCast(soundInterfaceArray.len))) : (index += 1) {
-            if (soundInterfaceArray[@intCast(index)] != null) {
+            if (!Object.isNull(soundInterfaceArray[@intCast(index)])) {
                 player = Inheritance.upcast(@TypeOf(player), soundInterfaceArray[@intCast(index)].?.getPlayerP());
-                if (player != null) {
-                    _ = player.?.close();
-                    _ = Inheritance.call(progressCanvas.?, "addPortion", .{ 100, self.soundStrings.?.CLOSING_SOUND, index });
+                if (!Object.isNull(player)) {
+                    _ = Inheritance.receiver(player.?, "close").close();
+                    _ = Inheritance.call(progressCanvas.?, "addPortion", .{ 100, Inheritance.fieldPointer(self.soundStrings.?, "CLOSING_SOUND").*, index });
                 }
             }
             }

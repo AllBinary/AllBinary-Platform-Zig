@@ -6,10 +6,10 @@ const allocator = std.heap.page_allocator;
 const String = @import("java/lang/String.zig").String;
 const Object = @import("java/lang/Object.zig").Object;
 const Inheritance = @import("zig/Inheritance.zig");
-// const Buffer = @import("java/nio/Buffer.zig").Buffer;
-// const FloatBuffer = @import("java/nio/FloatBuffer.zig").FloatBuffer;
-// const IntBuffer = @import("java/nio/IntBuffer.zig").IntBuffer;
-// const ShortBuffer = @import("java/nio/ShortBuffer.zig").ShortBuffer;
+const Buffer = @import("java/nio/Buffer.zig").Buffer;
+const FloatBuffer = @import("java/nio/FloatBuffer.zig").FloatBuffer;
+const IntBuffer = @import("java/nio/IntBuffer.zig").IntBuffer;
+const ShortBuffer = @import("java/nio/ShortBuffer.zig").ShortBuffer;
 const GL = @import("javax/microedition/khronos/opengles/GL.zig").GL;
 
 // Java interface: an implementation is a pointer and a table of functions
@@ -20,27 +20,27 @@ pub const GL11Ext = struct {
     object: Object,
     base: GL,
     toStringFn: *const fn (pointer: *anyopaque) ?*String,
-    glTexParameterfvFn: *const fn (pointer: *anyopaque, target: i32, pname: i32, param: []f32, offset: i32) void,
-    glCurrentPaletteMatrixOESFn: *const fn (pointer: *anyopaque, matrixpaletteindex: i32) void,
-    glDrawTexfOESFn: *const fn (pointer: *anyopaque, x: f32, y: f32, z: f32, width: f32, height: f32) void,
-    glDrawTexfvOESFn: *const fn (pointer: *anyopaque, coords: []f32, offset: i32) void,
-    glDrawTexfvOESFn: *const fn (pointer: *anyopaque, coords: ?*FloatBuffer) void,
-    glDrawTexiOESFn: *const fn (pointer: *anyopaque, x: i32, y: i32, z: i32, width: i32, height: i32) void,
-    glDrawTexivOESFn: *const fn (pointer: *anyopaque, coords: []i32, offset: i32) void,
-    glDrawTexivOESFn: *const fn (pointer: *anyopaque, coords: ?*IntBuffer) void,
-    glDrawTexsOESFn: *const fn (pointer: *anyopaque, x: i16, y: i16, z: i16, width: i16, height: i16) void,
-    glDrawTexsvOESFn: *const fn (pointer: *anyopaque, coords: []i16, offset: i32) void,
-    glDrawTexsvOESFn: *const fn (pointer: *anyopaque, coords: ?*ShortBuffer) void,
-    glDrawTexxOESFn: *const fn (pointer: *anyopaque, x: i32, y: i32, z: i32, width: i32, height: i32) void,
-    glDrawTexxvOESFn: *const fn (pointer: *anyopaque, coords: []i32, offset: i32) void,
-    glDrawTexxvOESFn: *const fn (pointer: *anyopaque, coords: ?*IntBuffer) void,
-    glEnableFn: *const fn (pointer: *anyopaque, cap: i32) void,
-    glEnableClientStateFn: *const fn (pointer: *anyopaque, array: i32) void,
-    glLoadPaletteFromModelViewMatrixOESFn: *const fn (pointer: *anyopaque) void,
-    glMatrixIndexPointerOESFn: *const fn (pointer: *anyopaque, size: i32, @"type": i32, stride: i32, pointer: ?*Buffer) void,
-    glMatrixIndexPointerOESFn: *const fn (pointer: *anyopaque, size: i32, @"type": i32, stride: i32, offset: i32) void,
-    glWeightPointerOESFn: *const fn (pointer: *anyopaque, size: i32, @"type": i32, stride: i32, pointer: ?*Buffer) void,
-    glWeightPointerOESFn: *const fn (pointer: *anyopaque, size: i32, @"type": i32, stride: i32, offset: i32) void,
+    glTexParameterfvFn: *const fn (interface_pointer: *anyopaque, target: i32, pname: i32, param: []f32, offset: i32) void,
+    glCurrentPaletteMatrixOESFn: *const fn (interface_pointer: *anyopaque, matrixpaletteindex: i32) void,
+    glDrawTexfOESFn: *const fn (interface_pointer: *anyopaque, x: f32, y: f32, z: f32, width: f32, height: f32) void,
+    glDrawTexfvOES2Fn: *const fn (interface_pointer: *anyopaque, coords: []f32, offset: i32) void,
+    glDrawTexfvOESFn: *const fn (interface_pointer: *anyopaque, coords: ?*FloatBuffer) void,
+    glDrawTexiOESFn: *const fn (interface_pointer: *anyopaque, x: i32, y: i32, z: i32, width: i32, height: i32) void,
+    glDrawTexivOES2Fn: *const fn (interface_pointer: *anyopaque, coords: []i32, offset: i32) void,
+    glDrawTexivOESFn: *const fn (interface_pointer: *anyopaque, coords: ?*IntBuffer) void,
+    glDrawTexsOESFn: *const fn (interface_pointer: *anyopaque, x: i16, y: i16, z: i16, width: i16, height: i16) void,
+    glDrawTexsvOES2Fn: *const fn (interface_pointer: *anyopaque, coords: []i16, offset: i32) void,
+    glDrawTexsvOESFn: *const fn (interface_pointer: *anyopaque, coords: ?*ShortBuffer) void,
+    glDrawTexxOESFn: *const fn (interface_pointer: *anyopaque, x: i32, y: i32, z: i32, width: i32, height: i32) void,
+    glDrawTexxvOES2Fn: *const fn (interface_pointer: *anyopaque, coords: []i32, offset: i32) void,
+    glDrawTexxvOESFn: *const fn (interface_pointer: *anyopaque, coords: ?*IntBuffer) void,
+    glEnableFn: *const fn (interface_pointer: *anyopaque, cap: i32) void,
+    glEnableClientStateFn: *const fn (interface_pointer: *anyopaque, array: i32) void,
+    glLoadPaletteFromModelViewMatrixOESFn: *const fn (interface_pointer: *anyopaque) void,
+    glMatrixIndexPointerOES__int_int_int_BufferFn: *const fn (interface_pointer: *anyopaque, size: i32, @"type": i32, stride: i32, pointer: ?*Buffer) void,
+    glMatrixIndexPointerOES__int_int_int_intFn: *const fn (interface_pointer: *anyopaque, size: i32, @"type": i32, stride: i32, offset: i32) void,
+    glWeightPointerOES__int_int_int_BufferFn: *const fn (interface_pointer: *anyopaque, size: i32, @"type": i32, stride: i32, pointer: ?*Buffer) void,
+    glWeightPointerOES__int_int_int_intFn: *const fn (interface_pointer: *anyopaque, size: i32, @"type": i32, stride: i32, offset: i32) void,
 
     pub fn glTexParameterfv(self: *Self, target: i32, pname: i32, param: []f32, offset: i32) void {
         return self.glTexParameterfvFn(self.pointer, target, pname, param, offset);
@@ -54,8 +54,8 @@ pub const GL11Ext = struct {
         return self.glDrawTexfOESFn(self.pointer, x, y, z, width, height);
     }
 
-    pub fn glDrawTexfvOES(self: *Self, coords: []f32, offset: i32) void {
-        return self.glDrawTexfvOESFn(self.pointer, coords, offset);
+    pub fn glDrawTexfvOES2(self: *Self, coords: []f32, offset: i32) void {
+        return self.glDrawTexfvOES2Fn(self.pointer, coords, offset);
     }
 
     pub fn glDrawTexfvOES(self: *Self, coords: ?*FloatBuffer) void {
@@ -66,8 +66,8 @@ pub const GL11Ext = struct {
         return self.glDrawTexiOESFn(self.pointer, x, y, z, width, height);
     }
 
-    pub fn glDrawTexivOES(self: *Self, coords: []i32, offset: i32) void {
-        return self.glDrawTexivOESFn(self.pointer, coords, offset);
+    pub fn glDrawTexivOES2(self: *Self, coords: []i32, offset: i32) void {
+        return self.glDrawTexivOES2Fn(self.pointer, coords, offset);
     }
 
     pub fn glDrawTexivOES(self: *Self, coords: ?*IntBuffer) void {
@@ -78,8 +78,8 @@ pub const GL11Ext = struct {
         return self.glDrawTexsOESFn(self.pointer, x, y, z, width, height);
     }
 
-    pub fn glDrawTexsvOES(self: *Self, coords: []i16, offset: i32) void {
-        return self.glDrawTexsvOESFn(self.pointer, coords, offset);
+    pub fn glDrawTexsvOES2(self: *Self, coords: []i16, offset: i32) void {
+        return self.glDrawTexsvOES2Fn(self.pointer, coords, offset);
     }
 
     pub fn glDrawTexsvOES(self: *Self, coords: ?*ShortBuffer) void {
@@ -90,8 +90,8 @@ pub const GL11Ext = struct {
         return self.glDrawTexxOESFn(self.pointer, x, y, z, width, height);
     }
 
-    pub fn glDrawTexxvOES(self: *Self, coords: []i32, offset: i32) void {
-        return self.glDrawTexxvOESFn(self.pointer, coords, offset);
+    pub fn glDrawTexxvOES2(self: *Self, coords: []i32, offset: i32) void {
+        return self.glDrawTexxvOES2Fn(self.pointer, coords, offset);
     }
 
     pub fn glDrawTexxvOES(self: *Self, coords: ?*IntBuffer) void {
@@ -110,20 +110,20 @@ pub const GL11Ext = struct {
         return self.glLoadPaletteFromModelViewMatrixOESFn(self.pointer);
     }
 
-    pub fn glMatrixIndexPointerOES(self: *Self, size: i32, @"type": i32, stride: i32, pointer: ?*Buffer) void {
-        return self.glMatrixIndexPointerOESFn(self.pointer, size, @"type", stride, pointer);
+    pub fn glMatrixIndexPointerOES__int_int_int_Buffer(self: *Self, size: i32, @"type": i32, stride: i32, pointer: ?*Buffer) void {
+        return self.glMatrixIndexPointerOES__int_int_int_BufferFn(self.pointer, size, @"type", stride, pointer);
     }
 
-    pub fn glMatrixIndexPointerOES(self: *Self, size: i32, @"type": i32, stride: i32, offset: i32) void {
-        return self.glMatrixIndexPointerOESFn(self.pointer, size, @"type", stride, offset);
+    pub fn glMatrixIndexPointerOES__int_int_int_int(self: *Self, size: i32, @"type": i32, stride: i32, offset: i32) void {
+        return self.glMatrixIndexPointerOES__int_int_int_intFn(self.pointer, size, @"type", stride, offset);
     }
 
-    pub fn glWeightPointerOES(self: *Self, size: i32, @"type": i32, stride: i32, pointer: ?*Buffer) void {
-        return self.glWeightPointerOESFn(self.pointer, size, @"type", stride, pointer);
+    pub fn glWeightPointerOES__int_int_int_Buffer(self: *Self, size: i32, @"type": i32, stride: i32, pointer: ?*Buffer) void {
+        return self.glWeightPointerOES__int_int_int_BufferFn(self.pointer, size, @"type", stride, pointer);
     }
 
-    pub fn glWeightPointerOES(self: *Self, size: i32, @"type": i32, stride: i32, offset: i32) void {
-        return self.glWeightPointerOESFn(self.pointer, size, @"type", stride, offset);
+    pub fn glWeightPointerOES__int_int_int_int(self: *Self, size: i32, @"type": i32, stride: i32, offset: i32) void {
+        return self.glWeightPointerOES__int_int_int_intFn(self.pointer, size, @"type", stride, offset);
     }
 
     pub fn toString(self: *Self) ?*String {
@@ -132,99 +132,99 @@ pub const GL11Ext = struct {
 
     // The interface value of an object with the methods. Like a Java class a method can be declared by the object or a superclass.
     pub fn of(object: anytype) ?*Self {
-        const Implementation = @TypeOf(object);
+        const ImplementationType = @TypeOf(object);
         const Methods = struct {
             fn toString(pointer: *anyopaque) ?*String {
-                const implementation: Implementation = @ptrCast(@alignCast(pointer));
+                const implementation: ImplementationType = @ptrCast(@alignCast(pointer));
                 return String.valueOf(implementation);
             }
-            fn glTexParameterfv(pointer: *anyopaque, target: i32, pname: i32, param: []f32, offset: i32) void {
-                const implementation: Implementation = @ptrCast(@alignCast(pointer));
-                return Inheritance.receiver(implementation, "glTexParameterfv").glTexParameterfv(target, pname, param, offset);
+            fn glTexParameterfv(interface_pointer: *anyopaque, target: i32, pname: i32, param: []f32, offset: i32) void {
+                const implementation: ImplementationType = @ptrCast(@alignCast(interface_pointer));
+                return Inheritance.call(implementation, "glTexParameterfv", .{ target, pname, param, offset });
             }
-            fn glCurrentPaletteMatrixOES(pointer: *anyopaque, matrixpaletteindex: i32) void {
-                const implementation: Implementation = @ptrCast(@alignCast(pointer));
-                return Inheritance.receiver(implementation, "glCurrentPaletteMatrixOES").glCurrentPaletteMatrixOES(matrixpaletteindex);
+            fn glCurrentPaletteMatrixOES(interface_pointer: *anyopaque, matrixpaletteindex: i32) void {
+                const implementation: ImplementationType = @ptrCast(@alignCast(interface_pointer));
+                return Inheritance.call(implementation, "glCurrentPaletteMatrixOES", .{ matrixpaletteindex });
             }
-            fn glDrawTexfOES(pointer: *anyopaque, x: f32, y: f32, z: f32, width: f32, height: f32) void {
-                const implementation: Implementation = @ptrCast(@alignCast(pointer));
-                return Inheritance.receiver(implementation, "glDrawTexfOES").glDrawTexfOES(x, y, z, width, height);
+            fn glDrawTexfOES(interface_pointer: *anyopaque, x: f32, y: f32, z: f32, width: f32, height: f32) void {
+                const implementation: ImplementationType = @ptrCast(@alignCast(interface_pointer));
+                return Inheritance.call(implementation, "glDrawTexfOES", .{ x, y, z, width, height });
             }
-            fn glDrawTexfvOES(pointer: *anyopaque, coords: []f32, offset: i32) void {
-                const implementation: Implementation = @ptrCast(@alignCast(pointer));
-                return Inheritance.receiver(implementation, "glDrawTexfvOES").glDrawTexfvOES(coords, offset);
+            fn glDrawTexfvOES2(interface_pointer: *anyopaque, coords: []f32, offset: i32) void {
+                const implementation: ImplementationType = @ptrCast(@alignCast(interface_pointer));
+                return Inheritance.call(implementation, "glDrawTexfvOES", .{ coords, offset });
             }
-            fn glDrawTexfvOES(pointer: *anyopaque, coords: ?*FloatBuffer) void {
-                const implementation: Implementation = @ptrCast(@alignCast(pointer));
-                return Inheritance.receiver(implementation, "glDrawTexfvOES").glDrawTexfvOES(coords);
+            fn glDrawTexfvOES(interface_pointer: *anyopaque, coords: ?*FloatBuffer) void {
+                const implementation: ImplementationType = @ptrCast(@alignCast(interface_pointer));
+                return Inheritance.call(implementation, "glDrawTexfvOES", .{ coords });
             }
-            fn glDrawTexiOES(pointer: *anyopaque, x: i32, y: i32, z: i32, width: i32, height: i32) void {
-                const implementation: Implementation = @ptrCast(@alignCast(pointer));
-                return Inheritance.receiver(implementation, "glDrawTexiOES").glDrawTexiOES(x, y, z, width, height);
+            fn glDrawTexiOES(interface_pointer: *anyopaque, x: i32, y: i32, z: i32, width: i32, height: i32) void {
+                const implementation: ImplementationType = @ptrCast(@alignCast(interface_pointer));
+                return Inheritance.call(implementation, "glDrawTexiOES", .{ x, y, z, width, height });
             }
-            fn glDrawTexivOES(pointer: *anyopaque, coords: []i32, offset: i32) void {
-                const implementation: Implementation = @ptrCast(@alignCast(pointer));
-                return Inheritance.receiver(implementation, "glDrawTexivOES").glDrawTexivOES(coords, offset);
+            fn glDrawTexivOES2(interface_pointer: *anyopaque, coords: []i32, offset: i32) void {
+                const implementation: ImplementationType = @ptrCast(@alignCast(interface_pointer));
+                return Inheritance.call(implementation, "glDrawTexivOES", .{ coords, offset });
             }
-            fn glDrawTexivOES(pointer: *anyopaque, coords: ?*IntBuffer) void {
-                const implementation: Implementation = @ptrCast(@alignCast(pointer));
-                return Inheritance.receiver(implementation, "glDrawTexivOES").glDrawTexivOES(coords);
+            fn glDrawTexivOES(interface_pointer: *anyopaque, coords: ?*IntBuffer) void {
+                const implementation: ImplementationType = @ptrCast(@alignCast(interface_pointer));
+                return Inheritance.call(implementation, "glDrawTexivOES", .{ coords });
             }
-            fn glDrawTexsOES(pointer: *anyopaque, x: i16, y: i16, z: i16, width: i16, height: i16) void {
-                const implementation: Implementation = @ptrCast(@alignCast(pointer));
-                return Inheritance.receiver(implementation, "glDrawTexsOES").glDrawTexsOES(x, y, z, width, height);
+            fn glDrawTexsOES(interface_pointer: *anyopaque, x: i16, y: i16, z: i16, width: i16, height: i16) void {
+                const implementation: ImplementationType = @ptrCast(@alignCast(interface_pointer));
+                return Inheritance.call(implementation, "glDrawTexsOES", .{ x, y, z, width, height });
             }
-            fn glDrawTexsvOES(pointer: *anyopaque, coords: []i16, offset: i32) void {
-                const implementation: Implementation = @ptrCast(@alignCast(pointer));
-                return Inheritance.receiver(implementation, "glDrawTexsvOES").glDrawTexsvOES(coords, offset);
+            fn glDrawTexsvOES2(interface_pointer: *anyopaque, coords: []i16, offset: i32) void {
+                const implementation: ImplementationType = @ptrCast(@alignCast(interface_pointer));
+                return Inheritance.call(implementation, "glDrawTexsvOES", .{ coords, offset });
             }
-            fn glDrawTexsvOES(pointer: *anyopaque, coords: ?*ShortBuffer) void {
-                const implementation: Implementation = @ptrCast(@alignCast(pointer));
-                return Inheritance.receiver(implementation, "glDrawTexsvOES").glDrawTexsvOES(coords);
+            fn glDrawTexsvOES(interface_pointer: *anyopaque, coords: ?*ShortBuffer) void {
+                const implementation: ImplementationType = @ptrCast(@alignCast(interface_pointer));
+                return Inheritance.call(implementation, "glDrawTexsvOES", .{ coords });
             }
-            fn glDrawTexxOES(pointer: *anyopaque, x: i32, y: i32, z: i32, width: i32, height: i32) void {
-                const implementation: Implementation = @ptrCast(@alignCast(pointer));
-                return Inheritance.receiver(implementation, "glDrawTexxOES").glDrawTexxOES(x, y, z, width, height);
+            fn glDrawTexxOES(interface_pointer: *anyopaque, x: i32, y: i32, z: i32, width: i32, height: i32) void {
+                const implementation: ImplementationType = @ptrCast(@alignCast(interface_pointer));
+                return Inheritance.call(implementation, "glDrawTexxOES", .{ x, y, z, width, height });
             }
-            fn glDrawTexxvOES(pointer: *anyopaque, coords: []i32, offset: i32) void {
-                const implementation: Implementation = @ptrCast(@alignCast(pointer));
-                return Inheritance.receiver(implementation, "glDrawTexxvOES").glDrawTexxvOES(coords, offset);
+            fn glDrawTexxvOES2(interface_pointer: *anyopaque, coords: []i32, offset: i32) void {
+                const implementation: ImplementationType = @ptrCast(@alignCast(interface_pointer));
+                return Inheritance.call(implementation, "glDrawTexxvOES", .{ coords, offset });
             }
-            fn glDrawTexxvOES(pointer: *anyopaque, coords: ?*IntBuffer) void {
-                const implementation: Implementation = @ptrCast(@alignCast(pointer));
-                return Inheritance.receiver(implementation, "glDrawTexxvOES").glDrawTexxvOES(coords);
+            fn glDrawTexxvOES(interface_pointer: *anyopaque, coords: ?*IntBuffer) void {
+                const implementation: ImplementationType = @ptrCast(@alignCast(interface_pointer));
+                return Inheritance.call(implementation, "glDrawTexxvOES", .{ coords });
             }
-            fn glEnable(pointer: *anyopaque, cap: i32) void {
-                const implementation: Implementation = @ptrCast(@alignCast(pointer));
-                return Inheritance.receiver(implementation, "glEnable").glEnable(cap);
+            fn glEnable(interface_pointer: *anyopaque, cap: i32) void {
+                const implementation: ImplementationType = @ptrCast(@alignCast(interface_pointer));
+                return Inheritance.call(implementation, "glEnable", .{ cap });
             }
-            fn glEnableClientState(pointer: *anyopaque, array: i32) void {
-                const implementation: Implementation = @ptrCast(@alignCast(pointer));
-                return Inheritance.receiver(implementation, "glEnableClientState").glEnableClientState(array);
+            fn glEnableClientState(interface_pointer: *anyopaque, array: i32) void {
+                const implementation: ImplementationType = @ptrCast(@alignCast(interface_pointer));
+                return Inheritance.call(implementation, "glEnableClientState", .{ array });
             }
-            fn glLoadPaletteFromModelViewMatrixOES(pointer: *anyopaque) void {
-                const implementation: Implementation = @ptrCast(@alignCast(pointer));
+            fn glLoadPaletteFromModelViewMatrixOES(interface_pointer: *anyopaque) void {
+                const implementation: ImplementationType = @ptrCast(@alignCast(interface_pointer));
                 return Inheritance.receiver(implementation, "glLoadPaletteFromModelViewMatrixOES").glLoadPaletteFromModelViewMatrixOES();
             }
-            fn glMatrixIndexPointerOES(pointer: *anyopaque, size: i32, @"type": i32, stride: i32, pointer: ?*Buffer) void {
-                const implementation: Implementation = @ptrCast(@alignCast(pointer));
-                return Inheritance.receiver(implementation, "glMatrixIndexPointerOES").glMatrixIndexPointerOES(size, @"type", stride, pointer);
+            fn glMatrixIndexPointerOES__int_int_int_Buffer(interface_pointer: *anyopaque, size: i32, @"type": i32, stride: i32, pointer: ?*Buffer) void {
+                const implementation: ImplementationType = @ptrCast(@alignCast(interface_pointer));
+                return Inheritance.call(implementation, "glMatrixIndexPointerOES", .{ size, @"type", stride, pointer });
             }
-            fn glMatrixIndexPointerOES(pointer: *anyopaque, size: i32, @"type": i32, stride: i32, offset: i32) void {
-                const implementation: Implementation = @ptrCast(@alignCast(pointer));
-                return Inheritance.receiver(implementation, "glMatrixIndexPointerOES").glMatrixIndexPointerOES(size, @"type", stride, offset);
+            fn glMatrixIndexPointerOES__int_int_int_int(interface_pointer: *anyopaque, size: i32, @"type": i32, stride: i32, offset: i32) void {
+                const implementation: ImplementationType = @ptrCast(@alignCast(interface_pointer));
+                return Inheritance.call(implementation, "glMatrixIndexPointerOES", .{ size, @"type", stride, offset });
             }
-            fn glWeightPointerOES(pointer: *anyopaque, size: i32, @"type": i32, stride: i32, pointer: ?*Buffer) void {
-                const implementation: Implementation = @ptrCast(@alignCast(pointer));
-                return Inheritance.receiver(implementation, "glWeightPointerOES").glWeightPointerOES(size, @"type", stride, pointer);
+            fn glWeightPointerOES__int_int_int_Buffer(interface_pointer: *anyopaque, size: i32, @"type": i32, stride: i32, pointer: ?*Buffer) void {
+                const implementation: ImplementationType = @ptrCast(@alignCast(interface_pointer));
+                return Inheritance.call(implementation, "glWeightPointerOES", .{ size, @"type", stride, pointer });
             }
-            fn glWeightPointerOES(pointer: *anyopaque, size: i32, @"type": i32, stride: i32, offset: i32) void {
-                const implementation: Implementation = @ptrCast(@alignCast(pointer));
-                return Inheritance.receiver(implementation, "glWeightPointerOES").glWeightPointerOES(size, @"type", stride, offset);
+            fn glWeightPointerOES__int_int_int_int(interface_pointer: *anyopaque, size: i32, @"type": i32, stride: i32, offset: i32) void {
+                const implementation: ImplementationType = @ptrCast(@alignCast(interface_pointer));
+                return Inheritance.call(implementation, "glWeightPointerOES", .{ size, @"type", stride, offset });
             }
         };
         const this = allocator.create(Self) catch unreachable;
-        this.* = .{ .pointer = object, .object = Object.of(object).?, .base = GL.of(object).?.*, .toStringFn = Methods.toString, .glTexParameterfvFn = Methods.glTexParameterfv, .glCurrentPaletteMatrixOESFn = Methods.glCurrentPaletteMatrixOES, .glDrawTexfOESFn = Methods.glDrawTexfOES, .glDrawTexfvOESFn = Methods.glDrawTexfvOES, .glDrawTexfvOESFn = Methods.glDrawTexfvOES, .glDrawTexiOESFn = Methods.glDrawTexiOES, .glDrawTexivOESFn = Methods.glDrawTexivOES, .glDrawTexivOESFn = Methods.glDrawTexivOES, .glDrawTexsOESFn = Methods.glDrawTexsOES, .glDrawTexsvOESFn = Methods.glDrawTexsvOES, .glDrawTexsvOESFn = Methods.glDrawTexsvOES, .glDrawTexxOESFn = Methods.glDrawTexxOES, .glDrawTexxvOESFn = Methods.glDrawTexxvOES, .glDrawTexxvOESFn = Methods.glDrawTexxvOES, .glEnableFn = Methods.glEnable, .glEnableClientStateFn = Methods.glEnableClientState, .glLoadPaletteFromModelViewMatrixOESFn = Methods.glLoadPaletteFromModelViewMatrixOES, .glMatrixIndexPointerOESFn = Methods.glMatrixIndexPointerOES, .glMatrixIndexPointerOESFn = Methods.glMatrixIndexPointerOES, .glWeightPointerOESFn = Methods.glWeightPointerOES, .glWeightPointerOESFn = Methods.glWeightPointerOES };
+        this.* = .{ .pointer = object, .object = Object.of(object).?, .base = GL.of(object).?.*, .toStringFn = Methods.toString, .glTexParameterfvFn = Methods.glTexParameterfv, .glCurrentPaletteMatrixOESFn = Methods.glCurrentPaletteMatrixOES, .glDrawTexfOESFn = Methods.glDrawTexfOES, .glDrawTexfvOES2Fn = Methods.glDrawTexfvOES2, .glDrawTexfvOESFn = Methods.glDrawTexfvOES, .glDrawTexiOESFn = Methods.glDrawTexiOES, .glDrawTexivOES2Fn = Methods.glDrawTexivOES2, .glDrawTexivOESFn = Methods.glDrawTexivOES, .glDrawTexsOESFn = Methods.glDrawTexsOES, .glDrawTexsvOES2Fn = Methods.glDrawTexsvOES2, .glDrawTexsvOESFn = Methods.glDrawTexsvOES, .glDrawTexxOESFn = Methods.glDrawTexxOES, .glDrawTexxvOES2Fn = Methods.glDrawTexxvOES2, .glDrawTexxvOESFn = Methods.glDrawTexxvOES, .glEnableFn = Methods.glEnable, .glEnableClientStateFn = Methods.glEnableClientState, .glLoadPaletteFromModelViewMatrixOESFn = Methods.glLoadPaletteFromModelViewMatrixOES, .glMatrixIndexPointerOES__int_int_int_BufferFn = Methods.glMatrixIndexPointerOES__int_int_int_Buffer, .glMatrixIndexPointerOES__int_int_int_intFn = Methods.glMatrixIndexPointerOES__int_int_int_int, .glWeightPointerOES__int_int_int_BufferFn = Methods.glWeightPointerOES__int_int_int_Buffer, .glWeightPointerOES__int_int_int_intFn = Methods.glWeightPointerOES__int_int_int_int };
         return this;
     }
     pub const GL_MATRIX_INDEX_ARRAY_BUFFER_BINDING_OES: i32 = 35742;

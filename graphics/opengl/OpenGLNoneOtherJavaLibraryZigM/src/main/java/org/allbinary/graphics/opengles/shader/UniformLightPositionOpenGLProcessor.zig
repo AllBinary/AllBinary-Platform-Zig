@@ -18,7 +18,7 @@ const allocator = std.heap.page_allocator;
 const String = @import("java/lang/String.zig").String;
 const Object = @import("java/lang/Object.zig").Object;
 const Inheritance = @import("zig/Inheritance.zig");
-// const GL10 = @import("javax/microedition/khronos/opengles/GL10.zig").GL10;
+const GL10 = @import("javax/microedition/khronos/opengles/GL10.zig").GL10;
 const OpenGLObject3dProcessor = @import("org/allbinary/graphics/opengles/shader/OpenGLObject3dProcessor.zig").OpenGLObject3dProcessor;
 const ShaderComposite = @import("org/allbinary/graphics/opengles/shader/ShaderComposite.zig").ShaderComposite;
 

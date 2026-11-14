@@ -29,20 +29,20 @@ pub const AbeClientInformationInterface = struct {
     pointer: *anyopaque,
     object: Object,
     toStringFn: *const fn (pointer: *anyopaque) ?*String,
-    initFn: *const fn (pointer: *anyopaque) void,
-    getOperatingSystemInterfaceFn: *const fn (pointer: *anyopaque) ?*GenericOperatingSystem,
-    getNameFn: *const fn (pointer: *anyopaque) ?*String,
-    getSpecialNameFn: *const fn (pointer: *anyopaque) ?*String,
-    getVersionFn: *const fn (pointer: *anyopaque) ?*String,
-    getLicenseIdFn: *const fn (pointer: *anyopaque) ?*String,
-    getLicenseServersFn: *const fn (pointer: *anyopaque) ?*BasicArrayList,
-    getLicenseServerFn: *const fn (pointer: *anyopaque, index: i32) ?*String,
-    getNumberOfLicenseServersFn: *const fn (pointer: *anyopaque) i32,
-    toHashtableFn: *const fn (pointer: *anyopaque) ?*ABHashtable,
-    isSameIdFn: *const fn (pointer: *anyopaque, alicenseId: ?*String) bool,
-    isLargerOrDifferentServerListFn: *const fn (pointer: *anyopaque, vector: ?*BasicArrayList) bool,
-    isHardSaleFn: *const fn (pointer: *anyopaque) bool,
-    toShortStringFn: *const fn (pointer: *anyopaque) ?*String,
+    initFn: *const fn (interface_pointer: *anyopaque) void,
+    getOperatingSystemInterfaceFn: *const fn (interface_pointer: *anyopaque) ?*GenericOperatingSystem,
+    getNameFn: *const fn (interface_pointer: *anyopaque) ?*String,
+    getSpecialNameFn: *const fn (interface_pointer: *anyopaque) ?*String,
+    getVersionFn: *const fn (interface_pointer: *anyopaque) ?*String,
+    getLicenseIdFn: *const fn (interface_pointer: *anyopaque) ?*String,
+    getLicenseServersFn: *const fn (interface_pointer: *anyopaque) ?*BasicArrayList,
+    getLicenseServerFn: *const fn (interface_pointer: *anyopaque, index: i32) ?*String,
+    getNumberOfLicenseServersFn: *const fn (interface_pointer: *anyopaque) i32,
+    toHashtableFn: *const fn (interface_pointer: *anyopaque) ?*ABHashtable,
+    isSameIdFn: *const fn (interface_pointer: *anyopaque, alicenseId: ?*String) bool,
+    isLargerOrDifferentServerListFn: *const fn (interface_pointer: *anyopaque, vector: ?*BasicArrayList) bool,
+    isHardSaleFn: *const fn (interface_pointer: *anyopaque) bool,
+    toShortStringFn: *const fn (interface_pointer: *anyopaque) ?*String,
 
     pub fn init(self: *Self) void {
         return self.initFn(self.pointer);
@@ -106,66 +106,66 @@ pub const AbeClientInformationInterface = struct {
 
     // The interface value of an object with the methods. Like a Java class a method can be declared by the object or a superclass.
     pub fn of(object: anytype) ?*Self {
-        const Implementation = @TypeOf(object);
+        const ImplementationType = @TypeOf(object);
         const Methods = struct {
             fn toString(pointer: *anyopaque) ?*String {
-                const implementation: Implementation = @ptrCast(@alignCast(pointer));
+                const implementation: ImplementationType = @ptrCast(@alignCast(pointer));
                 return String.valueOf(implementation);
             }
-            fn init(pointer: *anyopaque) void {
-                const implementation: Implementation = @ptrCast(@alignCast(pointer));
+            fn init(interface_pointer: *anyopaque) void {
+                const implementation: ImplementationType = @ptrCast(@alignCast(interface_pointer));
                 return Inheritance.receiver(implementation, "init").init();
             }
-            fn getOperatingSystemInterface(pointer: *anyopaque) ?*GenericOperatingSystem {
-                const implementation: Implementation = @ptrCast(@alignCast(pointer));
+            fn getOperatingSystemInterface(interface_pointer: *anyopaque) ?*GenericOperatingSystem {
+                const implementation: ImplementationType = @ptrCast(@alignCast(interface_pointer));
                 return Inheritance.upcast(?*GenericOperatingSystem, Inheritance.receiver(implementation, "getOperatingSystemInterface").getOperatingSystemInterface());
             }
-            fn getName(pointer: *anyopaque) ?*String {
-                const implementation: Implementation = @ptrCast(@alignCast(pointer));
+            fn getName(interface_pointer: *anyopaque) ?*String {
+                const implementation: ImplementationType = @ptrCast(@alignCast(interface_pointer));
                 return Inheritance.upcast(?*String, Inheritance.receiver(implementation, "getName").getName());
             }
-            fn getSpecialName(pointer: *anyopaque) ?*String {
-                const implementation: Implementation = @ptrCast(@alignCast(pointer));
+            fn getSpecialName(interface_pointer: *anyopaque) ?*String {
+                const implementation: ImplementationType = @ptrCast(@alignCast(interface_pointer));
                 return Inheritance.upcast(?*String, Inheritance.receiver(implementation, "getSpecialName").getSpecialName());
             }
-            fn getVersion(pointer: *anyopaque) ?*String {
-                const implementation: Implementation = @ptrCast(@alignCast(pointer));
+            fn getVersion(interface_pointer: *anyopaque) ?*String {
+                const implementation: ImplementationType = @ptrCast(@alignCast(interface_pointer));
                 return Inheritance.upcast(?*String, Inheritance.receiver(implementation, "getVersion").getVersion());
             }
-            fn getLicenseId(pointer: *anyopaque) ?*String {
-                const implementation: Implementation = @ptrCast(@alignCast(pointer));
+            fn getLicenseId(interface_pointer: *anyopaque) ?*String {
+                const implementation: ImplementationType = @ptrCast(@alignCast(interface_pointer));
                 return Inheritance.upcast(?*String, Inheritance.receiver(implementation, "getLicenseId").getLicenseId());
             }
-            fn getLicenseServers(pointer: *anyopaque) ?*BasicArrayList {
-                const implementation: Implementation = @ptrCast(@alignCast(pointer));
+            fn getLicenseServers(interface_pointer: *anyopaque) ?*BasicArrayList {
+                const implementation: ImplementationType = @ptrCast(@alignCast(interface_pointer));
                 return Inheritance.upcast(?*BasicArrayList, Inheritance.receiver(implementation, "getLicenseServers").getLicenseServers());
             }
-            fn getLicenseServer(pointer: *anyopaque, index: i32) ?*String {
-                const implementation: Implementation = @ptrCast(@alignCast(pointer));
-                return Inheritance.upcast(?*String, Inheritance.receiver(implementation, "getLicenseServer").getLicenseServer(index));
+            fn getLicenseServer(interface_pointer: *anyopaque, index: i32) ?*String {
+                const implementation: ImplementationType = @ptrCast(@alignCast(interface_pointer));
+                return Inheritance.upcast(?*String, Inheritance.call(implementation, "getLicenseServer", .{ index }));
             }
-            fn getNumberOfLicenseServers(pointer: *anyopaque) i32 {
-                const implementation: Implementation = @ptrCast(@alignCast(pointer));
+            fn getNumberOfLicenseServers(interface_pointer: *anyopaque) i32 {
+                const implementation: ImplementationType = @ptrCast(@alignCast(interface_pointer));
                 return Inheritance.receiver(implementation, "getNumberOfLicenseServers").getNumberOfLicenseServers();
             }
-            fn toHashtable(pointer: *anyopaque) ?*ABHashtable {
-                const implementation: Implementation = @ptrCast(@alignCast(pointer));
+            fn toHashtable(interface_pointer: *anyopaque) ?*ABHashtable {
+                const implementation: ImplementationType = @ptrCast(@alignCast(interface_pointer));
                 return Inheritance.upcast(?*ABHashtable, Inheritance.receiver(implementation, "toHashtable").toHashtable());
             }
-            fn isSameId(pointer: *anyopaque, alicenseId: ?*String) bool {
-                const implementation: Implementation = @ptrCast(@alignCast(pointer));
-                return Inheritance.receiver(implementation, "isSameId").isSameId(alicenseId);
+            fn isSameId(interface_pointer: *anyopaque, alicenseId: ?*String) bool {
+                const implementation: ImplementationType = @ptrCast(@alignCast(interface_pointer));
+                return Inheritance.call(implementation, "isSameId", .{ alicenseId });
             }
-            fn isLargerOrDifferentServerList(pointer: *anyopaque, vector: ?*BasicArrayList) bool {
-                const implementation: Implementation = @ptrCast(@alignCast(pointer));
-                return Inheritance.receiver(implementation, "isLargerOrDifferentServerList").isLargerOrDifferentServerList(vector);
+            fn isLargerOrDifferentServerList(interface_pointer: *anyopaque, vector: ?*BasicArrayList) bool {
+                const implementation: ImplementationType = @ptrCast(@alignCast(interface_pointer));
+                return Inheritance.call(implementation, "isLargerOrDifferentServerList", .{ vector });
             }
-            fn isHardSale(pointer: *anyopaque) bool {
-                const implementation: Implementation = @ptrCast(@alignCast(pointer));
+            fn isHardSale(interface_pointer: *anyopaque) bool {
+                const implementation: ImplementationType = @ptrCast(@alignCast(interface_pointer));
                 return Inheritance.receiver(implementation, "isHardSale").isHardSale();
             }
-            fn toShortString(pointer: *anyopaque) ?*String {
-                const implementation: Implementation = @ptrCast(@alignCast(pointer));
+            fn toShortString(interface_pointer: *anyopaque) ?*String {
+                const implementation: ImplementationType = @ptrCast(@alignCast(interface_pointer));
                 return Inheritance.upcast(?*String, Inheritance.receiver(implementation, "toShortString").toShortString());
             }
         };

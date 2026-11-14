@@ -41,7 +41,7 @@ pub const GraphicsFeatureFactory = struct {
     }
 
     fn initFields(this: *Self) void {
-        this.NONE = Inheritance.callStatic(GraphicsFeature, "create1", .{ StringUtil.getInstance().?.NULL_STRING });
+        this.NONE = Inheritance.callStatic(GraphicsFeature, "create1", .{ Inheritance.fieldPointer(StringUtil.getInstance().?, "NULL_STRING").* });
         this.TRANSPARENT_IMAGE_CREATION = Inheritance.callStatic(GraphicsFeature, "create1", .{ String.literal("Transparent Image Creation") });
         this.IMAGE_GRAPHICS = Inheritance.callStatic(GraphicsFeature, "create1", .{ String.literal("Image Graphics") });
         this.IMAGE_ROTATION_ON_THE_FLY = Inheritance.callStatic(GraphicsFeature, "create1", .{ String.literal("Image Rotated On The Fly") });

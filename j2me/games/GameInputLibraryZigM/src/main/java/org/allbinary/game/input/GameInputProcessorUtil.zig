@@ -34,12 +34,12 @@ pub const GameInputProcessorUtil = struct {
 
     pub fn init(inputProcessorArray: []?*GameInputProcessor) void {
         const noInputProcessor: ?*GameInputProcessor = Inheritance.upcast(?*GameInputProcessor, GameInputProcessor.getInstance());
-        const total: i32 = InputFactory.getInstance().?.MAX;
+        const total: i32 = Inheritance.fieldPointer(InputFactory.getInstance().?, "MAX").*;
         {
             var index: i32 = 0;
             while (index < total) : (index += 1) {
             const inputProcessorCanBeNull: ?*GameInputProcessor = Inheritance.upcast(?*GameInputProcessor, inputProcessorArray[@intCast(index)]);
-            if (inputProcessorCanBeNull == null) {
+            if (Object.isNull(inputProcessorCanBeNull)) {
                 inputProcessorArray[@intCast(index)] = Inheritance.upcast(@TypeOf(inputProcessorArray[@intCast(index)]), noInputProcessor);
             }
             }

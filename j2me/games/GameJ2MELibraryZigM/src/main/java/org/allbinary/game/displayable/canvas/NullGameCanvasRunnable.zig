@@ -18,9 +18,9 @@ const allocator = std.heap.page_allocator;
 const String = @import("java/lang/String.zig").String;
 const Object = @import("java/lang/Object.zig").Object;
 const Inheritance = @import("zig/Inheritance.zig");
-// const CommandListener = @import("javax/microedition/lcdui/CommandListener.zig").CommandListener;
-// const Graphics = @import("javax/microedition/lcdui/Graphics.zig").Graphics;
-// const Item = @import("javax/microedition/lcdui/Item.zig").Item;
+const CommandListener = @import("javax/microedition/lcdui/CommandListener.zig").CommandListener;
+const Graphics = @import("javax/microedition/lcdui/Graphics.zig").Graphics;
+const Item = @import("javax/microedition/lcdui/Item.zig").Item;
 const GameState = @import("org/allbinary/game/state/GameState.zig").GameState;
 const GameStateFactory = @import("org/allbinary/game/state/GameStateFactory.zig").GameStateFactory;
 const StdUtil = @import("org/allbinary/logic/StdUtil.zig").StdUtil;
@@ -28,6 +28,7 @@ const StringUtil = @import("org/allbinary/logic/string/StringUtil.zig").StringUt
 const ABHashtable = @import("org/allbinary/util/ABHashtable.zig").ABHashtable;
 const GameCanvasRunnableInterface = @import("org/allbinary/game/displayable/canvas/GameCanvasRunnableInterface.zig").GameCanvasRunnableInterface;
 const Thread = @import("java/lang/Thread.zig").Thread;
+const Exception = @import("java/lang/Exception.zig").Exception;
 
 pub const NullGameCanvasRunnable = struct {
     const Self = @This();
@@ -56,7 +57,7 @@ pub const NullGameCanvasRunnable = struct {
 
     pub fn getTitle(self: *Self) ?*String {
         _ = self;
-        return Inheritance.upcast(?*String, StringUtil.getInstance().?.EMPTY_STRING);
+        return Inheritance.upcast(?*String, Inheritance.fieldPointer(StringUtil.getInstance().?, "EMPTY_STRING").*);
     }
     
 
@@ -116,14 +117,14 @@ pub const NullGameCanvasRunnable = struct {
     // throws Exception
     pub fn getCurrentStateHashtable(self: *Self) ?*ABHashtable {
         _ = self;
-        return Inheritance.upcast(?*ABHashtable, StdUtil.getInstance().?.NULL_TABLE);
+        return Inheritance.upcast(?*ABHashtable, Inheritance.fieldPointer(StdUtil.getInstance().?, "NULL_TABLE").*);
     }
     
 
     // throws Exception
     pub fn getLoadStateHashtable(self: *Self) ?*ABHashtable {
         _ = self;
-        return Inheritance.upcast(?*ABHashtable, StdUtil.getInstance().?.NULL_TABLE);
+        return Inheritance.upcast(?*ABHashtable, Inheritance.fieldPointer(StdUtil.getInstance().?, "NULL_TABLE").*);
     }
     
 
@@ -148,7 +149,7 @@ pub const NullGameCanvasRunnable = struct {
     
 
     pub fn getGameState(self: *Self) ?*GameState {
-        return Inheritance.upcast(?*GameState, self.gameStateFactory.?.NO_GAME_STATE);
+        return Inheritance.upcast(?*GameState, Inheritance.fieldPointer(self.gameStateFactory.?, "NO_GAME_STATE").*);
     }
     
 

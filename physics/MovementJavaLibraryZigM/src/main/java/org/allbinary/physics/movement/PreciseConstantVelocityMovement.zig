@@ -12,6 +12,7 @@ const BasicDecimal = @import("org/allbinary/logic/math/BasicDecimal.zig").BasicD
 const MathUtil = @import("org/allbinary/logic/math/MathUtil.zig").MathUtil;
 const ScaleFactorFactory = @import("org/allbinary/logic/math/ScaleFactorFactory.zig").ScaleFactorFactory;
 const BasicConstantVelocityMovement = @import("org/allbinary/physics/movement/BasicConstantVelocityMovement.zig").BasicConstantVelocityMovement;
+const Exception = @import("java/lang/Exception.zig").Exception;
 
 pub const PreciseConstantVelocityMovement = struct {
     const Self = @This();
@@ -26,7 +27,7 @@ pub const PreciseConstantVelocityMovement = struct {
         this.accumulatedX = 0;
         this.accumulatedY = 0;
         this.accumulatedZ = 0;
-        this.factorValue = ScaleFactorFactory.getInstance().?.DEFAULT_SCALE_VALUE;
+        this.factorValue = Inheritance.fieldPointer(ScaleFactorFactory.getInstance().?, "DEFAULT_SCALE_VALUE").*;
     }
     
 
@@ -52,17 +53,17 @@ pub const PreciseConstantVelocityMovement = struct {
     pub fn process(self: *Self, layer: ?*AllBinaryGameLayer) void {
         const mathUtil: ?*MathUtil = Inheritance.upcast(?*MathUtil, MathUtil.getInstance());
         const velocityProperties: ?*BasicVelocityProperties = Inheritance.upcast(?*BasicVelocityProperties, Inheritance.receiver(self, "getVelocityProperties").getVelocityProperties());
-        self.accumulatedX = @as(i32, @intCast((self.accumulatedX + Inheritance.receiverOf(velocityProperties.?.getVelocityXBasicDecimalP().?, "getUnscaled").getUnscaled())));
-        self.accumulatedY = @as(i32, @intCast((self.accumulatedY + Inheritance.receiverOf(velocityProperties.?.getVelocityYBasicDecimalP().?, "getUnscaled").getUnscaled())));
-        self.accumulatedZ = @as(i32, @intCast((self.accumulatedZ + Inheritance.receiverOf(velocityProperties.?.getVelocityZBasicDecimalP().?, "getUnscaled").getUnscaled())));
+        self.accumulatedX = Inheritance.number(i32, (self.accumulatedX + Inheritance.receiverOf(velocityProperties.?.getVelocityXBasicDecimalP().?, "getUnscaled").getUnscaled()));
+        self.accumulatedY = Inheritance.number(i32, (self.accumulatedY + Inheritance.receiverOf(velocityProperties.?.getVelocityYBasicDecimalP().?, "getUnscaled").getUnscaled()));
+        self.accumulatedZ = Inheritance.number(i32, (self.accumulatedZ + Inheritance.receiverOf(velocityProperties.?.getVelocityZBasicDecimalP().?, "getUnscaled").getUnscaled()));
         _ = Inheritance.call(layer.?, "moveDXYZ", .{ @divTrunc(self.accumulatedX, self.factorValue), @divTrunc(self.accumulatedY, self.factorValue), @divTrunc(self.accumulatedZ, self.factorValue) });
-        if (Inheritance.call(mathUtil.?, "abs", .{ self.accumulatedX }) > self.factorValue) {
+        if (Inheritance.arithmetic(.greater, Inheritance.call(mathUtil.?, "abs", .{ self.accumulatedX }), self.factorValue)) {
             self.accumulatedX = 0;
         }
-        if (Inheritance.call(mathUtil.?, "abs", .{ self.accumulatedY }) > self.factorValue) {
+        if (Inheritance.arithmetic(.greater, Inheritance.call(mathUtil.?, "abs", .{ self.accumulatedY }), self.factorValue)) {
             self.accumulatedY = 0;
         }
-        if (Inheritance.call(mathUtil.?, "abs", .{ self.accumulatedZ }) > self.factorValue) {
+        if (Inheritance.arithmetic(.greater, Inheritance.call(mathUtil.?, "abs", .{ self.accumulatedZ }), self.factorValue)) {
             self.accumulatedZ = 0;
         }
     }

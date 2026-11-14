@@ -19,19 +19,21 @@ const String = @import("java/lang/String.zig").String;
 const Object = @import("java/lang/Object.zig").Object;
 const Inheritance = @import("zig/Inheritance.zig");
 const ByteArrayOutputStream = @import("java/io/ByteArrayOutputStream.zig").ByteArrayOutputStream;
-// const IOException = @import("java/io/IOException.zig").IOException;
-// const InputStream = @import("java/io/InputStream.zig").InputStream;
-// const OutputStream = @import("java/io/OutputStream.zig").OutputStream;
-// const Reader = @import("java/io/Reader.zig").Reader;
-// const Writer = @import("java/io/Writer.zig").Writer;
-// const CharBuffer = @import("java/nio/CharBuffer.zig").CharBuffer;
+const InputStream = @import("java/io/InputStream.zig").InputStream;
+const OutputStream = @import("java/io/OutputStream.zig").OutputStream;
+const Reader = @import("java/io/Reader.zig").Reader;
+const Writer = @import("java/io/Writer.zig").Writer;
 const NullUtil = @import("org/allbinary/logic/NullUtil.zig").NullUtil;
 const LogUtil = @import("org/allbinary/logic/communication/log/LogUtil.zig").LogUtil;
+const NullOutputStream = @import("org/allbinary/logic/io/NullOutputStream.zig").NullOutputStream;
+const NullReader = @import("org/allbinary/logic/io/NullReader.zig").NullReader;
+const NullWriter = @import("org/allbinary/logic/io/NullWriter.zig").NullWriter;
 const StreamUtil = @import("org/allbinary/logic/io/StreamUtil.zig").StreamUtil;
 const StringMaker = @import("org/allbinary/logic/string/StringMaker.zig").StringMaker;
 const CommonStrings = @import("org/allbinary/string/CommonStrings.zig").CommonStrings;
 const BasicArrayList = @import("org/allbinary/util/BasicArrayList.zig").BasicArrayList;
 const BasicArrayListD = @import("org/allbinary/util/BasicArrayListD.zig").BasicArrayListD;
+const Exception = @import("java/lang/Exception.zig").Exception;
 
 pub const SimpleFileUtil = struct {
     const Self = @This();
@@ -72,154 +74,17 @@ pub const SimpleFileUtil = struct {
     
 
     pub fn nullOutputStream() ?*OutputStream {
-        return OutputStream.create() // Java anonymous class body: implement it as a named type
-//             
-// 
-//             // throws IOException
-//             pub fn write(self: *Self, b: i32) void {
-//                 _ = b;
-//                 _ = self;
-//             }
-//             
-// 
-//             // throws IOException
-//             pub fn write(self: *Self, b: []i8, off: i32, len: i32) void {
-//                 _ = b;
-//                 _ = off;
-//                 _ = len;
-//                 _ = self;
-//             }
-//             
-// 
-//             pub fn close(self: *Self) void {
-//                 _ = self;
-//             }
-;
+        return Inheritance.upcast(?*OutputStream, NullOutputStream.NULL_OUTPUT_STREAM);
     }
     
 
     pub fn nullWriter() ?*Writer {
-        return Writer.create() // Java anonymous class body: implement it as a named type
-//             this.closed = false;
-//             
-// 
-//             // throws IOException
-//             pub fn append(self: *Self, c: u16) ?*Writer {
-//                 _ = c;
-//                 return Inheritance.upcast(?*Writer, self);
-//             }
-//             
-// 
-//             // throws IOException
-//             pub fn append(self: *Self, csq: ?*CharSequence) ?*Writer {
-//                 _ = csq;
-//                 return Inheritance.upcast(?*Writer, self);
-//             }
-//             
-// 
-//             // throws IOException
-//             pub fn append(self: *Self, csq: ?*CharSequence, start: i32, end: i32) ?*Writer {
-//                 _ = csq;
-//                 _ = start;
-//                 _ = end;
-//                 return Inheritance.upcast(?*Writer, self);
-//             }
-//             
-// 
-//             // throws IOException
-//             pub fn write(self: *Self, c: i32) void {
-//                 _ = c;
-//                 _ = self;
-//             }
-//             
-// 
-//             // throws IOException
-//             pub fn write(self: *Self, cbuf: []u16, off: i32, len: i32) void {
-//                 _ = cbuf;
-//                 _ = off;
-//                 _ = len;
-//                 _ = self;
-//             }
-//             
-// 
-//             // throws IOException
-//             pub fn write(self: *Self, str: ?*String) void {
-//                 _ = str;
-//                 _ = self;
-//             }
-//             
-// 
-//             // throws IOException
-//             pub fn write(self: *Self, str: ?*String, off: i32, len: i32) void {
-//                 _ = str;
-//                 _ = off;
-//                 _ = len;
-//                 _ = self;
-//             }
-//             
-// 
-//             // throws IOException
-//             pub fn flush(self: *Self) void {
-//                 _ = self;
-//             }
-//             
-// 
-//             // throws IOException
-//             pub fn close(self: *Self) void {
-//                 _ = self;
-//             }
-;
+        return Inheritance.upcast(?*Writer, NullWriter.NULL_WRITER);
     }
     
 
     pub fn nullReader() ?*Reader {
-        return Reader.create() // Java anonymous class body: implement it as a named type
-//             
-// 
-//             // throws IOException
-//             pub fn read(self: *Self) i32 {
-//                 _ = self;
-//                 return Inheritance.upcast(?*Reader, -1);
-//             }
-//             
-// 
-//             // throws IOException
-//             pub fn read(self: *Self, cbuf: []u16, off: i32, len: i32) i32 {
-//                 _ = cbuf;
-//                 _ = off;
-//                 _ = len;
-//                 _ = self;
-//                 return Inheritance.upcast(?*Reader, -1);
-//             }
-//             
-// 
-//             // throws IOException
-//             pub fn read(self: *Self, target: ?*CharBuffer) i32 {
-//                 _ = target;
-//                 _ = self;
-//                 return Inheritance.upcast(?*Reader, -1);
-//             }
-//             
-// 
-//             // throws IOException
-//             pub fn ready(self: *Self) bool {
-//                 _ = self;
-//                 return false;
-//             }
-//             
-// 
-//             // throws IOException
-//             pub fn skip(self: *Self, n: i64) i64 {
-//                 _ = n;
-//                 _ = self;
-//                 return 0;
-//             }
-//             
-// 
-//             pub fn close(self: *Self) void {
-//                 _ = self;
-//             }
-;
+        return Inheritance.upcast(?*Reader, NullReader.NULL_READER);
     }
     
 
@@ -230,10 +95,10 @@ pub const SimpleFileUtil = struct {
 
     pub fn loadFileAsListReturnLine(self: *Self, inputStream: ?*InputStream, max: i32, byteArray1: []i8, includeReturnLine: i32) ?*BasicArrayList {
         const stringList: ?*BasicArrayList = Inheritance.upcast(?*BasicArrayList, BasicArrayListD.create());
-        if (inputStream == null) {
+        if (Object.isNull(inputStream)) {
             return stringList;
         }
-        var byteArray: []i8 = self.nullUtil.?.NULL_BYTE_ARRAY;
+        var byteArray: []i8 = Inheritance.fieldPointer(self.nullUtil.?, "NULL_BYTE_ARRAY").*;
         { // try
             const outputStream2: ?*ByteArrayOutputStream = Inheritance.callStatic(ByteArrayOutputStream, "create1", .{ max });
             byteArray = Inheritance.upcast(@TypeOf(byteArray), Inheritance.call(self.streamUtil.?, "getByteArray", .{ inputStream, outputStream2, byteArray1 }));
@@ -241,8 +106,8 @@ pub const SimpleFileUtil = struct {
         }
         // catch (Exception e):
 //             _ = Inheritance.call(self.streamUtil.?, "close", .{ inputStream });
-//             _ = Inheritance.call(self.logUtil.?, "put", .{ self.commonStrings.?.EXCEPTION, self, self.commonStrings.?.ADD, e });
-        if (byteArray == null) {
+//             _ = Inheritance.call(self.logUtil.?, "put", .{ Inheritance.fieldPointer(self.commonStrings.?, "EXCEPTION").*, self, Inheritance.fieldPointer(self.commonStrings.?, "ADD").*, e });
+        if (Object.isNull(byteArray)) {
             return stringList;
         }
         const size: i32 = @as(i32, @intCast(byteArray.len));

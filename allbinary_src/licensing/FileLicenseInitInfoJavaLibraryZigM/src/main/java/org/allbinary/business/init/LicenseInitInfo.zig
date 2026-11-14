@@ -31,7 +31,7 @@ pub const LicenseInitInfo = struct {
     serverVector: ?*BasicArrayList = null,
 
     fn initFields(this: *Self) void {
-        this.id = Inheritance.upcast(?*String, StringUtil.getInstance().?.EMPTY_STRING);
+        this.id = Inheritance.upcast(?*String, Inheritance.fieldPointer(StringUtil.getInstance().?, "EMPTY_STRING").*);
         this.serverVector = Inheritance.upcast(?*BasicArrayList, BasicArrayListD.create());
     }
     
@@ -50,7 +50,7 @@ pub const LicenseInitInfo = struct {
     
 
     pub fn getServer(self: *Self, index: i32) ?*String {
-        return Inheritance.cast(?*String, self.serverVector.?.objectArray[@intCast(index)]);
+        return Inheritance.cast(?*String, Inheritance.fieldPointer(self.serverVector.?, "objectArray").*[@intCast(index)]);
     }
     
 

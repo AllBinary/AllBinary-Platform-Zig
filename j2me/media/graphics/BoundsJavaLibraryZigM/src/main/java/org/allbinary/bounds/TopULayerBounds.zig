@@ -38,13 +38,13 @@ pub const TopULayerBounds = struct {
     
 
     pub fn visit(self: *Self, boundsVisitorInterface: ?*BoundsVisitorInterface) void {
-        if (boundsVisitorInterface.?.getX() > Inheritance.fieldPointer(self, "rectangle").*.?.getMaxX()) {
+        if (Inheritance.arithmetic(.greater, boundsVisitorInterface.?.getX(), Inheritance.receiver(Inheritance.fieldPointer(self, "rectangle").*.?, "getMaxX").getMaxX())) {
             _ = boundsVisitorInterface.?.maxX();
         }
-        if (boundsVisitorInterface.?.getX() < Inheritance.receiverOf(Inheritance.fieldPointer(self, "rectangle").*.?.getPoint().?, "getX").getX()) {
+        if (Inheritance.arithmetic(.less, boundsVisitorInterface.?.getX(), Inheritance.receiverOf(Inheritance.receiver(Inheritance.fieldPointer(self, "rectangle").*.?, "getPoint").getPoint().?, "getX").getX())) {
             _ = boundsVisitorInterface.?.minX();
         }
-        if (boundsVisitorInterface.?.getY() < Inheritance.receiverOf(Inheritance.fieldPointer(self, "rectangle").*.?.getPoint().?, "getY").getY()) {
+        if (Inheritance.arithmetic(.less, boundsVisitorInterface.?.getY(), Inheritance.receiverOf(Inheritance.receiver(Inheritance.fieldPointer(self, "rectangle").*.?, "getPoint").getPoint().?, "getY").getY())) {
             _ = boundsVisitorInterface.?.minY();
         }
     }

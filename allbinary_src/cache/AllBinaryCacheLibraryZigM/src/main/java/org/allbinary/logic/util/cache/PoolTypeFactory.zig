@@ -21,7 +21,7 @@ pub const PoolTypeFactory = struct {
     }
 
     fn initFields(this: *Self) void {
-        this.VECTOR_POOL = Inheritance.callStatic(PoolType, "create1", .{ CacheTypeFactory.getInstance().?.NO_CACHE });
+        this.VECTOR_POOL = Inheritance.callStatic(PoolType, "create1", .{ Inheritance.fieldPointer(CacheTypeFactory.getInstance().?, "NO_CACHE").* });
     }
 
     pub fn create() *Self {

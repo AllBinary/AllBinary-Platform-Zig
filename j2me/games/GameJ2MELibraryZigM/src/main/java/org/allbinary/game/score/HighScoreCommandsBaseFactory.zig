@@ -18,9 +18,10 @@ const allocator = std.heap.page_allocator;
 const String = @import("java/lang/String.zig").String;
 const Object = @import("java/lang/Object.zig").Object;
 const Inheritance = @import("zig/Inheritance.zig");
-// const Command = @import("javax/microedition/lcdui/Command.zig").Command;
+const Command = @import("javax/microedition/lcdui/Command.zig").Command;
 const J2MEUtil = @import("org/allbinary/J2MEUtil.zig").J2MEUtil;
 const LogUtil = @import("org/allbinary/logic/communication/log/LogUtil.zig").LogUtil;
+const Exception = @import("java/lang/Exception.zig").Exception;
 
 pub const HighScoreCommandsBaseFactory = struct {
     const Self = @This();

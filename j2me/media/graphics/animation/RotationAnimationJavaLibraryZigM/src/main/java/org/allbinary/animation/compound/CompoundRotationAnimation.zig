@@ -18,8 +18,8 @@ const allocator = std.heap.page_allocator;
 const String = @import("java/lang/String.zig").String;
 const Object = @import("java/lang/Object.zig").Object;
 const Inheritance = @import("zig/Inheritance.zig");
-// const GL = @import("javax/microedition/khronos/opengles/GL.zig").GL;
-// const Graphics = @import("javax/microedition/lcdui/Graphics.zig").Graphics;
+const GL = @import("javax/microedition/khronos/opengles/GL.zig").GL;
+const Graphics = @import("javax/microedition/lcdui/Graphics.zig").Graphics;
 const AnimationBehavior = @import("org/allbinary/animation/AnimationBehavior.zig").AnimationBehavior;
 const IndexedAnimation = @import("org/allbinary/animation/IndexedAnimation.zig").IndexedAnimation;
 const RotationAnimation = @import("org/allbinary/animation/RotationAnimation.zig").RotationAnimation;
@@ -30,6 +30,7 @@ const AngleFactory = @import("org/allbinary/math/AngleFactory.zig").AngleFactory
 const AngleInfo = @import("org/allbinary/math/AngleInfo.zig").AngleInfo;
 const CircularIndexUtil = @import("org/allbinary/util/CircularIndexUtil.zig").CircularIndexUtil;
 const CompoundAnimationInterface = @import("org/allbinary/animation/compound/CompoundAnimationInterface.zig").CompoundAnimationInterface;
+const Exception = @import("java/lang/Exception.zig").Exception;
 
 pub const CompoundRotationAnimation = struct {
     const Self = @This();
@@ -48,7 +49,7 @@ pub const CompoundRotationAnimation = struct {
     pub fn create2(animationInterfaceArray: []?*RotationAnimation, animationBehavior: ?*AnimationBehavior) *Self {
         const this = allocator.create(Self) catch unreachable;
         this.* = .{};
-        this.base = Inheritance.callStatic(RotationAnimation, "create3", .{ Inheritance.callStatic(AngleInfo, "getInstance", .{ AngleFactory.getInstance().?.QUARTER_TOTAL_ANGLE }), Inheritance.callStatic(CircularIndexUtil, "createInstance", .{ 4 }), animationBehavior }).*;
+        this.base = Inheritance.callStatic(RotationAnimation, "create3", .{ Inheritance.callStatic(AngleInfo, "getInstance", .{ Inheritance.fieldPointer(AngleFactory.getInstance().?, "QUARTER_TOTAL_ANGLE").* }), Inheritance.callStatic(CircularIndexUtil, "createInstance", .{ 4 }), animationBehavior }).*;
         this.initFields();
         this.animationInterfaceArray = animationInterfaceArray;
         Inheritance.fieldPointer(this, "circularIndexUtil").* = Inheritance.upcast(@TypeOf(Inheritance.fieldPointer(this, "circularIndexUtil").*), Inheritance.callStatic(CircularIndexUtil, "createInstance", .{ @as(i32, @intCast(this.animationInterfaceArray.len)) }));

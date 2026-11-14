@@ -18,9 +18,9 @@ const allocator = std.heap.page_allocator;
 const String = @import("java/lang/String.zig").String;
 const Object = @import("java/lang/Object.zig").Object;
 const Inheritance = @import("zig/Inheritance.zig");
-// const Command = @import("javax/microedition/lcdui/Command.zig").Command;
-// const CommandListener = @import("javax/microedition/lcdui/CommandListener.zig").CommandListener;
-// const Graphics = @import("javax/microedition/lcdui/Graphics.zig").Graphics;
+const Command = @import("javax/microedition/lcdui/Command.zig").Command;
+const CommandListener = @import("javax/microedition/lcdui/CommandListener.zig").CommandListener;
+const Graphics = @import("javax/microedition/lcdui/Graphics.zig").Graphics;
 const AllBinaryGameLayerManager = @import("org/allbinary/game/layer/AllBinaryGameLayerManager.zig").AllBinaryGameLayerManager;
 const ColorFillBasePaintable = @import("org/allbinary/game/paint/ColorFillBasePaintable.zig").ColorFillBasePaintable;
 const ColorFillPaintableFactory = @import("org/allbinary/game/paint/ColorFillPaintableFactory.zig").ColorFillPaintableFactory;
@@ -28,6 +28,7 @@ const Anchor = @import("org/allbinary/graphics/Anchor.zig").Anchor;
 const DrawStringUtil = @import("org/allbinary/graphics/draw/DrawStringUtil.zig").DrawStringUtil;
 const StringUtil = @import("org/allbinary/logic/string/StringUtil.zig").StringUtil;
 const GameCommandCanvas = @import("org/allbinary/game/displayable/canvas/GameCommandCanvas.zig").GameCommandCanvas;
+const Exception = @import("java/lang/Exception.zig").Exception;
 
 pub const GameInputMappingInstructionsCanvas = struct {
     const Self = @This();
@@ -44,14 +45,14 @@ pub const GameInputMappingInstructionsCanvas = struct {
 
     // Static fields with runtime initializers: call staticInit once at startup
     pub fn staticInit() void {
-        DISPLAY = Inheritance.callStatic(Command, "create4", .{ String.literal("Help"), StringUtil.getInstance().?.EMPTY_STRING, Command.SCREEN, 1 });
-        CLOSE = Inheritance.callStatic(Command, "create4", .{ String.literal("Close"), StringUtil.getInstance().?.EMPTY_STRING, Command.SCREEN, 1 });
+        DISPLAY = Inheritance.callStatic(Command, "create4", .{ String.literal("Help"), Inheritance.fieldPointer(StringUtil.getInstance().?, "EMPTY_STRING").*, Command.SCREEN, 1 });
+        CLOSE = Inheritance.callStatic(Command, "create4", .{ String.literal("Close"), Inheritance.fieldPointer(StringUtil.getInstance().?, "EMPTY_STRING").*, Command.SCREEN, 1 });
     }
 
     fn initFields(this: *Self) void {
         this.drawStringUtil = Inheritance.upcast(?*DrawStringUtil, DrawStringUtil.getInstance());
         this.TITLE = String.literal("Input Instructions");
-        this.instructions = @constCast(&[_]?*String{ String.literal("Add Input Mapping:"), String.literal("1. Select the desired action by generating a currently defined input for a given action."), String.literal("(Example: Press the '1' key to select the Fire action)"), String.literal("2. Make the newly desired input for the selected action."), String.literal("(Example: Press 'f' to add it to the selected action)"), String.literal("Note: If the input is already mapped to another action then it will not be added. You"), String.literal("will need to deleted from the other action before adding it to another."), String.literal("Warning: Not all keys map for a given platform and show as Unknown."), StringUtil.getInstance().?.EMPTY_STRING, String.literal("Remove Input Mapping:"), String.literal("1. Select the desired action by generating a currently defined input for a given action."), String.literal("(Example: Press the key '1' to select the Fire action)"), String.literal("2. Select a mapped input for the selected action."), String.literal("(Example: Press the key '1' to select the '1' key input for the selected Fire action)"), String.literal("3. Press the Delete Key.") })[0..];
+        this.instructions = @constCast(&[_]?*String{ Inheritance.upcast(?*String, String.literal("Add Input Mapping:")), Inheritance.upcast(?*String, String.literal("1. Select the desired action by generating a currently defined input for a given action.")), Inheritance.upcast(?*String, String.literal("(Example: Press the '1' key to select the Fire action)")), Inheritance.upcast(?*String, String.literal("2. Make the newly desired input for the selected action.")), Inheritance.upcast(?*String, String.literal("(Example: Press 'f' to add it to the selected action)")), Inheritance.upcast(?*String, String.literal("Note: If the input is already mapped to another action then it will not be added. You")), Inheritance.upcast(?*String, String.literal("will need to deleted from the other action before adding it to another.")), Inheritance.upcast(?*String, String.literal("Warning: Not all keys map for a given platform and show as Unknown.")), Inheritance.upcast(?*String, Inheritance.fieldPointer(StringUtil.getInstance().?, "EMPTY_STRING").*), Inheritance.upcast(?*String, String.literal("Remove Input Mapping:")), Inheritance.upcast(?*String, String.literal("1. Select the desired action by generating a currently defined input for a given action.")), Inheritance.upcast(?*String, String.literal("(Example: Press the key '1' to select the Fire action)")), Inheritance.upcast(?*String, String.literal("2. Select a mapped input for the selected action.")), Inheritance.upcast(?*String, String.literal("(Example: Press the key '1' to select the '1' key input for the selected Fire action)")), Inheritance.upcast(?*String, String.literal("3. Press the Delete Key.")) })[0..];
         
         this.anchor = Anchor.TOP_LEFT;
     }
@@ -62,7 +63,7 @@ pub const GameInputMappingInstructionsCanvas = struct {
         this.* = .{};
         this.base = Inheritance.callStatic(GameCommandCanvas, "create4", .{ commandListener, GameInputMappingInstructionsCanvas.NAME, Inheritance.receiver(allBinaryGameLayerManager.?, "getBackgroundBasicColor").getBackgroundBasicColor(), Inheritance.receiver(allBinaryGameLayerManager.?, "getForegroundBasicColor").getForegroundBasicColor() }).*;
         this.initFields();
-        _ = Inheritance.call(Inheritance.fieldPointer(this, "logUtil").*.?, "putF", .{ Inheritance.fieldPointer(this, "commonStrings").*.?.START, this, Inheritance.fieldPointer(this, "commonStrings").*.?.CONSTRUCTOR });
+        _ = Inheritance.call(Inheritance.fieldPointer(this, "logUtil").*.?, "putF", .{ Inheritance.fieldPointer(Inheritance.fieldPointer(this, "commonStrings").*.?, "START").*, this, Inheritance.fieldPointer(Inheritance.fieldPointer(this, "commonStrings").*.?, "CONSTRUCTOR").* });
         this.colorFillPaintable = Inheritance.upcast(@TypeOf(this.colorFillPaintable), Inheritance.call(ColorFillPaintableFactory.getInstance().?, "getInstance", .{ Inheritance.receiver(allBinaryGameLayerManager.?, "getBackgroundBasicColor").getBackgroundBasicColor(), false }));
         Inheritance.bindOverrides(this);
         return this;
@@ -83,7 +84,7 @@ pub const GameInputMappingInstructionsCanvas = struct {
         const beginWidth: i32 = (Inheritance.call(graphics.?.getFont().?, "stringWidth", .{ self.TITLE }) >> @intCast(1));
         _ = Inheritance.call(graphics.?, "setColor", .{ Inheritance.fieldPointer(self, "foregroundColor").* });
         _ = Inheritance.call(graphics.?, "drawString", .{ self.TITLE, halfWidth - beginWidth, Inheritance.fieldPointer(self, "fontHeight").*, self.anchor });
-        _ = Inheritance.call(self.drawStringUtil.?, "drawCenterStrings", .{ graphics, self.instructions, Inheritance.receiverOf(Inheritance.fieldPointer(self, "displayInfo").*.?, "getLastWidth").getLastWidth(), Inheritance.fieldPointer(self, "fontHeight").*, halfWidth, 3 * Inheritance.fieldPointer(self, "fontHeight").* });
+        _ = Inheritance.call(self.drawStringUtil.?, "drawCenterStrings", .{ graphics, self.instructions, Inheritance.receiverOf(Inheritance.fieldPointer(self, "displayInfo").*.?, "getLastWidth").getLastWidth(), Inheritance.fieldPointer(self, "fontHeight").*, halfWidth, Inheritance.arithmetic(.multiply, 3, Inheritance.fieldPointer(self, "fontHeight").*) });
         _ = Inheritance.call(&self.base, "paint", .{ graphics });
     }
 };

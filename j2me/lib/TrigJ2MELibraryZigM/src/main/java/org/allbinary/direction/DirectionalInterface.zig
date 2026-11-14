@@ -28,10 +28,10 @@ pub const DirectionalInterface = struct {
     pointer: *anyopaque,
     object: Object,
     toStringFn: *const fn (pointer: *anyopaque) ?*String,
-    setFrameByDirectionFn: *const fn (pointer: *anyopaque, direction: ?*Direction) void,
-    setFrameToAngleFn: *const fn (pointer: *anyopaque, angle: ?*Angle) void,
-    adjustFrameToAngleFn: *const fn (pointer: *anyopaque, newAngle: ?*Angle) void,
-    adjustFrameFn: *const fn (pointer: *anyopaque, angle: i16) void,
+    setFrameByDirectionFn: *const fn (interface_pointer: *anyopaque, direction: ?*Direction) void,
+    setFrameToAngleFn: *const fn (interface_pointer: *anyopaque, angle: ?*Angle) void,
+    adjustFrameToAngleFn: *const fn (interface_pointer: *anyopaque, newAngle: ?*Angle) void,
+    adjustFrameFn: *const fn (interface_pointer: *anyopaque, angle: i16) void,
 
     pub fn setFrameByDirection(self: *Self, direction: ?*Direction) void {
         return self.setFrameByDirectionFn(self.pointer, direction);
@@ -55,27 +55,27 @@ pub const DirectionalInterface = struct {
 
     // The interface value of an object with the methods. Like a Java class a method can be declared by the object or a superclass.
     pub fn of(object: anytype) ?*Self {
-        const Implementation = @TypeOf(object);
+        const ImplementationType = @TypeOf(object);
         const Methods = struct {
             fn toString(pointer: *anyopaque) ?*String {
-                const implementation: Implementation = @ptrCast(@alignCast(pointer));
+                const implementation: ImplementationType = @ptrCast(@alignCast(pointer));
                 return String.valueOf(implementation);
             }
-            fn setFrameByDirection(pointer: *anyopaque, direction: ?*Direction) void {
-                const implementation: Implementation = @ptrCast(@alignCast(pointer));
-                return Inheritance.receiver(implementation, "setFrameByDirection").setFrameByDirection(direction);
+            fn setFrameByDirection(interface_pointer: *anyopaque, direction: ?*Direction) void {
+                const implementation: ImplementationType = @ptrCast(@alignCast(interface_pointer));
+                return Inheritance.call(implementation, "setFrameByDirection", .{ direction });
             }
-            fn setFrameToAngle(pointer: *anyopaque, angle: ?*Angle) void {
-                const implementation: Implementation = @ptrCast(@alignCast(pointer));
-                return Inheritance.receiver(implementation, "setFrameToAngle").setFrameToAngle(angle);
+            fn setFrameToAngle(interface_pointer: *anyopaque, angle: ?*Angle) void {
+                const implementation: ImplementationType = @ptrCast(@alignCast(interface_pointer));
+                return Inheritance.call(implementation, "setFrameToAngle", .{ angle });
             }
-            fn adjustFrameToAngle(pointer: *anyopaque, newAngle: ?*Angle) void {
-                const implementation: Implementation = @ptrCast(@alignCast(pointer));
-                return Inheritance.receiver(implementation, "adjustFrameToAngle").adjustFrameToAngle(newAngle);
+            fn adjustFrameToAngle(interface_pointer: *anyopaque, newAngle: ?*Angle) void {
+                const implementation: ImplementationType = @ptrCast(@alignCast(interface_pointer));
+                return Inheritance.call(implementation, "adjustFrameToAngle", .{ newAngle });
             }
-            fn adjustFrame(pointer: *anyopaque, angle: i16) void {
-                const implementation: Implementation = @ptrCast(@alignCast(pointer));
-                return Inheritance.receiver(implementation, "adjustFrame").adjustFrame(angle);
+            fn adjustFrame(interface_pointer: *anyopaque, angle: i16) void {
+                const implementation: ImplementationType = @ptrCast(@alignCast(interface_pointer));
+                return Inheritance.call(implementation, "adjustFrame", .{ angle });
             }
         };
         const this = allocator.create(Self) catch unreachable;

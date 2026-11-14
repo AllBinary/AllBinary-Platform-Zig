@@ -18,7 +18,8 @@ const allocator = std.heap.page_allocator;
 const String = @import("java/lang/String.zig").String;
 const Object = @import("java/lang/Object.zig").Object;
 const Inheritance = @import("zig/Inheritance.zig");
-// const Image = @import("javax/microedition/lcdui/Image.zig").Image;
+const Image = @import("javax/microedition/lcdui/Image.zig").Image;
+const Exception = @import("java/lang/Exception.zig").Exception;
 
 pub const ImageJ2MEScaleUtil = struct {
     const Self = @This();
@@ -61,7 +62,7 @@ pub const ImageJ2MEScaleUtil = struct {
         _ = self;
         const sourceWidth: i32 = image.?.getWidth();
         const sourceHeight: i32 = image.?.getHeight();
-        const originalData: []i32 = array_N66210: { const array_N66210_array = allocator.alloc(i32, @intCast(image.?.getWidth() * image.?.getHeight())) catch unreachable; @memset(array_N66210_array, 0); break :array_N66210 array_N66210_array; };
+        const originalData: []i32 = array_N66210: { const array_N66210_array = allocator.alloc(i32, @intCast(Inheritance.arithmetic(.multiply, image.?.getWidth(), image.?.getHeight()))) catch unreachable; @memset(array_N66210_array, 0); break :array_N66210 array_N66210_array; };
         _ = Inheritance.call(image.?, "getRGB", .{ originalData, 0, image.?.getWidth(), 0, 0, image.?.getWidth(), image.?.getHeight() });
         const scaledData: []i32 = array_N66388: { const array_N66388_array = allocator.alloc(i32, @intCast(width * height)) catch unreachable; @memset(array_N66388_array, 0); break :array_N66388 array_N66388_array; };
         const heightRatioFactor: i32 = @divTrunc((8 * sourceHeight), height);

@@ -18,7 +18,7 @@ const allocator = std.heap.page_allocator;
 const String = @import("java/lang/String.zig").String;
 const Object = @import("java/lang/Object.zig").Object;
 const Inheritance = @import("zig/Inheritance.zig");
-// const Displayable = @import("javax/microedition/lcdui/Displayable.zig").Displayable;
+const Displayable = @import("javax/microedition/lcdui/Displayable.zig").Displayable;
 
 pub const ScreenRepaintUtil = struct {
     const Self = @This();

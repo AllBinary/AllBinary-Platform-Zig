@@ -21,6 +21,7 @@ const Inheritance = @import("zig/Inheritance.zig");
 const JsType = @import("jsinterop/annotations/JsType.zig").JsType;
 const JsMethod = @import("jsinterop/annotations/JsMethod.zig").JsMethod;
 const CacheableInterface = @import("org/allbinary/logic/util/cache/CacheableInterface.zig").CacheableInterface;
+const Exception = @import("java/lang/Exception.zig").Exception;
 
 // Java interface: an implementation is a pointer and a table of functions
 pub const CacheInterface = struct {
@@ -29,9 +30,9 @@ pub const CacheInterface = struct {
     pointer: *anyopaque,
     object: Object,
     toStringFn: *const fn (pointer: *anyopaque) ?*String,
-    addFn: *const fn (pointer: *anyopaque, cacheableInterface: ?*CacheableInterface) void,
-    addArrayFn: *const fn (pointer: *anyopaque, cacheableInterfaces: []?*CacheableInterface) void,
-    clearFn: *const fn (pointer: *anyopaque) void,
+    addFn: *const fn (interface_pointer: *anyopaque, cacheableInterface: ?*CacheableInterface) void,
+    addArrayFn: *const fn (interface_pointer: *anyopaque, cacheableInterfaces: []?*CacheableInterface) void,
+    clearFn: *const fn (interface_pointer: *anyopaque) void,
 
     pub fn add(self: *Self, cacheableInterface: ?*CacheableInterface) void {
         return self.addFn(self.pointer, cacheableInterface);
@@ -51,22 +52,22 @@ pub const CacheInterface = struct {
 
     // The interface value of an object with the methods. Like a Java class a method can be declared by the object or a superclass.
     pub fn of(object: anytype) ?*Self {
-        const Implementation = @TypeOf(object);
+        const ImplementationType = @TypeOf(object);
         const Methods = struct {
             fn toString(pointer: *anyopaque) ?*String {
-                const implementation: Implementation = @ptrCast(@alignCast(pointer));
+                const implementation: ImplementationType = @ptrCast(@alignCast(pointer));
                 return String.valueOf(implementation);
             }
-            fn add(pointer: *anyopaque, cacheableInterface: ?*CacheableInterface) void {
-                const implementation: Implementation = @ptrCast(@alignCast(pointer));
-                return Inheritance.receiver(implementation, "add").add(cacheableInterface);
+            fn add(interface_pointer: *anyopaque, cacheableInterface: ?*CacheableInterface) void {
+                const implementation: ImplementationType = @ptrCast(@alignCast(interface_pointer));
+                return Inheritance.call(implementation, "add", .{ cacheableInterface });
             }
-            fn addArray(pointer: *anyopaque, cacheableInterfaces: []?*CacheableInterface) void {
-                const implementation: Implementation = @ptrCast(@alignCast(pointer));
-                return Inheritance.receiver(implementation, "addArray").addArray(cacheableInterfaces);
+            fn addArray(interface_pointer: *anyopaque, cacheableInterfaces: []?*CacheableInterface) void {
+                const implementation: ImplementationType = @ptrCast(@alignCast(interface_pointer));
+                return Inheritance.call(implementation, "addArray", .{ cacheableInterfaces });
             }
-            fn clear(pointer: *anyopaque) void {
-                const implementation: Implementation = @ptrCast(@alignCast(pointer));
+            fn clear(interface_pointer: *anyopaque) void {
+                const implementation: ImplementationType = @ptrCast(@alignCast(interface_pointer));
                 return Inheritance.receiver(implementation, "clear").clear();
             }
         };

@@ -18,7 +18,7 @@ const allocator = std.heap.page_allocator;
 const String = @import("java/lang/String.zig").String;
 const Object = @import("java/lang/Object.zig").Object;
 const Inheritance = @import("zig/Inheritance.zig");
-// const Command = @import("javax/microedition/lcdui/Command.zig").Command;
+const Command = @import("javax/microedition/lcdui/Command.zig").Command;
 const StringUtil = @import("org/allbinary/logic/string/StringUtil.zig").StringUtil;
 
 pub const HighScoreCommands = struct {
@@ -35,9 +35,9 @@ pub const HighScoreCommands = struct {
     }
 
     fn initFields(this: *Self) void {
-        this.DISPLAY = Inheritance.callStatic(Command, "create4", .{ String.literal("Scores"), StringUtil.getInstance().?.EMPTY_STRING, Command.SCREEN, 1 });
-        this.PERSONAL = Inheritance.callStatic(Command, "create4", .{ String.literal("Personal"), StringUtil.getInstance().?.EMPTY_STRING, Command.SCREEN, 1 });
-        this.WORLD = Inheritance.callStatic(Command, "create4", .{ String.literal("World"), StringUtil.getInstance().?.EMPTY_STRING, Command.SCREEN, 1 });
+        this.DISPLAY = Inheritance.callStatic(Command, "create4", .{ String.literal("Scores"), Inheritance.fieldPointer(StringUtil.getInstance().?, "EMPTY_STRING").*, Command.SCREEN, 1 });
+        this.PERSONAL = Inheritance.callStatic(Command, "create4", .{ String.literal("Personal"), Inheritance.fieldPointer(StringUtil.getInstance().?, "EMPTY_STRING").*, Command.SCREEN, 1 });
+        this.WORLD = Inheritance.callStatic(Command, "create4", .{ String.literal("World"), Inheritance.fieldPointer(StringUtil.getInstance().?, "EMPTY_STRING").*, Command.SCREEN, 1 });
     }
 
     pub fn create() *Self {

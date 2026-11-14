@@ -18,6 +18,7 @@ const StringUtil = @import("org/allbinary/logic/string/StringUtil.zig").StringUt
 const ABCustomForm = @import("org/allbinary/graphics/form/ABCustomForm.zig").ABCustomForm;
 const FormType = @import("org/allbinary/graphics/form/FormType.zig").FormType;
 const FormTypeFactory = @import("org/allbinary/graphics/form/FormTypeFactory.zig").FormTypeFactory;
+const Exception = @import("java/lang/Exception.zig").Exception;
 
 pub const PaintableForm = struct {
     const Self = @This();
@@ -32,7 +33,7 @@ pub const PaintableForm = struct {
 
     // Static fields with runtime initializers: call staticInit once at startup
     pub fn staticInit() void {
-        NULL_PAINTABLE_FORM = Inheritance.upcast(?Object, NullUtil.getInstance().?.NULL_OBJECT);
+        NULL_PAINTABLE_FORM = Inheritance.upcast(?Object, Inheritance.fieldPointer(NullUtil.getInstance().?, "NULL_OBJECT").*);
     }
 
     fn initFields(this: *Self) void {
@@ -40,13 +41,13 @@ pub const PaintableForm = struct {
         this.rectangle = Inheritance.upcast(?*Rectangle, RectangleFactory.SINGLETON);
         this.x = 0;
         this.y = 0;
-        this.formType = Inheritance.upcast(?*FormType, FormTypeFactory.getInstance().?.NULL_FORM_TYPE);
+        this.formType = Inheritance.upcast(?*FormType, Inheritance.fieldPointer(FormTypeFactory.getInstance().?, "NULL_FORM_TYPE").*);
     }
     
 
     pub fn getNullPaintableForm() ?*PaintableForm {
-        if (Object.same(PaintableForm.NULL_PAINTABLE_FORM, NullUtil.getInstance().?.NULL_OBJECT)) {
-            PaintableForm.NULL_PAINTABLE_FORM = Inheritance.upcast(@TypeOf(PaintableForm.NULL_PAINTABLE_FORM), Inheritance.callStatic(PaintableForm, "create4", .{ StringUtil.getInstance().?.EMPTY_STRING, array_N66024: { const array_N66024_array = allocator.alloc(?*ABCustomItem, @intCast(0)) catch unreachable; @memset(array_N66024_array, null); break :array_N66024 array_N66024_array; }, BasicColorFactory.getInstance().?.BLACK, BasicColorFactory.getInstance().?.WHITE }));
+        if (Object.same(PaintableForm.NULL_PAINTABLE_FORM, Inheritance.fieldPointer(NullUtil.getInstance().?, "NULL_OBJECT").*)) {
+            PaintableForm.NULL_PAINTABLE_FORM = Inheritance.upcast(@TypeOf(PaintableForm.NULL_PAINTABLE_FORM), Inheritance.callStatic(PaintableForm, "create4", .{ Inheritance.fieldPointer(StringUtil.getInstance().?, "EMPTY_STRING").*, array_N66024: { const array_N66024_array = allocator.alloc(?*ABCustomItem, @intCast(0)) catch unreachable; @memset(array_N66024_array, null); break :array_N66024 array_N66024_array; }, Inheritance.fieldPointer(BasicColorFactory.getInstance().?, "BLACK").*, Inheritance.fieldPointer(BasicColorFactory.getInstance().?, "WHITE").* }));
         }
         return Inheritance.cast(?*PaintableForm, PaintableForm.NULL_PAINTABLE_FORM);
     }
@@ -66,7 +67,7 @@ pub const PaintableForm = struct {
     // throws Exception
     pub fn init(self: *Self, rectangle: ?*Rectangle, formType: ?*FormType) void {
         self.rectangle = rectangle;
-        const point: ?*GPoint = Inheritance.upcast(?*GPoint, self.rectangle.?.getPoint());
+        const point: ?*GPoint = Inheritance.upcast(?*GPoint, Inheritance.receiver(self.rectangle.?, "getPoint").getPoint());
         self.x = point.?.getX();
         self.y = point.?.getY();
         self.formType = formType;
@@ -74,7 +75,7 @@ pub const PaintableForm = struct {
     
 
     pub fn getWidth(self: *Self) i32 {
-        return self.rectangle.?.getWidth();
+        return Inheritance.receiver(self.rectangle.?, "getWidth").getWidth();
     }
 };
 

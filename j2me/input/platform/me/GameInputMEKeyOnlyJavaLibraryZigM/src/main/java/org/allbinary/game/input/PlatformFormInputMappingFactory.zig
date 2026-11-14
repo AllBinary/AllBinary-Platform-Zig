@@ -22,6 +22,8 @@ const InputToGameKeyMapping = @import("org/allbinary/game/input/mapping/InputToG
 const NullUtil = @import("org/allbinary/logic/NullUtil.zig").NullUtil;
 const LogUtil = @import("org/allbinary/logic/communication/log/LogUtil.zig").LogUtil;
 const CommonStrings = @import("org/allbinary/string/CommonStrings.zig").CommonStrings;
+const GameKeyFactory = @import("org/allbinary/game/input/GameKeyFactory.zig").GameKeyFactory;
+const Exception = @import("java/lang/Exception.zig").Exception;
 
 pub const PlatformFormInputMappingFactory = struct {
     const Self = @This();
@@ -32,7 +34,7 @@ pub const PlatformFormInputMappingFactory = struct {
 
     // Static fields with runtime initializers: call staticInit once at startup
     pub fn staticInit() void {
-        instance = Inheritance.upcast(?Object, NullUtil.getInstance().?.NULL_OBJECT);
+        instance = Inheritance.upcast(?Object, Inheritance.fieldPointer(NullUtil.getInstance().?, "NULL_OBJECT").*);
     }
 
     fn initFields(this: *Self) void {
@@ -49,7 +51,7 @@ pub const PlatformFormInputMappingFactory = struct {
     
 
     pub fn getInstance() ?*PlatformFormInputMappingFactory {
-        if (Object.same(PlatformFormInputMappingFactory.instance, NullUtil.getInstance().?.NULL_OBJECT)) {
+        if (Object.same(PlatformFormInputMappingFactory.instance, Inheritance.fieldPointer(NullUtil.getInstance().?, "NULL_OBJECT").*)) {
             PlatformFormInputMappingFactory.instance = Inheritance.upcast(@TypeOf(PlatformFormInputMappingFactory.instance), PlatformFormInputMappingFactory.create());
         }
         return Inheritance.cast(?*PlatformFormInputMappingFactory, PlatformFormInputMappingFactory.instance);
@@ -61,17 +63,17 @@ pub const PlatformFormInputMappingFactory = struct {
             if (Object.same(self.inputToGameKeyMapping, InputToGameKeyMapping.getNullInstance())) {
                 const inputToGameKeyMapping: ?*InputToGameKeyMapping = InputToGameKeyMapping.create();
                 const gameKeyFactory: ?*GameKeyFactory = Inheritance.upcast(?*GameKeyFactory, GameKeyFactory.getInstance());
-                _ = Inheritance.call(inputToGameKeyMapping.?, "add", .{ gameKeyFactory.?.UP, gameKeyFactory.?.UP });
-                _ = Inheritance.call(inputToGameKeyMapping.?, "add", .{ gameKeyFactory.?.DOWN, gameKeyFactory.?.DOWN });
-                _ = Inheritance.call(inputToGameKeyMapping.?, "add", .{ gameKeyFactory.?.LEFT, gameKeyFactory.?.LEFT });
-                _ = Inheritance.call(inputToGameKeyMapping.?, "add", .{ gameKeyFactory.?.RIGHT, gameKeyFactory.?.RIGHT });
-                _ = Inheritance.call(inputToGameKeyMapping.?, "add", .{ gameKeyFactory.?.KEY_NUM1, gameKeyFactory.?.GAME_A });
+                _ = Inheritance.call(inputToGameKeyMapping.?, "add", .{ Inheritance.fieldPointer(gameKeyFactory.?, "UP").*, Inheritance.fieldPointer(gameKeyFactory.?, "UP").* });
+                _ = Inheritance.call(inputToGameKeyMapping.?, "add", .{ Inheritance.fieldPointer(gameKeyFactory.?, "DOWN").*, Inheritance.fieldPointer(gameKeyFactory.?, "DOWN").* });
+                _ = Inheritance.call(inputToGameKeyMapping.?, "add", .{ Inheritance.fieldPointer(gameKeyFactory.?, "LEFT").*, Inheritance.fieldPointer(gameKeyFactory.?, "LEFT").* });
+                _ = Inheritance.call(inputToGameKeyMapping.?, "add", .{ Inheritance.fieldPointer(gameKeyFactory.?, "RIGHT").*, Inheritance.fieldPointer(gameKeyFactory.?, "RIGHT").* });
+                _ = Inheritance.call(inputToGameKeyMapping.?, "add", .{ Inheritance.fieldPointer(gameKeyFactory.?, "KEY_NUM1").*, Inheritance.fieldPointer(gameKeyFactory.?, "GAME_A").* });
                 self.inputToGameKeyMapping = inputToGameKeyMapping;
             }
         }
         // catch (Exception e):
 //             const commonStrings: ?*CommonStrings = Inheritance.upcast(?*CommonStrings, CommonStrings.getInstance()); _ = commonStrings;
-//             _ = Inheritance.call(self.logUtil.?, "put", .{ commonStrings.?.EXCEPTION, self, commonStrings.?.GET_INSTANCE, e });
+//             _ = Inheritance.call(self.logUtil.?, "put", .{ Inheritance.fieldPointer(commonStrings.?, "EXCEPTION").*, self, Inheritance.fieldPointer(commonStrings.?, "GET_INSTANCE").*, e });
         return self.inputToGameKeyMapping;
     }
 };

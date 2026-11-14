@@ -53,7 +53,7 @@ pub const SWTProcessor = struct {
 
     pub fn process(self: *Self, display: ?*Display) void {
         _ = self;
-        _ = display.?.sleep();
+        _ = Inheritance.receiver(display.?, "sleep").sleep();
     }
 };
 

@@ -21,6 +21,7 @@ const Inheritance = @import("zig/Inheritance.zig");
 const AllBinaryLayer = @import("org/allbinary/layer/AllBinaryLayer.zig").AllBinaryLayer;
 const AllBinaryLayerFactoryInterface = @import("org/allbinary/layer/AllBinaryLayerFactoryInterface.zig").AllBinaryLayerFactoryInterface;
 const LifeLayer = @import("org/allbinary/game/ag/layer/pickup/life/LifeLayer.zig").LifeLayer;
+const Exception = @import("java/lang/Exception.zig").Exception;
 
 pub const LifeLayerFactory = struct {
     const Self = @This();

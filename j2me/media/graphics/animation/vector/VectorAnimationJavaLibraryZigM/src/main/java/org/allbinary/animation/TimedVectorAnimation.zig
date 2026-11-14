@@ -46,8 +46,8 @@ pub const TimedVectorAnimation = struct {
     
 
     pub fn nextFrame(self: *Self) void {
-        if (Inheritance.call(self.timeElapsedHelper.?, "isTime", .{ GameTickTimeDelayHelperFactory.getInstance().?.startTime })) {
-            _ = self.base.nextFrame();
+        if (Inheritance.call(self.timeElapsedHelper.?, "isTime", .{ Inheritance.fieldPointer(GameTickTimeDelayHelperFactory.getInstance().?, "startTime").* })) {
+            _ = Inheritance.receiver(&self.base, "nextFrame").nextFrame();
         }
     }
 };

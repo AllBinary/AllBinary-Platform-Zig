@@ -22,6 +22,7 @@ const AnimationBehavior = @import("org/allbinary/animation/AnimationBehavior.zig
 const CacheableInterface = @import("org/allbinary/logic/util/cache/CacheableInterface.zig").CacheableInterface;
 const CacheableInterfaceFactoryInterface = @import("org/allbinary/logic/util/cache/CacheableInterfaceFactoryInterface.zig").CacheableInterfaceFactoryInterface;
 const ImageArrayRotationAnimationCacheable = @import("org/allbinary/animation/image/ImageArrayRotationAnimationCacheable.zig").ImageArrayRotationAnimationCacheable;
+const Exception = @import("java/lang/Exception.zig").Exception;
 
 pub const ImageArrayRotationAnimationCacheableInterfaceFactory = struct {
     const Self = @This();

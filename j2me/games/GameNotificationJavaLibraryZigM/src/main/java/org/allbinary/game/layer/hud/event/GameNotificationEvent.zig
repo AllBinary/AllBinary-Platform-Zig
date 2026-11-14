@@ -35,9 +35,9 @@ pub const GameNotificationEvent = struct {
     removeable: ?*Boolean = null,
 
     fn initFields(this: *Self) void {
-        this.string = Inheritance.upcast(?*String, StringUtil.getInstance().?.EMPTY_STRING);
+        this.string = Inheritance.upcast(?*String, Inheritance.fieldPointer(StringUtil.getInstance().?, "EMPTY_STRING").*);
         
-        this.basicColor = Inheritance.upcast(?*BasicColor, BasicColorFactory.getInstance().?.BLACK);
+        this.basicColor = Inheritance.upcast(?*BasicColor, Inheritance.fieldPointer(BasicColorFactory.getInstance().?, "BLACK").*);
         
     }
     

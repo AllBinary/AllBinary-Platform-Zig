@@ -48,7 +48,7 @@ pub const Visitor = struct {
 
     pub fn visit(self: *Self, anyType: ?Object) ?Object {
         _ = anyType;
-        return Inheritance.upcast(?Object, self.nullUtil.?.NULL_OBJECT);
+        return Inheritance.upcast(?Object, Inheritance.fieldPointer(self.nullUtil.?, "NULL_OBJECT").*);
     }
     
 

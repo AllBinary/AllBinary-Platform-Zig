@@ -23,6 +23,9 @@ const BasicTouchInputFactory = @import("org/allbinary/input/motion/button/BasicT
 const NullUtil = @import("org/allbinary/logic/NullUtil.zig").NullUtil;
 const LogUtil = @import("org/allbinary/logic/communication/log/LogUtil.zig").LogUtil;
 const CommonStrings = @import("org/allbinary/string/CommonStrings.zig").CommonStrings;
+const GameKeyFactory = @import("org/allbinary/game/input/GameKeyFactory.zig").GameKeyFactory;
+const PCKeyFactory = @import("org/allbinary/game/input/PCKeyFactory.zig").PCKeyFactory;
+const Exception = @import("java/lang/Exception.zig").Exception;
 
 pub const PlatformFormInputMappingFactory = struct {
     const Self = @This();
@@ -33,7 +36,7 @@ pub const PlatformFormInputMappingFactory = struct {
 
     // Static fields with runtime initializers: call staticInit once at startup
     pub fn staticInit() void {
-        instance = Inheritance.upcast(?Object, NullUtil.getInstance().?.NULL_OBJECT);
+        instance = Inheritance.upcast(?Object, Inheritance.fieldPointer(NullUtil.getInstance().?, "NULL_OBJECT").*);
     }
 
     fn initFields(this: *Self) void {
@@ -50,7 +53,7 @@ pub const PlatformFormInputMappingFactory = struct {
     
 
     pub fn getInstance() ?*PlatformFormInputMappingFactory {
-        if (Object.same(PlatformFormInputMappingFactory.instance, NullUtil.getInstance().?.NULL_OBJECT)) {
+        if (Object.same(PlatformFormInputMappingFactory.instance, Inheritance.fieldPointer(NullUtil.getInstance().?, "NULL_OBJECT").*)) {
             PlatformFormInputMappingFactory.instance = Inheritance.upcast(@TypeOf(PlatformFormInputMappingFactory.instance), PlatformFormInputMappingFactory.create());
         }
         return Inheritance.cast(?*PlatformFormInputMappingFactory, PlatformFormInputMappingFactory.instance);
@@ -64,21 +67,21 @@ pub const PlatformFormInputMappingFactory = struct {
                 const inputToGameKeyMapping: ?*InputToGameKeyMapping = InputToGameKeyMapping.create();
                 const gameKeyFactory: ?*GameKeyFactory = Inheritance.upcast(?*GameKeyFactory, GameKeyFactory.getInstance());
                 const basicTouchInputFactory: ?*BasicTouchInputFactory = Inheritance.upcast(?*BasicTouchInputFactory, BasicTouchInputFactory.getInstance());
-                _ = Inheritance.call(inputToGameKeyMapping.?, "add", .{ gameKeyFactory.?.UP, pcKeyFactory.?.DPAD_UP });
-                _ = Inheritance.call(inputToGameKeyMapping.?, "add", .{ gameKeyFactory.?.DOWN, pcKeyFactory.?.DPAD_DOWN });
-                _ = Inheritance.call(inputToGameKeyMapping.?, "add", .{ gameKeyFactory.?.LEFT, pcKeyFactory.?.DPAD_LEFT });
-                _ = Inheritance.call(inputToGameKeyMapping.?, "add", .{ gameKeyFactory.?.RIGHT, pcKeyFactory.?.DPAD_RIGHT });
-                _ = Inheritance.call(inputToGameKeyMapping.?, "add", .{ gameKeyFactory.?.KEY_NUM1, pcKeyFactory.?.ENTER });
-                _ = Inheritance.call(inputToGameKeyMapping.?, "add", .{ gameKeyFactory.?.UP, basicTouchInputFactory.?.UP });
-                _ = Inheritance.call(inputToGameKeyMapping.?, "add", .{ gameKeyFactory.?.LEFT, basicTouchInputFactory.?.LEFT });
-                _ = Inheritance.call(inputToGameKeyMapping.?, "add", .{ gameKeyFactory.?.RIGHT, basicTouchInputFactory.?.RIGHT });
-                _ = Inheritance.call(inputToGameKeyMapping.?, "add", .{ gameKeyFactory.?.DOWN, basicTouchInputFactory.?.DOWN });
+                _ = Inheritance.call(inputToGameKeyMapping.?, "add", .{ Inheritance.fieldPointer(gameKeyFactory.?, "UP").*, Inheritance.fieldPointer(pcKeyFactory.?, "DPAD_UP").* });
+                _ = Inheritance.call(inputToGameKeyMapping.?, "add", .{ Inheritance.fieldPointer(gameKeyFactory.?, "DOWN").*, Inheritance.fieldPointer(pcKeyFactory.?, "DPAD_DOWN").* });
+                _ = Inheritance.call(inputToGameKeyMapping.?, "add", .{ Inheritance.fieldPointer(gameKeyFactory.?, "LEFT").*, Inheritance.fieldPointer(pcKeyFactory.?, "DPAD_LEFT").* });
+                _ = Inheritance.call(inputToGameKeyMapping.?, "add", .{ Inheritance.fieldPointer(gameKeyFactory.?, "RIGHT").*, Inheritance.fieldPointer(pcKeyFactory.?, "DPAD_RIGHT").* });
+                _ = Inheritance.call(inputToGameKeyMapping.?, "add", .{ Inheritance.fieldPointer(gameKeyFactory.?, "KEY_NUM1").*, Inheritance.fieldPointer(pcKeyFactory.?, "ENTER").* });
+                _ = Inheritance.call(inputToGameKeyMapping.?, "add", .{ Inheritance.fieldPointer(gameKeyFactory.?, "UP").*, Inheritance.fieldPointer(basicTouchInputFactory.?, "UP").* });
+                _ = Inheritance.call(inputToGameKeyMapping.?, "add", .{ Inheritance.fieldPointer(gameKeyFactory.?, "LEFT").*, Inheritance.fieldPointer(basicTouchInputFactory.?, "LEFT").* });
+                _ = Inheritance.call(inputToGameKeyMapping.?, "add", .{ Inheritance.fieldPointer(gameKeyFactory.?, "RIGHT").*, Inheritance.fieldPointer(basicTouchInputFactory.?, "RIGHT").* });
+                _ = Inheritance.call(inputToGameKeyMapping.?, "add", .{ Inheritance.fieldPointer(gameKeyFactory.?, "DOWN").*, Inheritance.fieldPointer(basicTouchInputFactory.?, "DOWN").* });
                 self.inputToGameKeyMapping = inputToGameKeyMapping;
             }
         }
         // catch (Exception e):
 //             const commonStrings: ?*CommonStrings = Inheritance.upcast(?*CommonStrings, CommonStrings.getInstance()); _ = commonStrings;
-//             _ = Inheritance.call(self.logUtil.?, "put", .{ commonStrings.?.EXCEPTION, self, commonStrings.?.GET_INSTANCE, e });
+//             _ = Inheritance.call(self.logUtil.?, "put", .{ Inheritance.fieldPointer(commonStrings.?, "EXCEPTION").*, self, Inheritance.fieldPointer(commonStrings.?, "GET_INSTANCE").*, e });
         return self.inputToGameKeyMapping;
     }
 };

@@ -29,10 +29,10 @@ pub const CompoundAnimationInterface = struct {
     object: Object,
     base: AnimationInterface,
     toStringFn: *const fn (pointer: *anyopaque) ?*String,
-    nextAnimationFn: *const fn (pointer: *anyopaque) void,
-    previousAnimationFn: *const fn (pointer: *anyopaque) void,
-    setAnimationFn: *const fn (pointer: *anyopaque, index: i32) void,
-    getCurrentAnimationFn: *const fn (pointer: *anyopaque) ?*IndexedAnimation,
+    nextAnimationFn: *const fn (interface_pointer: *anyopaque) void,
+    previousAnimationFn: *const fn (interface_pointer: *anyopaque) void,
+    setAnimationFn: *const fn (interface_pointer: *anyopaque, index: i32) void,
+    getCurrentAnimationFn: *const fn (interface_pointer: *anyopaque) ?*IndexedAnimation,
 
     pub fn nextAnimation(self: *Self) void {
         return self.nextAnimationFn(self.pointer);
@@ -56,26 +56,26 @@ pub const CompoundAnimationInterface = struct {
 
     // The interface value of an object with the methods. Like a Java class a method can be declared by the object or a superclass.
     pub fn of(object: anytype) ?*Self {
-        const Implementation = @TypeOf(object);
+        const ImplementationType = @TypeOf(object);
         const Methods = struct {
             fn toString(pointer: *anyopaque) ?*String {
-                const implementation: Implementation = @ptrCast(@alignCast(pointer));
+                const implementation: ImplementationType = @ptrCast(@alignCast(pointer));
                 return String.valueOf(implementation);
             }
-            fn nextAnimation(pointer: *anyopaque) void {
-                const implementation: Implementation = @ptrCast(@alignCast(pointer));
+            fn nextAnimation(interface_pointer: *anyopaque) void {
+                const implementation: ImplementationType = @ptrCast(@alignCast(interface_pointer));
                 return Inheritance.receiver(implementation, "nextAnimation").nextAnimation();
             }
-            fn previousAnimation(pointer: *anyopaque) void {
-                const implementation: Implementation = @ptrCast(@alignCast(pointer));
+            fn previousAnimation(interface_pointer: *anyopaque) void {
+                const implementation: ImplementationType = @ptrCast(@alignCast(interface_pointer));
                 return Inheritance.receiver(implementation, "previousAnimation").previousAnimation();
             }
-            fn setAnimation(pointer: *anyopaque, index: i32) void {
-                const implementation: Implementation = @ptrCast(@alignCast(pointer));
-                return Inheritance.receiver(implementation, "setAnimation").setAnimation(index);
+            fn setAnimation(interface_pointer: *anyopaque, index: i32) void {
+                const implementation: ImplementationType = @ptrCast(@alignCast(interface_pointer));
+                return Inheritance.call(implementation, "setAnimation", .{ index });
             }
-            fn getCurrentAnimation(pointer: *anyopaque) ?*IndexedAnimation {
-                const implementation: Implementation = @ptrCast(@alignCast(pointer));
+            fn getCurrentAnimation(interface_pointer: *anyopaque) ?*IndexedAnimation {
+                const implementation: ImplementationType = @ptrCast(@alignCast(interface_pointer));
                 return Inheritance.upcast(?*IndexedAnimation, Inheritance.receiver(implementation, "getCurrentAnimation").getCurrentAnimation());
             }
         };

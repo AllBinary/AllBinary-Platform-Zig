@@ -20,6 +20,7 @@ const Object = @import("java/lang/Object.zig").Object;
 const Inheritance = @import("zig/Inheritance.zig");
 const Thread = @import("java/lang/Thread.zig").Thread;
 const Runnable = @import("java/lang/Runnable.zig").Runnable;
+const Exception = @import("java/lang/Exception.zig").Exception;
 
 // Java interface: an implementation is a pointer and a table of functions
 pub const RunnableInterface = struct {
@@ -29,9 +30,9 @@ pub const RunnableInterface = struct {
     object: Object,
     base: Runnable,
     toStringFn: *const fn (pointer: *anyopaque) ?*String,
-    isRunningFn: *const fn (pointer: *anyopaque) bool,
-    setRunningFn: *const fn (pointer: *anyopaque, isRunning_: bool) void,
-    setThreadFn: *const fn (pointer: *anyopaque, thread: ?*Thread) void,
+    isRunningFn: *const fn (interface_pointer: *anyopaque) bool,
+    setRunningFn: *const fn (interface_pointer: *anyopaque, isRunning_: bool) void,
+    setThreadFn: *const fn (interface_pointer: *anyopaque, thread: ?*Thread) void,
 
     pub fn isRunning(self: *Self) bool {
         return self.isRunningFn(self.pointer);
@@ -51,23 +52,23 @@ pub const RunnableInterface = struct {
 
     // The interface value of an object with the methods. Like a Java class a method can be declared by the object or a superclass.
     pub fn of(object: anytype) ?*Self {
-        const Implementation = @TypeOf(object);
+        const ImplementationType = @TypeOf(object);
         const Methods = struct {
             fn toString(pointer: *anyopaque) ?*String {
-                const implementation: Implementation = @ptrCast(@alignCast(pointer));
+                const implementation: ImplementationType = @ptrCast(@alignCast(pointer));
                 return String.valueOf(implementation);
             }
-            fn isRunning(pointer: *anyopaque) bool {
-                const implementation: Implementation = @ptrCast(@alignCast(pointer));
+            fn isRunning(interface_pointer: *anyopaque) bool {
+                const implementation: ImplementationType = @ptrCast(@alignCast(interface_pointer));
                 return Inheritance.receiver(implementation, "isRunning").isRunning();
             }
-            fn setRunning(pointer: *anyopaque, isRunning_: bool) void {
-                const implementation: Implementation = @ptrCast(@alignCast(pointer));
-                return Inheritance.receiver(implementation, "setRunning").setRunning(isRunning_);
+            fn setRunning(interface_pointer: *anyopaque, isRunning_: bool) void {
+                const implementation: ImplementationType = @ptrCast(@alignCast(interface_pointer));
+                return Inheritance.call(implementation, "setRunning", .{ isRunning_ });
             }
-            fn setThread(pointer: *anyopaque, thread: ?*Thread) void {
-                const implementation: Implementation = @ptrCast(@alignCast(pointer));
-                return Inheritance.receiver(implementation, "setThread").setThread(thread);
+            fn setThread(interface_pointer: *anyopaque, thread: ?*Thread) void {
+                const implementation: ImplementationType = @ptrCast(@alignCast(interface_pointer));
+                return Inheritance.call(implementation, "setThread", .{ thread });
             }
         };
         const this = allocator.create(Self) catch unreachable;
